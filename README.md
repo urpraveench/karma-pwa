@@ -1,8 +1,6 @@
 # TikTym
 
-A progressive web app (PWA) for tracking daily practice minutes as points (1 minute = 1 point), with carry-forward backlog per practice. It is hosted on Firebase Hosting with Firestore and stays within the Spark (free) plan.
-
-> **Migration in progress.** The app is moving from a single HTML file (`legacy/`, still what gets deployed) to React + TypeScript + Vite (`src/`). See [React migration](#react-migration) below.
+A progressive web app (PWA) for tracking daily practice minutes as points (1 minute = 1 point), with carry-forward backlog per practice. Built with React, TypeScript and Vite, hosted on Firebase Hosting with Firestore, and stays within the Spark (free) plan.
 
 ## How the backlog works
 
@@ -24,22 +22,38 @@ Example: the target is 100. On day 1 you log 40, so 60 carries over. On day 2 yo
 
 ## Run locally (test mode)
 
-`config.js` ships with `mode: 'local'`. Sign in with `demo@tiktym.local` / `tiktym123`. Data is stored in the browser's localStorage.
+With no `.env.local`, the app runs in test mode. Sign in with `demo@tiktym.local` / `tiktym123`. Data is stored in the browser's localStorage.
 
 ```bash
-cd legacy && npx serve .      # or: python3 -m http.server 8080
+npm install
+npm run dev        # dev server at http://localhost:5173
+npm test           # Vitest: backlog engine, moments, insights, practice edits, Firestore store
+npm run build      # type-check + production build into dist/
+npm run preview    # serve dist/ locally, with the service worker
 ```
 
-Setup › **Load sample data** generates 3 weeks of history so you can see the backlog and insights in action.
+Setup › **Load sample data** generates 10 weeks of history so you can see the backlog and insights in action.
+
+## Configuration
+
+Settings are Vite env vars. Copy `.env.example` to `.env.local` and fill it in. Vite reads them at build time, so rebuild after a change.
+
+| Variable | Meaning |
+|---|---|
+| `VITE_BACKEND` | `local` (test mode) or `firebase` |
+| `VITE_SHOW_DEV_HINT` | Show the test login on the sign-in screen (test mode only) |
+| `VITE_ENABLE_GOOGLE` | Enable the Google sign-in button |
+| `VITE_TERMS_URL`, `VITE_PRIVACY_URL` | Legal links shown at sign-up |
+| `VITE_FIREBASE_*` | The web app config from the Firebase Console |
 
 ## Deploy to Firebase (Spark plan)
 
 1. Create a project in the Firebase Console. Add a **Web app** and copy its config.
 2. Go to **Build › Firestore Database** and create a database in production mode. Pick a region close to you, such as `asia-south1`.
 3. Go to **Build › Authentication › Sign-in method** and enable **Email/Password**. Under **Users**, add your temporary account.
-4. Edit `legacy/config.js`: set `mode: 'firebase'`, paste the `firebase` block, and set `showDevHint: false`.
+4. In `.env.local`, set `VITE_BACKEND=firebase` and paste the config into the `VITE_FIREBASE_*` variables. Set `VITE_FIREBASE_AUTH_DOMAIN` to `<project>.web.app`.
 5. Put your project ID in `.firebaserc`.
-6. Deploy:
+6. Deploy. `firebase.json` runs `npm run build` first and serves `dist/`:
    ```bash
    npm i -g firebase-tools
    firebase login
@@ -53,8 +67,8 @@ No separate API key is needed. Firebase handles OAuth for web apps.
 
 - [ ] In Authentication › Sign-in method, enable **Google** and set a support email.
 - [ ] Under Authentication › Settings › Authorized domains, confirm that `<project>.web.app` and `<project>.firebaseapp.com` are listed, plus any custom domain.
-- [ ] In `config.js`, set `enableGoogle: true`.
-- [ ] In `config.js`, set `firebase.authDomain` to `<project>.web.app` (your hosting domain). This avoids third-party-storage failures for Google sign-in on iOS Safari and installed PWAs.
+- [ ] In `.env.local`, set `VITE_ENABLE_GOOGLE=true`.
+- [ ] In `.env.local`, set `VITE_FIREBASE_AUTH_DOMAIN` to `<project>.web.app` (your hosting domain). This avoids third-party-storage failures for Google sign-in on iOS Safari and installed PWAs.
 - [ ] Redeploy with `firebase deploy --only hosting`.
 
 Until that's done, the Google button shows a reminder instead of signing in.
@@ -91,36 +105,32 @@ users/{uid}/meta/settings     { seeded, schema: 2, backlogCap }
 
 The rules in `firestore.rules` restrict each user to their own `users/{uid}` tree. Logs are bucketed one doc per month, so an app open costs about (categories + months + 1) reads. A user with a year of history is around 17 reads per open, compared with about 1,500 under the old one-doc-per-log layout. Old data migrates automatically on first load (schema 1 to 2). Firestore offline persistence is enabled, so logging works without signal and syncs later.
 
-## React migration
+## Offline and updates
 
-The new app lives in `src/` and is built with Vite. Until it reaches parity, Firebase Hosting still serves `legacy/` (see `firebase.json`).
+`vite-plugin-pwa` generates the service worker. It precaches the app shell (`index.html`, the hashed JS and CSS, and the icons), so the app opens without a connection. Google Fonts and the Firebase SDK are cached the first time they load. Firestore and Auth requests are never intercepted; Firestore's own offline cache handles data. A new deploy activates on the next app load.
 
-```bash
-npm install
-npm run dev        # dev server
-npm test           # Vitest: backlog engine, moments, insights, practice edits, Firestore store
-npm run build      # type-check + production build into dist/
+## Code layout
+
 ```
-
-Configuration moves from `config.js` to Vite env vars: copy `.env.example` to `.env.local`.
-
-| Step | Status |
-|---|---|
-| 1. Vite + React + TypeScript scaffold | Done |
-| 2. Logic with no UI: `src/lib/` (dates, backlog engine, moments, sample data) | Done, with tests |
-| 3. Storage adapters: `src/store/` (localStorage, Firestore from npm) | Done, with tests |
-| 4. App state, hooks and screens as components (`src/state/`, `src/screens/`, `src/sheets/`, `src/timer/`) | Done: matches legacy, checked in a browser |
-| 5. PWA via `vite-plugin-pwa`, hosting switched to `dist/`, `legacy/` removed | Next |
+src/lib/       pure logic: dates, backlog engine, moments, insights, practice edits, timer state
+src/store/     persistence: localStorage (test mode) and Firestore adapters behind one interface
+src/state/     React state: session, data and actions (app.tsx), focus timer (timer.tsx), theme
+src/screens/   Login, Today, Insights, History, Setup
+src/sheets/    log minutes, add or edit a practice
+src/timer/     focus view and mini-player
+src/auth.ts    sign-in for both modes; the Firebase SDK loads only in firebase mode
+tests/         Vitest unit tests
+```
 
 ## Notes
 
-- `config.js` values are not secrets. Firebase web config only identifies the project, and security is enforced by the rules and Auth.
+- `VITE_FIREBASE_*` values are not secrets. Firebase web config only identifies the project, and security is enforced by the rules and Auth.
 - Test-mode credentials are a UI gate only. Don't put real data in test mode on a shared device.
 - Dates use the phone's local time zone.
 
 ## Public (B2C) launch checklist
 
-- [ ] `config.js`: `mode: 'firebase'`, `showDevHint: false`, and set `legal` links to real Terms and Privacy pages.
+- [ ] `.env.local`: `VITE_BACKEND=firebase`, and set `VITE_TERMS_URL` and `VITE_PRIVACY_URL` to real Terms and Privacy pages.
 - [ ] In Authentication, enable Email/Password (self sign-up is built in) and Google. Customise the password-reset email template.
 - [ ] Turn on **App Check** (reCAPTCHA Enterprise) so only your app can call Firestore.
 - [ ] Set budget alerts on the billing account before moving to Blaze. Alerts notify you; they do not cap spend.

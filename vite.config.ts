@@ -1,7 +1,51 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      // A new deploy activates on the next load, without asking.
+      registerType: 'autoUpdate',
+      includeManifestIcons: false, // the precache glob below already covers icons/
+      manifest: {
+        name: 'TikTym',
+        short_name: 'TikTym',
+        description: 'One minute, one point. Track daily practices and clear your backlog.',
+        start_url: '/',
+        scope: '/',
+        display: 'standalone',
+        background_color: '#EDF0EA',
+        theme_color: '#EDF0EA',
+        icons: [
+          { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+          { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        ],
+      },
+      workbox: {
+        // The app shell (hashed JS/CSS + index.html) is precached, so the app opens offline.
+        // Firebase chunks are only fetched in firebase mode; cache them when used rather than up front.
+        globPatterns: ['**/*.{js,css,html,svg,png}'],
+        globIgnores: ['**/index.esm-*.js', '**/firebase*.js'],
+        navigateFallback: 'index.html',
+        cleanupOutdatedCaches: true,
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.origin === self.location.origin && /\/assets\/(index\.esm|firebase).*\.js$/.test(url.pathname),
+            handler: 'CacheFirst', // hashed filenames never change
+            options: { cacheName: 'firebase-sdk', expiration: { maxEntries: 10 } },
+          },
+          {
+            urlPattern: ({ url }) => url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com',
+            handler: 'CacheFirst',
+            options: { cacheName: 'google-fonts', expiration: { maxEntries: 20, maxAgeSeconds: 365 * 24 * 3600 }, cacheableResponse: { statuses: [0, 200] } },
+          },
+          // Firestore and Auth traffic is never matched, so it always goes to the network (Firestore has its own offline cache).
+        ],
+      },
+    }),
+  ],
   test: { include: ['tests/**/*.test.ts'] },
 });

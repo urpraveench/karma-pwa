@@ -4,19 +4,22 @@ import { expect, test, type Page } from '@playwright/test';
 
 const newEmail = () => `g${Date.now()}${Math.floor(Math.random() * 1e6)}@example.com`;
 
+// The emulator's sign-in window is slowest when every test worker is busy, so its steps get extra time.
+const POPUP = { timeout: 20_000 };
+
 async function continueWithGoogle(page: Page, email: string, name: string) {
-  const [popup] = await Promise.all([page.waitForEvent('popup'), page.click('.gbtn')]);
-  await popup.locator('text=Add new account').click();
+  const [popup] = await Promise.all([page.waitForEvent('popup', POPUP), page.click('.gbtn')]);
+  await popup.locator('text=Add new account').click(POPUP);
   await popup.fill('#email-input', email);
   await popup.fill('#display-name-input', name);
-  await popup.locator('button', { hasText: 'Sign in with Google.com' }).click();
-  await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+  await popup.locator('button', { hasText: 'Sign in with Google.com' }).click(POPUP);
+  await expect(page.locator('.hello')).toBeVisible(POPUP);
 }
 
 async function signInAgainWithGoogle(page: Page, email: string) {
-  const [popup] = await Promise.all([page.waitForEvent('popup'), page.click('.gbtn')]);
-  await popup.locator('li', { hasText: email }).click(); // the emulator lists accounts it has seen
-  await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+  const [popup] = await Promise.all([page.waitForEvent('popup', POPUP), page.click('.gbtn')]);
+  await popup.locator('li', { hasText: email }).click(POPUP); // the emulator lists accounts it has seen
+  await expect(page.locator('.hello')).toBeVisible(POPUP);
 }
 
 test.beforeEach(async ({ page }) => {

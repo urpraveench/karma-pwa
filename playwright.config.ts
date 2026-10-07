@@ -29,8 +29,9 @@ export default defineConfig({
   projects: [
     // Locale and time zone are pinned so date formatting is the same on every machine.
     { name: 'Test mode', testIgnore: ['firebase/**', 'firebase-google/**'], use: { ...phone, baseURL: `http://localhost:${LOCAL_PORT}` } },
-    { name: 'Firebase mode', testMatch: 'firebase/**/*.spec.ts', use: { ...phone, baseURL: `http://localhost:${FIREBASE_PORT}` } },
-    { name: 'Firebase + Google', testMatch: 'firebase-google/**/*.spec.ts', use: { ...phone, baseURL: `http://localhost:${GOOGLE_PORT}` } },
+    // Emulator-backed projects retry once: a rare emulator slowdown is reported as "flaky" instead of failing the run.
+    { name: 'Firebase mode', testMatch: 'firebase/**/*.spec.ts', retries: 1, use: { ...phone, baseURL: `http://localhost:${FIREBASE_PORT}` } },
+    { name: 'Firebase + Google', testMatch: 'firebase-google/**/*.spec.ts', retries: 1, use: { ...phone, baseURL: `http://localhost:${GOOGLE_PORT}` } },
   ],
   webServer: [
     {

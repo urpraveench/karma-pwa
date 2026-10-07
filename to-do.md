@@ -15,7 +15,7 @@ The app is live at https://tiktym.web.app (project `tiktym`, Firestore in `asia-
 
 These can't be automated, or need the real project and a real phone. IDs refer to [FEATURES.md](FEATURES.md).
 
-- [ ] Install on iPhone (APP-03) and Android (APP-04); the app opens full screen as "TikTym"
+- [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Content clears the notch and home indicator (APP-18)
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] The goal chime plays (TIMER-05)
@@ -70,6 +70,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Installs on iPhone 14 Plus and opens full screen as "TikTym" (APP-03), 8 October 2026
 - [x] Screen stays on during a focus timer, checked on a phone (TIMER-07), 8 October 2026
 - [x] Installed on a phone as an app and signed in, 8 October 2026
 - [x] First real account created and signed in on https://tiktym.web.app, 8 October 2026

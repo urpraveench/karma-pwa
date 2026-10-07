@@ -30,11 +30,12 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 
 No separate API key is needed; Firebase handles OAuth for web apps. Until this is done, the Google button shows a "not set up yet" message.
 
+- [ ] **Claude:** test Google sign-in end to end against the Auth emulator's pretend Google accounts: new account gets the default practices and is greeted by first name (AUTH-19, AUTH-25).
+- [ ] **Claude:** show a clear message when someone uses Google with an email that already has a password account, instead of a raw error code (AUTH-24).
 - [ ] **You:** in Authentication › Sign-in method, enable **Google** and set a support email.
-- [ ] **You:** under Authentication › Settings › Authorized domains, confirm `tiktym.web.app` and `tiktym.firebaseapp.com` are listed, plus any custom domain.
-- [ ] **You:** in `.env.local`, set `VITE_ENABLE_GOOGLE=true`. Keep `VITE_FIREBASE_AUTH_DOMAIN` as `tiktym.web.app`; this avoids Google sign-in failures on iOS Safari and installed apps.
-- [ ] **Claude:** redeploy with `firebase deploy --only hosting`.
-- [ ] **You:** test Google sign-in on iPhone and Android (AUTH-19).
+- [ ] **You:** under Authentication › Settings › Authorized domains, confirm `tiktym.web.app` and `tiktym.firebaseapp.com` are listed.
+- [ ] **Claude:** set `VITE_ENABLE_GOOGLE=true` in `.env.local` (keeping `VITE_FIREBASE_AUTH_DOMAIN=tiktym.web.app`, which avoids sign-in failures in iOS Safari and installed apps) and redeploy.
+- [ ] **You:** test Google sign-in on your iPhone, in Safari and in the installed app (AUTH-19).
 
 ## 4. Public launch
 

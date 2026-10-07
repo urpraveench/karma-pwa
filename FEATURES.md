@@ -22,7 +22,7 @@ Summary of coverage at the time of writing:
 
 | Area | Scenarios | Tested | Gap | Manual |
 |---|---|---|---|---|
-| 1. Accounts and sign-in | 22 | 19 | 0 | 3 |
+| 1. Accounts and sign-in | 24 | 19 | 3 | 2 |
 | 2. First run | 4 | 2 | 0 | 2 |
 | 3. Backlog rules | 13 | 13 | 0 | 0 |
 | 4. Today screen | 16 | 16 | 0 | 0 |
@@ -35,7 +35,7 @@ Summary of coverage at the time of writing:
 | 11. Settings and data (Setup) | 18 | 16 | 1 | 1 |
 | 12. Sync and storage | 14 | 12 | 1 | 1 |
 | 13. App shell, PWA and platform | 19 | 11 | 3 | 5 |
-| **Total** | **212** | **192** | **5** | **15** |
+| **Total** | **214** | **192** | **8** | **14** |
 
 ---
 
@@ -69,11 +69,13 @@ The app has two modes, set by `VITE_BACKEND`. **Test mode** (`local`) keeps data
 | AUTH-16 | Invalid email, too many attempts, or no connection | Matching friendly message; anything unknown shows "Something went wrong: <code>" | E2E `firebase/account.spec.ts` (invalid email; too-many-attempts and no-connection are Manual) |
 | AUTH-17 | Forgot password with no email entered | "Enter your email above, then tap Forgot password again." | E2E `firebase/account.spec.ts` |
 | AUTH-18 | Forgot password with an email | Toast: a reset link is on its way (shown whether or not the account exists) | E2E `firebase/account.spec.ts` |
-| AUTH-19 | Google sign-in when enabled | Popup sign-in; falls back to a redirect if the popup is blocked | Manual |
+| AUTH-19 | Google sign-in when enabled | Popup sign-in; falls back to a redirect if the popup is blocked; opens Today | Gap (emulator); Manual on a real phone |
 | AUTH-20 | Google sign-in when `VITE_ENABLE_GOOGLE` is off | Toast explaining it isn't set up | E2E `firebase/account.spec.ts` |
 | AUTH-21 | Legal links configured | Terms and Privacy links show below the form | Manual |
 | AUTH-22 | Firebase SDK fails to load | Login screen with "Could not load Firebase. Check your connection and .env.local." | Manual |
 | AUTH-23 | Sign out | Returns to login | E2E `firebase/account.spec.ts` |
+| AUTH-24 | Google with an email that already has a password account | "That email already has an account. Sign in with your password." instead of a raw error code | Gap |
+| AUTH-25 | First Google sign-in | Creates the account, seeds the default practices, greets by the Google first name | Gap |
 
 ## 2. First run
 

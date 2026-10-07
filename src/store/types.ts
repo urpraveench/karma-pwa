@@ -1,0 +1,17 @@
+import type { AppData, Category, Log, Settings } from '../lib/types';
+
+/** Persistence for one signed-in user. Both adapters hold the same data; only the backing store differs. */
+export interface Store {
+  kind: 'local' | 'firebase';
+  loadAll(): Promise<AppData>;
+  putCategory(c: Category): Promise<void>;
+  /** Removes the category and every log that belongs to it. */
+  deleteCategory(id: string): Promise<void>;
+  addLog(l: Log): Promise<void>;
+  deleteLog(l: Pick<Log, 'id' | 'date'>): Promise<void>;
+  putSettings(s: Settings): Promise<void>;
+  /** Wipes everything and writes `d` in its place. */
+  replaceAll(d: AppData): Promise<void>;
+  /** Firebase only: removes all data, then the auth user. */
+  deleteAccount?(): Promise<void>;
+}

@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "public",
+    "public": "legacy",
     "ignore": ["firebase.json", "**/.*"],
     "headers": [
       { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },

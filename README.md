@@ -1,6 +1,8 @@
 # TikTym
 
-A progressive web app (PWA) for tracking daily practice minutes as points (1 minute = 1 point), with carry-forward backlog per practice. It is plain HTML/JS with no build step, hosted on Firebase Hosting with Firestore, and stays within the Spark (free) plan.
+A progressive web app (PWA) for tracking daily practice minutes as points (1 minute = 1 point), with carry-forward backlog per practice. It is hosted on Firebase Hosting with Firestore and stays within the Spark (free) plan.
+
+> **Migration in progress.** The app is moving from a single HTML file (`legacy/`, still what gets deployed) to React + TypeScript + Vite (`src/`). See [React migration](#react-migration) below.
 
 ## How the backlog works
 
@@ -25,7 +27,7 @@ Example: the target is 100. On day 1 you log 40, so 60 carries over. On day 2 yo
 `config.js` ships with `mode: 'local'`. Sign in with `demo@tiktym.local` / `tiktym123`. Data is stored in the browser's localStorage.
 
 ```bash
-cd public && npx serve .      # or: python3 -m http.server 8080
+cd legacy && npx serve .      # or: python3 -m http.server 8080
 ```
 
 Setup › **Load sample data** generates 3 weeks of history so you can see the backlog and insights in action.
@@ -35,7 +37,7 @@ Setup › **Load sample data** generates 3 weeks of history so you can see the b
 1. Create a project in the Firebase Console. Add a **Web app** and copy its config.
 2. Go to **Build › Firestore Database** and create a database in production mode. Pick a region close to you, such as `asia-south1`.
 3. Go to **Build › Authentication › Sign-in method** and enable **Email/Password**. Under **Users**, add your temporary account.
-4. Edit `public/config.js`: set `mode: 'firebase'`, paste the `firebase` block, and set `showDevHint: false`.
+4. Edit `legacy/config.js`: set `mode: 'firebase'`, paste the `firebase` block, and set `showDevHint: false`.
 5. Put your project ID in `.firebaserc`.
 6. Deploy:
    ```bash
@@ -88,6 +90,27 @@ users/{uid}/meta/settings     { seeded, schema: 2, backlogCap }
 ```
 
 The rules in `firestore.rules` restrict each user to their own `users/{uid}` tree. Logs are bucketed one doc per month, so an app open costs about (categories + months + 1) reads. A user with a year of history is around 17 reads per open, compared with about 1,500 under the old one-doc-per-log layout. Old data migrates automatically on first load (schema 1 to 2). Firestore offline persistence is enabled, so logging works without signal and syncs later.
+
+## React migration
+
+The new app lives in `src/` and is built with Vite. Until it reaches parity, Firebase Hosting still serves `legacy/` (see `firebase.json`).
+
+```bash
+npm install
+npm run dev        # dev server
+npm test           # Vitest: backlog engine, moments, Firestore store
+npm run build      # type-check + production build into dist/
+```
+
+Configuration moves from `config.js` to Vite env vars: copy `.env.example` to `.env.local`.
+
+| Step | Status |
+|---|---|
+| 1. Vite + React + TypeScript scaffold | Done |
+| 2. Logic with no UI: `src/lib/` (dates, backlog engine, moments, sample data) | Done, with tests |
+| 3. Storage adapters: `src/store/` (localStorage, Firestore from npm) | Done, with tests |
+| 4. App state, hooks and screens as components | Next |
+| 5. PWA via `vite-plugin-pwa`, hosting switched to `dist/`, `legacy/` removed | To do |
 
 ## Notes
 

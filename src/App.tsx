@@ -1,12 +1,25 @@
-import { config } from './config';
+import { Shell } from './Shell';
+import { Login } from './screens/Login';
+import { AppProvider, useApp } from './state/app';
+import { TimerProvider } from './state/timer';
+import { FeedbackProvider } from './ui/feedback';
 
-// Placeholder until the screens are ported (migration step 4). The production app is still legacy/index.html.
+function Root() {
+  const { phase } = useApp();
+  switch (phase.kind) {
+    case 'boot': return null;
+    case 'login': return <Login key={phase.error ?? ''} error={phase.error} />;
+    case 'loading': return <div className="login"><p className="lead">Loading TikTym…</p></div>;
+    case 'ready': return <TimerProvider><Shell /></TimerProvider>;
+  }
+}
+
 export function App() {
   return (
-    <main className="login">
-      <h1>TikTym</h1>
-      <p className="lead">React version in progress. The logic and storage layers are ported; screens come next.</p>
-      <p className="devhint">Backend: <b>{config.backend}</b></p>
-    </main>
+    <FeedbackProvider>
+      <AppProvider>
+        <Root />
+      </AppProvider>
+    </FeedbackProvider>
   );
 }

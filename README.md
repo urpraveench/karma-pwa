@@ -98,7 +98,7 @@ The new app lives in `src/` and is built with Vite. Until it reaches parity, Fir
 ```bash
 npm install
 npm run dev        # dev server
-npm test           # Vitest: backlog engine, moments, Firestore store
+npm test           # Vitest: backlog engine, moments, insights, practice edits, Firestore store
 npm run build      # type-check + production build into dist/
 ```
 
@@ -109,8 +109,8 @@ Configuration moves from `config.js` to Vite env vars: copy `.env.example` to `.
 | 1. Vite + React + TypeScript scaffold | Done |
 | 2. Logic with no UI: `src/lib/` (dates, backlog engine, moments, sample data) | Done, with tests |
 | 3. Storage adapters: `src/store/` (localStorage, Firestore from npm) | Done, with tests |
-| 4. App state, hooks and screens as components | Next |
-| 5. PWA via `vite-plugin-pwa`, hosting switched to `dist/`, `legacy/` removed | To do |
+| 4. App state, hooks and screens as components (`src/state/`, `src/screens/`, `src/sheets/`, `src/timer/`) | Done: matches legacy, checked in a browser |
+| 5. PWA via `vite-plugin-pwa`, hosting switched to `dist/`, `legacy/` removed | Next |
 
 ## Notes
 

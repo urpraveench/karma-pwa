@@ -11,9 +11,4 @@ export const fmtShort = (s: DateStr) => parse(s).toLocaleDateString(undefined, {
 export const monthName = (d: DateStr) => parse(d).toLocaleDateString(undefined, { month: 'long' });
 export const hourLabel = (h: number) => new Date(2000, 0, 1, h).toLocaleTimeString(undefined, { hour: 'numeric' });
 
-/** The last `n` days ending at `end`, oldest first. */
-export function lastN(n: number, end: DateStr = today()): DateStr[] {
-  const out: DateStr[] = [];
-  for (let i = n - 1; i >= 0; i--) out.push(addDays(end, -i));
-  return out;
-}
+export const dayLabel = (d: DateStr, T: DateStr = today()) => d === T ? 'today' : d === addDays(T, -1) ? 'yesterday' : fmtShort(d);

@@ -8,7 +8,7 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 ## 1. Go live on Firebase
 
-Nothing has run against a real Firebase project yet. The code is tested against the local emulators, so this is setup, not development.
+The app is live at https://tiktym.web.app (project `tiktym`, Firestore in `asia-south1`). Two steps are left before you can use it.
 
 - [ ] **You:** turn on **Email/Password** under Authentication › Sign-in method.
 - [ ] **You:** install it on your phone (iPhone: Share › Add to Home Screen; Android: Install app) and sign up.

@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const LOCAL_PORT = 4173, FIREBASE_PORT = 4175;
+const LOCAL_PORT = 4173, FIREBASE_PORT = 4175, GOOGLE_PORT = 4176;
 // firebase-tools needs Java 21+. Homebrew's keg-only openjdk@21 is used when present; otherwise `java` on PATH.
 const JAVA21 = 'PATH=/opt/homebrew/opt/openjdk@21/bin:$PATH';
 const phone = { ...devices['Pixel 7'], channel: 'chrome', locale: 'en-GB', timezoneId: 'Asia/Kolkata' };
@@ -9,6 +9,7 @@ const phone = { ...devices['Pixel 7'], channel: 'chrome', locale: 'en-GB', timez
 // with the deployable dist/:
 //   test mode     (localStorage, demo login)            -> dist-e2e,          port 4173
 //   firebase mode (local Auth + Firestore emulators)    -> dist-e2e-firebase, port 4175
+//   firebase mode with Google sign-in switched on        -> dist-e2e-google,   port 4176
 export default defineConfig({
   testDir: 'e2e',
   fullyParallel: true,
@@ -27,8 +28,9 @@ export default defineConfig({
   },
   projects: [
     // Locale and time zone are pinned so date formatting is the same on every machine.
-    { name: 'Test mode', testIgnore: 'firebase/**', use: { ...phone, baseURL: `http://localhost:${LOCAL_PORT}` } },
+    { name: 'Test mode', testIgnore: ['firebase/**', 'firebase-google/**'], use: { ...phone, baseURL: `http://localhost:${LOCAL_PORT}` } },
     { name: 'Firebase mode', testMatch: 'firebase/**/*.spec.ts', use: { ...phone, baseURL: `http://localhost:${FIREBASE_PORT}` } },
+    { name: 'Firebase + Google', testMatch: 'firebase-google/**/*.spec.ts', use: { ...phone, baseURL: `http://localhost:${GOOGLE_PORT}` } },
   ],
   webServer: [
     {
@@ -45,6 +47,16 @@ export default defineConfig({
       timeout: 180_000,
       // Ctrl+C-style stop, so the CLI shuts down its Firestore java process instead of orphaning it on the port
       gracefulShutdown: { signal: 'SIGINT', timeout: 15_000 },
+    },
+    {
+      command: `npx vite build --outDir dist-e2e-google --emptyOutDir && npx vite preview --outDir dist-e2e-google --port ${GOOGLE_PORT} --strictPort`,
+      url: `http://localhost:${GOOGLE_PORT}`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      env: {
+        VITE_BACKEND: 'firebase', VITE_USE_EMULATORS: 'true', VITE_ENABLE_GOOGLE: 'true',
+        VITE_FIREBASE_API_KEY: 'fake-api-key', VITE_FIREBASE_PROJECT_ID: 'demo-tiktym', VITE_FIREBASE_AUTH_DOMAIN: 'localhost',
+      },
     },
     {
       command: `npx vite build --outDir dist-e2e-firebase --emptyOutDir && npx vite preview --outDir dist-e2e-firebase --port ${FIREBASE_PORT} --strictPort`,

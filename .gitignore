@@ -10,3 +10,4 @@ test-results
 dist-e2e-firebase
 firebase-debug.log
 firestore-debug.log
+dist-e2e-google

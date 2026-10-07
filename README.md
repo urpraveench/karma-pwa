@@ -50,6 +50,7 @@ The browser tests run two production builds as a phone (Pixel 7, `en-GB`, a fixe
 
 - **Test mode** (`dist-e2e/`): sign-in, Today, logging, the focus timer, History, Setup, Insights, offline use, and accessibility basics. Any console error or warning fails the test.
 - **Firebase mode** (`dist-e2e-firebase/`, files in `e2e/firebase/`): sign-up, sign-in errors, password reset, sync between two devices, offline logging, and delete account, against the local Auth and Firestore emulators.
+- **Firebase mode with Google on** (`dist-e2e-google/`, files in `e2e/firebase-google/`): Google sign-in, using the Auth emulator's pretend Google accounts.
 
 Requirements: Google Chrome, and Java 21 or newer for the Firebase emulators. On a Mac, `brew install openjdk@21`; the scripts pick it up from Homebrew automatically. The emulators run under a `demo-tiktym` project, so they never touch your real Firebase project and need no login. Reports are written to `reports/`; stop a report server with Ctrl+C.
 

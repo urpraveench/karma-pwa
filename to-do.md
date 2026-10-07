@@ -30,7 +30,6 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 
 No separate API key is needed; Firebase handles OAuth for web apps. Until this is done, the Google button shows a "not set up yet" message.
 
-- [ ] **Claude:** test Google sign-in end to end against the Auth emulator's pretend Google accounts: new account gets the default practices and is greeted by first name (AUTH-19, AUTH-25).
 - [ ] **Claude:** show a clear message when someone uses Google with an email that already has a password account, instead of a raw error code (AUTH-24).
 - [ ] **You:** in Authentication › Sign-in method, enable **Google** and set a support email.
 - [ ] **You:** under Authentication › Settings › Authorized domains, confirm `tiktym.web.app` and `tiktym.firebaseapp.com` are listed.
@@ -69,6 +68,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Google sign-in tested end to end against the Auth emulator: first sign-in, defaults, greeting, same data on a second device (AUTH-19, AUTH-25), 8 October 2026
 - [x] Timer catches up at once after time away, on iPhone 14 Plus (TIMER-22), 8 October 2026
 - [x] Content clears the notch and home indicator on iPhone 14 Plus (APP-18), 8 October 2026
 - [x] Installs on iPhone 14 Plus and opens full screen as "TikTym" (APP-03), 8 October 2026

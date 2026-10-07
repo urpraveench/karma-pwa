@@ -43,3 +43,19 @@ test('signing in with Google again returns to the same data (AUTH-19)', async ({
   await signInAgainWithGoogle(phone2, email);
   await expect(phone2.locator('.cat').nth(1).locator('.cat-meta')).toHaveText('Done, 30 logged');
 });
+
+test('Google with an email that already has a password account opens that account (AUTH-24)', async ({ page, browser }) => {
+  const email = newEmail();
+  await page.locator('.link', { hasText: 'Create an account' }).click();
+  await page.fill('#em', email);
+  await page.fill('#pw', 'secret123');
+  await page.click('button[type=submit]');
+  await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+  await page.locator('.cat').nth(0).locator('.qbtn').click();
+  await expect(page.locator('.toast span')).toHaveText('Exercise done for today');
+
+  const phone2 = await (await browser.newContext({ ...test.info().project.use })).newPage();
+  await phone2.goto('/');
+  await continueWithGoogle(phone2, email, 'Same Person');
+  await expect(phone2.locator('.cat').nth(0).locator('.cat-meta')).toHaveText('Done, 30 logged');
+});

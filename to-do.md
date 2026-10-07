@@ -18,7 +18,6 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] The goal chime plays (TIMER-05)
-- [ ] Coming back to the app after time away catches the timer up at once (TIMER-22)
 - [ ] A new deploy reaches the installed app on its next open (APP-07)
 - [ ] The loading screen shows briefly on a slow connection (FIRST-03)
 - [ ] A Firestore failure on load returns to sign-in with a clear message (FIRST-04)
@@ -69,6 +68,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Timer catches up at once after time away, on iPhone 14 Plus (TIMER-22), 8 October 2026
 - [x] Content clears the notch and home indicator on iPhone 14 Plus (APP-18), 8 October 2026
 - [x] Installs on iPhone 14 Plus and opens full screen as "TikTym" (APP-03), 8 October 2026
 - [x] Screen stays on during a focus timer, checked on a phone (TIMER-07), 8 October 2026

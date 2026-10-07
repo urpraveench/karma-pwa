@@ -72,6 +72,15 @@ describe('calc', () => {
     expect(c.totals).toMatchObject({ owed: 100, done: 100, end: 0 });
   });
 
+  it('backfilling a past day recalculates every day after it', () => {
+    const before = calc(data([cat()], [log('2026-10-02', 100), log('2026-10-03', 100)]), '2026-10-03').per.c;
+    expect(before.byDate.get('2026-10-01')!.end).toBe(100);
+    expect(before.today.end).toBe(100); // 1 Oct's miss is still carried
+    const after = calc(data([cat()], [log('2026-10-02', 100), log('2026-10-03', 100), log('2026-10-01', 100)]), '2026-10-03').per.c;
+    expect(after.byDate.get('2026-10-02')!.opening).toBe(0);
+    expect(after.today.end).toBe(0);
+  });
+
   it('totals carried minutes still to work off today', () => {
     const c = calc(data([cat()], [log('2026-10-01', 40), log('2026-10-02', 30)]), '2026-10-02');
     expect(c.totals.carryLeft).toBe(30); // 60 carried in, 30 logged against it

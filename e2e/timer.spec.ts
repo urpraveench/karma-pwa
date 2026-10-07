@@ -1,5 +1,4 @@
-import { expect, test } from '@playwright/test';
-import { signIn, toast } from './helpers';
+import { expect, test, onDialog, signIn, tab, toast } from './helpers';
 
 test.describe('Focus timer', () => {
   test.beforeEach(async ({ page }) => {
@@ -27,6 +26,7 @@ test.describe('Focus timer', () => {
     await page.click('.f-min');
     await expect(page.locator('.mini')).toBeVisible();
     await expect(page.locator('.tbtn.live')).toHaveText('12′');
+    await expect(page.locator('.mala circle.bd.live')).toHaveCount(13); // 12 of 100 owed → 13 of 108 beads pulse (TIMER-09)
     await page.click('.mini-open');
     await expect(page.locator('.focus')).toBeVisible();
   });
@@ -63,5 +63,69 @@ test.describe('Focus timer', () => {
     await page.clock.fastForward('03:00');
     await page.reload();
     await expect(page.locator('.mini')).toBeVisible();
+  });
+});
+
+test.describe('Focus timer edge cases', () => {
+  test.beforeEach(async ({ page }) => { await signIn(page); });
+
+  test('starting another practice stops and logs the first (TIMER-16)', async ({ page }) => {
+    await page.locator('.cat').nth(1).locator('.tbtn').click();
+    await page.clock.fastForward('05:00');
+    await page.click('.f-min');
+    await page.locator('.cat').nth(0).locator('.tbtn').click();
+    await expect(page.locator('.focus .f-name')).toHaveText('Exercise');
+    await expect(toast(page)).toHaveText('+5 Reading');
+  });
+
+  test('declining to switch keeps the running timer (TIMER-16)', async ({ page }) => {
+    await page.locator('.cat').nth(1).locator('.tbtn').click();
+    await page.click('.f-min');
+    onDialog(page, 'dismiss');
+    await page.locator('.cat').nth(0).locator('.tbtn').click();
+    await expect(page.locator('.focus')).toHaveCount(0);
+    await expect(page.locator('.mini small')).toHaveText('Reading');
+  });
+
+  test('stopping after 4+ hours asks first; declining opens Other instead (TIMER-14)', async ({ page }) => {
+    await page.locator('.cat').nth(1).locator('.tbtn').click();
+    await page.clock.fastForward('04:01:00');
+    onDialog(page, 'dismiss');
+    await page.click('.f-stop');
+    await expect(page.locator('.focus')).toHaveCount(0);
+    await expect(page.locator('.sheet .custom')).toBeVisible();
+    await expect(page.locator('.mini')).toHaveCount(0);
+  });
+
+  test('stopping after 4+ hours logs everything when confirmed (TIMER-14)', async ({ page }) => {
+    await page.locator('.cat').nth(1).locator('.tbtn').click();
+    await page.clock.fastForward('04:01:00');
+    await page.click('.f-stop');
+    await expect(toast(page)).toHaveText('Reading done for today');
+  });
+
+  test('deleting the practice clears its timer (TIMER-19)', async ({ page }) => {
+    await page.locator('.cat').nth(1).locator('.tbtn').click();
+    await page.click('.f-min');
+    await tab(page, 'Setup').click();
+    await page.locator('.li', { hasText: 'Reading' }).click();
+    await page.locator('.sheet .btn-danger').click();
+    await expect(page.locator('.mini')).toHaveCount(0);
+    await expect(page).toHaveTitle('TikTym');
+  });
+
+  test('Escape closes the focus view; the timer keeps running (TIMER-20, APP-12)', async ({ page }) => {
+    await page.locator('.cat').nth(1).locator('.tbtn').click();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('.focus')).toHaveCount(0);
+    await expect(page.locator('.mini')).toBeVisible();
+  });
+
+  test('beads fill as time passes and turn gold at the target (TIMER-03, TIMER-05)', async ({ page }) => {
+    await page.locator('.cat').nth(3).locator('.tbtn').click(); // Meditation: 10 beads
+    await page.clock.fastForward('05:00');
+    await expect(page.locator('.f-ring svg > circle[fill="var(--c)"]')).toHaveCount(5);
+    await page.clock.fastForward('05:00');
+    await expect(page.locator('.f-ring svg > circle[fill="var(--gold)"]')).toHaveCount(10);
   });
 });

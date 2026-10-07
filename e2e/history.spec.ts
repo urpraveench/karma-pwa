@@ -1,5 +1,4 @@
-import { expect, test } from '@playwright/test';
-import { signIn, tab, toast } from './helpers';
+import { expect, test, seedData, signIn, signInWith, tab, toast } from './helpers';
 
 test.describe('History', () => {
   test.beforeEach(async ({ page }) => { await signIn(page); });
@@ -31,4 +30,18 @@ test.describe('History', () => {
     await page.click('.tundo');
     await expect(page.locator('.log')).toHaveCount(1);
   });
+});
+
+test('lists the 60 most recent days with entries (HIST-06)', async ({ page }) => {
+  await signIn(page);
+  await tab(page, 'Setup').click();
+  await page.locator('.li', { hasText: 'Load sample data' }).click();
+  await tab(page, 'History').click();
+  await expect(page.locator('.day-h')).toHaveCount(60);
+});
+
+test('an entry whose practice is gone shows as "Deleted practice" (HIST-05)', async ({ page }) => {
+  await signInWith(page, seedData([{ id: 'r', name: 'Reading' }], [['gone', '2026-10-06', 15]]));
+  await tab(page, 'History').click();
+  await expect(page.locator('.log .n')).toHaveText('Deleted practice');
 });

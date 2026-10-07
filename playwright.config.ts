@@ -1,9 +1,14 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 4173;
+const LOCAL_PORT = 4173, FIREBASE_PORT = 4175;
+// firebase-tools needs Java 21+. Homebrew's keg-only openjdk@21 is used when present; otherwise `java` on PATH.
+const JAVA21 = 'PATH=/opt/homebrew/opt/openjdk@21/bin:$PATH';
+const phone = { ...devices['Pixel 7'], channel: 'chrome', locale: 'en-GB', timezoneId: 'Asia/Kolkata' };
 
-// Browser tests run against a production build in test mode (localStorage, demo login),
-// built into its own folder so it can never be confused with the deployable dist/.
+// Browser tests run against production builds, each in its own folder so neither can be confused
+// with the deployable dist/:
+//   test mode     (localStorage, demo login)            -> dist-e2e,          port 4173
+//   firebase mode (local Auth + Firestore emulators)    -> dist-e2e-firebase, port 4175
 export default defineConfig({
   testDir: 'e2e',
   fullyParallel: true,
@@ -15,21 +20,41 @@ export default defineConfig({
   ],
   outputDir: 'reports/e2e-artifacts',
   use: {
-    baseURL: `http://localhost:${PORT}`,
     channel: 'chrome', // the installed Google Chrome; no browser download needed
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     serviceWorkers: 'block', // except in pwa.spec.ts, so cached shells never leak between tests
   },
   projects: [
-    // Pin locale and time zone so date formatting is the same on every machine.
-    { name: 'Mobile Chrome', use: { ...devices['Pixel 7'], channel: 'chrome', locale: 'en-GB', timezoneId: 'Asia/Kolkata' } },
+    // Locale and time zone are pinned so date formatting is the same on every machine.
+    { name: 'Test mode', testIgnore: 'firebase/**', use: { ...phone, baseURL: `http://localhost:${LOCAL_PORT}` } },
+    { name: 'Firebase mode', testMatch: 'firebase/**/*.spec.ts', use: { ...phone, baseURL: `http://localhost:${FIREBASE_PORT}` } },
   ],
-  webServer: {
-    command: `npx vite build --outDir dist-e2e --emptyOutDir && npx vite preview --outDir dist-e2e --port ${PORT} --strictPort`,
-    url: `http://localhost:${PORT}`,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-    env: { VITE_BACKEND: 'local', VITE_SHOW_DEV_HINT: 'true' },
-  },
+  webServer: [
+    {
+      command: `npx vite build --outDir dist-e2e --emptyOutDir && npx vite preview --outDir dist-e2e --port ${LOCAL_PORT} --strictPort`,
+      url: `http://localhost:${LOCAL_PORT}`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      env: { VITE_BACKEND: 'local', VITE_SHOW_DEV_HINT: 'true' },
+    },
+    {
+      command: `${JAVA21} firebase emulators:start --only auth,firestore --project demo-tiktym`,
+      url: 'http://127.0.0.1:9099', // Auth lives in the CLI process, so a leftover Firestore java process can't fake readiness
+      reuseExistingServer: !process.env.CI,
+      timeout: 180_000,
+      // Ctrl+C-style stop, so the CLI shuts down its Firestore java process instead of orphaning it on the port
+      gracefulShutdown: { signal: 'SIGINT', timeout: 15_000 },
+    },
+    {
+      command: `npx vite build --outDir dist-e2e-firebase --emptyOutDir && npx vite preview --outDir dist-e2e-firebase --port ${FIREBASE_PORT} --strictPort`,
+      url: `http://localhost:${FIREBASE_PORT}`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      env: {
+        VITE_BACKEND: 'firebase', VITE_USE_EMULATORS: 'true', VITE_ENABLE_GOOGLE: 'false',
+        VITE_FIREBASE_API_KEY: 'fake-api-key', VITE_FIREBASE_PROJECT_ID: 'demo-tiktym', VITE_FIREBASE_AUTH_DOMAIN: 'localhost',
+      },
+    },
+  ],
 });

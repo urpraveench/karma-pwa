@@ -7,7 +7,8 @@ export function LocalStore(key: string, onSaveError: () => void = () => {}): Sto
   let db: AppData | null;
   try { db = JSON.parse(localStorage.getItem(K) || 'null'); } catch { db = null; }
   let data: AppData = db || { categories: [], logs: [], settings: {} };
-  const save = () => { try { localStorage.setItem(K, JSON.stringify(data)); } catch { onSaveError(); } };
+  // Report after the caller's own feedback (e.g. the "+30 Reading" toast), which would otherwise replace the warning.
+  const save = () => { try { localStorage.setItem(K, JSON.stringify(data)); } catch { setTimeout(onSaveError, 0); } };
   return {
     kind: 'local',
     async loadAll() { return structuredClone(data); },

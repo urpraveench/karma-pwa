@@ -39,12 +39,19 @@ Every feature and scenario, with the test that covers it, is listed in [FEATURES
 
 | Command | What it does |
 |---|---|
-| `npm test` | Unit tests (Vitest): backlog engine, moments, insights, practice edits, Firestore store |
-| `npm run test:report` | Unit tests, then opens Vitest's HTML report (pass/fail counts, timings per test) |
+| `npm test` | Unit tests (Vitest): backlog engine, moments, coach lines, insights, practice edits, Firestore store (in-memory fake) |
+| `npm run test:emulator` | Starts the Firebase emulators, then runs the security-rules tests and the Firestore store against a real (local) Firestore |
 | `npm run test:e2e` | Browser tests (Playwright) in a visible Chrome window, then opens the HTML report: totals, duration per test, and a screenshot and trace for any failure |
-| `npm run test:e2e:headless` | Browser tests without a window or report server, for CI |
+| `npm run test:e2e:headless` | The same browser tests without a window or report server, for CI |
+| `npm run test:report` | Unit tests, then opens Vitest's HTML report |
+| `npm run test:all` | Unit, emulator and headless browser tests, stopping at the first failing suite |
 
-The browser tests build a test-mode copy of the app into `dist-e2e/` and run it as a phone (Pixel 7, `en-GB`, a fixed clock of Wednesday 7 October 2026), so results don't depend on the machine or the date. They cover sign-in, Today, the log sheet, the focus timer, History, Setup (including export and import), Insights, and offline use through the service worker. They use your installed Google Chrome. Reports are written to `reports/`; stop a report server with Ctrl+C.
+The browser tests run two production builds as a phone (Pixel 7, `en-GB`, a fixed clock of Wednesday 7 October 2026), so results don't depend on the machine or the date:
+
+- **Test mode** (`dist-e2e/`): sign-in, Today, logging, the focus timer, History, Setup, Insights, offline use, and accessibility basics. Any console error or warning fails the test.
+- **Firebase mode** (`dist-e2e-firebase/`, files in `e2e/firebase/`): sign-up, sign-in errors, password reset, sync between two devices, offline logging, and delete account, against the local Auth and Firestore emulators.
+
+Requirements: Google Chrome, and Java 21 or newer for the Firebase emulators. On a Mac, `brew install openjdk@21`; the scripts pick it up from Homebrew automatically. The emulators run under a `demo-tiktym` project, so they never touch your real Firebase project and need no login. Reports are written to `reports/`; stop a report server with Ctrl+C.
 
 ## Configuration
 

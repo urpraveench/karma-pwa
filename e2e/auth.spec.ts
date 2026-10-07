@@ -1,5 +1,4 @@
-import { expect, test } from '@playwright/test';
-import { DEMO, loadSampleData, open, signIn, tab } from './helpers';
+import { expect, test, DEMO, loadSampleData, open, signIn, tab } from './helpers';
 
 test.describe('Sign-in (test mode)', () => {
   test('shows the test login hint', async ({ page }) => {
@@ -25,6 +24,20 @@ test.describe('Sign-in (test mode)', () => {
     await signIn(page);
     await expect(page.locator('.hello')).toHaveText('Good morning, Demo');
     await expect(page.locator('.date')).toHaveText('Wednesday 7 October');
+  });
+
+  test('the demo email is case-insensitive (AUTH-05)', async ({ page }) => {
+    await open(page);
+    await page.fill('#em', 'DEMO@TikTym.local');
+    await page.fill('#pw', DEMO.password);
+    await page.click('button[type=submit]');
+    await expect(page.locator('.hello')).toBeVisible();
+  });
+
+  test('Google explains it is not set up in test mode (AUTH-08)', async ({ page }) => {
+    await open(page);
+    await page.click('.gbtn');
+    await expect(page.locator('.toast span')).toContainText("Google sign-in isn't set up yet");
   });
 
   test('stays signed in after a reload', async ({ page }) => {

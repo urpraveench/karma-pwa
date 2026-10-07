@@ -11,7 +11,9 @@
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test --headed; playwright show-report reports/e2e",
     "test:e2e:headless": "playwright test",
-    "test:report": "REPORT=1 vitest run; vite preview --outDir reports/unit --port 4174 --open"
+    "test:report": "REPORT=1 vitest run; vite preview --outDir reports/unit --port 4174 --open",
+    "test:emulator": "PATH=/opt/homebrew/opt/openjdk@21/bin:$PATH firebase emulators:exec --only auth,firestore --project demo-tiktym 'vitest run --config vitest.emulator.config.ts'",
+    "test:all": "npm test && npm run test:emulator && npm run test:e2e:headless"
   },
   "dependencies": {
     "firebase": "^12.19.0",
@@ -19,6 +21,7 @@
     "react-dom": "^19.3.0"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.2",
     "@playwright/test": "^1.63.0",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

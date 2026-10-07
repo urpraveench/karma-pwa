@@ -10,7 +10,6 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 Nothing has run against a real Firebase project yet. The code is tested against the local emulators, so this is setup, not development.
 
-- [ ] **You:** add a **Web app** to the project and copy its config.
 - [ ] **You:** create the **Firestore database** in production mode, in a region near you such as `asia-south1`.
 - [ ] **You:** turn on **Email/Password** under Authentication › Sign-in method.
 - [ ] **You:** copy `.env.example` to `.env.local`, set `VITE_BACKEND=firebase`, paste the config into the `VITE_FIREBASE_*` variables, and set `VITE_FIREBASE_AUTH_DOMAIN=tiktym.web.app`.
@@ -77,6 +76,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Web app `TikTym` added to the Firebase project, 8 October 2026
 - [x] Project ID `tiktym` set in `.firebaserc`, 8 October 2026
 - [x] Firebase project `tiktym` created; Hosting site is https://tiktym.web.app, 8 October 2026
 - [x] Firebase CLI logged in again (`firebase login --reauth`, run outside the repo), 8 October 2026

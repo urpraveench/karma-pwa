@@ -1,0 +1,87 @@
+# TikTym to-do
+
+Everything still pending, in the order it should happen. Tick items off as they're done, and add new ones here rather than anywhere else.
+
+**Owner:** **You** means it needs your accounts, devices or a decision. **Claude** means it can be done in a coding session once anything it depends on is in place.
+
+**Last updated:** 8 October 2026
+
+## 1. Go live on Firebase
+
+Nothing has run against a real Firebase project yet. The code is tested against the local emulators, so this is setup, not development.
+
+- [ ] **You:** run `firebase login --reauth`. The saved CLI login has expired.
+- [ ] **You:** create a Firebase project named `tiktym`, so the app lives at `tiktym.web.app`.
+- [ ] **You:** add a **Web app** to the project and copy its config.
+- [ ] **You:** create the **Firestore database** in production mode, in a region near you such as `asia-south1`.
+- [ ] **You:** turn on **Email/Password** under Authentication › Sign-in method.
+- [ ] **You:** copy `.env.example` to `.env.local`, set `VITE_BACKEND=firebase`, paste the config into the `VITE_FIREBASE_*` variables, and set `VITE_FIREBASE_AUTH_DOMAIN=tiktym.web.app`.
+- [ ] **You:** put the project ID in `.firebaserc`.
+- [ ] **Claude:** deploy with `firebase deploy --only hosting,firestore` and check the live site.
+- [ ] **You:** install it on your phone (iPhone: Share › Add to Home Screen; Android: Install app) and sign up.
+
+## 2. Check by hand before release
+
+These can't be automated, or need the real project and a real phone. IDs refer to [FEATURES.md](FEATURES.md).
+
+- [ ] Install on iPhone (APP-03) and Android (APP-04); the app opens full screen as "TikTym"
+- [ ] Content clears the notch and home indicator (APP-18)
+- [ ] The screen stays on during a focus timer (TIMER-07)
+- [ ] Haptics on Android when logging (APP-17)
+- [ ] The goal chime plays (TIMER-05)
+- [ ] Coming back to the app after time away catches the timer up at once (TIMER-22)
+- [ ] A new deploy reaches the installed app on its next open (APP-07)
+- [ ] The loading screen shows briefly on a slow connection (FIRST-03)
+- [ ] A Firestore failure on load returns to sign-in with a clear message (FIRST-04)
+- [ ] A Firebase SDK failure to load shows its message (AUTH-22)
+- [ ] Test mode never downloads the Firebase SDK: check the network tab (SYNC-14)
+- [ ] Deleting an account after a long session asks you to sign in again first (SET-15)
+- [ ] Confirm, and tell users, that the goal alert can't fire while the app is closed (TIMER-21)
+
+## 3. Google sign-in
+
+No separate API key is needed; Firebase handles OAuth for web apps. Until this is done, the Google button shows a "not set up yet" message.
+
+- [ ] **You:** in Authentication › Sign-in method, enable **Google** and set a support email.
+- [ ] **You:** under Authentication › Settings › Authorized domains, confirm `tiktym.web.app` and `tiktym.firebaseapp.com` are listed, plus any custom domain.
+- [ ] **You:** in `.env.local`, set `VITE_ENABLE_GOOGLE=true`. Keep `VITE_FIREBASE_AUTH_DOMAIN` as `tiktym.web.app`; this avoids Google sign-in failures on iOS Safari and installed apps.
+- [ ] **Claude:** redeploy with `firebase deploy --only hosting`.
+- [ ] **You:** test Google sign-in on iPhone and Android (AUTH-19).
+
+## 4. Public launch
+
+- [ ] **You:** write Terms and Privacy pages. **Claude:** set `VITE_TERMS_URL` and `VITE_PRIVACY_URL`, then check the links on the sign-up screen (AUTH-21).
+- [ ] **You:** customise the password-reset email template in Authentication › Templates.
+- [ ] **You + Claude:** turn on **App Check** (reCAPTCHA Enterprise) so only your app can call Firestore.
+- [ ] **You:** check "TikTym" for trademark conflicts before publishing, since it sounds close to "TikTok".
+- [ ] **You:** before moving to the paid Blaze plan, set budget alerts on the billing account. Alerts notify you; they don't cap spend.
+
+## 5. Remaining test gaps
+
+From FEATURES.md › "What's left to test".
+
+- [ ] **Claude:** a failed Firebase save shows "Could not save. Check your connection." (SET-18, SYNC-13)
+- [ ] **Claude:** the service worker never caches Firestore or Auth requests (APP-08)
+- [ ] **Claude:** days follow the phone's time zone (APP-11)
+- [ ] **Claude:** dark mode colours on every screen, as screenshot comparisons (APP-14)
+
+## 6. Features not built yet
+
+- [ ] Reorder practices. `order` exists in the data, but there's no way to change it.
+- [ ] Edit a logged entry. Today you delete it and log again.
+- [ ] Phase 2, needs Blaze: push reminders, streak-at-risk alerts, a weekly recap, and a timer alert while the app is closed (Cloud Functions + FCM).
+
+## 7. Housekeeping
+
+- [ ] **You (optional):** rename the GitHub repo from `karma-pwa` to `tiktym` (Settings › Repository name), then run `git remote set-url origin https://github.com/urpraveench/tiktym.git`.
+- [ ] **Claude:** watch for a Firebase release that drops the flagged `@grpc/grpc-js` version from `npm audit`. It only affects Firebase's Node build, never the app in the browser. Don't run `npm audit fix --force`; it downgrades Firebase.
+
+## Done
+
+Move items here when they're finished, newest first, so there's a record.
+
+- [x] Delete account in the app (Setup › Delete account removes all data, then the account), 7 October 2026
+- [x] Firebase mode, security rules and sync tested against the local emulators, 7 October 2026
+- [x] Browser and unit test suites with HTML reports, 7 October 2026
+- [x] Moved to React + TypeScript + Vite, installable and offline-ready, 7 October 2026
+- [x] Rebranded from Karma to TikTym, 7 October 2026

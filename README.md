@@ -80,17 +80,9 @@ Settings are Vite env vars. Copy `.env.example` to `.env.local` and fill it in. 
    ```
 7. On your phone, open `https://<project>.web.app` and use **Share › Add to Home Screen** (iOS) or **Install app** (Android).
 
-## ⏰ Reminder: Google sign-in (to do later)
+## Google sign-in
 
-No separate API key is needed. Firebase handles OAuth for web apps.
-
-- [ ] In Authentication › Sign-in method, enable **Google** and set a support email.
-- [ ] Under Authentication › Settings › Authorized domains, confirm that `<project>.web.app` and `<project>.firebaseapp.com` are listed, plus any custom domain.
-- [ ] In `.env.local`, set `VITE_ENABLE_GOOGLE=true`.
-- [ ] In `.env.local`, set `VITE_FIREBASE_AUTH_DOMAIN` to `<project>.web.app` (your hosting domain). This avoids third-party-storage failures for Google sign-in on iOS Safari and installed PWAs.
-- [ ] Redeploy with `firebase deploy --only hosting`.
-
-Until that's done, the Google button shows a reminder instead of signing in.
+Not turned on yet; until it is, the Google button shows a "not set up yet" message. The setup steps are in [to-do.md](to-do.md).
 
 ## Focus timer
 
@@ -147,11 +139,6 @@ tests/         Vitest unit tests
 - Test-mode credentials are a UI gate only. Don't put real data in test mode on a shared device.
 - Dates use the phone's local time zone.
 
-## Public (B2C) launch checklist
+## Pending work
 
-- [ ] `.env.local`: `VITE_BACKEND=firebase`, and set `VITE_TERMS_URL` and `VITE_PRIVACY_URL` to real Terms and Privacy pages.
-- [ ] In Authentication, enable Email/Password (self sign-up is built in) and Google. Customise the password-reset email template.
-- [ ] Turn on **App Check** (reCAPTCHA Enterprise) so only your app can call Firestore.
-- [ ] Set budget alerts on the billing account before moving to Blaze. Alerts notify you; they do not cap spend.
-- [ ] Account deletion: Setup › Delete account removes all data, then the auth user. App stores require an in-app deletion path.
-- [ ] Phase 2 (needs Blaze): Cloud Functions + FCM for reminders, streak-at-risk pushes and a weekly recap.
+Everything still to do, including the public launch checklist, is tracked in [to-do.md](to-do.md).

@@ -17,7 +17,6 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 
 - [ ] Install on iPhone (APP-03) and Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Content clears the notch and home indicator (APP-18)
-- [ ] The screen stays on during a focus timer (TIMER-07)
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] The goal chime plays (TIMER-05)
 - [ ] Coming back to the app after time away catches the timer up at once (TIMER-22)
@@ -71,6 +70,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Screen stays on during a focus timer, checked on a phone (TIMER-07), 8 October 2026
 - [x] Installed on a phone as an app and signed in, 8 October 2026
 - [x] First real account created and signed in on https://tiktym.web.app, 8 October 2026
 - [x] Email/Password sign-in turned on, 8 October 2026

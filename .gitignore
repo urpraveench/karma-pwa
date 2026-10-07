@@ -4,3 +4,6 @@ dist
 .env.local
 .firebase
 *.tsbuildinfo
+dist-e2e
+reports
+test-results

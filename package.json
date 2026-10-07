@@ -8,7 +8,10 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "playwright test --headed; playwright show-report reports/e2e",
+    "test:e2e:headless": "playwright test",
+    "test:report": "REPORT=1 vitest run; vite preview --outDir reports/unit --port 4174 --open"
   },
   "dependencies": {
     "firebase": "^12.19.0",
@@ -16,9 +19,11 @@
     "react-dom": "^19.3.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "@vitest/ui": "^5.0.3",
     "typescript": "^7.0.2",
     "vite": "^8.3.3",
     "vite-plugin-pwa": "^2.0.0",

@@ -47,5 +47,9 @@ export default defineConfig({
       },
     }),
   ],
-  test: { include: ['tests/**/*.test.ts'] },
+  test: {
+    include: ['tests/**/*.test.ts'],
+    // npm run test:report sets REPORT=1 to add the HTML report.
+    reporters: process.env.REPORT ? ['default', ['html', { outputDir: 'reports/unit' }]] : ['default'],
+  },
 });

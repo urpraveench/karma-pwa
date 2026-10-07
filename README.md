@@ -27,12 +27,24 @@ With no `.env.local`, the app runs in test mode. Sign in with `demo@tiktym.local
 ```bash
 npm install
 npm run dev        # dev server at http://localhost:5173
-npm test           # Vitest: backlog engine, moments, insights, practice edits, Firestore store
 npm run build      # type-check + production build into dist/
 npm run preview    # serve dist/ locally, with the service worker
 ```
 
 Setup › **Load sample data** generates 10 weeks of history so you can see the backlog and insights in action.
+
+## Testing
+
+Every feature and scenario, with the test that covers it, is listed in [FEATURES.md](FEATURES.md).
+
+| Command | What it does |
+|---|---|
+| `npm test` | Unit tests (Vitest): backlog engine, moments, insights, practice edits, Firestore store |
+| `npm run test:report` | Unit tests, then opens Vitest's HTML report (pass/fail counts, timings per test) |
+| `npm run test:e2e` | Browser tests (Playwright) in a visible Chrome window, then opens the HTML report: totals, duration per test, and a screenshot and trace for any failure |
+| `npm run test:e2e:headless` | Browser tests without a window or report server, for CI |
+
+The browser tests build a test-mode copy of the app into `dist-e2e/` and run it as a phone (Pixel 7, `en-GB`, a fixed clock of Wednesday 7 October 2026), so results don't depend on the machine or the date. They cover sign-in, Today, the log sheet, the focus timer, History, Setup (including export and import), Insights, and offline use through the service worker. They use your installed Google Chrome. Reports are written to `reports/`; stop a report server with Ctrl+C.
 
 ## Configuration
 

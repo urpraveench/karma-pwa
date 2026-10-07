@@ -11,7 +11,6 @@ Everything still pending, in the order it should happen. Tick items off as they'
 Nothing has run against a real Firebase project yet. The code is tested against the local emulators, so this is setup, not development.
 
 - [ ] **You:** turn on **Email/Password** under Authentication › Sign-in method.
-- [ ] **Claude:** deploy with `firebase deploy --only hosting,firestore` and check the live site.
 - [ ] **You:** install it on your phone (iPhone: Share › Add to Home Screen; Android: Install app) and sign up.
 
 ## 2. Check by hand before release
@@ -74,6 +73,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Deployed to https://tiktym.web.app; loads in Firebase mode, service worker installs, no console errors, 8 October 2026
 - [x] `.env.local` filled in from the web app config (Firebase mode, auth domain `tiktym.web.app`), 8 October 2026
 - [x] Firestore database created in `asia-south1` (Mumbai), with rules and indexes deployed, 8 October 2026
 - [x] Web app `TikTym` added to the Firebase project, 8 October 2026

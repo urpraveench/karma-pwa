@@ -1,6 +1,6 @@
 {
-  "name": "Karma",
-  "short_name": "Karma",
+  "name": "TikTym",
+  "short_name": "TikTym",
   "description": "One minute, one point. Track daily practices and clear your backlog.",
   "start_url": "./",
   "scope": "./",

@@ -7,9 +7,9 @@
 <meta name="theme-color" content="#0F1B19" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Karma">
+<meta name="apple-mobile-web-app-title" content="TikTym">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>Karma</title>
+<title>TikTym</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -350,7 +350,7 @@ input[type=date].in::-webkit-date-and-time-value{text-align:left}
 <div id="root"></div>
 <script type="module">
 /* ============================ config + utils ============================ */
-const CFG = Object.assign({ mode:'local', devCredentials:{email:'demo@karma.local',password:'karma123'}, showDevHint:true, enableGoogle:false, firebase:{} }, window.KARMA_CONFIG || {});
+const CFG = Object.assign({ mode:'local', devCredentials:{email:'demo@tiktym.local',password:'tiktym123'}, showDevHint:true, enableGoogle:false, firebase:{} }, window.TIKTYM_CONFIG || {});
 const FIREBASE_READY = CFG.mode === 'firebase' && !!(CFG.firebase && CFG.firebase.apiKey && CFG.firebase.projectId);
 const pad = n => String(n).padStart(2,'0');
 const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
@@ -379,7 +379,7 @@ const ICON = {
 
 /* ============================ storage adapters ============================ */
 function LocalStore(key){
-  const K = 'karma:data:' + key;
+  const K = 'tiktym:data:' + key;
   let db; try { db = JSON.parse(localStorage.getItem(K)); } catch { db = null; }
   db = db || { categories:[], logs:[], settings:{} };
   const save = () => { try { localStorage.setItem(K, JSON.stringify(db)); } catch { toast('Could not save on this device'); } };
@@ -533,7 +533,7 @@ function moment(c){
   const pending = cats.filter(x => c.per[x.id].today.end > 0);
   const easiest = [...pending].sort((a,b) => targetMinutesOn(a, T) - targetMinutesOn(b, T))[0];
   const minGoal = easiest ? Math.min(15, round5(Math.min(targetMinutesOn(easiest, T), c.per[easiest.id].today.end))) : 10;
-  const hidden = localStorage.getItem('karma:moment:' + T);
+  const hidden = localStorage.getItem('tiktym:moment:' + T);
   const out = [], add = (key, prio, o) => { if (hidden !== key) out.push({ key, prio, ...o }); };
   const name = firstName(), logged = new Set(S.data.logs.map(l => l.date));
   const sched = (from, to) => { let due = 0, met = 0, clear = 0, days = 0; for (let d = from < earliest ? earliest : from; d <= to; d = addDays(d, 1)) { const r = dayAll(c, d); if (r.due > 0) { due += r.due; met += Math.min(r.done, r.due); } if (r.owed > 0) { days++; if (r.end === 0) clear++; } } return { due, met, clear, days, hit: due ? Math.round(met / due * 100) : null }; };
@@ -624,19 +624,19 @@ function momentCard(m, timerOn){
 
 /* ============================ boot + auth ============================ */
 async function boot(){
-  applyTheme(localStorage.getItem('karma:theme') || 'system');
+  applyTheme(localStorage.getItem('tiktym:theme') || 'system');
   if (FIREBASE_READY) {
     try { FB = await loadFirebase(); } catch (e) { console.error(e); return renderLogin('Could not load Firebase. Check your connection and config.js.'); }
     FB.A.getRedirectResult(FB.auth).catch(e => console.warn(e));
     FB.A.onAuthStateChanged(FB.auth, u => u ? startSession({ id:u.uid, email:u.email, name:u.displayName }, FirebaseStore(FB, u.uid)) : renderLogin());
   } else {
-    let s = null; try { s = JSON.parse(localStorage.getItem('karma:session')); } catch {}
+    let s = null; try { s = JSON.parse(localStorage.getItem('tiktym:session')); } catch {}
     s ? startSession(s, LocalStore(s.id)) : renderLogin();
   }
 }
 async function startSession(user, store){
   S.user = user; S.store = store;
-  $('#root').innerHTML = '<div class="login"><p class="lead">Loading your karma…</p></div>';
+  $('#root').innerHTML = '<div class="login"><p class="lead">Loading TikTym…</p></div>';
   try { S.data = await store.loadAll(); } catch (e) { console.error(e); return renderLogin('Could not load your data. Check Firestore rules and your connection.'); }
   S.data.settings ||= {};
   if (!S.data.categories.length && !S.data.settings.seeded) {
@@ -653,7 +653,7 @@ function renderLogin(error = ''){
   $('#root').innerHTML = `
   <main class="login">
     ${markSVG('mark')}
-    <h1>Karma</h1>
+    <h1>TikTym</h1>
     <p class="lead">${signup ? 'Create your account. Pick your practices next, then log your first minute.' : 'One minute, one point. Clear today, then clear what\'s carried.'}</p>
     <form id="f-login" novalidate>
       <div class="field"><label for="em">Email</label><input class="in" id="em" type="email" autocomplete="${signup ? 'email' : 'username'}" inputmode="email" required></div>
@@ -686,7 +686,7 @@ async function doLogin(email, pw){
   const dc = CFG.devCredentials;
   if (email.toLowerCase() === dc.email.toLowerCase() && pw === dc.password) {
     const s = { id:'local-' + dc.email.toLowerCase(), email:dc.email, name:'Test user' };
-    localStorage.setItem('karma:session', JSON.stringify(s));
+    localStorage.setItem('tiktym:session', JSON.stringify(s));
     startSession(s, LocalStore(s.id));
   } else err.textContent = 'That email and password don\'t match the test login.';
 }
@@ -710,7 +710,7 @@ async function doGoogle(){
 async function signOut(){
   closeFocus(); document.body.classList.remove('has-timer');
   if (FIREBASE_READY) await FB.A.signOut(FB.auth);
-  else { localStorage.removeItem('karma:session'); renderLogin(); }
+  else { localStorage.removeItem('tiktym:session'); renderLogin(); }
 }
 
 /* ============================ shell + views ============================ */
@@ -769,7 +769,7 @@ function viewToday(){
   <section class="mala ${S.intro ? 'intro' : ''} ${m ? 'sm' : ''}" aria-label="Today: ${t.doneCap} of ${t.owed} points done">${malaSVG(c, cats)}<div class="mala-center">${center}</div></section>
   <p class="legend"><span><i style="background:var(--ink)"></i>Logged</span><span><i style="background:var(--due)"></i>Carried over</span><span><i style="background:var(--line)"></i>Still due</span></p>
   ${m ? '' : nudge}
-  ${!tm && !m && rows && !localStorage.getItem('karma:tip-timer') ? `<div class="tip"><span class="tip-play">${ICON.play}</span><p><b>Try a focus timer.</b> Tap ▶ on any practice, do the work, then tap stop. The minutes log themselves.</p><button class="x" data-action="hideTip" aria-label="Dismiss tip">${ICON.x}</button></div>` : ''}
+  ${!tm && !m && rows && !localStorage.getItem('tiktym:tip-timer') ? `<div class="tip"><span class="tip-play">${ICON.play}</span><p><b>Try a focus timer.</b> Tap ▶ on any practice, do the work, then tap stop. The minutes log themselves.</p><button class="x" data-action="hideTip" aria-label="Dismiss tip">${ICON.x}</button></div>` : ''}
   ${rows || `<div class="empty">No practices yet. Add one in Setup.</div>`}
   ${rows ? `<p class="row-hint">▶ starts a timer. The coloured button logs everything left. Tap a name for other amounts.</p>` : ''}`;
 }
@@ -980,7 +980,7 @@ function viewHistory(){
 
 function viewSetup(){
   const cats = [...S.data.categories].sort((a,b)=>(a.order??0)-(b.order??0));
-  const theme = localStorage.getItem('karma:theme') || 'system';
+  const theme = localStorage.getItem('tiktym:theme') || 'system';
   const cur = c => { let t = null; for (const x of c.targets) if (x.from <= today()) t = x; return t || c.targets[0]; };
   const dayTxt = d => d.length === 7 ? 'every day' : d.length === 0 ? 'no days' : [1,2,3,4,5,6,0].filter(x => d.includes(x)).map(x => ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][x]).join(', ');
   const total = sum(activeCats().map(c => dueOn(c, today())));
@@ -1080,8 +1080,8 @@ function openEditCat(id){
 }
 
 /* ============================ timer (state lives on this device) ============================ */
-const getTimer = () => { try { return JSON.parse(localStorage.getItem('karma:timer')); } catch { return null; } };
-const setTimer = v => { try { v ? localStorage.setItem('karma:timer', JSON.stringify(v)) : localStorage.removeItem('karma:timer'); } catch {} };
+const getTimer = () => { try { return JSON.parse(localStorage.getItem('tiktym:timer')); } catch { return null; } };
+const setTimer = v => { try { v ? localStorage.setItem('tiktym:timer', JSON.stringify(v)) : localStorage.removeItem('tiktym:timer'); } catch {} };
 const elapsedMs = tm => Math.max(0, (tm.pausedAt || Date.now()) - tm.startedAt - (tm.pausedMs || 0));
 function fmtClock(ms){ const x = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(x / 3600), m = Math.floor(x % 3600 / 60); return h ? `${h}:${pad(m)}:${pad(x % 60)}` : `${m}:${pad(x % 60)}`; }
 
@@ -1105,7 +1105,7 @@ function startTimerFor(catId, goalOverride){
   const left = calc().per[catId].today.end;
   primeAudio(); haptic(12);
   setTimer({ catId, startedAt:Date.now(), pausedMs:0, pausedAt:null, goal: goalOverride || (left >= 5 ? Math.min(left, 120) : 25), alerted:false });
-  localStorage.setItem('karma:tip-timer', '1');
+  localStorage.setItem('tiktym:tip-timer', '1');
   closeSheet(); renderView(); openFocus();
 }
 function renderMini(){
@@ -1164,7 +1164,7 @@ function updateFocus(){
 let lastTickMin = -1;
 function tick(){
   const tm = getTimer();
-  if (!tm || !S.user) { if (document.title !== 'Karma') document.title = 'Karma'; return; }
+  if (!tm || !S.user) { if (document.title !== 'TikTym') document.title = 'TikTym'; return; }
   const cat = S.data.categories.find(c => c.id === tm.catId); if (!cat) { setTimer(null); return; }
   const ms = elapsedMs(tm), clock = fmtClock(ms);
   document.title = `${clock} ${cat.name}`;
@@ -1280,7 +1280,7 @@ const Actions = {
   timerFor: el => startTimerFor(el.dataset.cat),
   openFocus: () => openFocus(),
   minFocus: () => { closeFocus(); renderView(); },
-  hideTip: () => { localStorage.setItem('karma:tip-timer', '1'); renderView(); },
+  hideTip: () => { localStorage.setItem('tiktym:tip-timer', '1'); renderView(); },
   goal: el => { const tm = getTimer(); if (!tm) return; tm.goal = Number(el.dataset.v); tm.alerted = elapsedMs(tm) >= tm.goal * 60000; setTimer(tm); renderFocus(); renderMini(); },
   pauseTimer: () => { const tm = getTimer(); if (!tm) return;
     if (tm.pausedAt) { tm.pausedMs = (tm.pausedMs || 0) + (Date.now() - tm.pausedAt); tm.pausedAt = null; } else tm.pausedAt = Date.now();
@@ -1288,14 +1288,14 @@ const Actions = {
   stopTimer: () => { const tm = getTimer(); if (!tm) return; const ms = elapsedMs(tm), mins = Math.floor(ms / 60000);
     if (mins < 1) { setTimer(null); closeFocus(); renderView(); toast('Under a minute, so nothing was logged'); return; }
     if (mins > 240 && !confirm(`The timer ran for ${fmtClock(ms)}. Log all ${mins} minutes?`)) { setTimer(null); closeFocus(); openLog(tm.catId); LOG.custom = true; renderLogSheet(); return; }
-    setTimer(null); closeFocus(); document.title = 'Karma'; logEntry(tm.catId, mins, today()); },
+    setTimer(null); closeFocus(); document.title = 'TikTym'; logEntry(tm.catId, mins, today()); },
   cancelTimer: () => { const tm = getTimer(); if (!tm) return; const m = Math.floor(elapsedMs(tm) / 60000);
     if (m >= 2 && !confirm(`Discard ${m} minutes without logging them?`)) return;
-    setTimer(null); closeFocus(); document.title = 'Karma'; renderView(); toast('Timer discarded'); },
+    setTimer(null); closeFocus(); document.title = 'TikTym'; renderView(); toast('Timer discarded'); },
   close: closeSheet,
   google: doGoogle,
   momentGo: el => startTimerFor(el.dataset.cat, Number(el.dataset.goal) || undefined),
-  hideMoment: el => { localStorage.setItem('karma:moment:' + today(), el.dataset.k); renderView(); },
+  hideMoment: el => { localStorage.setItem('tiktym:moment:' + today(), el.dataset.k); renderView(); },
   authMode: () => { AUTH_MODE = AUTH_MODE === 'signup' ? 'signin' : 'signup'; const em = $('#em')?.value; renderLogin(); if (em) $('#em').value = em; },
   resetPw: doReset,
   deleteAccount: deleteAccount,
@@ -1319,11 +1319,11 @@ const Actions = {
     toast('Entry deleted', 4500, () => { S.data.logs.push(l); S.store.addLog(l).catch(() => {}); renderView(); }); },
   cap: el => { S.data.settings = { ...S.data.settings, backlogCap:Number(el.dataset.v) }; persist(() => S.store.putSettings(S.data.settings), Number(el.dataset.v) ? `Backlog capped at ${el.dataset.v} day${el.dataset.v === '1' ? '' : 's'} per practice` : 'Backlog has no limit'); },
   range: el => { S.range = Number(el.dataset.n); renderView(); },
-  theme: el => { localStorage.setItem('karma:theme', el.dataset.t); applyTheme(el.dataset.t); renderView(); },
+  theme: el => { localStorage.setItem('tiktym:theme', el.dataset.t); applyTheme(el.dataset.t); renderView(); },
   sample: () => { if (!confirm('Replace all your data with sample data?')) return; S.data = sampleData(); S.intro = true; persist(() => S.store.replaceAll(S.data), 'Sample data loaded'); },
   reset: () => { if (!confirm('Delete all logs and reset to the default practices?')) return; S.data = { categories:defaultCategories(today()), logs:[], settings:{ seeded:true } }; persist(() => S.store.replaceAll(S.data), 'Started over'); },
-  export: () => { const b = new Blob([JSON.stringify({ app:'karma', version:1, exportedAt:new Date().toISOString(), ...S.data }, null, 2)], { type:'application/json' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `karma-backup-${today()}.json`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); },
+  export: () => { const b = new Blob([JSON.stringify({ app:'tiktym', version:1, exportedAt:new Date().toISOString(), ...S.data }, null, 2)], { type:'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `tiktym-backup-${today()}.json`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); },
 };
 document.addEventListener('click', e => { const el = e.target.closest('[data-action]'); if (!el) return; const fn = Actions[el.dataset.action]; if (fn) { e.preventDefault(); fn(el, e); } });
 document.addEventListener('submit', e => { e.preventDefault(); ({ 'f-login': () => doLogin($('#em').value, $('#pw').value), 'f-log': saveCustom, 'f-cat': saveCat })[e.target.id]?.(); });
@@ -1336,7 +1336,7 @@ document.addEventListener('change', async e => {
     if (!Array.isArray(d.categories) || !Array.isArray(d.logs)) throw new Error('bad');
     if (!confirm(`Import ${d.categories.length} practices and ${d.logs.length} entries? This replaces your current data.`)) return;
     S.data = { categories:d.categories, logs:d.logs, settings:d.settings || { seeded:true } }; persist(() => S.store.replaceAll(S.data), 'Backup imported');
-  } catch { toast('That file isn\'t a Karma backup'); }
+  } catch { toast('That file isn\'t a TikTym backup'); }
 });
 // re-render at midnight / when returning to the app so "today" and the timer stay right
 let lastDay = today();

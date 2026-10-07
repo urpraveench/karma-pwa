@@ -1,6 +1,6 @@
-# Karma
+# TikTym
 
-A progressive web app (PWA) for tracking daily practice minutes as karma points (1 minute = 1 point), with carry-forward backlog per practice. It is plain HTML/JS with no build step, hosted on Firebase Hosting with Firestore, and stays within the Spark (free) plan.
+A progressive web app (PWA) for tracking daily practice minutes as points (1 minute = 1 point), with carry-forward backlog per practice. It is plain HTML/JS with no build step, hosted on Firebase Hosting with Firestore, and stays within the Spark (free) plan.
 
 ## How the backlog works
 
@@ -22,7 +22,7 @@ Example: the target is 100. On day 1 you log 40, so 60 carries over. On day 2 yo
 
 ## Run locally (test mode)
 
-`config.js` ships with `mode: 'local'`. Sign in with `demo@karma.local` / `karma123`. Data is stored in the browser's localStorage.
+`config.js` ships with `mode: 'local'`. Sign in with `demo@tiktym.local` / `tiktym123`. Data is stored in the browser's localStorage.
 
 ```bash
 cd public && npx serve .      # or: python3 -m http.server 8080

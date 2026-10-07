@@ -10,7 +10,7 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 The app is live at https://tiktym.web.app (project `tiktym`, Firestore in `asia-south1`). Two steps are left before you can use it.
 
-- [ ] **You:** install it on your phone (iPhone: Share › Add to Home Screen; Android: Install app) and sign up.
+- [ ] **You:** install it on your phone (iPhone: Share › Add to Home Screen; Android: Install app) and sign in.
 
 ## 2. Check by hand before release
 
@@ -72,6 +72,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] First real account created and signed in on https://tiktym.web.app, 8 October 2026
 - [x] Email/Password sign-in turned on, 8 October 2026
 - [x] Deployed to https://tiktym.web.app; loads in Firebase mode, service worker installs, no console errors, 8 October 2026
 - [x] `.env.local` filled in from the web app config (Firebase mode, auth domain `tiktym.web.app`), 8 October 2026

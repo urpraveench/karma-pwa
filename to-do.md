@@ -10,13 +10,10 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 Nothing has run against a real Firebase project yet. The code is tested against the local emulators, so this is setup, not development.
 
-- [ ] **You:** run `firebase login --reauth`. The saved CLI login has expired.
-- [ ] **You:** create a Firebase project named `tiktym`, so the app lives at `tiktym.web.app`.
 - [ ] **You:** add a **Web app** to the project and copy its config.
 - [ ] **You:** create the **Firestore database** in production mode, in a region near you such as `asia-south1`.
 - [ ] **You:** turn on **Email/Password** under Authentication › Sign-in method.
 - [ ] **You:** copy `.env.example` to `.env.local`, set `VITE_BACKEND=firebase`, paste the config into the `VITE_FIREBASE_*` variables, and set `VITE_FIREBASE_AUTH_DOMAIN=tiktym.web.app`.
-- [ ] **You:** put the project ID in `.firebaserc`.
 - [ ] **Claude:** deploy with `firebase deploy --only hosting,firestore` and check the live site.
 - [ ] **You:** install it on your phone (iPhone: Share › Add to Home Screen; Android: Install app) and sign up.
 
@@ -80,6 +77,9 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Project ID `tiktym` set in `.firebaserc`, 8 October 2026
+- [x] Firebase project `tiktym` created; Hosting site is https://tiktym.web.app, 8 October 2026
+- [x] Firebase CLI logged in again (`firebase login --reauth`, run outside the repo), 8 October 2026
 - [x] Delete account in the app (Setup › Delete account removes all data, then the account), 7 October 2026
 - [x] Firebase mode, security rules and sync tested against the local emulators, 7 October 2026
 - [x] Browser and unit test suites with HTML reports, 7 October 2026

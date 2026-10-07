@@ -8,7 +8,7 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 ## 1. Go live on Firebase
 
-The app is live at https://tiktym.web.app (project `tiktym`, Firestore in `asia-south1`). One step is left: installing it on your phone.
+The app is live at https://tiktym.web.app (project `tiktym`, Firestore in `asia-south1`) and installed on a phone. Nothing left here.
 
 
 ## 2. Check by hand before release

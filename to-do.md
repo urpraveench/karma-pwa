@@ -60,7 +60,7 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 **Other launch items**
 
-- [ ] **You:** paste it into Authentication › Templates › Password reset › Message, save, and send yourself a reset email to check it in Gmail on iPhone (AUTH-29).
+- [ ] **You (blocked, 8 October 2026):** Firebase refuses to save template changes for this project: "Email template updates are currently unavailable for this project. For assistance with template changes, contact Firebase support." Likely an anti-spam restriction on new or Spark-plan projects (unconfirmed). The plain default email works and reaches the inbox, so it stays for now. After moving to Blaze, try pasting `email/password-reset.html` again; if it's still refused, ask Firebase support (console › ? › Contact support). If it's never allowed, send account emails ourselves (Cloud Function + Resend or Brevo from noreply@tiktym.com, needs Blaze) (AUTH-29).
 - [ ] **You:** before moving to the paid Blaze plan, set budget alerts on the billing account. Alerts notify you; they don't cap spend.
 
 ## Go-to-market (see GTM.md)

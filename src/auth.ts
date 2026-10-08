@@ -31,6 +31,13 @@ const AUTH_ERR: Record<string, string> = {
 export const errCode = (e: unknown) => (e as { code?: string })?.code || (e as Error)?.message || String(e);
 export const authMsg = (e: unknown) => AUTH_ERR[(e as { code?: string })?.code || ''] || 'Something went wrong: ' + errCode(e);
 
+/**
+ * Running from an iPhone or iPad home screen (iOS sets `navigator.standalone`). There, a sign-in pop-up opens in
+ * Safari, whose storage the installed app can't see, so the result never comes back; a full-page redirect stays
+ * in the app. This relies on the auth domain being the app's own domain and on the service worker leaving `/__/` alone.
+ */
+const isIOSHomeScreenApp = () => (navigator as Navigator & { standalone?: boolean }).standalone === true;
+
 const SESSION_KEY = 'tiktym:session';
 const GOOGLE_NOT_SET_UP = 'Google sign-in isn\'t set up yet. Add the Firebase keys to .env.local and set VITE_ENABLE_GOOGLE=true.';
 
@@ -73,6 +80,7 @@ async function startFirebaseAuth(cb: AuthCallbacks): Promise<AuthApi> {
     async google() {
       if (!config.enableGoogle) return GOOGLE_NOT_SET_UP;
       const p = new A.GoogleAuthProvider();
+      if (isIOSHomeScreenApp()) { await A.signInWithRedirect(auth, p); return null; }
       try { await A.signInWithPopup(auth, p); return null; }
       catch (e) {
         if (/popup/.test((e as { code?: string }).code || '')) { await A.signInWithRedirect(auth, p); return null; }

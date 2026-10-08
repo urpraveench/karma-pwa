@@ -30,7 +30,6 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 
 Google sign-in is live on https://tiktym.web.app. What remains is checking it on your phone.
 
-- [ ] **Claude (bug):** Google sign-in doesn't complete in the app installed on iPhone: the pop-up opens in Safari, whose storage the installed app can't see, so the result never comes back. In iPhone home-screen apps, sign in with a full-page redirect instead (AUTH-27).
 - [ ] **You:** test Google sign-in in the installed app on your iPhone after the fix (AUTH-27). Safari already works (AUTH-19).
 - [ ] **You:** if your TikTym account uses the same email as your Google account, check whether password sign-in still works afterwards (AUTH-26). Firebase removes the password from accounts whose email was never verified; your data stays. Use Forgot password to set a new one if you want both.
 
@@ -66,6 +65,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Fixed: in iPhone home-screen apps, Google sign-in uses a full-page redirect instead of a pop-up that opened in Safari and never came back (AUTH-27), 8 October 2026
 - [x] Google sign-in works in Safari on iPhone 14 Plus and in a laptop browser (AUTH-19), 8 October 2026
 - [x] Google switched on (`VITE_ENABLE_GOOGLE=true`) and deployed; the live pop-up reaches Google's sign-in page, 8 October 2026
 - [x] Sign-in address `https://tiktym.web.app/__/auth/handler` registered on the tiktym project's OAuth client, 8 October 2026

@@ -62,3 +62,26 @@ test('Google with an email that already has a password account opens that accoun
   await continueWithGoogle(phone2, email, 'Same Person');
   await expect(phone2.locator('.cat').nth(0).locator('.cat-meta')).toHaveText('Done, 30 logged');
 });
+
+test.describe('installed on an iPhone home screen', () => {
+  // iOS sets navigator.standalone when a web app runs from the home screen.
+  test.use({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1' });
+  test.beforeEach(async ({ context }) => {
+    await context.addInitScript(() => Object.defineProperty(navigator, 'standalone', { get: () => true }));
+  });
+
+  test('Google sign-in uses a full-page redirect and comes back signed in (AUTH-27)', async ({ page, context }) => {
+    let popups = 0;
+    context.on('page', () => popups++);
+    await page.goto('/');
+    await page.click('.gbtn');
+    await page.waitForURL(/\/emulator\/auth\/handler/, POPUP); // the app itself goes to the sign-in page
+    await page.locator('text=Add new account').click(POPUP);
+    await page.fill('#email-input', newEmail());
+    await page.fill('#display-name-input', 'Meera Iyer');
+    await page.locator('button', { hasText: 'Sign in with Google.com' }).click(POPUP);
+    await expect(page.locator('.hello')).toHaveText(/, Meera$/, POPUP);
+    await expect(page.locator('.cat .cat-name')).toHaveText(['Exercise', 'Reading', 'Course study', 'Meditation']);
+    expect(popups, 'no pop-up window').toBe(0);
+  });
+});

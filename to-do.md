@@ -82,7 +82,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 - [ ] **You:** run a 30-day learning challenge with your network, using TikTym.
 - [ ] **You:** take part in r/developersIndia, r/IndianWorkplace and tech Slack/Discord communities before sharing TikTym.
 - [ ] **You:** list 10 productivity or career newsletters and creators and pitch them.
-- [ ] **Claude:** progress card stats: this month's time, streak, best streak, active days, top three practices (SHARE-01).
 - [ ] **Claude:** progress card image (1080×1350) with a preview, Share via the phone's share sheet or Download, and a switch to hide practice names (SHARE-02, SHARE-03, SHARE-04).
 
 ## 5. Remaining test gaps
@@ -110,6 +109,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Progress card stats: month's time, streak, best, active days, top three practices (SHARE-01), 8 October 2026
 - [x] A new deploy reaches the installed iPhone app: the "New version ready" bar appeared and Reload updated it (APP-07), 8 October 2026
 - [x] Google Analytics is capturing data from the app and the website (seen in Reports › Realtime), 8 October 2026
 - [x] Released 1.3.1 (commit f960cbc): analytics consent at sign-up, no card on Today, 8 October 2026

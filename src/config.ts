@@ -21,7 +21,8 @@ export const config = {
   devCredentials: { email: 'demo@tiktym.local', password: 'tiktym123' },
   showDevHint: flag(env.VITE_SHOW_DEV_HINT, true),
   enableGoogle: flag(env.VITE_ENABLE_GOOGLE, false),
-  legal: env.VITE_TERMS_URL && env.VITE_PRIVACY_URL ? { terms: env.VITE_TERMS_URL, privacy: env.VITE_PRIVACY_URL } : null,
+  /** The app's own Terms and Privacy pages (public/terms, public/privacy), unless .env.local points elsewhere. */
+  legal: { terms: env.VITE_TERMS_URL || '/terms/', privacy: env.VITE_PRIVACY_URL || '/privacy/' },
 };
 
 export const FIREBASE_READY = config.backend === 'firebase' && !!(firebaseConfig.apiKey && firebaseConfig.projectId);

@@ -55,3 +55,14 @@ test('version.json is published and always comes from the network (APP-23)', asy
   expect(v.version).toMatch(/^\d+\.\d+\.\d+$/);
   expect(v.commit).toBeTruthy();
 });
+
+test('the Terms and Privacy pages open offline (LEGAL-04)', async ({ page, context }) => {
+  await page.goto('/');
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.reload();
+  await context.setOffline(true);
+  await page.goto('/terms/');
+  await expect(page.locator('h1')).toHaveText('Terms of Service');
+  await page.goto('/privacy/');
+  await expect(page.locator('h1')).toHaveText('Privacy Policy');
+});

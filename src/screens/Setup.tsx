@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { FIREBASE_READY } from '../config';
+import { config, FIREBASE_READY } from '../config';
 import { activeCats, byOrder, capDays, dueOn, targetOn } from '../lib/backlog';
 import { fmtShort } from '../lib/date';
 import { sum } from '../lib/util';
@@ -68,6 +68,8 @@ export function Setup() {
       <div className="sect-h"><h2>About</h2></div>
       <div className="list">
         <div className="li about"><span className="t">TikTym {BUILD.version}<small>Build {BUILD.commit}, {new Date(BUILD.builtAt).toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</small></span></div>
+        <a className="li" href={config.legal.terms}><span className="t">Terms of Service</span><span className="chev">›</span></a>
+        <a className="li" href={config.legal.privacy}><span className="t">Privacy Policy</span><span className="chev">›</span></a>
       </div>
 
       {/* Last on the page and set apart, so a tap meant for Sign out can't land here. */}

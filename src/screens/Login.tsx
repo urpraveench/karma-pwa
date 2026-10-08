@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { config, FIREBASE_READY } from '../config';
+import { appCheckSiteKey, config, FIREBASE_READY } from '../config';
 import { useApp } from '../state/app';
 import { useFeedback } from '../ui/feedback';
 import { GoogleLogo, Mark } from '../ui/icons';
@@ -60,8 +60,10 @@ export function Login({ error: initialError = '' }: { error?: string }) {
       {testMode && config.showDevHint && (
         <p className="devhint">Test mode: sign in with <b>{config.devCredentials.email}</b> and <b>{config.devCredentials.password}</b>. Data stays in this browser until Firebase is set up.</p>
       )}
-      {!testMode && config.legal && (
-        <p className="hint" style={{ marginTop: 18 }}>By continuing you agree to the <a href={config.legal.terms}>Terms</a> and <a href={config.legal.privacy}>Privacy Policy</a>.</p>
+      <p className="hint legal">By continuing you agree to the <a href={config.legal.terms}>Terms</a> and <a href={config.legal.privacy}>Privacy Policy</a>.</p>
+      {appCheckSiteKey() && (
+        // Required by Google because App Check keeps the reCAPTCHA badge hidden
+        <p className="hint recaptcha">This site is protected by reCAPTCHA, and the Google <a href="https://policies.google.com/privacy">Privacy Policy</a> and <a href="https://policies.google.com/terms">Terms of Service</a> apply.</p>
       )}
       <p className="build">{buildLabel()}</p>
     </main>

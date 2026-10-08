@@ -1,4 +1,4 @@
-import { expect, test } from './helpers';
+import { expect, open, signIn, tab, test } from './helpers';
 
 test.describe('Terms of Service (LEGAL-01)', () => {
   test('names the operator, the eligibility, and Indian law and courts', async ({ page }) => {
@@ -49,5 +49,33 @@ test.describe('Privacy Policy (LEGAL-02)', () => {
     await page.goto('/privacy/');
     await page.locator('footer a', { hasText: 'Terms of Service' }).click();
     await expect(page.locator('h1')).toHaveText('Terms of Service');
+  });
+});
+
+test.describe('legal links (AUTH-21)', () => {
+  test('the login screen links to both pages', async ({ page }) => {
+    await open(page);
+    await expect(page.locator('.login .legal')).toHaveText('By continuing you agree to the Terms and Privacy Policy.');
+    await page.locator('.login .legal a', { hasText: 'Terms' }).click();
+    await expect(page.locator('h1')).toHaveText('Terms of Service');
+    await page.goBack();
+    await page.locator('.login .legal a', { hasText: 'Privacy Policy' }).click();
+    await expect(page.locator('h1')).toHaveText('Privacy Policy');
+  });
+
+  test('Setup › About links to both pages', async ({ page }) => {
+    await signIn(page);
+    await tab(page, 'Setup').click();
+    await page.locator('a.li', { hasText: 'Terms of Service' }).click();
+    await expect(page.locator('h1')).toHaveText('Terms of Service');
+    await page.goBack();
+    await tab(page, 'Setup').click();
+    await page.locator('a.li', { hasText: 'Privacy Policy' }).click();
+    await expect(page.locator('h1')).toHaveText('Privacy Policy');
+  });
+
+  test('no reCAPTCHA notice while App Check is off (test mode)', async ({ page }) => {
+    await open(page);
+    await expect(page.locator('.login .recaptcha')).toHaveCount(0);
   });
 });

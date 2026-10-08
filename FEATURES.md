@@ -345,7 +345,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | APP-04 | Install on Android | Install app prompt | Manual |
 | APP-05 | Opens offline | App shell is precached; signed-in app opens with no connection | E2E `pwa.spec.ts` |
 | APP-06 | Deep links offline | Any path falls back to the app | E2E `pwa.spec.ts` |
-| APP-07 | Updates | A new deploy activates on the next app load | Manual |
+| APP-07 | Updates | A new deploy activates on the next app load | Manual: checked on iPhone, 8 October 2026 (the update bar, APP-22, is tested) |
 | APP-08 | Firestore and Auth traffic | Never cached by the service worker | Gap |
 | APP-09 | Midnight | Date, greeting, totals and moment roll over within a minute | E2E `today-states.spec.ts` |
 | APP-10 | Returning to the app | Screen refreshes immediately | E2E `app.spec.ts` |

@@ -6,10 +6,6 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 **Last updated:** 8 October 2026
 
-## 1. Go live on Firebase
-
-The app is live at https://tiktym.web.app (project `tiktym`, Firestore in `asia-south1`) and installed on a phone. Nothing left here.
-
 
 ## Setup layout
 
@@ -22,7 +18,6 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] **You:** after the fix, run the 5-minute Meditation test again: the chime should play right as the timer reaches its target (TIMER-05).
-- [ ] A new deploy reaches the installed app on its next open (APP-07)
 - [ ] The loading screen shows briefly on a slow connection (FIRST-03)
 - [ ] A Firestore failure on load returns to sign-in with a clear message (FIRST-04)
 - [ ] A Firebase SDK failure to load shows its message (AUTH-22)
@@ -114,6 +109,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] A new deploy reaches the installed iPhone app: the "New version ready" bar appeared and Reload updated it (APP-07), 8 October 2026
 - [x] Google Analytics is capturing data from the app and the website (seen in Reports › Realtime), 8 October 2026
 - [x] Released 1.3.1 (commit f960cbc): analytics consent at sign-up, no card on Today, 8 October 2026
 - [x] Analytics consent moved to an unticked checkbox on Create account; no card on Today; Setup › Privacy switch kept; Privacy Policy updated (ANA-01, LEGAL-05), 8 October 2026

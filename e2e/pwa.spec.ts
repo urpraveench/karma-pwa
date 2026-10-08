@@ -41,3 +41,17 @@ test("Firebase's reserved addresses always come from the network (APP-20)", asyn
   const deepLink = await page.goto('/any/deep/link');
   expect(deepLink?.fromServiceWorker()).toBe(true);
 });
+
+test('version.json is published and always comes from the network (APP-23)', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.reload();
+  const [response] = await Promise.all([
+    page.waitForResponse('**/version.json'),
+    page.evaluate(() => fetch('/version.json')),
+  ]);
+  expect(response.fromServiceWorker()).toBe(false);
+  const v = await response.json();
+  expect(v.version).toMatch(/^\d+\.\d+\.\d+$/);
+  expect(v.commit).toBeTruthy();
+});

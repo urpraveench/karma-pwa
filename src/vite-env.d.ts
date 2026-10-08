@@ -1,5 +1,8 @@
 /// <reference types="vite/client" />
 
+/** Set at build time by vite.config.ts. */
+declare const __BUILD__: { version: string; commit: string; builtAt: string };
+
 interface ImportMetaEnv {
   readonly VITE_BACKEND?: 'local' | 'firebase';
   readonly VITE_SHOW_DEV_HINT?: string;

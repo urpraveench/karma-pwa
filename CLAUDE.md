@@ -21,6 +21,15 @@ Push only when the user asks.
 
 If the user asks for something that skips a step (for example "just fix it quickly"), still do steps 1 to 4, but say so in one line rather than asking.
 
+## Releasing
+
+Every deploy gets a new version, so the app's version label and update bar mean something.
+
+1. Bump the version: `npm version patch --no-git-tag-version` for fixes (1.0.0 → 1.0.1), `npm version minor --no-git-tag-version` for new features (1.0.1 → 1.1.0). Use `major` only for a change users must relearn.
+2. Commit the bump on its own ("Release 1.0.1") after the work it ships, so the build isn't stamped `-dirty`.
+3. `firebase deploy --only hosting` (it rebuilds `dist/` first), then check https://tiktym.web.app/version.json shows the new version and commit.
+4. Add a line under Done in to-do.md: "Released 1.0.1: <what changed>".
+
 ## Commands
 
 | Command | Use |

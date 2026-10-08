@@ -1,10 +1,30 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig, type Plugin } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import { execSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+
+// What this build is: the package.json version, the git commit (with -dirty if there were uncommitted
+// changes), and when it was built. Shown in the app and published as version.json so the app can tell
+// when a newer build is live.
+const git = (cmd: string) => { try { return execSync(cmd, { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch { return ''; } };
+const BUILD = {
+  version: JSON.parse(readFileSync('package.json', 'utf8')).version as string,
+  commit: (git('git rev-parse --short HEAD') || 'unknown') + (git('git status --porcelain') ? '-dirty' : ''),
+  builtAt: new Date().toISOString(),
+};
+
+const versionFile: Plugin = {
+  name: 'tiktym-version-file',
+  apply: 'build',
+  generateBundle() { this.emitFile({ type: 'asset', fileName: 'version.json', source: JSON.stringify(BUILD) + '\n' }); },
+};
 
 export default defineConfig({
+  define: { __BUILD__: JSON.stringify(BUILD) },
   plugins: [
     react(),
+    versionFile,
     VitePWA({
       // A new deploy activates on the next load, without asking.
       registerType: 'autoUpdate',

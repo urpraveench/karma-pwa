@@ -35,7 +35,8 @@ Summary of coverage at the time of writing:
 | 11. Settings and data (Setup) | 19 | 17 | 1 | 1 |
 | 12. Sync and storage | 14 | 12 | 1 | 1 |
 | 13. App shell, PWA and platform | 28 | 20 | 3 | 5 |
-| **Total** | **227** | **207** | **5** | **15** |
+| 14. Marketing and sharing | 2 | 0 | 2 | 0 |
+| **Total** | **229** | **207** | **7** | **15** |
 
 ---
 
@@ -364,6 +365,14 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | LEGAL-02 | Privacy page | `/privacy/` shows, for India's DPDP Act 2023: what's collected (account, practice data, device storage, reCAPTCHA signals), why, where it's stored (Mumbai), processors (Google), retention, rights (access, correction, export, erasure, grievance, Data Protection Board), 18+, changes, contact | E2E `legal.spec.ts` |
 | LEGAL-03 | reCAPTCHA notice | With App Check on, the login screen says "Protected by reCAPTCHA" with links to Google's Privacy Policy and Terms, as Google requires when the badge is hidden | Unit `app-check.test.ts` (when it shows); E2E `legal.spec.ts` (hidden while App Check is off). Shown live with App Check on: checked after each release |
 | LEGAL-04 | Legal pages offline | `/terms/` and `/privacy/` open without a connection once the app has been installed | E2E `pwa.spec.ts` |
+
+
+## 14. Marketing and sharing
+
+| ID | Scenario | Expected | Coverage |
+|---|---|---|---|
+| GTM-01 | Link preview | Sharing the app's link (WhatsApp, LinkedIn, X, Slack) shows the TikTym title, a one-line description and a 1200×630 preview image | Gap |
+| GTM-02 | Send feedback | Setup › About › Send feedback opens an email to support with the app version and build filled in | Gap |
 
 ---
 

@@ -1,4 +1,5 @@
 import { expect, test, type Browser, type Page } from '@playwright/test';
+import { startWithDefaults } from '../helpers';
 
 // Firebase mode against the local Auth and Firestore emulators. Each test uses its own new account.
 
@@ -19,7 +20,7 @@ async function signUp(page: Page, email = newEmail()) {
   await page.fill('#em', email);
   await page.fill('#pw', PASSWORD);
   await page.click('button[type=submit]');
-  await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+  await startWithDefaults(page, { timeout: 15_000 });
   return email;
 }
 
@@ -34,7 +35,7 @@ async function onNewDevice(browser: Browser, email: string) {
   const page = await ctx.newPage();
   await openLogin(page);
   await signIn(page, email);
-  await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+  await startWithDefaults(page, { timeout: 15_000 });
   return page;
 }
 
@@ -108,7 +109,7 @@ test.describe('Firebase sign-in', () => {
   test('stays signed in after a reload, then signs out (AUTH-10, AUTH-23)', async ({ page }) => {
     await signUp(page);
     await page.reload();
-    await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+    await startWithDefaults(page, { timeout: 15_000 });
     await page.locator('.tab', { hasText: 'Setup' }).click();
     await page.locator('.li', { hasText: 'Sign out' }).click();
     await expect(page.locator('.login h1')).toBeVisible();
@@ -161,7 +162,7 @@ test.describe('Firebase sync', () => {
       await expect(toast(page)).toHaveText(`Deleted ${name}`);
     }
     await page.reload();
-    await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+    await startWithDefaults(page, { timeout: 15_000 });
     await expect(page.locator('.empty')).toHaveText('No practices yet. Add one in Setup.');
   });
 });
@@ -172,11 +173,11 @@ test.describe('Delete account', () => {
     await page.goto('/');
     await page.locator('.link', { hasText: 'Create an account' }).click();
     await signIn(page, newEmail());
-    await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+    await startWithDefaults(page, { timeout: 15_000 });
     await page.locator('.tab', { hasText: 'Setup' }).click();
     await page.locator('.li', { hasText: 'Delete account' }).click();
     await expect(toast(page)).toHaveText('Account not deleted');
-    await expect(page.locator('.hello')).toBeVisible();
+    await startWithDefaults(page);
   });
 
   test('removes the account and its data (SET-13)', async ({ page, browser }) => {
@@ -210,7 +211,7 @@ test.describe('Analytics consent at sign-up (ANA-01)', () => {
     await expect(box).not.toBeChecked(); // a clear yes is needed
     if (share) await box.check();
     await signIn(page, newEmail());
-    await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+    await startWithDefaults(page, { timeout: 15_000 });
     return requests;
   }
 
@@ -251,7 +252,7 @@ test.describe('Anonymous daily totals (STAT-01, STAT-02)', () => {
     const before = await readStats(page, day);
     await page.locator('.link', { hasText: 'Create an account' }).click();
     await signIn(page, newEmail());
-    await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+    await startWithDefaults(page, { timeout: 15_000 });
     await page.locator('.cat').nth(0).locator('.qbtn').click();                       // Exercise, 30 min
     await page.locator('.cat').nth(1).locator('.cat-open').click();
     await page.locator('.tile', { hasText: /^10$/ }).click();                         // Reading, 10 min

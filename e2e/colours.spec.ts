@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { DEMO, expect, loadSampleData, open, seedData, signInWith, tab, test } from './helpers';
+import { DEMO, expect, loadSampleData, open, seedData, signInWith, startWithDefaults, tab, test } from './helpers';
 import { lowContrast } from './contrast';
 
 // Every screen and sheet is checked for text that's hard to read (WCAG AA contrast), in dark and in light.
@@ -15,7 +15,10 @@ for (const scheme of ['dark', 'light'] as const) {
       await open(page);
       await noLowContrast(page, 'sign-in');
       await page.fill('#em', DEMO.email); await page.fill('#pw', DEMO.password); await page.click('button[type=submit]');
-      await expect(page.locator('.hello')).toBeVisible();
+      await expect(page.locator('.first-run')).toBeVisible();
+      await page.getByRole('button', { name: '5 more minutes of Reading' }).click(); // a ticked row shows − and +
+      await noLowContrast(page, 'choosing practices');
+      await startWithDefaults(page);
       await loadSampleData(page);
       await page.waitForTimeout(1600); // the mala's opening animation
       for (const t of ['Today', 'Insights', 'History', 'Setup']) {

@@ -63,7 +63,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 **Phase 0: Foundations**
 
 - [ ] **You:** stay on the free Spark plan for now (decided 8 October). Watch usage weekly in Firebase › Usage and billing; GTM.md › "Capacity on the free plan" lists the limits and what hits them first. Move to Blaze with a budget alert before any real promotion.
-- [ ] **Claude:** a new account chooses its practices before day one: suggestions for working professionals with the four current defaults ticked, minutes to adjust, and "add your own" (GTM-03, FIRST-01, FIRST-08 to FIRST-12). Branch `feat/first-run`.
 
 **Phase 1: Website**
 
@@ -109,6 +108,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] A new account chooses its practices before day one: "What do you want to make time for?" with eight suggestions (the four old defaults ticked), − and + for minutes, and "Add your own"; nothing is saved until Start (GTM-03, FIRST-01, FIRST-08 to FIRST-12), 8 October 2026
 - [x] Released 1.6.2: a start screen instead of a blank page on slow connections, with slow, stuck and offline messages; fonts no longer block the first paint. Checked live on a throttled phone connection (50 KB/s): start screen at 1.3 s, sign-in at 9.3 s, where it was blank for all 9 s before, 8 October 2026
 - [x] Google's font stylesheet loads in the background instead of holding up the first paint; the page draws in the system font until it arrives (APP-26), 8 October 2026
 - [x] A start screen from the first byte (in index.html, before any code arrives), kept up while Firebase starts and data loads: "Loading TikTym…", "Your connection seems slow" after 5 seconds, Reload after 20, an offline message, and a reload by itself when the connection returns (FIRST-03, FIRST-05, FIRST-06, FIRST-07), 8 October 2026

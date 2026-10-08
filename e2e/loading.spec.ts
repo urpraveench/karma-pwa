@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { expect, NOW, test } from './helpers';
+import { startWithDefaults, expect, NOW, test } from './helpers';
 import { lowContrast } from './contrast';
 
 // A slow connection: the app's code is held back until release() is called.
@@ -62,7 +62,7 @@ test('a returning user goes from the start screen straight to Today (FIRST-03)',
   await page.reload({ waitUntil: 'commit' });
   await expect(boot(page)).toBeVisible();
   release();
-  await expect(page.locator('.hello')).toBeVisible();
+  await startWithDefaults(page);
   await expect(boot(page)).toHaveCount(0);
 });
 

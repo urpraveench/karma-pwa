@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { startWithDefaults } from '../helpers';
 
 // Firestore and Auth traffic must always reach Firebase: a cached answer would show stale data or a stale sign-in.
 // Here they go to the emulators (127.0.0.1:8080 and :9099); live, to *.googleapis.com.
@@ -20,7 +21,7 @@ test('the service worker never answers or caches Firestore and Auth requests (AP
   await page.fill('#em', `sw${Date.now()}@test.local`);
   await page.fill('#pw', 'secret123');
   await page.click('button[type=submit]');
-  await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+  await startWithDefaults(page, { timeout: 15_000 });
   await page.locator('.cat').nth(1).locator('.qbtn').click();
   await expect(page.locator('.toast span').first()).toHaveText('Reading done for today');
   await page.reload();

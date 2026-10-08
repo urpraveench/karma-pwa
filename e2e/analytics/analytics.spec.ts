@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, signIn, tab, test, toast } from '../helpers';
+import { startWithDefaults } from '../helpers';
 
 // A build with a test GA4 ID. Google's script is replaced by a stub, so nothing reaches real Analytics; the test
 // reads what the app pushed to the dataLayer, which is exactly what gtag would send.
@@ -90,7 +91,7 @@ test('Setup › Privacy turns sharing off, stops events and removes the cookies 
   await page.locator('.cat').nth(0).locator('.qbtn').click();
   expect((await events(page)).length).toBe(before);
   await page.reload();
-  await expect(page.locator('.hello')).toBeVisible();
+  await startWithDefaults(page);
   await tab(page, 'Setup').click();
   await expect(page.locator('.li', { hasText: 'Share anonymous usage stats' })).toHaveAttribute('aria-pressed', 'false'); // remembered
 });

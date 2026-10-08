@@ -36,7 +36,14 @@ export async function signIn(page: Page, time = NOW) {
   await page.fill('#em', DEMO.email);
   await page.fill('#pw', DEMO.password);
   await page.click('button[type=submit]');
-  await expect(page.locator('.hello')).toBeVisible();
+  await startWithDefaults(page);
+}
+
+/** A brand-new account: takes the practices ticked on first run (FIRST-01), then waits for Today. */
+export async function startWithDefaults(page: Page, opts: { timeout?: number } = {}) {
+  await expect(page.locator('.hello, .first-run')).toBeVisible(opts);
+  if (await page.locator('.first-run').count()) await page.locator('.fr-start .btn').click();
+  await expect(page.locator('.hello')).toBeVisible(opts);
 }
 
 // --- seeded data, for scenarios that need history ---

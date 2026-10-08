@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { DEMO } from './helpers';
+import { DEMO, startWithDefaults } from './helpers';
 
 test.use({ serviceWorkers: 'allow' });
 
@@ -19,7 +19,7 @@ test.describe('Installable PWA', () => {
     await page.fill('#em', DEMO.email);
     await page.fill('#pw', DEMO.password);
     await page.click('button[type=submit]');
-    await expect(page.locator('.hello')).toBeVisible();
+    await startWithDefaults(page);
 
     await context.setOffline(true);
     await page.reload();

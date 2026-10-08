@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { startWithDefaults } from '../helpers';
 
 // Google sign-in against the Auth emulator, which stands in for Google with a page of pretend accounts.
 
@@ -13,13 +14,13 @@ async function continueWithGoogle(page: Page, email: string, name: string) {
   await popup.fill('#email-input', email);
   await popup.fill('#display-name-input', name);
   await popup.locator('button', { hasText: 'Sign in with Google.com' }).click(POPUP);
-  await expect(page.locator('.hello')).toBeVisible(POPUP);
+  await startWithDefaults(page, POPUP);
 }
 
 async function signInAgainWithGoogle(page: Page, email: string) {
   const [popup] = await Promise.all([page.waitForEvent('popup', POPUP), page.click('.gbtn')]);
   await popup.locator('li', { hasText: email }).click(POPUP); // the emulator lists accounts it has seen
-  await expect(page.locator('.hello')).toBeVisible(POPUP);
+  await startWithDefaults(page, POPUP);
 }
 
 test.beforeEach(async ({ page }) => {
@@ -53,7 +54,7 @@ test('Google with an email that already has a password account opens that accoun
   await page.fill('#em', email);
   await page.fill('#pw', 'secret123');
   await page.click('button[type=submit]');
-  await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+  await startWithDefaults(page, { timeout: 15_000 });
   await page.locator('.cat').nth(0).locator('.qbtn').click();
   await expect(page.locator('.toast span')).toHaveText('Exercise done for today');
 
@@ -80,7 +81,8 @@ test.describe('installed on an iPhone home screen', () => {
     await page.fill('#email-input', newEmail());
     await page.fill('#display-name-input', 'Meera Iyer');
     await page.locator('button', { hasText: 'Sign in with Google.com' }).click(POPUP);
-    await expect(page.locator('.hello')).toHaveText(/, Meera$/, POPUP);
+    await startWithDefaults(page, POPUP);
+    await expect(page.locator('.hello')).toHaveText(/, Meera$/);
     await expect(page.locator('.cat .cat-name')).toHaveText(['Exercise', 'Reading', 'Course study', 'Meditation']);
     expect(popups, 'no pop-up window').toBe(0);
   });

@@ -359,3 +359,18 @@ a.li{text-decoration:none;color:inherit}
   background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;font-weight:600;font-size:15px;max-width:90vw;animation:up .25s}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* First run: choosing practices (FIRST-08) */
+.first-run{max-width:520px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.fr-title{font-size:clamp(25px,7.2vw,30px);font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-top:2px}
+.first-run .lead{color:var(--ink-2);margin:8px 0 20px;font-size:16px}
+.fr-item{padding:4px 8px 4px 14px;gap:6px}
+.fr-pick{display:flex;align-items:center;gap:12px;flex:1;min-width:0;padding:10px 0;text-align:left;background:none;color:inherit}
+.fr-pick .tick{flex:none;width:24px;height:24px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center}
+.fr-pick[aria-pressed="true"] .tick{background:var(--ink);border-color:var(--ink)}
+.fr-pick[aria-pressed="true"] .tick::after{content:"";width:6px;height:11px;border:solid var(--bg);border-width:0 2.5px 2.5px 0;transform:translateY(-1px) rotate(45deg)}
+.fr-mins{display:flex;flex:none}
+.fr-mins .x{font-size:22px;font-weight:600;color:var(--ink)}
+.fr-own{display:flex;gap:10px;align-items:center;margin:-8px 0 18px}
+.fr-own .chip{flex:none;padding:12px 18px}
+.fr-start{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom,0px))}

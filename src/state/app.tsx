@@ -7,6 +7,7 @@ import { track } from '../lib/analytics';
 import { count, countActiveDevice, flushStats, type Counter } from '../lib/stats';
 import { haptic } from '../lib/feedback';
 import { moment as findMoment, type Moment } from '../lib/moments';
+import { startingCategories, type Choice } from '../lib/firstRun';
 import { defaultCategories, sampleData } from '../lib/sample';
 import { saveTimer } from '../lib/timer';
 import { newId } from '../lib/util';
@@ -17,7 +18,7 @@ import { useFeedback } from '../ui/feedback';
 export type View = 'today' | 'insights' | 'history' | 'setup';
 export type LogMethod = 'quick' | 'tile' | 'all_left' | 'custom' | 'timer' | 'other';
 export type Sheet = { kind: 'log'; catId?: string; custom?: boolean } | { kind: 'editCat'; id?: string } | { kind: 'share' } | { kind: 'editLog'; id: string } | null;
-type Phase = { kind: 'boot' } | { kind: 'login'; error?: string } | { kind: 'loading' } | { kind: 'ready' };
+type Phase = { kind: 'boot' } | { kind: 'login'; error?: string } | { kind: 'loading' } | { kind: 'choose' } | { kind: 'ready' };
 
 const EMPTY: AppData = { categories: [], logs: [], settings: {} };
 const METHOD_COUNTER: Record<LogMethod, Counter> = { quick: 'logQuick', tile: 'logTile', all_left: 'logAllLeft', custom: 'logCustom', timer: 'logTimer', other: 'logOther' };
@@ -79,13 +80,11 @@ function useAppState() {
     let d: AppData;
     try { d = await s.loadAll(); } catch (e) { console.error(e); setPhase({ kind: 'login', error: 'Could not load your data. Check Firestore rules and your connection.' }); return; }
     d = { ...d, settings: d.settings || {} };
-    if (!d.categories.length && !d.settings.seeded) {
-      d = { ...d, categories: defaultCategories(today()), settings: { ...d.settings, seeded: true } };
-      await Promise.all([...d.categories.map(x => s.putCategory(x)), s.putSettings(d.settings)]).catch(() => {});
-      count('signUps'); // a brand-new account, however it signed up
-    }
-    setData(d); setIntro(true); setPhase({ kind: 'ready' });
+    setData(d);
     countActiveDevice();
+    // a brand-new account chooses its practices first; nothing is saved until it does (FIRST-12)
+    if (!d.categories.length && !d.settings.seeded) { setPhase({ kind: 'choose' }); return; }
+    setIntro(true); setPhase({ kind: 'ready' });
   }, [setData]);
 
   const started = useRef(false);
@@ -110,6 +109,16 @@ function useAppState() {
   const persist = useCallback(async (fn: () => Promise<unknown>, okMsg?: string) => {
     try { await fn(); if (okMsg) toast(okMsg); } catch (e) { console.error(e); toast(SAVE_FAILED); }
   }, [toast]);
+
+  /** Creates the practices picked on first run and opens Today (FIRST-08). */
+  const choosePractices = useCallback((picked: Pick<Choice, 'name' | 'minutes'>[]) => {
+    if (!store || !picked.length) return;
+    const d0 = dataRef.current, categories = startingCategories(picked, today()), settings = { ...d0.settings, seeded: true };
+    setData({ ...d0, categories, settings });
+    void persist(() => Promise.all([...categories.map(c => store.putCategory(c)), store.putSettings(settings)]));
+    count('signUps'); // a brand-new account, however it signed up
+    setIntro(true); setPhase({ kind: 'ready' });
+  }, [store, setData, persist]);
 
   /** `method` says how the minutes were logged, for anonymous analytics (with consent). */
   const logEntry = useCallback((catId: string, mins: number, date: DateStr, note = '', method: LogMethod = 'other') => {
@@ -247,7 +256,7 @@ function useAppState() {
   }, [store, toast, signOut]);
 
   return {
-    phase, auth, user, data, T, c, moment, now, intro,
+    phase, auth, user, data, T, c, moment, now, intro, choosePractices,
     getData,
     view, setView, range, setRange, sheet, openSheet, closeSheet,
     hideMoment, tipHidden, hideTip,

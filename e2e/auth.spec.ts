@@ -1,4 +1,4 @@
-import { expect, test, DEMO, loadSampleData, open, signIn, tab } from './helpers';
+import { expect, test, DEMO, loadSampleData, open, signIn, tab, startWithDefaults } from './helpers';
 
 test.describe('Sign-in (test mode)', () => {
   test('shows the test login hint', async ({ page }) => {
@@ -31,7 +31,7 @@ test.describe('Sign-in (test mode)', () => {
     await page.fill('#em', 'DEMO@TikTym.local');
     await page.fill('#pw', DEMO.password);
     await page.click('button[type=submit]');
-    await expect(page.locator('.hello')).toBeVisible();
+    await startWithDefaults(page);
   });
 
   test('Google explains it is not set up in test mode (AUTH-08)', async ({ page }) => {

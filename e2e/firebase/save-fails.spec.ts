@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { expect, test, type APIRequestContext } from '@playwright/test';
+import { startWithDefaults } from '../helpers';
 
 // A save Firestore refuses (not just a lost connection, which Firestore queues) must say so. The emulator's rules are
 // swapped for ones that refuse writes from accounts named savefails…, so tests running alongside are unaffected.
@@ -24,7 +25,7 @@ test('a save Firestore refuses shows "Could not save", after the screen has alre
   await page.fill('#em', `savefails${Date.now()}@test.local`);
   await page.fill('#pw', 'secret123');
   await page.click('button[type=submit]');
-  await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+  await startWithDefaults(page, { timeout: 15_000 });
 
   await setRules(request, REFUSING);
   await page.locator('.cat').nth(1).locator('.qbtn').click();
@@ -44,7 +45,7 @@ test('a refused delete says so too (SYNC-13)', async ({ page, request }) => {
   await page.fill('#em', `savefails${Date.now()}@test.local`);
   await page.fill('#pw', 'secret123');
   await page.click('button[type=submit]');
-  await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+  await startWithDefaults(page, { timeout: 15_000 });
   await page.locator('.cat').nth(1).locator('.qbtn').click();
   await expect(toast(page)).toHaveText('Reading done for today');
 

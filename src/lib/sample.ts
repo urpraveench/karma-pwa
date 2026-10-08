@@ -1,11 +1,12 @@
 import { dueOn, targetMinutesOn } from './backlog';
 import { addDays, parse, today } from './date';
-import { COLORS, newId } from './util';
+import { firstChoices, startingCategories } from './firstRun';
+import { newId } from './util';
 import type { AppData, Category, DateStr, Log, Settings } from './types';
 
+/** The four practices ticked on first run (FIRST-01), used by Start over and the sample data. */
 export function defaultCategories(start: DateStr): Category[] {
-  return ([['Exercise', 30, COLORS[0]], ['Reading', 30, COLORS[1]], ['Course study', 30, COLORS[2]], ['Meditation', 10, COLORS[3]]] as const)
-    .map(([name, minutes, color], i) => ({ id: newId(), name, color, order: i, startDate: start, archivedFrom: null, targets: [{ from: start, minutes, days: [0, 1, 2, 3, 4, 5, 6] }] }));
+  return startingCategories(firstChoices().filter(c => c.picked), start);
 }
 
 /** Ten weeks of realistic history: improving overall, weak Saturdays, meditation slipping lately. */

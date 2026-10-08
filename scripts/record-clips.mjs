@@ -33,6 +33,7 @@ await p0.goto(URL_);
 await p0.fill('#em', 'demo@tiktym.local');
 await p0.fill('#pw', 'tiktym123');
 await p0.click('button[type=submit]');
+await p0.locator('.fr-start .btn').click(); // first run: start with the ticked defaults
 await p0.locator('.tab', { hasText: 'Setup' }).click();
 await p0.locator('.li', { hasText: 'Load sample data' }).click();
 await p0.locator('.tab', { hasText: 'Today' }).click();

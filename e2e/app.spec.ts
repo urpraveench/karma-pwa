@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { DEMO, expect, open, test, signIn, tab } from './helpers';
+import { DEMO, expect, open, test, signIn, tab, startWithDefaults } from './helpers';
 
 test('tab bar highlights the current tab and scrolls to the top (APP-01)', async ({ page }) => {
   await signIn(page);
@@ -59,6 +59,7 @@ test('the version shows on the login page and in Setup › About (APP-21)', asyn
   await page.fill('#em', DEMO.email);
   await page.fill('#pw', DEMO.password);
   await page.click('button[type=submit]');
+  await startWithDefaults(page);
   await tab(page, 'Setup').click();
   await expect(page.locator('.li.about .t')).toContainText(`TikTym ${version}`);
   await expect(page.locator('.li.about small')).toContainText(/^Build [0-9a-f]{7,}/);
@@ -81,6 +82,7 @@ test.describe('update bar (APP-22)', () => {
     await page.fill('#em', DEMO.email);
     await page.fill('#pw', DEMO.password);
     await page.click('button[type=submit]');
+    await startWithDefaults(page);
     for (const t of ['Today', 'Insights', 'History', 'Setup']) {
       await tab(page, t).click();
       await expect(page.locator('.update-bar')).toBeVisible();

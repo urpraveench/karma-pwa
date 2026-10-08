@@ -82,6 +82,13 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 - [ ] **You:** take part in r/developersIndia, r/IndianWorkplace and tech Slack/Discord communities before sharing TikTym.
 - [ ] **You:** list 10 productivity or career newsletters and creators and pitch them.
 
+## Anonymous usage totals
+
+- [ ] **Claude:** count anonymous daily totals for everyone in Firestore `stats/{date}`: active devices, sign-ups, entries (by how), minutes, timers started and finished, practices added, cards shared. Batched in the app; no user ID, device ID, names or cookies (STAT-01, STAT-02).
+- [ ] **Claude:** security rules: signed-in users may only add small amounts to known counters; nobody can read the totals from the app; tested on the emulator (STAT-03).
+- [ ] **Claude:** say so in the Privacy Policy (LEGAL-06).
+- [ ] **You:** after the release, look at Firebase › Firestore › `stats`: one document per day with the totals.
+
 ## 5. Remaining test gaps
 
 From FEATURES.md › "What's left to test".

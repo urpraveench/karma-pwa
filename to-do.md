@@ -65,6 +65,8 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 ## Go-to-market (see GTM.md)
 
+- [ ] **Claude:** ask for analytics consent with one unticked checkbox on Create account instead of the card on Today; Setup › Privacy keeps the switch; Privacy Policy wording to match (ANA-01, LEGAL-05).
+
 **Phase 0: Foundations**
 
 - [ ] **You:** stay on the free Spark plan for now (decided 8 October). Watch usage weekly in Firebase › Usage and billing; GTM.md › "Capacity on the free plan" lists the limits and what hits them first. Move to Blaze with a budget alert before any real promotion.

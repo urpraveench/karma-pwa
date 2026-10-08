@@ -1,5 +1,7 @@
 # TikTym go-to-market plan
 
+Day-to-day outreach (tasks, messages, tracking links, logs) is in [OUTREACH.md](OUTREACH.md).
+
 How TikTym gets its first users in India, and what has to be true before it does. Pending steps are tracked in [to-do.md](to-do.md) under "Go-to-market"; this file is the why.
 
 **Decided, 8 October 2026:** the name stays **TikTym** (no IP India results for "TikTym", nor for "TikTim" in phonetic search), the domain is **tiktym.com** (owned), and the first audience is **working professionals**.

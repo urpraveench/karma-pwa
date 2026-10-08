@@ -78,7 +78,9 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 **Phase 3: Launch**
 
-- [ ] **You:** set up a TikTym company page on LinkedIn; post 3 times a week (building in public, "busy weeks carry forward", monthly progress with Insights screenshots).
+Day-to-day outreach (tasks by date, messages, tracking links, share and feedback logs, weekly review) lives in [OUTREACH.md](OUTREACH.md).
+
+- [ ] **You:** post on the TikTym LinkedIn page 2 or 3 times a week (page set up 8 October) (building in public, "busy weeks carry forward", monthly progress with Insights screenshots).
 - [ ] **You:** run a 30-day learning challenge with your network, using TikTym.
 - [ ] **You:** take part in r/developersIndia, r/IndianWorkplace and tech Slack/Discord communities before sharing TikTym.
 - [ ] **You:** list 10 productivity or career newsletters and creators and pitch them.
@@ -105,6 +107,7 @@ From FEATURES.md › "What's left to test". None left: every scenario has a test
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] OUTREACH.md: outreach tasks by date, ready messages, tracking links per channel, share and feedback logs, weekly review, 8 October 2026
 - [x] LinkedIn company page set up (logo, cover, tagline); first post published with a 16-second app video (founder story: office, home, sleep, repeat), 8 October 2026
 - [x] Released 1.6.1: changes made just before the app closes are kept (SYNC-16). Checked live: https://app.tiktym.com/version.json shows 1.6.1, 8 October 2026
 - [x] Changes made just before the app closes are kept: each one is noted in localStorage until Firestore confirms it, and anything unconfirmed is shown and sent again on the next open. A log, edit or delete followed at once by a reload failed 2 times in 3 before; now passes every time (SYNC-16), 8 October 2026

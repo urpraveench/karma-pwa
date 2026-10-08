@@ -48,7 +48,7 @@ Google sign-in works on https://tiktym.web.app: in Safari, on a laptop, and in t
 
 **Trademark**
 
-- [ ] **You:** search IP India once more for **TikTim** in phonetic mode, classes 9 and 42, to rule out the closest app; then consider filing TikTym in classes 9 and 42 (about ₹4,500 per class).
+- [ ] **You (optional):** file TikTym as a trademark in India, classes 9 and 42 (about ₹4,500 per class).
 
 Preliminary findings (web search, 8 October 2026; not legal advice):
 
@@ -73,11 +73,11 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 - [ ] **You:** move the Firebase project to the **Blaze** plan and set a budget alert (for example ₹500 a month) before any promotion.
 - [ ] **Claude:** link previews for WhatsApp and social: title, description and a preview image (GTM-01).
 - [ ] **Claude:** "Send feedback" in Setup, opening an email to support (GTM-02).
-- [ ] **Claude:** first-run choice of practices, with an "Exam prep" preset (GTM-03).
+- [ ] **Claude (optional):** first-run choice of practices, so people can adjust the defaults before day one; the current defaults already suit professionals (GTM-03).
 
 **Phase 1: Website**
 
-- [ ] **Claude:** website at `tiktym.com` in `site/`: Home, How it works, Features, Install, For exam students, Privacy promise, FAQ, What's new (GTM-04).
+- [ ] **Claude:** website at `tiktym.com` in `site/`: Home, How it works, Features, Install, For working professionals, Privacy promise, FAQ, What's new (GTM-04).
 - [ ] **Claude:** feature clips recorded automatically from the app with one command (GTM-05).
 - [ ] **Claude:** move the app to `app.tiktym.com`, with `tiktym.web.app` redirecting so installed apps keep working (GTM-06).
 - [ ] **You:** add a cookie-free website counter (for example Cloudflare Web Analytics) and send Claude its snippet.
@@ -89,10 +89,11 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 **Phase 3: Launch**
 
-- [ ] **You:** start Instagram and YouTube accounts for TikTym; 3 short videos a week (study-with-me, backlog streaks, 30-day challenge).
-- [ ] **You:** list 20 small study creators and reach out.
-- [ ] **You:** join and take part in exam-prep communities (Reddit, Telegram, Discord) before sharing TikTym.
-- [ ] **Claude:** shareable streak card for Instagram stories (GTM-08).
+- [ ] **You:** set up a TikTym company page on LinkedIn; post 3 times a week (building in public, "busy weeks carry forward", monthly progress with Insights screenshots).
+- [ ] **You:** run a 30-day learning challenge with your network, using TikTym.
+- [ ] **You:** take part in r/developersIndia, r/IndianWorkplace and tech Slack/Discord communities before sharing TikTym.
+- [ ] **You:** list 10 productivity or career newsletters and creators and pitch them.
+- [ ] **Claude:** shareable progress card sized for LinkedIn and Instagram (GTM-08).
 
 ## 5. Remaining test gaps
 
@@ -118,6 +119,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] IP India phonetic search for "TikTim", classes 9 and 42: no results. Name TikTym settled for India. First audience changed to working professionals (GTM.md), 8 October 2026
 - [x] GTM decisions: keep the name TikTym (IP India search for "TikTym": no results), domain tiktym.com is owned, first audience is exam students. Plan in GTM.md, 8 October 2026
 - [x] Password after Google sign-in: Forgot password set a new one and email/password sign-in works alongside Google (AUTH-26). The reset email went to spam; see Other launch items, 8 October 2026
 - [x] Released 1.1.0 (commit 6184127): Terms of Service and Privacy Policy for India, linked from login and Setup, reCAPTCHA notice, available offline, 8 October 2026

@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { calc } from '../lib/backlog';
 import { today } from '../lib/date';
 import { track } from '../lib/analytics';
+import { count } from '../lib/stats';
 import { chime, haptic, primeAudio } from '../lib/feedback';
 import { elapsedMin, elapsedMs, fmtClock, loadTimer, saveTimer, type Timer } from '../lib/timer';
 import type { Category } from '../lib/types';
@@ -35,7 +36,7 @@ function useTimerState() {
       setMinute(Math.floor(ms / 60000));
       if (!tm.alerted && ms >= tm.goal * 60000) {
         set({ ...tm, alerted: true }); void chime(); haptic([30, 80, 30, 80, 60]);
-        track('timer_target_reached', { goal_minutes: tm.goal });
+        track('timer_target_reached', { goal_minutes: tm.goal }); count('timersReachedTarget');
         toast(`${c.name}: ${tm.goal} min target reached. Keep going or stop to log.`, 6000);
       }
     };
@@ -67,6 +68,7 @@ function useTimerState() {
     primeAudio(); haptic(12);
     set({ catId, startedAt: Date.now(), pausedMs: 0, pausedAt: null, goal: goalOverride || (left >= 5 ? Math.min(left, 120) : 25), alerted: false });
     hideTip(); closeSheet(); setFocusOpen(true);
+    count('timersStarted');
   }, [getData, set, logEntry, hideTip, closeSheet]);
 
   const togglePause = useCallback(() => {

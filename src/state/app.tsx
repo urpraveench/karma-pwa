@@ -4,6 +4,7 @@ import { calc } from '../lib/backlog';
 import { editCategory, newCategory, type CategoryForm } from '../lib/categories';
 import { dayLabel, today, ymd } from '../lib/date';
 import { track } from '../lib/analytics';
+import { count, countActiveDevice, flushStats, type Counter } from '../lib/stats';
 import { haptic } from '../lib/feedback';
 import { moment as findMoment, type Moment } from '../lib/moments';
 import { defaultCategories, sampleData } from '../lib/sample';
@@ -19,6 +20,7 @@ export type Sheet = { kind: 'log'; catId?: string; custom?: boolean } | { kind: 
 type Phase = { kind: 'boot' } | { kind: 'login'; error?: string } | { kind: 'loading' } | { kind: 'ready' };
 
 const EMPTY: AppData = { categories: [], logs: [], settings: {} };
+const METHOD_COUNTER: Record<LogMethod, Counter> = { quick: 'logQuick', tile: 'logTile', all_left: 'logAllLeft', custom: 'logCustom', timer: 'logTimer', other: 'logOther' };
 const SAVE_FAILED = 'Could not save. Check your connection.';
 const momentKey = (T: DateStr) => 'tiktym:moment:' + T;
 const TIP_KEY = 'tiktym:tip-timer';
@@ -80,8 +82,10 @@ function useAppState() {
     if (!d.categories.length && !d.settings.seeded) {
       d = { ...d, categories: defaultCategories(today()), settings: { ...d.settings, seeded: true } };
       await Promise.all([...d.categories.map(x => s.putCategory(x)), s.putSettings(d.settings)]).catch(() => {});
+      count('signUps'); // a brand-new account, however it signed up
     }
     setData(d); setIntro(true); setPhase({ kind: 'ready' });
+    countActiveDevice();
   }, [setData]);
 
   const started = useRef(false);
@@ -120,6 +124,7 @@ function useAppState() {
     store.addLog(l).catch(() => toast(SAVE_FAILED));
     const after = calc(d1, T0); haptic(12);
     track('log_entry', { method, minutes: mins, backfill: date !== T0 });
+    count('logs'); count('minutes', mins); count(METHOD_COUNTER[method]);
     const undo = () => {
       const cur = dataRef.current; setData({ ...cur, logs: cur.logs.filter(x => x.id !== l.id) });
       store.deleteLog(l).catch(() => {}); toast('Undone');
@@ -151,7 +156,7 @@ function useAppState() {
   const saveCategory = useCallback((id: string | undefined, f: CategoryForm) => {
     const d0 = dataRef.current, ex = id ? d0.categories.find(x => x.id === id) : undefined;
     if (ex) putCategory(editCategory(ex, f, today()), 'Saved changes');
-    else { putCategory(newCategory(f, d0.categories.length), `Added ${f.name}`); track('practice_added'); }
+    else { putCategory(newCategory(f, d0.categories.length), `Added ${f.name}`); track('practice_added'); count('practicesAdded'); }
   }, [putCategory]);
 
   const toggleArchive = useCallback((id: string) => {
@@ -205,7 +210,8 @@ function useAppState() {
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   }, []);
 
-  const signOut = useCallback(async () => { await auth?.signOut(); }, [auth]);
+  // save the anonymous totals first: once signed out, the rules refuse the write
+  const signOut = useCallback(async () => { flushStats(); await auth?.signOut(); }, [auth]);
 
   const deleteAccount = useCallback(async () => {
     if (!store?.deleteAccount) return;

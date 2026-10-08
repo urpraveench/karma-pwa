@@ -1,5 +1,6 @@
 import { config, FIREBASE_READY } from './config';
 import { LocalStore } from './store/local';
+import { setStatsSink } from './lib/stats';
 import type { Store } from './store/types';
 import type { User } from './lib/types';
 
@@ -68,9 +69,15 @@ function startLocalAuth(cb: AuthCallbacks): AuthApi {
 }
 
 async function startFirebaseAuth(cb: AuthCallbacks): Promise<AuthApi> {
-  const [{ auth, db }, A, { FirebaseStore }] = await Promise.all([import('./store/firebaseClient'), import('firebase/auth'), import('./store/firebase')]);
+  const [{ auth, db }, A, { FirebaseStore }, { firestoreStatsSink }] = await Promise.all([
+    import('./store/firebaseClient'), import('firebase/auth'), import('./store/firebase'), import('./store/stats'),
+  ]);
   A.getRedirectResult(auth).catch(e => console.warn(e));
-  A.onAuthStateChanged(auth, u => u ? cb.signedIn({ id: u.uid, email: u.email, name: u.displayName }, FirebaseStore(db, auth, u.uid)) : cb.signedOut());
+  A.onAuthStateChanged(auth, u => {
+    // anonymous daily totals are saved only while someone is signed in (the rules require it)
+    setStatsSink(u ? firestoreStatsSink(db) : null);
+    if (u) cb.signedIn({ id: u.uid, email: u.email, name: u.displayName }, FirebaseStore(db, auth, u.uid)); else cb.signedOut();
+  });
   const attempt = async (fn: () => Promise<unknown>) => { try { await fn(); return null; } catch (e) { return authMsg(e); } };
   return {
     firebase: true,

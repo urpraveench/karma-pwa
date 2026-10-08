@@ -235,3 +235,33 @@ test.describe('Analytics consent at sign-up (ANA-01)', () => {
     await expect(page.locator('.check')).toHaveCount(0);
   });
 });
+
+test.describe('Anonymous daily totals (STAT-01, STAT-02)', () => {
+  // Read stats/{day} as an administrator on the emulator (apps can't read it).
+  async function readStats(page: Page, day: string) {
+    const r = await page.request.get(`http://127.0.0.1:8080/v1/projects/demo-tiktym/databases/(default)/documents/stats/${day}`, { headers: { Authorization: 'Bearer owner' } });
+    if (r.status() === 404) return {} as Record<string, number>;
+    const fields = (await r.json()).fields || {};
+    return Object.fromEntries(Object.entries(fields).map(([k, v]) => [k, Number((v as { integerValue: string }).integerValue)])) as Record<string, number>;
+  }
+
+  test("a new user's activity reaches the day's totals, without identifiers", async ({ page }) => {
+    await openLogin(page);
+    const day = await page.evaluate(() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; });
+    const before = await readStats(page, day);
+    await page.locator('.link', { hasText: 'Create an account' }).click();
+    await signIn(page, newEmail());
+    await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+    await page.locator('.cat').nth(0).locator('.qbtn').click();                       // Exercise, 30 min
+    await page.locator('.cat').nth(1).locator('.cat-open').click();
+    await page.locator('.tile', { hasText: /^10$/ }).click();                         // Reading, 10 min
+    await page.evaluate(() => dispatchEvent(new Event('pagehide')));                 // save now
+    await expect.poll(async () => {
+      const after = await readStats(page, day), d = (k: string) => (after[k] || 0) - (before[k] || 0);
+      return [d('signUps') >= 1, d('activeDevices') >= 1, d('logs') >= 2, d('minutes') >= 40, d('logQuick') >= 1, d('logTile') >= 1];
+    }, { timeout: 15_000 }).toEqual([true, true, true, true, true, true]);
+    const r = await page.request.get(`http://127.0.0.1:8080/v1/projects/demo-tiktym/databases/(default)/documents/stats/${day}`, { headers: { Authorization: 'Bearer owner' } });
+    const keys = Object.keys((await r.json()).fields);
+    for (const k of keys) expect(['activeDevices', 'signUps', 'logs', 'minutes', 'logQuick', 'logTile', 'logAllLeft', 'logCustom', 'logTimer', 'logOther', 'timersStarted', 'timersReachedTarget', 'practicesAdded', 'cardsShared']).toContain(k);
+  });
+});

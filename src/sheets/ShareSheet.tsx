@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Sheet } from '../components/Sheet';
 import { track } from '../lib/analytics';
+import { count } from '../lib/stats';
 import { CARD, cardSummary, drawCard } from '../lib/card';
 import { cardStats } from '../lib/share';
 import { useApp } from '../state/app';
@@ -36,7 +37,7 @@ export function ShareSheet() {
     if (!file) return;
     try {
       await navigator.share({ files: [file], title: 'My TikTym progress', text: 'One minute, one point. tiktym.com' });
-      track('share_progress', { method: 'share' });
+      track('share_progress', { method: 'share' }); count('cardsShared');
     } catch (e) {
       if ((e as Error).name !== 'AbortError') toast("Couldn't open sharing here. Try Download instead.");
     }
@@ -44,7 +45,7 @@ export function ShareSheet() {
   function download() {
     if (!url) return;
     const a = document.createElement('a'); a.href = url; a.download = fileName; a.click();
-    track('share_progress', { method: 'download' });
+    track('share_progress', { method: 'download' }); count('cardsShared');
   }
 
   return (

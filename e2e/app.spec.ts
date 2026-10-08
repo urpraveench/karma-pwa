@@ -113,3 +113,22 @@ test.describe('update bar (APP-22)', () => {
     if (i >= 0) consoleErrors.splice(i, 1);
   });
 });
+
+test('sharing the link shows a title, description and preview image (GTM-01)', async ({ page, request }) => {
+  await page.goto('/');
+  const meta = (sel: string) => page.locator(sel).getAttribute('content');
+  expect(await meta('meta[property="og:title"]')).toBe("TikTym: make time for what you're learning");
+  expect(await meta('meta[property="og:description"]')).toContain('Busy weeks carry forward');
+  expect(await meta('meta[name="description"]')).toContain('made in India');
+  expect(await meta('meta[name="twitter:card"]')).toBe('summary_large_image');
+  const image = await meta('meta[property="og:image"]');
+  expect(image).toMatch(/^https:\/\/.+\/og\.png$/); // previews need an absolute URL
+  // the image itself ships with the app: a PNG small enough for WhatsApp
+  const png = await request.get('/og.png');
+  expect(png.ok()).toBe(true);
+  expect(png.headers()['content-type']).toBe('image/png');
+  const body = await png.body();
+  expect(body.length).toBeLessThan(300_000);
+  expect(body.readUInt32BE(16)).toBe(1200); // PNG header: width
+  expect(body.readUInt32BE(20)).toBe(630);  // and height
+});

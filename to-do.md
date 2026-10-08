@@ -71,7 +71,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 - [ ] **You:** add `tiktym.com` (website) and `app.tiktym.com` (app) as custom domains in Firebase › Hosting, and add the DNS records Firebase shows at GoDaddy. Claude will set up the second Hosting site first.
 - [ ] **You:** move the Firebase project to the **Blaze** plan and set a budget alert (for example ₹500 a month) before any promotion.
-- [ ] **Claude:** link previews for WhatsApp, LinkedIn and social: title, description and a preview image (GTM-01).
 - [ ] **Claude:** "Send feedback" in Setup, opening an email to support (GTM-02).
 - [ ] **Claude (optional):** first-run choice of practices, so people can adjust the defaults before day one; the current defaults already suit professionals (GTM-03).
 
@@ -119,6 +118,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Link previews: title, description and a 1200×630 preview image (`npm run og:image` redraws it) (GTM-01), 8 October 2026
 - [x] IP India phonetic search for "TikTim", classes 9 and 42: no results. Name TikTym settled for India. First audience changed to working professionals (GTM.md), 8 October 2026
 - [x] GTM decisions: keep the name TikTym (IP India search for "TikTym": no results), domain tiktym.com is owned, first audience is exam students. Plan in GTM.md, 8 October 2026
 - [x] Password after Google sign-in: Forgot password set a new one and email/password sign-in works alongside Google (AUTH-26). The reset email went to spam; see Other launch items, 8 October 2026

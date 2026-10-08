@@ -35,8 +35,8 @@ Summary of coverage at the time of writing:
 | 11. Settings and data (Setup) | 19 | 17 | 1 | 1 |
 | 12. Sync and storage | 14 | 12 | 1 | 1 |
 | 13. App shell, PWA and platform | 28 | 20 | 3 | 5 |
-| 14. Marketing and sharing | 4 | 3 | 1 | 0 |
-| **Total** | **231** | **210** | **6** | **15** |
+| 14. Marketing and sharing | 4 | 4 | 0 | 0 |
+| **Total** | **231** | **211** | **5** | **15** |
 
 ---
 
@@ -374,7 +374,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | GTM-01 | Link preview | Sharing the app's link (WhatsApp, LinkedIn, X, Slack) shows the TikTym title, a one-line description and a 1200×630 preview image | E2E `app.spec.ts` (how each service renders it: checked live after release) |
 | GTM-02 | Send feedback | Setup › About › Send feedback opens an email to support with the app version and build filled in | Unit `feedback.test.ts`, E2E `setup.spec.ts` |
 | GTM-05 | Feature clips | `npm run site:clips` records short looping MP4 clips of the real app (sample data, fixed date) for the website: Today, quick log, focus timer, backlog, Insights; each with a poster image | Unit `site-clips.test.ts` (files and sizes; content checked by eye at recording) |
-| GTM-04 | Website | `tiktym.com` (`site/`): Home with the pitch and "Open TikTym", How it works, Features with clips, For working professionals, Install (iPhone, Android), Privacy promise, FAQ, links to Terms and Privacy; fast and readable on a phone, no console errors | Gap |
+| GTM-04 | Website | `tiktym.com` (`site/`): Home with the pitch and "Open TikTym", How it works, Features with clips, For working professionals, Install (iPhone, Android), Privacy promise, FAQ, links to Terms and Privacy; fast and readable on a phone, no console errors | E2E `site/site.spec.ts` (phone and desktop) |
 
 ---
 

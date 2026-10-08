@@ -1,1 +1,18 @@
-{ "projects": { "default": "tiktym" } }
+{
+  "projects": {
+    "default": "tiktym"
+  },
+  "targets": {
+    "tiktym": {
+      "hosting": {
+        "app": [
+          "tiktym"
+        ],
+        "site": [
+          "tiktym-site"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

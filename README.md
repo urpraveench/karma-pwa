@@ -77,7 +77,7 @@ Settings are Vite env vars. Copy `.env.example` to `.env.local` and fill it in. 
    ```bash
    npm i -g firebase-tools
    firebase login
-   firebase deploy --only hosting,firestore
+   firebase deploy --only hosting:app,firestore
    ```
 7. On your phone, open `https://<project>.web.app` and use **Share › Add to Home Screen** (iOS) or **Install app** (Android).
 
@@ -118,6 +118,17 @@ users/{uid}/meta/settings     { seeded, schema: 2, backlogCap }
 ```
 
 The rules in `firestore.rules` restrict each user to their own `users/{uid}` tree. Logs are bucketed one doc per month, so an app open costs about (categories + months + 1) reads. A user with a year of history is around 17 reads per open, compared with about 1,500 under the old one-doc-per-log layout. Old data migrates automatically on first load (schema 1 to 2). Firestore offline persistence is enabled, so logging works without signal and syncs later.
+
+## Website
+
+The marketing website (tiktym.com) is plain HTML and CSS in `site/`, with no build step. It's a second Firebase Hosting site in the same project:
+
+| Hosting target | Site | Serves | Deploy |
+|---|---|---|---|
+| `app` | `tiktym` (tiktym.web.app) | the app, from `dist/` | `firebase deploy --only hosting:app` |
+| `site` | `tiktym-site` (tiktym-site.web.app) | the website, from `site/` | `firebase deploy --only hosting:site` |
+
+Its feature clips are recorded from the real app with `npm run site:clips` (sample data, a fixed date, a phone-sized window), and its preview image is drawn by `npm run og:image`. The browser tests check it on a phone and a desktop.
 
 ## Offline and updates
 

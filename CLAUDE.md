@@ -1,6 +1,6 @@
 # TikTym
 
-Habit-tracking PWA: React 19 + TypeScript + Vite, Firebase (Auth + Firestore) for sync, localStorage in test mode. See README.md for setup, FEATURES.md for every scenario, to-do.md for pending work.
+Habit-tracking PWA: React 19 + TypeScript + Vite, Firebase (Auth + Firestore) for sync, localStorage in test mode. The marketing website is plain HTML in `site/`. See README.md for setup, FEATURES.md for every scenario, to-do.md for pending work, GTM.md for the go-to-market plan.
 
 ## Workflow for every change
 
@@ -29,7 +29,8 @@ Every deploy gets a new version, so the app's version label and update bar mean 
 
 1. Bump the version: `npm version patch --no-git-tag-version` for fixes (1.0.0 → 1.0.1), `npm version minor --no-git-tag-version` for new features (1.0.1 → 1.1.0). Use `major` only for a change users must relearn.
 2. Commit the bump on its own ("Release 1.0.1") after the work it ships, so the build isn't stamped `-dirty`.
-3. `firebase deploy --only hosting` (it rebuilds `dist/` first), then check https://tiktym.web.app/version.json shows the new version and commit.
+3. `firebase deploy --only hosting:app` (it rebuilds `dist/` first), then check https://tiktym.web.app/version.json shows the new version and commit.
+   If the release changes anything visible, re-record the website's clips (`npm run site:clips`), check them by eye, and deploy the website: `firebase deploy --only hosting:site`.
 4. Add a line under Done in to-do.md: "Released 1.0.1: <what changed>".
 
 ## Commands
@@ -43,6 +44,8 @@ Every deploy gets a new version, so the app's version label and update bar mean 
 | `npm run test:e2e` | Browser tests in a visible window, then opens the HTML report |
 | `npm run test:all` | All three suites |
 | `npm run build` | Type-check and production build into `dist/` |
+| `npm run site:clips` | Re-record the website's feature clips from the real app |
+| `npm run og:image` | Redraw the link-preview image (app and website) |
 
 ## Conventions
 

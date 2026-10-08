@@ -1,9 +1,11 @@
-// Draws the link-preview image (public/og.png, 1200×630) shown when TikTym is shared on WhatsApp,
+// Draws the link-preview image (public/og.png for the app, site/og.png for the website; 1200×630) shown when TikTym is shared on WhatsApp,
 // LinkedIn, X or Slack. Run with `npm run og:image` after changing the pitch or brand.
 import { chromium } from '@playwright/test';
 import { fileURLToPath } from 'node:url';
+import { copyFileSync } from 'node:fs';
 
 const OUT = fileURLToPath(new URL('../public/og.png', import.meta.url));
+const SITE_COPY = fileURLToPath(new URL('../site/og.png', import.meta.url));
 
 // The mala: 108 beads, the first 70 filled, gold marker on top (as on the Today screen).
 const beads = Array.from({ length: 108 }, (_, i) => {
@@ -37,4 +39,5 @@ await page.setContent(html, { waitUntil: 'networkidle' });
 await page.evaluate(() => document.fonts.ready);
 await page.screenshot({ path: OUT, type: 'png' });
 await browser.close();
-console.log('wrote', OUT);
+copyFileSync(OUT, SITE_COPY);
+console.log('wrote', OUT, 'and', SITE_COPY);

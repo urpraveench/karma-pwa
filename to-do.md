@@ -69,13 +69,12 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 **Phase 0: Foundations**
 
-- [ ] **You:** add `tiktym.com` (website) and `app.tiktym.com` (app) as custom domains in Firebase › Hosting, and add the DNS records Firebase shows at GoDaddy. Claude will set up the second Hosting site first.
+- [ ] **You:** connect the domains in Firebase › Hosting. On the **tiktym-site** site: Add custom domain › `tiktym.com` (and `www.tiktym.com`, redirecting to it). Add the records Firebase shows in GoDaddy › DNS, and tell Claude when they're in. `app.tiktym.com` for the app comes with GTM-06.
 - [ ] **You:** move the Firebase project to the **Blaze** plan and set a budget alert (for example ₹500 a month) before any promotion.
 - [ ] **Claude (optional):** first-run choice of practices, so people can adjust the defaults before day one; the current defaults already suit professionals (GTM-03).
 
 **Phase 1: Website**
 
-- [ ] **Claude:** website at `tiktym.com` in `site/`: Home, How it works, Features, Install, For working professionals, Privacy promise, FAQ, What's new (GTM-04).
 - [ ] **Claude:** move the app to `app.tiktym.com`, with `tiktym.web.app` redirecting so installed apps keep working (GTM-06).
 - [ ] **You:** add a cookie-free website counter (for example Cloudflare Web Analytics) and send Claude its snippet.
 
@@ -116,6 +115,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Website live at https://tiktym-site.web.app (tiktym.com once the domain is connected): Home, How it works, four features with clips, For working professionals, Install, Privacy, FAQ (GTM-04), 8 October 2026
 - [x] Feature clips recorded from the real app with `npm run site:clips`: Today, focus timer, backlog, Insights (GTM-05), 8 October 2026
 - [x] Send feedback in Setup › About, an email to support with the version filled in (GTM-02), 8 October 2026
 - [x] Link previews: title, description and a 1200×630 preview image (`npm run og:image` redraws it) (GTM-01), 8 October 2026

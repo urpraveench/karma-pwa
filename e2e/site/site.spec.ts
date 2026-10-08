@@ -53,6 +53,12 @@ test.describe('website (GTM-04)', () => {
     await expect(page.locator('footer a', { hasText: 'Privacy' })).toHaveAttribute('href', `${APP}privacy/`);
   });
 
+  test('serves the email header image (AUTH-29)', async ({ request }) => {
+    const r = await request.get('/email/header.png');
+    expect(r.status()).toBe(200);
+    expect(r.headers()['content-type']).toBe('image/png');
+  });
+
   test('link preview tags', async ({ page }) => {
     await page.goto('/');
     expect(await page.locator('meta[property="og:image"]').getAttribute('content')).toBe('https://tiktym.com/og.png');

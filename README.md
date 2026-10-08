@@ -128,6 +128,8 @@ The marketing website (tiktym.com) is plain HTML and CSS in `site/`, with no bui
 | `app` | `tiktym` (tiktym.web.app) | the app, from `dist/` | `firebase deploy --only hosting:app` |
 | `site` | `tiktym-site` (tiktym-site.web.app) | the website, from `site/` | `firebase deploy --only hosting:site` |
 
+Account emails: the password-reset message body is `email/password-reset.html`, pasted into Firebase › Authentication › Templates; its header image is `site/email/header.png` (`npm run email:header`).
+
 Its feature clips are recorded from the real app with `npm run site:clips` (sample data, a fixed date, a phone-sized window), and its preview image is drawn by `npm run og:image`. The browser tests check it on a phone and a desktop.
 
 ## Offline and updates

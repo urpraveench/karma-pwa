@@ -35,7 +35,6 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 Google sign-in works on https://tiktym.web.app: in Safari, on a laptop, and in the installed iPhone app.
 
 - [ ] **You:** if Google's email field ever again shows no cursor or keyboard in the installed iPhone app, note the iOS version and tell Claude. Seen once on iPhone 14 Plus on 8 October 2026; not reproduced since, nor in the simulator.
-- [ ] **You:** if your TikTym account uses the same email as your Google account, check whether password sign-in still works afterwards (AUTH-26). Firebase removes the password from accounts whose email was never verified; your data stays. Use Forgot password to set a new one if you want both.
 
 ## 4. Public launch
 
@@ -61,7 +60,9 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 **Other launch items**
 
-- [ ] **You:** customise the password-reset email template in Authentication › Templates.
+- [ ] **You:** account emails (password reset) land in spam because they come from `noreply@tiktym.firebaseapp.com`. Send them from a domain you own: Firebase › Authentication › Templates › **Customize domain**, then add the DNS records Firebase shows (SPF and DKIM) at your domain's DNS host. Tell Claude which domain (AUTH-28).
+- [ ] **You:** customise the password-reset email template in Authentication › Templates: sender name **TikTym**, a clear subject such as "Reset your TikTym password", and a reply-to address.
+- [ ] **You:** after both, send yourself a reset email and check it arrives in the inbox, not spam (AUTH-28).
 - [ ] **You:** before moving to the paid Blaze plan, set budget alerts on the billing account. Alerts notify you; they don't cap spend.
 
 ## 5. Remaining test gaps
@@ -88,6 +89,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Password after Google sign-in: Forgot password set a new one and email/password sign-in works alongside Google (AUTH-26). The reset email went to spam; see Other launch items, 8 October 2026
 - [x] Released 1.1.0 (commit 6184127): Terms of Service and Privacy Policy for India, linked from login and Setup, reCAPTCHA notice, available offline, 8 October 2026
 - [x] Terms and Privacy linked from the login screen and Setup › About; Google's reCAPTCHA notice on the login screen when App Check is on; both pages available offline (AUTH-21, LEGAL-03, LEGAL-04), 8 October 2026
 - [x] Privacy Policy for India's DPDP Act 2023 at `/privacy/`, based on what the app actually stores (LEGAL-02), 8 October 2026

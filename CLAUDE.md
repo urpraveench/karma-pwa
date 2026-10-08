@@ -31,7 +31,7 @@ Every deploy gets a new version, so the app's version label and update bar mean 
 
 1. Bump the version: `npm version patch --no-git-tag-version` for fixes (1.0.0 → 1.0.1), `npm version minor --no-git-tag-version` for new features (1.0.1 → 1.1.0). Use `major` only for a change users must relearn.
 2. Commit the bump on its own ("Release 1.0.1") after the work it ships, so the build isn't stamped `-dirty`.
-3. `firebase deploy --only hosting:app` (it rebuilds `dist/` first), then check https://tiktym.web.app/version.json shows the new version and commit.
+3. `firebase deploy --only hosting:app` (it rebuilds `dist/` first), then check https://tiktym.web.app/version.json shows the new version and commit. If `firestore.rules` changed, deploy them in the same command (`--only hosting:app,firestore:rules`); an app that writes something the live rules don't allow fails silently.
    If the release changes anything visible, re-record the website's clips (`npm run site:clips`), check them by eye, and deploy the website: `firebase deploy --only hosting:site`.
 4. Add a line under Done in to-do.md: "Released 1.0.1: <what changed>".
 

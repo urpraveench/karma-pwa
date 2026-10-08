@@ -69,14 +69,14 @@ function startLocalAuth(cb: AuthCallbacks): AuthApi {
 }
 
 async function startFirebaseAuth(cb: AuthCallbacks): Promise<AuthApi> {
-  const [{ auth, db }, A, { FirebaseStore }, { firestoreStatsSink }] = await Promise.all([
-    import('./store/firebaseClient'), import('firebase/auth'), import('./store/firebase'), import('./store/stats'),
+  const [{ auth, db }, A, { FirebaseStore }, { firestoreStatsSink }, { withOutbox }] = await Promise.all([
+    import('./store/firebaseClient'), import('firebase/auth'), import('./store/firebase'), import('./store/stats'), import('./store/outbox'),
   ]);
   A.getRedirectResult(auth).catch(e => console.warn(e));
   A.onAuthStateChanged(auth, u => {
     // anonymous daily totals are saved only while someone is signed in (the rules require it)
     setStatsSink(u ? firestoreStatsSink(db) : null);
-    if (u) cb.signedIn({ id: u.uid, email: u.email, name: u.displayName }, FirebaseStore(db, auth, u.uid)); else cb.signedOut();
+    if (u) cb.signedIn({ id: u.uid, email: u.email, name: u.displayName }, withOutbox(FirebaseStore(db, auth, u.uid), 'tiktym:outbox:' + u.uid)); else cb.signedOut();
   });
   const attempt = async (fn: () => Promise<unknown>) => { try { await fn(); return null; } catch (e) { return authMsg(e); } };
   return {

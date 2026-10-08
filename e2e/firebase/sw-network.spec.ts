@@ -23,7 +23,6 @@ test('the service worker never answers or caches Firestore and Auth requests (AP
   await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
   await page.locator('.cat').nth(1).locator('.qbtn').click();
   await expect(page.locator('.toast span').first()).toHaveText('Reading done for today');
-  await page.waitForTimeout(1000); // let Firestore save it first: a reload within a few ms can lose it (see to-do.md)
   await page.reload();
   await expect(page.locator('.cat').nth(1).locator('.cat-meta')).toHaveText('Done, 30 logged', { timeout: 15_000 });
 

@@ -18,7 +18,6 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] **You:** after the fix, run the 5-minute Meditation test again: the chime should play right as the timer reaches its target (TIMER-05).
-- [ ] The loading screen shows briefly on a slow connection (FIRST-03)
 - [ ] A Firestore failure on load returns to sign-in with a clear message (FIRST-04)
 - [ ] A Firebase SDK failure to load shows its message (AUTH-22)
 - [ ] Test mode never downloads the Firebase SDK: check the network tab (SYNC-14)
@@ -97,7 +96,6 @@ From FEATURES.md › "What's left to test". None left: every scenario has a test
 
 No more blank screen on a slow connection (reported by a friend, 8 October 2026). Before anything showed, a phone downloaded Google's font stylesheet (which blocks the first paint), about 100 KB of app code and, in Firebase mode, about 190 KB of Firebase SDK, with nothing on screen. Branch `fix/slow-start`.
 
-- [ ] **Claude:** a loading screen from the first byte, with "Your connection seems slow" after 5 seconds, a Reload button after 20, and an offline message (FIRST-03, FIRST-05, FIRST-06, FIRST-07).
 - [ ] **Claude:** the font stylesheet no longer holds up the first paint (APP-26).
 
 - [ ] **Claude (before scale):** load only recent months on app open, using the offline cache for older ones. Today every open downloads a user's full history: fine now, but after a year it is about 230 KB and 17 reads per open, which makes Firestore's free 10 GiB/month egress the first limit for long-time users.
@@ -112,6 +110,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] A start screen from the first byte (in index.html, before any code arrives), kept up while Firebase starts and data loads: "Loading TikTym…", "Your connection seems slow" after 5 seconds, Reload after 20, an offline message, and a reload by itself when the connection returns (FIRST-03, FIRST-05, FIRST-06, FIRST-07), 8 October 2026
 - [x] OUTREACH.md: outreach tasks by date, ready messages, tracking links per channel, share and feedback logs, weekly review, 8 October 2026
 - [x] LinkedIn company page set up (logo, cover, tagline); first post published with a 16-second app video (founder story: office, home, sleep, repeat), 8 October 2026
 - [x] Released 1.6.1: changes made just before the app closes are kept (SYNC-16). Checked live: https://app.tiktym.com/version.json shows 1.6.1, 8 October 2026

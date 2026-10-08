@@ -7,6 +7,7 @@ import { moveAction } from './lib/moved';
 import { applyTheme, readTheme } from './state/theme';
 import './styles.css';
 
+window.tiktymStarted = true; // the start screen in index.html stops waiting to reload when the connection returns
 const move = moveAction(location.href, installedApp());
 if (move && move !== 'bar') {
   location.replace(move.go); // the old address in a browser tab: straight to app.tiktym.com (GTM-08)

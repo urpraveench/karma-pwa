@@ -28,8 +28,55 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* The start screen (FIRST-03, FIRST-05 to FIRST-07): drawn from this file alone, before any app code or font arrives.
+   The app removes #boot once the sign-in screen or Today is ready. */
+html{background:#EDF0EA}
+#boot{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:#EDF0EA;color:#16302E;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+#boot svg{width:76px;height:76px}
+#boot .f{fill:#16302E}#boot .e{fill:#CBD5CA}#boot .g{fill:#C98E0E}
+#boot b{font-size:30px;font-weight:800;letter-spacing:-.02em}
+#boot p{max-width:300px;font-size:16px;line-height:1.45;color:#3F5149;margin:0}
+#boot button{margin-top:6px;font:inherit;font-weight:700;font-size:16px;padding:12px 28px;border:0;border-radius:14px;background:#16302E;color:#EDF0EA;cursor:pointer}
+#boot button[hidden]{display:none}
+@media (prefers-color-scheme:dark){html,#boot{background:#0F1B19}#boot{color:#E4ECE7}#boot p{color:#AFC2B9}#boot .f{fill:#E4ECE7}#boot .e{fill:#2C433F}#boot .g{fill:#E6B23C}#boot button{background:#E4ECE7;color:#0F1B19}}
+</style>
 </head>
 <body>
+<div id="boot" role="status" aria-live="polite">
+  <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50.0" cy="12.0" r="6" class="g"/><circle cx="59.8" cy="13.3" r="3.6" class="f"/><circle cx="69.0" cy="17.1" r="3.6" class="f"/><circle cx="76.9" cy="23.1" r="3.6" class="f"/><circle cx="82.9" cy="31.0" r="3.6" class="f"/><circle cx="86.7" cy="40.2" r="3.6" class="f"/><circle cx="88.0" cy="50.0" r="3.6" class="f"/><circle cx="86.7" cy="59.8" r="3.6" class="f"/><circle cx="82.9" cy="69.0" r="3.6" class="f"/><circle cx="76.9" cy="76.9" r="3.6" class="f"/><circle cx="69.0" cy="82.9" r="3.6" class="f"/><circle cx="59.8" cy="86.7" r="3.6" class="f"/><circle cx="50.0" cy="88.0" r="3.6" class="f"/><circle cx="40.2" cy="86.7" r="3.6" class="f"/><circle cx="31.0" cy="82.9" r="3.6" class="f"/><circle cx="23.1" cy="76.9" r="3.6" class="f"/><circle cx="17.1" cy="69.0" r="3.6" class="f"/><circle cx="13.3" cy="59.8" r="3.6" class="e"/><circle cx="12.0" cy="50.0" r="3.6" class="e"/><circle cx="13.3" cy="40.2" r="3.6" class="e"/><circle cx="17.1" cy="31.0" r="3.6" class="e"/><circle cx="23.1" cy="23.1" r="3.6" class="e"/><circle cx="31.0" cy="17.1" r="3.6" class="e"/><circle cx="40.2" cy="13.3" r="3.6" class="e"/></svg>
+  <b>TikTym</b>
+  <p class="boot-msg">Loading TikTym…</p>
+  <button type="button" hidden>Reload</button>
+</div>
+<script>
+// Timed messages for the start screen. Plain script, so it runs while the app's code is still downloading.
+(function () {
+  var start = Date.now(), el = document.getElementById('boot'), msg = el.querySelector('.boot-msg'), btn = el.querySelector('button');
+  var TEXT = {
+    loading: 'Loading TikTym…',
+    slow: 'Your connection seems slow. TikTym is still loading, and it opens instantly next time.',
+    stuck: 'Still loading? Check your connection, then try again.',
+    offline: 'You\u2019re offline. TikTym needs a connection the first time it opens; after that it works offline.'
+  };
+  function stage() {
+    var ms = Date.now() - start;
+    return !navigator.onLine ? 'offline' : ms >= 20000 ? 'stuck' : ms >= 5000 ? 'slow' : 'loading';
+  }
+  function show() {
+    if (!el.isConnected) return;
+    var s = stage();
+    if (el.dataset.stage === s) return;
+    el.dataset.stage = s; msg.textContent = TEXT[s]; btn.hidden = s !== 'stuck' && s !== 'offline';
+  }
+  var timer = setInterval(function () { if (el.isConnected) show(); else clearInterval(timer); }, 500);
+  addEventListener('offline', show);
+  // back online before the app could start: load it again, since its code may have failed to arrive
+  addEventListener('online', function () { if (el.isConnected && !window.tiktymStarted) location.reload(); else show(); });
+  btn.onclick = function () { location.reload(); };
+  show();
+})();
+</script>
 <div id="root"></div>
 <script type="module" src="/src/main.tsx"></script>
 </body>

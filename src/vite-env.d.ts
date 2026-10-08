@@ -26,3 +26,8 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+interface Window {
+  /** Set as soon as the app's code runs; read by the start screen in index.html. */
+  tiktymStarted?: boolean;
+}

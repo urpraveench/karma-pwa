@@ -84,7 +84,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 ## Anonymous usage totals
 
-- [ ] **Claude:** say so in the Privacy Policy (LEGAL-06).
 - [ ] **You:** after the release, look at Firebase › Firestore › `stats`: one document per day with the totals.
 
 ## 5. Remaining test gaps
@@ -112,6 +111,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Privacy Policy explains the anonymous daily totals (LEGAL-06), 8 October 2026
 - [x] Anonymous daily totals for everyone in Firestore `stats/{date}`, batched, no identifiers (STAT-01, STAT-02), 8 October 2026
 - [x] Security rules for anonymous totals: only small increments to known counters, no reads from apps (STAT-03), 8 October 2026
 - [x] Google Analytics data retention set to 14 months, matching the Privacy Policy; Google signals are switched off by the app and website on every hit, 8 October 2026

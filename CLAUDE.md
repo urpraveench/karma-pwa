@@ -19,6 +19,8 @@ Before each commit, run the checks for what changed. All must pass:
 
 Gate the commit on each command's exit code (`set -o pipefail` when piping output), never on a printed summary line: Playwright prints failures above its last line, and the emulator projects retry once, so a summary can look green when it isn't.
 
+If browser tests fail only by timing out (a page or Chrome slow to start) while the machine is busy, check `uptime`; rerun with `--workers=2` rather than changing the test, and say so.
+
 Push only when the user asks.
 
 If the user asks for something that skips a step (for example "just fix it quickly"), still do steps 1 to 4, but say so in one line rather than asking.

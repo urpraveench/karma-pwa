@@ -45,6 +45,12 @@ test.describe('Privacy Policy (LEGAL-02)', () => {
     await expect(page.locator('a[href="https://policies.google.com/terms"]')).toBeVisible();
   });
 
+  test('explains the anonymous daily totals (LEGAL-06)', async ({ page }) => {
+    await page.goto('/privacy/');
+    await expect(page.locator('h2', { hasText: 'Anonymous daily totals' })).toBeVisible();
+    await expect(page.locator('main')).toContainText("Nothing that identifies you or your device is included");
+  });
+
   test('describes optional Google Analytics and how to turn it off (LEGAL-05)', async ({ page }) => {
     await page.goto('/privacy/');
     const body = page.locator('main');

@@ -1,0 +1,23 @@
+/* Terms and Privacy pages: TikTym's colours and type, readable on a phone. */
+:root{--bg:#EDF0EA;--surface:#F8FAF6;--ink:#16302E;--ink-2:#55685F;--line:#CBD5CA;--gold:#C98E0E;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1B19;--surface:#162624;--ink:#E4ECE7;--ink-2:#93A89F;--line:#2C433F;--gold:#E6B23C;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 "Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:680px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top,0px)) 18px calc(48px + env(safe-area-inset-bottom,0px))}
+.back{display:inline-block;margin-bottom:18px;color:var(--ink-2);font-weight:600;text-decoration:none}
+.back:hover{color:var(--ink)}
+h1,h2{font-family:"Bricolage Grotesque",ui-rounded,system-ui,sans-serif;line-height:1.15;letter-spacing:-.01em}
+h1{font-size:34px;font-weight:800;margin:0 0 6px}
+h2{font-size:21px;font-weight:700;margin:32px 0 8px}
+.meta{color:var(--ink-2);font-size:14px;margin:0 0 22px}
+.summary{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 18px;margin:0 0 8px}
+.summary p{margin:6px 0}
+p,li{max-width:65ch}
+ul{padding-left:22px}
+li{margin:4px 0}
+a{color:var(--ink);text-decoration-color:var(--gold);text-underline-offset:3px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:8px 0}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-top:1px solid var(--line)}
+th{font-weight:700;color:var(--ink-2);font-size:13px;text-transform:uppercase;letter-spacing:.04em;border-top:0}
+.table{overflow-x:auto}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--ink-2);font-size:14px}

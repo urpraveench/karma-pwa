@@ -34,8 +34,8 @@ Summary of coverage at the time of writing:
 | 10. Practices (Setup) | 21 | 21 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 17 | 1 | 1 |
 | 12. Sync and storage | 14 | 12 | 1 | 1 |
-| 13. App shell, PWA and platform | 28 | 16 | 7 | 5 |
-| **Total** | **226** | **202** | **10** | **14** |
+| 13. App shell, PWA and platform | 28 | 17 | 6 | 5 |
+| **Total** | **226** | **203** | **9** | **14** |
 
 ---
 
@@ -359,7 +359,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | APP-22 | Newer version live | A bar at the top of every screen, including login: "New version ready (1.0.1)" with Reload; Reload loads the new version. No bar when up to date, offline, or in the dev server | E2E `app.spec.ts` (the offline case isn't tested) |
 | APP-23 | Version file | Each build publishes `version.json` (version, commit, build date); the service worker never caches it | Unit `version.test.ts`, E2E `pwa.spec.ts` |
 | APP-24 | App Check | With `VITE_RECAPTCHA_SITE_KEY` set, the app attaches a reCAPTCHA Enterprise (Google Cloud Fraud Defense) App Check token to Firebase requests; without it, and in test mode or with the emulators, App Check is off | Unit `app-check.test.ts` (the on/off switch; live tokens are checked in the Firebase console, see to-do.md) |
-| LEGAL-01 | Terms page | `/terms/` shows the Terms of Service under Indian law: operator Pramal IT Services Private Limited (CIN), eligibility, accounts, acceptable use, your data, no medical advice, availability, liability, termination, governing law and courts in Andhra Pradesh, grievance contact | Gap |
+| LEGAL-01 | Terms page | `/terms/` shows the Terms of Service under Indian law: operator Pramal IT Services Private Limited (CIN), eligibility, accounts, acceptable use, your data, no medical advice, availability, liability, termination, governing law and courts in Andhra Pradesh, grievance contact | E2E `legal.spec.ts` |
 | LEGAL-02 | Privacy page | `/privacy/` shows, for India's DPDP Act 2023: what's collected (account, practice data, device storage, reCAPTCHA signals), why, where it's stored (Mumbai), processors (Google), retention, rights (access, correction, export, erasure, grievance, Data Protection Board), 18+, changes, contact | Gap |
 | LEGAL-03 | reCAPTCHA notice | With App Check on, the login screen says "Protected by reCAPTCHA" with links to Google's Privacy Policy and Terms, as Google requires when the badge is hidden | Gap |
 | LEGAL-04 | Legal pages offline | `/terms/` and `/privacy/` open without a connection once the app has been installed | Gap |

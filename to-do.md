@@ -60,7 +60,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 **Other launch items**
 
-- [ ] **You:** account emails (password reset) land in spam because they come from `noreply@tiktym.firebaseapp.com`. Send them from tiktym.com: Firebase › Authentication › **Templates** tab › click **Password reset** › click the **pencil (edit)** icon › under the sender address, **Customize domain** › enter `tiktym.com` › add the DNS records shown (a TXT for verification, plus SPF and two DKIM CNAMEs) in GoDaddy › **Verify** (up to 48 hours). If that link isn't there, use **SMTP settings** in the same Templates list to send through your own mailbox provider instead. Tell Claude which records you added and Claude will check them (AUTH-28).
 - [ ] **You:** customise the password-reset email template in Authentication › Templates: sender name **TikTym**, a clear subject such as "Reset your TikTym password", and a reply-to address.
 - [ ] **You:** after both, send yourself a reset email and check it arrives in the inbox, not spam (AUTH-28).
 - [ ] **You:** before moving to the paid Blaze plan, set budget alerts on the billing account. Alerts notify you; they don't cap spend.
@@ -116,6 +115,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Account emails sent from tiktym.com: domain verified in Firebase; SPF, `firebase=tiktym` and both DKIM records confirmed in DNS (AUTH-28), 8 October 2026
 - [x] App Check token time to live set to 7 days, so the free 10,000 reCAPTCHA checks a month cover about 2,000 daily users, 8 October 2026
 - [x] Released 1.2.0 (commit e878f1a): link previews for WhatsApp, LinkedIn and X; Send feedback in Setup, 8 October 2026
 - [x] Website live at https://tiktym-site.web.app (tiktym.com once the domain is connected): Home, How it works, four features with clips, For working professionals, Install, Privacy, FAQ (GTM-04), 8 October 2026

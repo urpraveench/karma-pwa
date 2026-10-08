@@ -15,7 +15,7 @@ Pulls the app's anonymous daily totals (Firestore `stats/{date}`) into a Google 
    - **Review permissions** › choose your account.
    - Google warns that the app isn't verified. That's expected for your own script: **Advanced** › **Go to … (unsafe)** › **Allow**.
    It needs to read the Firestore database, edit this spreadsheet, and run on a schedule.
-6. **Back in the Sheet:** you'll see **Daily totals**, **Weekly** and **Charts** tabs, and a **TikTym** menu (reload the Sheet if the menu isn't there yet).
+6. **Back in the Sheet:** you'll see **Daily totals**, **Weekly** and **Charts** tabs. **Reload the Sheet** (⌘R) to get the **TikTym** menu: it's added when the Sheet opens. (Or run `installDailyTrigger` from the Apps Script editor for the next step.)
 7. **Refresh every morning:** **TikTym › Refresh every morning** (once).
 
 ## Using it

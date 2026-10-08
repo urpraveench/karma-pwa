@@ -84,7 +84,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 ## Anonymous usage totals
 
-- [ ] **You:** in the Sheet, TikTym › **Refresh every morning** (once), then check Apps Script › Triggers shows `refresh`, Day timer, 7am to 8am (STAT-04).
 
 ## 5. Remaining test gaps
 
@@ -111,6 +110,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Google Sheet set to refresh every morning, 7–8 am IST (STAT-04), 8 October 2026
 - [x] Anonymous daily totals arriving in Firestore `stats` (seen through the Sheet), 8 October 2026
 - [x] Google Sheet set up; Refresh pulls the anonymous totals from Firestore (STAT-04), 8 October 2026
 - [x] Google Sheets report for the anonymous totals: `tools/sheets/` (Apps Script, manifest, setup guide) (STAT-04), 8 October 2026

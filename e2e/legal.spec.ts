@@ -23,3 +23,31 @@ test.describe('Terms of Service (LEGAL-01)', () => {
     await expect(page.locator('.login h1')).toHaveText('TikTym');
   });
 });
+
+test.describe('Privacy Policy (LEGAL-02)', () => {
+  test('covers the DPDP Act essentials', async ({ page }) => {
+    await page.goto('/privacy/');
+    await expect(page).toHaveTitle('Privacy Policy · TikTym');
+    const body = page.locator('main');
+    await expect(body).toContainText('Digital Personal Data Protection Act, 2023');
+    await expect(body).toContainText('Data Fiduciary');
+    await expect(body).toContainText('Pramal IT Services Private Limited');
+    for (const what of ['Account', 'Your practices', 'Your entries', 'Settings', 'Security signals', 'Technical data'])
+      await expect(page.locator('td', { hasText: new RegExp(`^${what}$`) })).toBeVisible();
+    await expect(body).toContainText('Google Cloud Firestore in Mumbai, India');
+    for (const right of ['Access', 'Correct or update', 'Erase', 'Withdraw consent', 'Nominate', 'Raise a grievance'])
+      await expect(page.locator('li strong', { hasText: right })).toBeVisible();
+    await expect(body).toContainText('Data Protection Board of India');
+    await expect(body).toContainText('aged 18 and over');
+    // Google requires this wording when the reCAPTCHA badge is hidden
+    await expect(body).toContainText('This site is protected by reCAPTCHA, and the Google Privacy Policy and Terms of Service apply.');
+    await expect(page.locator('a[href="https://policies.google.com/privacy"]')).toBeVisible();
+    await expect(page.locator('a[href="https://policies.google.com/terms"]')).toBeVisible();
+  });
+
+  test('links to the Terms', async ({ page }) => {
+    await page.goto('/privacy/');
+    await page.locator('footer a', { hasText: 'Terms of Service' }).click();
+    await expect(page.locator('h1')).toHaveText('Terms of Service');
+  });
+});

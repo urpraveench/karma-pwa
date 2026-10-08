@@ -41,7 +41,6 @@ Google sign-in works on https://tiktym.web.app: in Safari, on a laptop, and in t
 
 **Terms and Privacy** (India-only launch)
 
-- [ ] **Claude:** Privacy Policy for India's DPDP Act 2023 at `/privacy/`, from what the app actually stores (LEGAL-02).
 - [ ] **Claude:** link both from the login screen and Setup › About, show Google's reCAPTCHA notice on the login screen, and keep both pages available offline (AUTH-21, LEGAL-03, LEGAL-04).
 - [ ] **You:** read both drafts and get them checked if you can. They're a starting point, not legal advice.
 
@@ -90,6 +89,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Privacy Policy for India's DPDP Act 2023 at `/privacy/`, based on what the app actually stores (LEGAL-02), 8 October 2026
 - [x] Terms of Service for India at `/terms/` (LEGAL-01), 8 October 2026
 - [x] Company details for the legal pages: Pramal IT Services Private Limited, CIN U72900AP2022PTC121639 (Andhra Pradesh); India-only launch, 8 October 2026
 - [x] Released 1.0.2 (commit 227cb92): App Check with reCAPTCHA Enterprise, 8 October 2026

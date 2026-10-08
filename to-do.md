@@ -105,6 +105,7 @@ From FEATURES.md › "What's left to test". None left: every scenario has a test
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] LinkedIn company page set up (logo, cover, tagline); first post published with a 16-second app video (founder story: office, home, sleep, repeat), 8 October 2026
 - [x] Released 1.6.1: changes made just before the app closes are kept (SYNC-16). Checked live: https://app.tiktym.com/version.json shows 1.6.1, 8 October 2026
 - [x] Changes made just before the app closes are kept: each one is noted in localStorage until Firestore confirms it, and anything unconfirmed is shown and sent again on the next open. A log, edit or delete followed at once by a reload failed 2 times in 3 before; now passes every time (SYNC-16), 8 October 2026
 - [x] Checked on iPhone: the moved bar on the old app, sign-in with email and Google at https://app.tiktym.com in Safari and from the new home-screen app, editing an entry, reordering practices (GTM-06, GTM-09), 8 October 2026

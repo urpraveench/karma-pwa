@@ -34,8 +34,8 @@ Summary of coverage at the time of writing:
 | 10. Practices (Setup) | 21 | 21 | 0 | 0 |
 | 11. Settings and data (Setup) | 18 | 16 | 1 | 1 |
 | 12. Sync and storage | 14 | 12 | 1 | 1 |
-| 13. App shell, PWA and platform | 20 | 11 | 4 | 5 |
-| **Total** | **216** | **195** | **6** | **15** |
+| 13. App shell, PWA and platform | 20 | 12 | 3 | 5 |
+| **Total** | **216** | **196** | **5** | **15** |
 
 ---
 
@@ -352,7 +352,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | APP-17 | Haptics | Light vibration on log, pick and steps (Android) | Manual |
 | APP-18 | Safe areas | Content clears the notch and home indicator | Manual |
 | APP-19 | Console | No errors or warnings during normal use | E2E (every test-mode test fails on a console error or warning) |
-| APP-20 | Firebase's reserved addresses (`/__/…`, e.g. the Google sign-in relay page) | Always loaded from the network, never answered by the service worker with the app | Gap |
+| APP-20 | Firebase's reserved addresses (`/__/…`, e.g. the Google sign-in relay page) | Always loaded from the network, never answered by the service worker with the app | E2E `pwa.spec.ts` |
 
 ---
 

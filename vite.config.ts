@@ -30,6 +30,9 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png}'],
         globIgnores: ['**/index.esm-*.js', '**/firebase*.js'],
         navigateFallback: 'index.html',
+        // Firebase Hosting's reserved addresses, such as the Google sign-in relay page /__/auth/handler,
+        // must reach the network; answering them with the app shell breaks sign-in.
+        navigateFallbackDenylist: [/^\/__\//],
         cleanupOutdatedCaches: true,
         runtimeCaching: [
           {

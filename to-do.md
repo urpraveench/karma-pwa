@@ -11,6 +11,13 @@ Everything still pending, in the order it should happen. Tick items off as they'
 The app is live at https://tiktym.web.app (project `tiktym`, Firestore in `asia-south1`) and installed on a phone. Nothing left here.
 
 
+## Version numbering
+
+- [ ] **Claude:** version numbering: `package.json` version starting at 1.0.0, each build stamped with its commit and date, and a `version.json` published with each deploy. Bump rule in CLAUDE.md (APP-23).
+- [ ] **Claude:** show the version on the login page and in Setup › About (APP-21).
+- [ ] **Claude:** when a newer version is live, show "New version ready" with a Reload button on every screen (APP-22).
+- [ ] **You:** after the next deploy, check your installed iPhone app shows the bar and that Reload brings it up to date.
+
 ## 2. Check by hand before release
 
 These can't be automated, or need the real project and a real phone. IDs refer to [FEATURES.md](FEATURES.md).

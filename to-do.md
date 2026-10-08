@@ -18,7 +18,7 @@ The app is live at https://tiktym.web.app (project `tiktym`, Firestore in `asia-
 ## Version numbering
 
 - [ ] **Claude:** show the version on the login page and in Setup › About (APP-21).
-- [ ] **You:** open the installed app on your iPhone (close it fully first) and check Setup › About says **TikTym 1.0.0**, build `730b51e`. At the next release (1.0.1), check the "New version ready" bar appears and Reload brings it up to date.
+- [ ] **You:** on your iPhone, open the installed app (still on 1.0.0): the "New version ready (1.0.1)" bar should appear. Tap Reload, then check Setup › About says **TikTym 1.0.1**, build `eebd399`, and the Danger zone is at the bottom (APP-22).
 
 ## 2. Check by hand before release
 
@@ -74,6 +74,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.0.1 (commit eebd399): Danger zone in Setup, keeping Start over and Delete account away from Sign out, 8 October 2026
 - [x] Danger zone: Start over and Delete account moved to a red section at the bottom of Setup, away from Sign out (SET-19), 8 October 2026
 - [x] Google sign-in works in the installed app on iPhone 14 Plus: iOS filled the saved account with Face ID and the app came back signed in (AUTH-27), 8 October 2026
 - [x] No further app change needed for Google sign-in in the installed iPhone app: the redirect fix (1.0.0) works. The earlier unfocusable email field didn't recur (AUTH-27), 8 October 2026

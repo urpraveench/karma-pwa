@@ -73,7 +73,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 **Phase 1: Website**
 
 - [ ] **Claude:** move the app to `app.tiktym.com`, with `tiktym.web.app` redirecting so installed apps keep working (GTM-06).
-- [ ] **Claude:** update the Privacy Policy and the website's "no analytics" wording to describe optional, consent-based Google Analytics (LEGAL-05).
 - [ ] **You:** in Google Analytics › Admin: check the data stream lists tiktym.web.app, tiktym.com and www.tiktym.com, keep Google signals off, and set data retention (14 months is the most). Then open the app and website, choose Allow, and watch Reports › Realtime.
 
 **Phase 2: App stores**
@@ -114,6 +113,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Privacy Policy and website wording updated for optional, consent-based Google Analytics (LEGAL-05), 8 October 2026
 - [x] Consent-based Google Analytics on the website, same property: consent bar, open_app clicks by location, domains linked to the app (ANA-04), 8 October 2026
 - [x] Consent-based Google Analytics in the app: asks once on Today, Setup › Privacy switch, page views and anonymous events (ANA-01, ANA-02, ANA-03, ANA-05), 8 October 2026
 - [x] Released 1.2.1 (commit 72abb4e): goal chime fix for iPhone, 8 October 2026

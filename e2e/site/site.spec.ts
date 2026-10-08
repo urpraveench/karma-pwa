@@ -59,6 +59,12 @@ test.describe('website (GTM-04)', () => {
     expect(r.headers()['content-type']).toBe('image/png');
   });
 
+  test('the privacy promise matches consent-based analytics (LEGAL-05)', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('.promise')).toContainText('anonymous usage stats only if you say yes');
+    await expect(page.locator('body')).not.toContainText('no analytics');
+  });
+
   test('link preview tags', async ({ page }) => {
     await page.goto('/');
     expect(await page.locator('meta[property="og:image"]').getAttribute('content')).toBe('https://tiktym.com/og.png');

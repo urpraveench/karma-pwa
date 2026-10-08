@@ -36,8 +36,8 @@ Summary of coverage at the time of writing:
 | 12. Sync and storage | 14 | 12 | 1 | 1 |
 | 13. App shell, PWA and platform | 28 | 20 | 3 | 5 |
 | 14. Marketing and sharing | 4 | 4 | 0 | 0 |
-| 15. Analytics | 6 | 5 | 1 | 0 |
-| **Total** | **238** | **217** | **6** | **15** |
+| 15. Analytics | 6 | 6 | 0 | 0 |
+| **Total** | **238** | **218** | **5** | **15** |
 
 ---
 
@@ -388,7 +388,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | ANA-03 | Change your mind | Setup › Privacy › "Share anonymous usage stats" switches it on or off at any time; off stops sending and removes Analytics cookies | E2E `analytics/analytics.spec.ts` |
 | ANA-04 | Website analytics | A slim consent bar; Google Analytics loads only after Allow; clicks on "Open TikTym" are counted; visits link to the app across domains (same GA4 property) | E2E `site/site.spec.ts` (phone and desktop) |
 | ANA-05 | Off without a measurement ID | Builds without `VITE_GA_MEASUREMENT_ID` (test mode, the emulators) never ask and never load Analytics | E2E `app.spec.ts` |
-| LEGAL-05 | Privacy wording matches | The Privacy Policy and the website describe optional, consent-based Google Analytics: what's collected, why, how to turn it off | Gap |
+| LEGAL-05 | Privacy wording matches | The Privacy Policy and the website describe optional, consent-based Google Analytics: what's collected, why, how to turn it off | E2E `legal.spec.ts`, `site/site.spec.ts` |
 
 ---
 

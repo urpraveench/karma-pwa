@@ -45,6 +45,16 @@ test.describe('Privacy Policy (LEGAL-02)', () => {
     await expect(page.locator('a[href="https://policies.google.com/terms"]')).toBeVisible();
   });
 
+  test('describes optional Google Analytics and how to turn it off (LEGAL-05)', async ({ page }) => {
+    await page.goto('/privacy/');
+    const body = page.locator('main');
+    await expect(page.locator('td', { hasText: /^Usage statistics \(only if you allow them\)$/ })).toBeVisible();
+    await expect(body).toContainText('Advertising features are switched off');
+    await expect(body).toContainText('Setup › Privacy › Share anonymous usage stats');
+    await expect(body).toContainText('kept in Google Analytics for up to 14 months');
+    await expect(body).not.toContainText("we don't use analytics");
+  });
+
   test('links to the Terms', async ({ page }) => {
     await page.goto('/privacy/');
     await page.locator('footer a', { hasText: 'Terms of Service' }).click();

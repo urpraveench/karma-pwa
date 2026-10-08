@@ -47,7 +47,6 @@ Google sign-in works on https://tiktym.web.app: in Safari, on a laptop, and in t
 
 **App Check** (only the real TikTym app can use your Firebase data; reCAPTCHA Enterprise, free on the Spark plan)
 
-- [ ] **Claude:** deploy with the key and confirm requests show as verified in Firebase › App Check.
 - [ ] **You:** after a day or two of verified traffic, turn on **Enforce** for Cloud Firestore and Authentication in Firebase › App Check.
 
 **Trademark**
@@ -91,6 +90,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] App Check live in 1.0.2: reCAPTCHA Enterprise loads, Firebase issues App Check tokens (200), no visible badge, no console errors (APP-24), 8 October 2026
 - [x] Fraud Defense (reCAPTCHA Enterprise) web key created and registered in Firebase › App Check, 8 October 2026
 - [x] App Check switched to the reCAPTCHA Enterprise provider, which takes Google Cloud Fraud Defense keys (site key only, free on Spark) (APP-24), 8 October 2026
 - [x] Preliminary trademark search for "TikTym": findings under Public launch › Trademark, 8 October 2026

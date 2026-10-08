@@ -90,15 +90,13 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 ## 5. Remaining test gaps
 
-From FEATURES.md › "What's left to test".
+From FEATURES.md › "What's left to test". None left: every scenario has a test, or is under "Check by hand before release".
 
 
 ## 6. Features not built yet
 
 - [ ] **Claude:** look into a narrow race found while testing (8 October 2026): in Firebase mode, an entry logged about 40 ms before the page reloads was lost, every time; with 300 ms or more it is always kept. Likely Firestore hadn't put the write in its offline queue yet. No one closes the app that fast, but check whether locking the phone straight after a quick tap can lose one, and whether waiting for the queue on `pagehide` helps. It may also explain the occasionally flaky Google test AUTH-19, which logs and then at once opens a second device.
 - [ ] **Claude (before scale):** load only recent months on app open, using the offline cache for older ones. Today every open downloads a user's full history: fine now, but after a year it is about 230 KB and 17 reads per open, which makes Firestore's free 10 GiB/month egress the first limit for long-time users.
-Branch `features/edit-reorder-tests`, merged into main when all of these are done:
-
 - [ ] Phase 2, needs Blaze: push reminders, streak-at-risk alerts, a weekly recap, and a timer alert while the app is closed (Cloud Functions + FCM).
 
 ## 7. Housekeeping

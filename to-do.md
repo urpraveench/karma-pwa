@@ -45,9 +45,10 @@ Google sign-in works on https://tiktym.web.app: in Safari, on a laptop, and in t
 - [ ] **Claude:** draft global Terms and Privacy pages from what the app actually collects; publish them at `/terms` and `/privacy`; link them on the login screen and in Setup › About (LEGAL-01, LEGAL-02, AUTH-21).
 - [ ] **You:** read both drafts and get them checked if you can. They're a starting point, not legal advice.
 
-**App Check** (only the real TikTym app can use your Firebase data)
+**App Check** (only the real TikTym app can use your Firebase data; reCAPTCHA Enterprise, free on the Spark plan)
 
-- [ ] **You:** create a reCAPTCHA v3 key for `tiktym.web.app` and register it in Firebase › App Check (steps from Claude).
+- [ ] **Claude:** switch App Check to the reCAPTCHA Enterprise provider: Google has moved reCAPTCHA into Google Cloud ("Fraud Defense"), whose keys have only a site key, which App Check takes through its Enterprise provider (APP-24).
+- [ ] **You:** create a Fraud Defense web key in Google Cloud for the tiktym project (score-based, no checkbox challenge, domains `tiktym.web.app` and `tiktym.firebaseapp.com`), register it in Firebase › App Check › reCAPTCHA Enterprise, and send Claude the site key.
 - [ ] **Claude:** deploy with the key and confirm requests show as verified in Firebase › App Check.
 - [ ] **You:** after a day or two of verified traffic, turn on **Enforce** for Cloud Firestore and Authentication in Firebase › App Check.
 

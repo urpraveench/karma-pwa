@@ -85,3 +85,11 @@ for (const scheme of ['light', 'dark'] as const) {
     });
   });
 }
+
+test("Google's font stylesheet never holds up the first paint (APP-26)", async ({ page }) => {
+  void page.route('https://fonts.googleapis.com/**', () => new Promise(() => {})); // never arrives
+  await page.goto('/', { waitUntil: 'commit' });
+  await expect(page.locator('#boot')).toBeVisible();
+  await expect(page.locator('.login h1')).toHaveText('TikTym'); // and the app opens, in the system font
+  expect(await page.locator('link[href^="https://fonts.googleapis.com"][rel="stylesheet"]').count()).toBe(0);
+});

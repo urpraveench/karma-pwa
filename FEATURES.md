@@ -34,10 +34,10 @@ Summary of coverage at the time of writing:
 | 10. Practices (Setup) | 23 | 23 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 16 | 15 | 0 | 1 |
-| 13. App shell, PWA and platform | 30 | 24 | 1 | 5 |
+| 13. App shell, PWA and platform | 30 | 25 | 0 | 5 |
 | 14. Marketing and sharing | 11 | 11 | 0 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **262** | **247** | **1** | **14** |
+| **Total** | **262** | **248** | **0** | **14** |
 
 ---
 
@@ -374,7 +374,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | APP-23 | Version file | Each build publishes `version.json` (version, commit, build date); the service worker never caches it | Unit `version.test.ts`, E2E `pwa.spec.ts` |
 | APP-24 | App Check | With `VITE_RECAPTCHA_SITE_KEY` set, the app attaches a reCAPTCHA Enterprise (Google Cloud Fraud Defense) App Check token to Firebase requests; without it, and in test mode or with the emulators, App Check is off | Unit `app-check.test.ts` (the on/off switch; live tokens are checked in the Firebase console, see to-do.md) |
 | APP-25 | Light mode colours | The same contrast check as APP-14, in light: login, Today, Insights, History, Setup, the sheets and the focus timer | E2E `colours.spec.ts` |
-| APP-26 | Fonts don't block the first paint | The page draws straight away in the system font and switches to TikTym's fonts when they arrive | Gap |
+| APP-26 | Fonts don't block the first paint | The page draws straight away in the system font and switches to TikTym's fonts when they arrive | E2E `loading.spec.ts` |
 | LEGAL-01 | Terms page | `/terms/` shows the Terms of Service under Indian law: operator Pramal IT Services Private Limited (CIN), eligibility, accounts, acceptable use, your data, no medical advice, availability, liability, termination, governing law and courts in Andhra Pradesh, grievance contact | E2E `legal.spec.ts` |
 | LEGAL-02 | Privacy page | `/privacy/` shows, for India's DPDP Act 2023: what's collected (account, practice data, device storage, reCAPTCHA signals), why, where it's stored (Mumbai), processors (Google), retention, rights (access, correction, export, erasure, grievance, Data Protection Board), 18+, changes, contact | E2E `legal.spec.ts` |
 | LEGAL-03 | reCAPTCHA notice | With App Check on, the login screen says "Protected by reCAPTCHA" with links to Google's Privacy Policy and Terms, as Google requires when the badge is hidden | Unit `app-check.test.ts` (when it shows); E2E `legal.spec.ts` (hidden while App Check is off). Shown live with App Check on: checked after each release |

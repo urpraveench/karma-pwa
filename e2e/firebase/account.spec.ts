@@ -9,7 +9,8 @@ const toast = (page: Page) => page.locator('.toast span').first();
 async function openLogin(page: Page, promptAnswer = 'DELETE') {
   page.on('dialog', d => d.accept(d.type() === 'prompt' ? promptAnswer : undefined));
   await page.goto('/');
-  await expect(page.locator('.login h1')).toHaveText('TikTym');
+  // the first screen waits for the Firebase SDK and Auth, slower while the emulators warm up
+  await expect(page.locator('.login h1')).toHaveText('TikTym', { timeout: 15_000 });
 }
 
 async function signUp(page: Page, email = newEmail()) {

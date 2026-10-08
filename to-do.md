@@ -92,7 +92,6 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 From FEATURES.md › "What's left to test".
 
-- [ ] **Claude:** a failed Firebase save shows "Could not save. Check your connection." (SET-18, SYNC-13)
 - [ ] **Claude:** the service worker never caches Firestore or Auth requests (APP-08)
 - [ ] **Claude:** days follow the phone's time zone (APP-11)
 - [ ] **Claude:** dark mode colours on every screen, as text-contrast checks (APP-14)
@@ -113,6 +112,7 @@ Branch `features/edit-reorder-tests`, merged into main when all of these are don
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] A save Firestore refuses shows "Could not save. Check your connection." after the screen has updated; deleting an entry (and its Undo) now says so too instead of failing silently (SET-18, SYNC-13), 8 October 2026
 - [x] Reorder practices in Setup with Move up and Move down; new practices always go last (PRAC-20, PRAC-22, PRAC-23), 8 October 2026
 - [x] Tap an entry in History to change its practice, day, minutes or note, with Undo, or delete it (HIST-07, HIST-08, HIST-09), 8 October 2026
 - [x] Stores can change a logged entry, including moving it to another month in one batch (SYNC-15), 8 October 2026

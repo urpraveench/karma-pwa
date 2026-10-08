@@ -32,12 +32,12 @@ Summary of coverage at the time of writing:
 | 8. History | 9 | 9 | 0 | 0 |
 | 9. Insights | 23 | 23 | 0 | 0 |
 | 10. Practices (Setup) | 23 | 23 | 0 | 0 |
-| 11. Settings and data (Setup) | 19 | 17 | 1 | 1 |
-| 12. Sync and storage | 15 | 13 | 1 | 1 |
+| 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
+| 12. Sync and storage | 15 | 14 | 0 | 1 |
 | 13. App shell, PWA and platform | 28 | 20 | 3 | 5 |
 | 14. Marketing and sharing | 11 | 11 | 0 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **256** | **236** | **5** | **15** |
+| **Total** | **256** | **238** | **3** | **15** |
 
 ---
 
@@ -318,7 +318,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | SET-15 | Delete account needing a recent sign-in | Asks to sign in again and signs out | Manual |
 | SET-16 | Test-mode note | Explains data stays in this browser | E2E `setup.spec.ts` |
 | SET-17 | Settings sync | Backlog limit is saved with the account; theme is per device | E2E `firebase/account.spec.ts` |
-| SET-18 | Save fails | "Could not save. Check your connection." | Gap |
+| SET-18 | Save fails | "Could not save. Check your connection." | E2E `firebase/save-fails.spec.ts` |
 | SET-19 | Destructive actions kept apart | Account shows only name, email and Sign out. Start over and Delete account (Firebase mode only) sit in a red "Danger zone", the last section of Setup, below About | E2E `setup.spec.ts`, `firebase/account.spec.ts` |
 
 ## 12. Sync and storage
@@ -337,7 +337,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | SYNC-10 | Security rules | Each user can read and write only `users/{their uid}` | Emulator `tests-emulator/rules.test.ts` |
 | SYNC-11 | Offline logging | Firestore's offline cache: logging works without signal and syncs later | E2E `firebase/account.spec.ts` |
 | SYNC-12 | Two devices | Changes on one show on the other after reopening | E2E `firebase/account.spec.ts` |
-| SYNC-13 | Optimistic updates | The screen updates immediately; a failed save shows a toast | Gap |
+| SYNC-13 | Optimistic updates | The screen updates immediately; a failed save shows a toast | E2E `firebase/save-fails.spec.ts` |
 | SYNC-14 | Firebase SDK only in Firebase mode | Test mode never downloads it | Manual (check the network tab) |
 | SYNC-15 | Edit a log | Same month: only that entry changes. Another month: removed from the old month and added to the new one in one batch | Unit `firestore-store.test.ts`, Emulator `tests-emulator/store.test.ts` |
 

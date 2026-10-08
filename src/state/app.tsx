@@ -127,7 +127,7 @@ function useAppState() {
     count('logs'); count('minutes', mins); count(METHOD_COUNTER[method]);
     const undo = () => {
       const cur = dataRef.current; setData({ ...cur, logs: cur.logs.filter(x => x.id !== l.id) });
-      store.deleteLog(l).catch(() => {}); toast('Undone');
+      store.deleteLog(l).catch(() => toast(SAVE_FAILED)); toast('Undone');
     };
     if (before.totals.end > 0 && after.totals.end === 0) { celebrate(after.streak, undo); return; }
     const mm = momentRef.current;
@@ -142,8 +142,8 @@ function useAppState() {
     if (!store) return;
     const d0 = dataRef.current, l = d0.logs.find(x => x.id === id); if (!l) return;
     setData({ ...d0, logs: d0.logs.filter(x => x.id !== id) });
-    store.deleteLog(l).catch(() => {});
-    toast('Entry deleted', 4500, () => { const cur = dataRef.current; setData({ ...cur, logs: [...cur.logs, l] }); store.addLog(l).catch(() => {}); });
+    store.deleteLog(l).catch(() => toast(SAVE_FAILED));
+    toast('Entry deleted', 4500, () => { const cur = dataRef.current; setData({ ...cur, logs: [...cur.logs, l] }); store.addLog(l).catch(() => toast(SAVE_FAILED)); });
   }, [store, toast, setData]);
 
   /** Changes an entry's practice, day, minutes or note (HIST-07), with Undo. */

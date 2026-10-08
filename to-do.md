@@ -73,7 +73,10 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 **Phase 1: Website**
 
 - [ ] **Claude:** move the app to `app.tiktym.com`, with `tiktym.web.app` redirecting so installed apps keep working (GTM-06).
-- [ ] **You:** add a cookie-free website counter (for example Cloudflare Web Analytics) and send Claude its snippet.
+- [ ] **Claude:** Google Analytics in the app (GA4 property G-JL1YCFLK23): asks consent once on Today, loads nothing before it, Setup › Privacy to change it; screen views and a few anonymous events; never in test mode (ANA-01, ANA-02, ANA-03, ANA-05).
+- [ ] **Claude:** Google Analytics on the website, same property: a consent bar, nothing before Allow, an "open app" event, and visits linked to the app across domains (ANA-04).
+- [ ] **Claude:** update the Privacy Policy and the website's "no analytics" wording to describe optional, consent-based Google Analytics (LEGAL-05).
+- [ ] **You:** in Google Analytics › Admin: check the data stream lists tiktym.web.app, tiktym.com and www.tiktym.com, keep Google signals off, and set data retention (14 months is the most). Then open the app and website, choose Allow, and watch Reports › Realtime.
 
 **Phase 2: App stores**
 

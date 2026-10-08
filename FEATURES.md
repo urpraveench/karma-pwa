@@ -36,7 +36,8 @@ Summary of coverage at the time of writing:
 | 12. Sync and storage | 14 | 12 | 1 | 1 |
 | 13. App shell, PWA and platform | 28 | 20 | 3 | 5 |
 | 14. Marketing and sharing | 4 | 4 | 0 | 0 |
-| **Total** | **232** | **212** | **5** | **15** |
+| 15. Analytics | 6 | 0 | 6 | 0 |
+| **Total** | **238** | **212** | **11** | **15** |
 
 ---
 
@@ -376,6 +377,18 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | GTM-02 | Send feedback | Setup › About › Send feedback opens an email to support with the app version and build filled in | Unit `feedback.test.ts`, E2E `setup.spec.ts` |
 | GTM-05 | Feature clips | `npm run site:clips` records short looping MP4 clips of the real app (sample data, fixed date) for the website: Today, quick log, focus timer, backlog, Insights; each with a poster image | Unit `site-clips.test.ts` (files and sizes; content checked by eye at recording) |
 | GTM-04 | Website | `tiktym.com` (`site/`): Home with the pitch and "Open TikTym", How it works, Features with clips, For working professionals, Install (iPhone, Android), Privacy promise, FAQ, links to Terms and Privacy; fast and readable on a phone, no console errors | E2E `site/site.spec.ts` (phone and desktop) |
+
+
+## 15. Analytics
+
+| ID | Scenario | Expected | Coverage |
+|---|---|---|---|
+| ANA-01 | Consent in the app | A card on Today asks once: "Help improve TikTym with anonymous usage stats?" Allow or No thanks. Nothing from Google Analytics loads or is sent before Allow; the choice is remembered on the device | Gap |
+| ANA-02 | What's measured in the app | After Allow: a page view per tab, and events for logging minutes (how), finishing a timer, adding a practice and signing in (method). No names, emails or practice names; advertising features off | Gap |
+| ANA-03 | Change your mind | Setup › Privacy › "Share anonymous usage stats" switches it on or off at any time; off stops sending and removes Analytics cookies | Gap |
+| ANA-04 | Website analytics | A slim consent bar; Google Analytics loads only after Allow; clicks on "Open TikTym" are counted; visits link to the app across domains (same GA4 property) | Gap |
+| ANA-05 | Off without a measurement ID | Builds without `VITE_GA_MEASUREMENT_ID` (test mode, the emulators) never ask and never load Analytics | Gap |
+| LEGAL-05 | Privacy wording matches | The Privacy Policy and the website describe optional, consent-based Google Analytics: what's collected, why, how to turn it off | Gap |
 
 ---
 

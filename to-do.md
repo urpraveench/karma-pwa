@@ -14,7 +14,7 @@ The app is live at https://tiktym.web.app (project `tiktym`, Firestore in `asia-
 ## Version numbering
 
 - [ ] **Claude:** show the version on the login page and in Setup › About (APP-21).
-- [ ] **You:** after the next deploy, check your installed iPhone app shows the bar and that Reload brings it up to date.
+- [ ] **You:** open the installed app on your iPhone (close it fully first) and check Setup › About says **TikTym 1.0.0**, build `730b51e`. At the next release (1.0.1), check the "New version ready" bar appears and Reload brings it up to date.
 
 ## 2. Check by hand before release
 
@@ -70,6 +70,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.0.0 (commit 730b51e): first versioned release. Version on login and Setup › About, "New version ready" bar, Google sign-in in iPhone home-screen apps, service worker fix for Google sign-in, 8 October 2026
 - [x] "New version ready" bar with Reload, on every screen including login, pinned while scrolling (APP-22), 8 October 2026
 - [x] Version numbering: 1.0.0 in package.json, builds stamped with commit and date, `version.json` published and never cached, bump rule in CLAUDE.md (APP-23), 8 October 2026
 - [x] Fixed: in iPhone home-screen apps, Google sign-in uses a full-page redirect instead of a pop-up that opened in Safari and never came back (AUTH-27), 8 October 2026

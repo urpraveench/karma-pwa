@@ -60,6 +60,8 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 **Other launch items**
 
+- [ ] **Claude:** branded password-reset email: TikTym header image (served from www.tiktym.com), short message, a "Reset password" button and the plain link, footer; HTML kept in `email/` (AUTH-29).
+- [ ] **You:** paste it into Authentication › Templates › Password reset › Message, save, and send yourself a reset email to check it in Gmail on iPhone (AUTH-29).
 - [ ] **You:** before moving to the paid Blaze plan, set budget alerts on the billing account. Alerts notify you; they don't cap spend.
 
 ## Go-to-market (see GTM.md)

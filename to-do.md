@@ -68,7 +68,15 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 **Phase 1: Website**
 
-- [ ] **Claude:** move the app to `app.tiktym.com`, with `tiktym.web.app` redirecting so installed apps keep working (GTM-06).
+Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site serves both addresses, so the old one keeps working; nothing is deployed until the new address is live.
+
+- [ ] **You:** Firebase › Hosting › site `tiktym` › Add custom domain › `app.tiktym.com`; add the DNS records it shows at your domain registrar and wait for **Connected** (the certificate can take up to a few hours).
+- [ ] **You:** Firebase › Authentication › Settings › Authorized domains: check `app.tiktym.com` is listed (add it if not).
+- [ ] **You:** Google Cloud › APIs & Services › Credentials › the Web client (961077922651…): add `https://app.tiktym.com/__/auth/handler` to Authorized redirect URIs and `https://app.tiktym.com` to Authorized JavaScript origins. Keep the `tiktym.web.app` ones.
+- [ ] **You:** Google Cloud › Security › reCAPTCHA › the TikTym key: add `app.tiktym.com` to its domains (keep `tiktym.web.app`).
+- [ ] **Claude:** point everything at `app.tiktym.com`: sign-in domain, link preview, website links, Terms and Privacy links, Analytics cross-domain list, docs (GTM-06).
+- [ ] **Claude:** the old address in a browser tab goes to the same page on `app.tiktym.com` (GTM-08); an app installed from the old address keeps working and shows a "TikTym has moved" bar (GTM-09).
+- [ ] **Claude:** release and deploy the app and the website once `app.tiktym.com` is connected; check sign-in (email and Google) there and the redirect from the old address.
 
 **Phase 2: App stores**
 

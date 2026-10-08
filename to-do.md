@@ -33,7 +33,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 
 ## 3. Google sign-in
 
-Google sign-in is live on https://tiktym.web.app. What remains is checking it on your phone.
+Google sign-in works on https://tiktym.web.app: in Safari, on a laptop, and in the installed iPhone app.
 
 - [ ] **You:** if Google's email field ever again shows no cursor or keyboard in the installed iPhone app, note the iOS version and tell Claude. Seen once on iPhone 14 Plus on 8 October 2026; not reproduced since, nor in the simulator.
 - [ ] **You:** if your TikTym account uses the same email as your Google account, check whether password sign-in still works afterwards (AUTH-26). Firebase removes the password from accounts whose email was never verified; your data stays. Use Forgot password to set a new one if you want both.

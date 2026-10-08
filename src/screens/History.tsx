@@ -8,7 +8,7 @@ import { Icon } from '../ui/icons';
 const DELETED = { name: 'Deleted practice', color: 'var(--line)' };
 
 export function History() {
-  const { data, T, deleteLog } = useApp();
+  const { data, T, deleteLog, openSheet } = useApp();
   const catMap = new Map(data.categories.map(c => [c.id, c]));
   const byDate: Record<string, Log[]> = {};
   for (const l of data.logs) (byDate[l.date] ||= []).push(l);
@@ -32,9 +32,11 @@ export function History() {
               const cat = catMap.get(l.catId) || DELETED;
               return (
                 <div className="log" key={l.id} style={{ '--c': cat.color } as CSSProperties}>
-                  <i />
-                  <span className="n">{cat.name}{l.note && <span className="note">{l.note}</span>}</span>
-                  <b>{l.minutes}</b>
+                  <button className="log-open" type="button" onClick={() => openSheet({ kind: 'editLog', id: l.id })}>
+                    <i />
+                    <span className="n">{cat.name}{l.note && <span className="note">{l.note}</span>}</span>
+                    <b>{l.minutes}</b>
+                  </button>
                   <button className="x" onClick={() => deleteLog(l.id)} aria-label="Delete entry"><Icon.x /></button>
                 </div>
               );

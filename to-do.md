@@ -102,7 +102,6 @@ From FEATURES.md › "What's left to test".
 - [ ] **Claude (before scale):** load only recent months on app open, using the offline cache for older ones. Today every open downloads a user's full history: fine now, but after a year it is about 230 KB and 17 reads per open, which makes Firestore's free 10 GiB/month egress the first limit for long-time users.
 Branch `features/edit-reorder-tests`, merged into main when all of these are done:
 
-- [ ] **Claude:** tap an entry in History to edit its practice, day, minutes and note, or delete it (HIST-07, HIST-08, HIST-09).
 - [ ] **Claude:** reorder practices in Setup with Move up and Move down (PRAC-22, PRAC-23).
 - [ ] Phase 2, needs Blaze: push reminders, streak-at-risk alerts, a weekly recap, and a timer alert while the app is closed (Cloud Functions + FCM).
 
@@ -115,6 +114,7 @@ Branch `features/edit-reorder-tests`, merged into main when all of these are don
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Tap an entry in History to change its practice, day, minutes or note, with Undo, or delete it (HIST-07, HIST-08, HIST-09), 8 October 2026
 - [x] Stores can change a logged entry, including moving it to another month in one batch (SYNC-15), 8 October 2026
 - [x] `app.tiktym.com` connected to Hosting site `tiktym` (DNS points at Firebase; certificate pending), added to Authorized domains, the OAuth client (redirect URI and JavaScript origin) and the reCAPTCHA key, 8 October 2026
 - [x] The old address in a browser tab goes to the same page on `app.tiktym.com` (GTM-08); an app installed from it keeps working with a "TikTym has moved" bar and an Open button (GTM-09); not deployed until the domain is connected, 8 October 2026

@@ -6,6 +6,7 @@ import { History } from './screens/History';
 import { Setup } from './screens/Setup';
 import { Today } from './screens/Today';
 import { CategorySheet } from './sheets/CategorySheet';
+import { EditLogSheet } from './sheets/EditLogSheet';
 import { LogSheet } from './sheets/LogSheet';
 import { ShareSheet } from './sheets/ShareSheet';
 import { useApp, type View } from './state/app';
@@ -59,6 +60,7 @@ export function Shell() {
       {sheet?.kind === 'log' && <LogSheet key={sheet.catId ?? ''} catId={sheet.catId} custom={sheet.custom} />}
       {sheet?.kind === 'editCat' && <CategorySheet key={sheet.id ?? 'new'} id={sheet.id} />}
       {sheet?.kind === 'share' && <ShareSheet />}
+      {sheet?.kind === 'editLog' && <EditLogSheet key={sheet.id} id={sheet.id} />}
       {focusOpen && <Focus />}
     </>
   );

@@ -29,7 +29,7 @@ Summary of coverage at the time of writing:
 | 5. Moments | 14 | 14 | 0 | 0 |
 | 6. Logging minutes | 20 | 20 | 0 | 0 |
 | 7. Focus timer | 22 | 19 | 0 | 3 |
-| 8. History | 9 | 6 | 3 | 0 |
+| 8. History | 9 | 9 | 0 | 0 |
 | 9. Insights | 23 | 23 | 0 | 0 |
 | 10. Practices (Setup) | 23 | 21 | 2 | 0 |
 | 11. Settings and data (Setup) | 19 | 17 | 1 | 1 |
@@ -37,7 +37,7 @@ Summary of coverage at the time of writing:
 | 13. App shell, PWA and platform | 28 | 20 | 3 | 5 |
 | 14. Marketing and sharing | 11 | 11 | 0 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **256** | **231** | **10** | **15** |
+| **Total** | **256** | **234** | **7** | **15** |
 
 ---
 
@@ -223,9 +223,9 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 | HIST-04 | Delete an entry | Removed with an Undo toast; totals and backlog recalculate | E2E `history.spec.ts` |
 | HIST-05 | Entry for a deleted practice | Not possible today, because deleting a practice deletes its logs. Shown as "Deleted practice" if it ever happens | E2E `history.spec.ts` |
 | HIST-06 | Only 60 days shown | Older days are kept, just not listed | E2E `history.spec.ts` |
-| HIST-07 | Edit an entry | Tap an entry: a sheet with its practice, day (no future dates), minutes (1 to 1440) and note filled in. Save changes updates History, Today and Insights at once; toast "Entry updated" with Undo | Gap |
-| HIST-08 | Delete from the edit sheet | "Delete entry" removes it, with Undo, as HIST-04 | Gap |
-| HIST-09 | Entry for an archived practice | Its own practice is offered too, so changing the minutes or note doesn't move it | Gap |
+| HIST-07 | Edit an entry | Tap an entry: a sheet with its practice, day (no future dates), minutes (1 to 1440) and note filled in. Save changes updates History, Today and Insights at once; toast "Entry updated" with Undo | E2E `history.spec.ts` |
+| HIST-08 | Delete from the edit sheet | "Delete entry" removes it, with Undo, as HIST-04 | E2E `history.spec.ts` |
+| HIST-09 | Entry for an archived practice | Its own practice is offered too, so changing the minutes or note doesn't move it | E2E `history.spec.ts` |
 
 ## 9. Insights
 

@@ -16,7 +16,7 @@ import { useFeedback } from '../ui/feedback';
 
 export type View = 'today' | 'insights' | 'history' | 'setup';
 export type LogMethod = 'quick' | 'tile' | 'all_left' | 'custom' | 'timer' | 'other';
-export type Sheet = { kind: 'log'; catId?: string; custom?: boolean } | { kind: 'editCat'; id?: string } | { kind: 'share' } | null;
+export type Sheet = { kind: 'log'; catId?: string; custom?: boolean } | { kind: 'editCat'; id?: string } | { kind: 'share' } | { kind: 'editLog'; id: string } | null;
 type Phase = { kind: 'boot' } | { kind: 'login'; error?: string } | { kind: 'loading' } | { kind: 'ready' };
 
 const EMPTY: AppData = { categories: [], logs: [], settings: {} };
@@ -146,6 +146,19 @@ function useAppState() {
     toast('Entry deleted', 4500, () => { const cur = dataRef.current; setData({ ...cur, logs: [...cur.logs, l] }); store.addLog(l).catch(() => {}); });
   }, [store, toast, setData]);
 
+  /** Changes an entry's practice, day, minutes or note (HIST-07), with Undo. */
+  const updateLog = useCallback((id: string, f: Pick<Log, 'catId' | 'date' | 'minutes' | 'note'>) => {
+    if (!store) return;
+    if (!(f.minutes > 0 && f.minutes <= 1440)) { toast('Enter between 1 and 1440 minutes'); return; }
+    const d0 = dataRef.current, prev = d0.logs.find(x => x.id === id); if (!prev) return;
+    const T0 = today(), next: Log = { ...prev, ...f, date: f.date > T0 ? T0 : f.date };
+    closeSheet();
+    if (next.catId === prev.catId && next.date === prev.date && next.minutes === prev.minutes && next.note === prev.note) return;
+    const swap = (from: Log, to: Log) => { const cur = dataRef.current; setData({ ...cur, logs: cur.logs.map(x => x.id === id ? to : x) }); return store.updateLog(from, to).catch(() => toast(SAVE_FAILED)); };
+    void swap(prev, next);
+    toast('Entry updated', 4500, () => { void swap(next, prev); });
+  }, [store, toast, setData, closeSheet]);
+
   const putCategory = useCallback((cat: Category, msg: string) => {
     if (!store) return;
     const d0 = dataRef.current, exists = d0.categories.some(x => x.id === cat.id);
@@ -228,7 +241,7 @@ function useAppState() {
     getData,
     view, setView, range, setRange, sheet, openSheet, closeSheet,
     hideMoment, tipHidden, hideTip,
-    logEntry, deleteLog, saveCategory, toggleArchive, deleteCategory, setBacklogCap,
+    logEntry, deleteLog, updateLog, saveCategory, toggleArchive, deleteCategory, setBacklogCap,
     loadSample, startOver, importBackup, exportBackup, signOut, deleteAccount,
   };
 }

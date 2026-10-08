@@ -292,7 +292,8 @@ input[type=date].in::-webkit-date-and-time-value{text-align:left}
 /* history + settings */
 .day-h{display:flex;justify-content:space-between;font-weight:700;margin:18px 2px 8px}
 .day-h small{font-weight:500;color:var(--ink-2)}
-.log{display:grid;grid-template-columns:10px 1fr auto auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:11px 12px 11px 14px;margin-bottom:6px}
+.log{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:11px 12px 11px 14px;margin-bottom:6px}
+.log-open{display:grid;grid-template-columns:10px 1fr auto;gap:12px;align-items:center;text-align:left;width:100%;padding:0;background:none;color:inherit}
 .log i{width:10px;height:10px;border-radius:50%;background:var(--c)}
 .log .n{font-weight:600}
 .log .note{display:block;font-size:13px;color:var(--ink-2);font-weight:400}

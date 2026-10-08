@@ -95,7 +95,7 @@ Everything people say about the app: confusion, bugs, requests, praise. Bring an
 
 | Date | From | What they said | Bug, idea or praise | Done? |
 |---|---|---|---|---|
-| 8 Oct | Friend (WhatsApp, direct link) | "Not accepting https; on http a blank white screen", then "slow"; screenshot showed "Not secure" and a blank page on his college network | Network, not the app | Two causes. (1) Slow connections showed a blank page while loading: fixed in 1.6.2. (2) His college firewall swaps in its own certificate for uncategorised sites; our certificate is valid (Google Trust Services). Fix: get the domains categorised (task above). Asked him to try mobile data. |
+| 8 Oct | Friend (WhatsApp, direct link) | "Not accepting https; on http a blank white screen", then "slow"; screenshot showed "Not secure" and a blank page on his college network | Network, not the app | Two causes. (1) Slow connections showed a blank page while loading: fixed in 1.6.2. (2) His college firewall swaps in its own certificate for uncategorised sites; our certificate is valid (Google Trust Services). Fix: get the domains categorised (task above). Confirmed: works fine on mobile data, so it's the college network. |
 
 ## Weekly review (every Monday)
 

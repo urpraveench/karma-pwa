@@ -22,7 +22,7 @@ Summary of coverage at the time of writing:
 
 | Area | Scenarios | Tested | Gap | Manual |
 |---|---|---|---|---|
-| 1. Accounts and sign-in | 25 | 22 | 0 | 3 |
+| 1. Accounts and sign-in | 26 | 22 | 1 | 3 |
 | 2. First run | 4 | 2 | 0 | 2 |
 | 3. Backlog rules | 13 | 13 | 0 | 0 |
 | 4. Today screen | 16 | 16 | 0 | 0 |
@@ -35,7 +35,7 @@ Summary of coverage at the time of writing:
 | 11. Settings and data (Setup) | 18 | 16 | 1 | 1 |
 | 12. Sync and storage | 14 | 12 | 1 | 1 |
 | 13. App shell, PWA and platform | 20 | 12 | 3 | 5 |
-| **Total** | **216** | **196** | **5** | **15** |
+| **Total** | **217** | **196** | **6** | **15** |
 
 ---
 
@@ -76,6 +76,7 @@ The app has two modes, set by `VITE_BACKEND`. **Test mode** (`local`) keeps data
 | AUTH-23 | Sign out | Returns to login | E2E `firebase/account.spec.ts` |
 | AUTH-24 | Google with an email that already has a password account | Opens that same account with its data (Firebase's default: one account per email) | E2E `firebase-google/google.spec.ts` |
 | AUTH-26 | Password after Google takes over an unverified account | In production, Firebase removes the password from an account whose email was never verified once Google signs in with that email; sign in with Google from then on, or use Forgot password to set a new one | Manual |
+| AUTH-27 | Google sign-in in an app installed on an iPhone or iPad home screen | Uses a full-page redirect instead of a pop-up (a pop-up opens in Safari, whose storage the installed app can't see) and comes back signed in | Gap |
 | AUTH-25 | First Google sign-in | Creates the account, seeds the default practices, greets by the Google first name | E2E `firebase-google/google.spec.ts` |
 
 ## 2. First run

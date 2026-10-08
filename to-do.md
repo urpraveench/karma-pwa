@@ -21,7 +21,8 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
-- [ ] The goal chime plays (TIMER-05)
+- [ ] **Claude (bug):** the goal chime plays late on iPhone: the target is reached, but the sound comes minutes later, around the next tap in the app. Likely iOS suspending the timer's audio, so the chime waits until audio resumes (TIMER-05).
+- [ ] **You:** after the fix, run the 5-minute Meditation test again: the chime should play right as the timer reaches its target (TIMER-05).
 - [ ] A new deploy reaches the installed app on its next open (APP-07)
 - [ ] The loading screen shows briefly on a slow connection (FIRST-03)
 - [ ] A Firestore failure on load returns to sign-in with a clear message (FIRST-04)
@@ -67,7 +68,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 **Phase 0: Foundations**
 
-- [ ] **You (reminder, check around 9 October):** https://www.tiktym.com is live (8 October); plain https://tiktym.com still shows Firebase's "Site Not Found". In Firebase › Hosting › tiktym-site, check `tiktym.com` shows **Connected** (add it there if only `www` was added, ideally redirecting to `www` or the other way round). Tell Claude, who will switch the website's links and previews to the final address.
 - [ ] **You:** stay on the free Spark plan for now (decided 8 October). Watch usage weekly in Firebase › Usage and billing; GTM.md › "Capacity on the free plan" lists the limits and what hits them first. Move to Blaze with a budget alert before any real promotion.
 - [ ] **Claude (optional):** first-run choice of practices, so people can adjust the defaults before day one; the current defaults already suit professionals (GTM-03).
 
@@ -114,6 +114,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] https://tiktym.com and https://www.tiktym.com both serve the website, 8 October 2026
 - [x] Branded password-reset email written (`email/password-reset.html`), header image live at www.tiktym.com/email/header.png (`npm run email:header` redraws it) (AUTH-29), 8 October 2026
 - [x] Password-reset email arrives in the Gmail inbox (not spam), sender "TikTym", subject "Reset your password for TikTym" (AUTH-28), 8 October 2026
 - [x] Account emails sent from tiktym.com: domain verified in Firebase; SPF, `firebase=tiktym` and both DKIM records confirmed in DNS (AUTH-28), 8 October 2026

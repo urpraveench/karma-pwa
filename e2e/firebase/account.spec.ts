@@ -189,3 +189,12 @@ test.describe('Delete account', () => {
     await expect(other.locator('.err')).toHaveText("That email and password don't match.");
   });
 });
+
+test('Delete account is in the Danger zone, apart from Sign out (SET-19)', async ({ page }) => {
+  await signUp(page);
+  await page.locator('.tab', { hasText: 'Setup' }).click();
+  const account = page.locator('.list', { has: page.locator('.li', { hasText: 'Sign out' }) });
+  await expect(account).not.toContainText('Delete account');
+  await expect(page.locator('.list.danger .li')).toHaveText([/^Start over/, /^Delete account/]);
+  await expect(page.locator('.sect-h h2').last()).toHaveText('Danger zone');
+});

@@ -217,3 +217,18 @@ test('archived practices stay in history charts but leave practice health (PRAC-
   await tab(page, 'History').click();
   await expect(page.locator('.log .n')).toHaveText(['Reading', 'Old']);
 });
+
+test('destructive actions sit in a Danger zone at the bottom, away from Sign out (SET-19)', async ({ page }) => {
+  await signIn(page);
+  await tab(page, 'Setup').click();
+  const headings = page.locator('.sect-h h2');
+  await expect(headings.last()).toHaveText('Danger zone');
+  await expect(headings.nth(-2)).toHaveText('About');
+  const account = page.locator('.list', { has: page.locator('.li', { hasText: 'Sign out' }) });
+  await expect(account.locator('.li')).toHaveCount(2); // name and email, Sign out
+  await expect(account).not.toContainText('Start over');
+  const danger = page.locator('.list.danger');
+  await expect(danger.locator('.li')).toHaveText([/^Start over/]); // Delete account only exists in Firebase mode
+  await danger.locator('.li', { hasText: 'Start over' }).click();
+  await expect(toast(page)).toHaveText('Started over');
+});

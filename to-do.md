@@ -13,7 +13,6 @@ The app is live at https://tiktym.web.app (project `tiktym`, Firestore in `asia-
 
 ## Setup layout
 
-- [ ] **Claude:** keep destructive actions away from Sign out: Account keeps only your name, email and Sign out; a red "Danger zone" at the very bottom of Setup, below About, holds Start over and Delete account (SET-19).
 - [ ] **Claude (optional, not started):** replace the browser's plain confirm and "Type DELETE" boxes with an in-app confirmation sheet.
 
 ## Version numbering
@@ -75,6 +74,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Danger zone: Start over and Delete account moved to a red section at the bottom of Setup, away from Sign out (SET-19), 8 October 2026
 - [x] Google sign-in works in the installed app on iPhone 14 Plus: iOS filled the saved account with Face ID and the app came back signed in (AUTH-27), 8 October 2026
 - [x] No further app change needed for Google sign-in in the installed iPhone app: the redirect fix (1.0.0) works. The earlier unfocusable email field didn't recur (AUTH-27), 8 October 2026
 - [x] iPhone simulator set up (iOS 18.6, iPhone 16 Plus). It did not reproduce the stuck email field: Google's page took focus and typing, 8 October 2026

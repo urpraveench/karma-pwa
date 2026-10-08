@@ -56,20 +56,26 @@ export function Setup() {
           <span className="t">Import from JSON<small>Replaces everything with a backup file</small></span>
           <input type="file" accept="application/json" className="sr" onChange={e => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void importBackup(f); }} />
         </label>
-        <button className="li" onClick={startOver}><span className="t" style={{ color: 'var(--due)' }}>Start over<small>Deletes all logs and resets the default practices</small></span></button>
       </div>
 
       <div className="sect-h"><h2>Account</h2>{FIREBASE_READY ? <span className="badge">Synced with Firebase</span> : <span className="badge test">Test mode</span>}</div>
       <div className="list">
         <div className="li"><span className="t">{user?.name || user?.email}<small>{user?.email || ''}</small></span></div>
         <button className="li" onClick={() => { if (confirm('Sign out?')) void signOut(); }}><span className="t">Sign out</span></button>
-        {FIREBASE_READY && <button className="li" onClick={() => void deleteAccount()}><span className="t" style={{ color: 'var(--due)' }}>Delete account<small>Removes your account and all data permanently</small></span></button>}
       </div>
+      {!FIREBASE_READY && <p className="devhint">Test mode keeps data in this browser only. Set <b>VITE_BACKEND=firebase</b> and your Firebase keys in .env.local to sync across devices.</p>}
+
       <div className="sect-h"><h2>About</h2></div>
       <div className="list">
         <div className="li about"><span className="t">TikTym {BUILD.version}<small>Build {BUILD.commit}, {new Date(BUILD.builtAt).toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</small></span></div>
       </div>
-      {!FIREBASE_READY && <p className="devhint">Test mode keeps data in this browser only. Set <b>VITE_BACKEND=firebase</b> and your Firebase keys in .env.local to sync across devices.</p>}
+
+      {/* Last on the page and set apart, so a tap meant for Sign out can't land here. */}
+      <div className="sect-h danger-h"><h2>Danger zone</h2></div>
+      <div className="list danger">
+        <button className="li" onClick={startOver}><span className="t">Start over<small>Deletes all logs and resets the default practices</small></span></button>
+        {FIREBASE_READY && <button className="li" onClick={() => void deleteAccount()}><span className="t">Delete account<small>Removes your account and all data permanently</small></span></button>}
+      </div>
     </>
   );
 }

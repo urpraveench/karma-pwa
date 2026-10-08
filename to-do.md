@@ -42,12 +42,12 @@ Google sign-in works on https://tiktym.web.app: in Safari, on a laptop, and in t
 **Terms and Privacy**
 
 - [ ] **You:** tell Claude the company's exact legal name and the country it's registered in (for the operator line and the governing-law clause).
-- [ ] **Claude:** draft global Terms and Privacy pages from what the app actually collects; publish them at `/terms` and `/privacy`; link them on the login screen and in Setup › About (LEGAL-01, LEGAL-02, AUTH-21).
+- [ ] **Claude:** draft global Terms and Privacy pages from what the app actually collects; publish them at `/terms` and `/privacy`; link them on the login screen and in Setup › About (LEGAL-01, LEGAL-02, AUTH-21). Include Google's required reCAPTCHA notice ("This site is protected by reCAPTCHA, and the Google Privacy Policy and Terms of Service apply."), since App Check hides the badge.
 - [ ] **You:** read both drafts and get them checked if you can. They're a starting point, not legal advice.
 
 **App Check** (only the real TikTym app can use your Firebase data; reCAPTCHA Enterprise, free on the Spark plan)
 
-- [ ] **You:** after a day or two of verified traffic, turn on **Enforce** for Cloud Firestore and Authentication in Firebase › App Check.
+- [ ] **You:** around 10 October 2026, check Firebase › App Check › APIs: Cloud Firestore and Authentication should show mostly **Verified** requests. Then turn on **Enforce** for both. Firebase › App Check also has a debug token option if you ever need to run the real app on localhost after that.
 
 **Trademark**
 
@@ -90,6 +90,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.0.2 (commit 227cb92): App Check with reCAPTCHA Enterprise, 8 October 2026
 - [x] App Check live in 1.0.2: reCAPTCHA Enterprise loads, Firebase issues App Check tokens (200), no visible badge, no console errors (APP-24), 8 October 2026
 - [x] Fraud Defense (reCAPTCHA Enterprise) web key created and registered in Firebase › App Check, 8 October 2026
 - [x] App Check switched to the reCAPTCHA Enterprise provider, which takes Google Cloud Fraud Defense keys (site key only, free on Spark) (APP-24), 8 October 2026

@@ -94,7 +94,7 @@ Everything people say about the app: confusion, bugs, requests, praise. Bring an
 
 | Date | From | What they said | Bug, idea or praise | Done? |
 |---|---|---|---|---|
-| 8 Oct | Friend (WhatsApp, direct link) | "Not accepting https; on http a blank white screen, on web and mobile" | Bug? | Checking. The link works from public DNS and in Chrome on desktop and phone, http and https. Likely his network (same Wi-Fi on both devices; office firewalls block new domains). Asked him to try mobile data and send a screenshot. |
+| 8 Oct | Friend (WhatsApp, direct link) | "Not accepting https; on http a blank white screen, on web and mobile" | Bug? | Checking. The link works from public DNS and in Chrome on desktop and phone, http and https. Likely his network (same Wi-Fi on both devices; office firewalls block new domains). Asked him to try mobile data and send a screenshot. Then he said it was slow; on a slow connection the app was blank until it loaded. Fixed in 1.6.2 (8 Oct): a start screen with "connection seems slow" messages. Ask him to try again. |
 
 ## Weekly review (every Monday)
 

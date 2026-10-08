@@ -109,6 +109,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.6.2: a start screen instead of a blank page on slow connections, with slow, stuck and offline messages; fonts no longer block the first paint. Checked live on a throttled phone connection (50 KB/s): start screen at 1.3 s, sign-in at 9.3 s, where it was blank for all 9 s before, 8 October 2026
 - [x] Google's font stylesheet loads in the background instead of holding up the first paint; the page draws in the system font until it arrives (APP-26), 8 October 2026
 - [x] A start screen from the first byte (in index.html, before any code arrives), kept up while Firebase starts and data loads: "Loading TikTym…", "Your connection seems slow" after 5 seconds, Reload after 20, an offline message, and a reload by itself when the connection returns (FIRST-03, FIRST-05, FIRST-06, FIRST-07), 8 October 2026
 - [x] OUTREACH.md: outreach tasks by date, ready messages, tracking links per channel, share and feedback logs, weekly review, 8 October 2026

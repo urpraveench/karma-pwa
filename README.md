@@ -144,4 +144,4 @@ tests/         Vitest unit tests
 
 ## Pending work
 
-Everything still to do, including the public launch checklist, is tracked in [to-do.md](to-do.md).
+Everything still to do, including the public launch checklist, is tracked in [to-do.md](to-do.md). The go-to-market plan is in [GTM.md](GTM.md).

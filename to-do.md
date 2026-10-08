@@ -15,7 +15,6 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 These can't be automated, or need the real project and a real phone. IDs refer to [FEATURES.md](FEATURES.md).
 
-- [ ] Sign in with email and with Google at https://app.tiktym.com, in a browser and in the iPhone app added from the new address (GTM-06)
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] **You:** after the fix, run the 5-minute Meditation test again: the chime should play right as the timer reaches its target (TIMER-05).
@@ -107,6 +106,7 @@ From FEATURES.md › "What's left to test". None left: every scenario has a test
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Checked on iPhone: the moved bar on the old app, sign-in with email and Google at https://app.tiktym.com in Safari and from the new home-screen app, editing an entry, reordering practices (GTM-06, GTM-09), 8 October 2026
 - [x] Released 1.6.0: the app moves to https://app.tiktym.com (old address redirects; installed apps show a "TikTym has moved" bar), edit a logged entry, reorder practices, failed deletes now say so, better text contrast in dark and light. Website redeployed with new links and clips. Checked live: both addresses serve 1.6.0, the old one redirects with path and query kept, 8 October 2026
 - [x] Text contrast checked on every screen, sheet and the focus timer in dark and light (WCAG AA). Fixed what it found: white text on the green and amber practice colours (fills now 8% darker), the time-of-day bar's Morning and Night labels, the light-mode streak number, and "points so far" on the dark focus timer (APP-14, APP-25), 8 October 2026
 - [x] Days follow the phone's time zone: checked in Los Angeles and India at times when UTC is on another date (APP-11), 8 October 2026

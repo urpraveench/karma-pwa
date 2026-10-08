@@ -95,6 +95,11 @@ From FEATURES.md › "What's left to test". None left: every scenario has a test
 
 ## 6. Features not built yet
 
+No more blank screen on a slow connection (reported by a friend, 8 October 2026). Before anything showed, a phone downloaded Google's font stylesheet (which blocks the first paint), about 100 KB of app code and, in Firebase mode, about 190 KB of Firebase SDK, with nothing on screen. Branch `fix/slow-start`.
+
+- [ ] **Claude:** a loading screen from the first byte, with "Your connection seems slow" after 5 seconds, a Reload button after 20, and an offline message (FIRST-03, FIRST-05, FIRST-06, FIRST-07).
+- [ ] **Claude:** the font stylesheet no longer holds up the first paint (APP-26).
+
 - [ ] **Claude (before scale):** load only recent months on app open, using the offline cache for older ones. Today every open downloads a user's full history: fine now, but after a year it is about 230 KB and 17 reads per open, which makes Firestore's free 10 GiB/month egress the first limit for long-time users.
 - [ ] Phase 2, needs Blaze: push reminders, streak-at-risk alerts, a weekly recap, and a timer alert while the app is closed (Cloud Functions + FCM).
 

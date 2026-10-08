@@ -23,7 +23,7 @@ Summary of coverage at the time of writing:
 | Area | Scenarios | Tested | Gap | Manual |
 |---|---|---|---|---|
 | 1. Accounts and sign-in | 28 | 25 | 0 | 3 |
-| 2. First run | 4 | 2 | 0 | 2 |
+| 2. First run | 7 | 2 | 4 | 1 |
 | 3. Backlog rules | 13 | 13 | 0 | 0 |
 | 4. Today screen | 16 | 16 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
@@ -34,10 +34,10 @@ Summary of coverage at the time of writing:
 | 10. Practices (Setup) | 23 | 23 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 16 | 15 | 0 | 1 |
-| 13. App shell, PWA and platform | 29 | 24 | 0 | 5 |
+| 13. App shell, PWA and platform | 30 | 24 | 1 | 5 |
 | 14. Marketing and sharing | 11 | 11 | 0 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **258** | **243** | **0** | **15** |
+| **Total** | **262** | **243** | **5** | **14** |
 
 ---
 
@@ -89,7 +89,10 @@ The app has two modes, set by `VITE_BACKEND`. **Test mode** (`local`) keeps data
 |---|---|---|---|
 | FIRST-01 | First sign-in with no data | Seeds Exercise 30, Reading 30, Course study 30 and Meditation 10 minutes, every day, starting today | E2E `today.spec.ts`, E2E `firebase/account.spec.ts` |
 | FIRST-02 | User deletes every practice | Defaults are not re-seeded on the next load (the `seeded` flag is kept) | E2E `firebase/account.spec.ts` |
-| FIRST-03 | Loading screen | "Loading TikTym…" while data loads | Manual (too brief to assert reliably) |
+| FIRST-03 | Loading screen | From the very first moment, before any code arrives: the TikTym name and "Loading TikTym…". The same screen stays up while Firebase starts and data loads, so the page is never blank | Gap |
+| FIRST-05 | Slow connection | After 5 seconds still loading: "Your connection seems slow. TikTym is still loading, and it opens instantly next time." | Gap |
+| FIRST-06 | Stuck loading | After 20 seconds: "Still loading? Check your connection, then try again." with a Reload button | Gap |
+| FIRST-07 | Offline on first visit | "You're offline. TikTym needs a connection the first time it opens; after that it works offline." Loading carries on when the connection returns | Gap |
 | FIRST-04 | Data fails to load | Back to login with "Could not load your data. Check Firestore rules and your connection." | Manual |
 
 ## 3. Backlog rules
@@ -371,6 +374,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | APP-23 | Version file | Each build publishes `version.json` (version, commit, build date); the service worker never caches it | Unit `version.test.ts`, E2E `pwa.spec.ts` |
 | APP-24 | App Check | With `VITE_RECAPTCHA_SITE_KEY` set, the app attaches a reCAPTCHA Enterprise (Google Cloud Fraud Defense) App Check token to Firebase requests; without it, and in test mode or with the emulators, App Check is off | Unit `app-check.test.ts` (the on/off switch; live tokens are checked in the Firebase console, see to-do.md) |
 | APP-25 | Light mode colours | The same contrast check as APP-14, in light: login, Today, Insights, History, Setup, the sheets and the focus timer | E2E `colours.spec.ts` |
+| APP-26 | Fonts don't block the first paint | The page draws straight away in the system font and switches to TikTym's fonts when they arrive | Gap |
 | LEGAL-01 | Terms page | `/terms/` shows the Terms of Service under Indian law: operator Pramal IT Services Private Limited (CIN), eligibility, accounts, acceptable use, your data, no medical advice, availability, liability, termination, governing law and courts in Andhra Pradesh, grievance contact | E2E `legal.spec.ts` |
 | LEGAL-02 | Privacy page | `/privacy/` shows, for India's DPDP Act 2023: what's collected (account, practice data, device storage, reCAPTCHA signals), why, where it's stored (Mumbai), processors (Google), retention, rights (access, correction, export, erasure, grievance, Data Protection Board), 18+, changes, contact | E2E `legal.spec.ts` |
 | LEGAL-03 | reCAPTCHA notice | With App Check on, the login screen says "Protected by reCAPTCHA" with links to Google's Privacy Policy and Terms, as Google requires when the badge is hidden | Unit `app-check.test.ts` (when it shows); E2E `legal.spec.ts` (hidden while App Check is off). Shown live with App Check on: checked after each release |

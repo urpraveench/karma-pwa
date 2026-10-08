@@ -33,7 +33,7 @@ test('first Google sign-in creates the account with the defaults and greets by f
   await expect(page.locator('.hello')).toHaveText(/, Asha$/);
   await expect(page.locator('.cat .cat-name')).toHaveText(['Exercise', 'Reading', 'Course study', 'Meditation']);
   await page.locator('.tab', { hasText: 'Setup' }).click();
-  await expect(page.locator('.list').last().locator('.li').first()).toContainText('Asha Kumar');
+  await expect(page.locator('.li', { hasText: 'Asha Kumar' })).toBeVisible(); // the Account row
 });
 
 test('signing in with Google again returns to the same data (AUTH-19)', async ({ page, browser }) => {

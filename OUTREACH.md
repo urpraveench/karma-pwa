@@ -44,6 +44,8 @@ Each channel gets its own link, so Google Analytics (Reports › Acquisition ›
 
 ## Messages ready to send
 
+Until the web-filter categorisation goes through (task above), the WhatsApp messages include a line about trying mobile data. Drop it once college and office networks open the site.
+
 **LinkedIn profile reshare** (add above the reshared post, in your own words):
 
 > I built this for myself after years of office → home → sleep. Now it's live and free. If you've been meaning to get back to learning, give it a week and tell me what you think.
@@ -56,7 +58,7 @@ Each channel gets its own link, so Google Analytics (Reports › Acquisition ›
 >
 > https://tiktym.com/?utm_source=whatsapp&utm_medium=direct
 >
-> (Open it on your phone and add it to your home screen, no app store needed.)
+> (Open it on your phone and add it to your home screen, no app store needed. If it doesn't open on office or college Wi-Fi, try mobile data; some networks block new sites.)
 
 **WhatsApp Status** (with the video or the post image):
 
@@ -67,6 +69,8 @@ Each channel gets its own link, so Google Analytics (Reports › Acquisition ›
 > Hi all 👋 Hope everyone's doing well! I built a small app for people like us whose days go office → home → sleep: TikTym. You set a few minutes a day for things like upskilling, reading or exercise, and it keeps you going. Miss a busy day and it carries forward without piling up.
 >
 > It's free and works on any phone: https://tiktym.com/?utm_source=whatsapp&utm_medium=group&utm_campaign=college
+>
+> If it doesn't open on office or college Wi-Fi, try mobile data; some networks block new sites.
 >
 > Would love to hear what you think. Replies welcome, even "this is confusing" 😄
 

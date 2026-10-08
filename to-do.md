@@ -82,7 +82,8 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 - [ ] **You:** run a 30-day learning challenge with your network, using TikTym.
 - [ ] **You:** take part in r/developersIndia, r/IndianWorkplace and tech Slack/Discord communities before sharing TikTym.
 - [ ] **You:** list 10 productivity or career newsletters and creators and pitch them.
-- [ ] **Claude:** shareable progress card sized for LinkedIn and Instagram (GTM-08).
+- [ ] **Claude:** progress card stats: this month's time, streak, best streak, active days, top three practices (SHARE-01).
+- [ ] **Claude:** progress card image (1080×1350) with a preview, Share via the phone's share sheet or Download, and a switch to hide practice names (SHARE-02, SHARE-03, SHARE-04).
 
 ## 5. Remaining test gaps
 

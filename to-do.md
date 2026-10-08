@@ -85,7 +85,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 ## Anonymous usage totals
 
 - [ ] **You:** after the release, look at Firebase › Firestore › `stats`: one document per day with the totals.
-- [ ] **Claude:** Google Sheets report: an Apps Script that pulls `stats/{date}` through your Google login into Daily totals (gaps filled, derived columns, your Notes kept), Weekly and Charts tabs, a TikTym menu and a daily refresh (STAT-04).
 - [ ] **You:** set up the Sheet from `tools/sheets/README.md` (about 10 minutes) and tell Claude what it shows.
 
 ## 5. Remaining test gaps
@@ -113,6 +112,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Google Sheets report for the anonymous totals: `tools/sheets/` (Apps Script, manifest, setup guide) (STAT-04), 8 October 2026
 - [x] Released 1.5.0 (commit 8cd3aeb) with the new Firestore rules: anonymous daily totals, 8 October 2026
 - [x] Privacy Policy explains the anonymous daily totals (LEGAL-06), 8 October 2026
 - [x] Anonymous daily totals for everyone in Firestore `stats/{date}`, batched, no identifiers (STAT-01, STAT-02), 8 October 2026

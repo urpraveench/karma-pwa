@@ -155,6 +155,10 @@ tests/         Vitest unit tests
 - Test-mode credentials are a UI gate only. Don't put real data in test mode on a shared device.
 - Dates use the phone's local time zone.
 
+## Usage totals
+
+The app counts anonymous daily totals (Firestore `stats/{date}`; see the Privacy Policy). To chart them, set up the Google Sheet in [tools/sheets/README.md](tools/sheets/README.md).
+
 ## Pending work
 
 Everything still to do, including the public launch checklist, is tracked in [to-do.md](to-do.md). The go-to-market plan is in [GTM.md](GTM.md).

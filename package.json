@@ -14,7 +14,8 @@
     "test:report": "REPORT=1 vitest run; vite preview --outDir reports/unit --port 4174 --open",
     "test:emulator": "PATH=/opt/homebrew/opt/openjdk@21/bin:$PATH firebase emulators:exec --only auth,firestore --project demo-tiktym 'vitest run --config vitest.emulator.config.ts'",
     "test:all": "npm test && npm run test:emulator && npm run test:e2e:headless",
-    "og:image": "node scripts/og-image.mjs"
+    "og:image": "node scripts/og-image.mjs",
+    "site:clips": "node scripts/record-clips.mjs"
   },
   "dependencies": {
     "firebase": "^12.19.0",

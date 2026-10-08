@@ -76,7 +76,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 **Phase 1: Website**
 
 - [ ] **Claude:** website at `tiktym.com` in `site/`: Home, How it works, Features, Install, For working professionals, Privacy promise, FAQ, What's new (GTM-04).
-- [ ] **Claude:** feature clips recorded automatically from the app with one command (GTM-05).
 - [ ] **Claude:** move the app to `app.tiktym.com`, with `tiktym.web.app` redirecting so installed apps keep working (GTM-06).
 - [ ] **You:** add a cookie-free website counter (for example Cloudflare Web Analytics) and send Claude its snippet.
 
@@ -117,6 +116,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Feature clips recorded from the real app with `npm run site:clips`: Today, focus timer, backlog, Insights (GTM-05), 8 October 2026
 - [x] Send feedback in Setup › About, an email to support with the version filled in (GTM-02), 8 October 2026
 - [x] Link previews: title, description and a 1200×630 preview image (`npm run og:image` redraws it) (GTM-01), 8 October 2026
 - [x] IP India phonetic search for "TikTim", classes 9 and 42: no results. Name TikTym settled for India. First audience changed to working professionals (GTM.md), 8 October 2026

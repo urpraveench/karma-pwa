@@ -51,6 +51,7 @@ test.describe('Privacy Policy (LEGAL-02)', () => {
     await expect(page.locator('td', { hasText: /^Usage statistics \(only if you allow them\)$/ })).toBeVisible();
     await expect(body).toContainText('Advertising features are switched off');
     await expect(body).toContainText('Setup › Privacy › Share anonymous usage stats');
+    await expect(body).toContainText('unticked checkbox when you create an account');
     await expect(body).toContainText('kept in Google Analytics for up to 14 months');
     await expect(body).not.toContainText("we don't use analytics");
   });

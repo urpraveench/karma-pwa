@@ -1,25 +1,5 @@
 import { useState } from 'react';
-import { config } from '../config';
-import { analyticsAvailable, readConsent, setConsent, trackScreen } from '../lib/analytics';
-
-/** Asks once whether to share anonymous usage stats. Nothing is sent before Allow (ANA-01). */
-export function AnalyticsConsent() {
-  const [consent, setLocal] = useState(readConsent);
-  if (!analyticsAvailable() || consent !== null) return null;
-  const choose = (c: 'granted' | 'denied') => {
-    setConsent(c); setLocal(c);
-    if (c === 'granted') trackScreen('today');
-  };
-  return (
-    <section className="consent" aria-label="Usage statistics">
-      <p><b>Help improve TikTym?</b> Share anonymous usage stats, such as which screens and features get used, with Google Analytics. No names, emails or practice names. <a href={config.legal.privacy}>Privacy Policy</a></p>
-      <div className="row2">
-        <button className="btn btn-2" type="button" onClick={() => choose('denied')}>No thanks</button>
-        <button className="btn" type="button" onClick={() => choose('granted')}>Allow</button>
-      </div>
-    </section>
-  );
-}
+import { analyticsAvailable, readConsent, setConsent } from '../lib/analytics';
 
 /** Setup › Privacy: change the choice at any time (ANA-03). */
 export function AnalyticsSwitch() {

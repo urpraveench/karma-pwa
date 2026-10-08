@@ -65,7 +65,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 ## Go-to-market (see GTM.md)
 
-- [ ] **Claude:** ask for analytics consent with one unticked checkbox on Create account instead of the card on Today; Setup › Privacy keeps the switch; Privacy Policy wording to match (ANA-01, LEGAL-05).
 
 **Phase 0: Foundations**
 
@@ -75,7 +74,7 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 **Phase 1: Website**
 
 - [ ] **Claude:** move the app to `app.tiktym.com`, with `tiktym.web.app` redirecting so installed apps keep working (GTM-06).
-- [ ] **You:** in Google Analytics › Admin: check the data stream lists tiktym.web.app, tiktym.com and www.tiktym.com, keep Google signals off, and set data retention (14 months is the most). Then open the app and website, choose Allow, and watch Reports › Realtime.
+- [ ] **You:** in Google Analytics › Admin: check the data stream lists tiktym.web.app, tiktym.com and www.tiktym.com, keep Google signals off, and set data retention (14 months is the most). Then switch on Setup › Privacy › Share anonymous usage stats in the app, choose Allow on the website, and watch Reports › Realtime.
 
 **Phase 2: App stores**
 
@@ -115,6 +114,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Analytics consent moved to an unticked checkbox on Create account; no card on Today; Setup › Privacy switch kept; Privacy Policy updated (ANA-01, LEGAL-05), 8 October 2026
 - [x] Released 1.3.0 (commit e31e592) and the website: consent-based Google Analytics in both, updated Privacy Policy, 8 October 2026
 - [x] Privacy Policy and website wording updated for optional, consent-based Google Analytics (LEGAL-05), 8 October 2026
 - [x] Consent-based Google Analytics on the website, same property: consent bar, open_app clicks by location, domains linked to the app (ANA-04), 8 October 2026

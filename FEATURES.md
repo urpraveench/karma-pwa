@@ -36,8 +36,8 @@ Summary of coverage at the time of writing:
 | 12. Sync and storage | 14 | 12 | 1 | 1 |
 | 13. App shell, PWA and platform | 28 | 20 | 3 | 5 |
 | 14. Marketing and sharing | 4 | 4 | 0 | 0 |
-| 15. Analytics | 6 | 5 | 1 | 0 |
-| **Total** | **238** | **217** | **6** | **15** |
+| 15. Analytics | 6 | 6 | 0 | 0 |
+| **Total** | **238** | **218** | **5** | **15** |
 
 ---
 
@@ -383,7 +383,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
-| ANA-01 | Consent in the app | Asked once, as an unticked checkbox on Create account: "Share anonymous usage stats to help improve TikTym". Ticked: Analytics starts with the new account. Unticked, existing accounts and Google sign-ups: off until switched on in Setup › Privacy. No card on Today; nothing loads or is sent before consent | Gap |
+| ANA-01 | Consent in the app | Asked once, as an unticked checkbox on Create account: "Share anonymous usage stats to help improve TikTym". Ticked: Analytics starts with the new account. Unticked, existing accounts and Google sign-ups: off until switched on in Setup › Privacy. No card on Today; nothing loads or is sent before consent | E2E `firebase/account.spec.ts` (checkbox), `analytics/analytics.spec.ts` (no card, nothing before consent) |
 | ANA-02 | What's measured in the app | After Allow: a page view per tab, and events for logging minutes (how), finishing a timer, adding a practice and signing in (method). No names, emails or practice names; advertising features off | E2E `analytics/analytics.spec.ts` (what reaches Google: checked in GA Realtime) |
 | ANA-03 | Change your mind | Setup › Privacy › "Share anonymous usage stats" switches it on or off at any time; off stops sending and removes Analytics cookies | E2E `analytics/analytics.spec.ts` |
 | ANA-04 | Website analytics | A slim consent bar; Google Analytics loads only after Allow; clicks on "Open TikTym" are counted; visits link to the app across domains (same GA4 property) | E2E `site/site.spec.ts` (phone and desktop) |

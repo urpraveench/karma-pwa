@@ -198,3 +198,39 @@ test('Delete account is in the Danger zone, apart from Sign out (SET-19)', async
   await expect(page.locator('.list.danger .li')).toHaveText([/^Start over/, /^Delete account/]);
   await expect(page.locator('.sect-h h2').last()).toHaveText('Danger zone');
 });
+
+test.describe('Analytics consent at sign-up (ANA-01)', () => {
+  async function signUpWithChoice(page: Page, share: boolean) {
+    const requests: string[] = [];
+    await page.route('https://www.googletagmanager.com/gtag/js**', r => { requests.push(r.request().url()); return r.fulfill({ contentType: 'text/javascript', body: '' }); });
+    await openLogin(page);
+    await page.locator('.link', { hasText: 'Create an account' }).click();
+    const box = page.locator('.check input');
+    await expect(box).not.toBeChecked(); // a clear yes is needed
+    if (share) await box.check();
+    await signIn(page, newEmail());
+    await expect(page.locator('.hello')).toBeVisible({ timeout: 15_000 });
+    return requests;
+  }
+
+  test('ticking the box turns Analytics on from the start', async ({ page }) => {
+    const requests = await signUpWithChoice(page, true);
+    await expect.poll(() => requests.length).toBeGreaterThan(0);
+    const events = await page.evaluate(() => ((window as unknown as { dataLayer?: ArrayLike<unknown>[] }).dataLayer || []).map(a => Array.from(a)).filter(a => a[0] === 'event').map(a => a[1]));
+    expect(events).toContain('sign_up');
+    await page.locator('.tab', { hasText: 'Setup' }).click();
+    await expect(page.locator('.li', { hasText: 'Share anonymous usage stats' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  test('leaving it unticked keeps Analytics off', async ({ page }) => {
+    const requests = await signUpWithChoice(page, false);
+    await page.locator('.tab', { hasText: 'Setup' }).click();
+    await expect(page.locator('.li', { hasText: 'Share anonymous usage stats' })).toHaveAttribute('aria-pressed', 'false');
+    expect(requests).toHaveLength(0);
+  });
+
+  test('signing in (not up) shows no checkbox', async ({ page }) => {
+    await openLogin(page);
+    await expect(page.locator('.check')).toHaveCount(0);
+  });
+});

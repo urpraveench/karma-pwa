@@ -14,36 +14,29 @@ const pushed = (page: Page) => page.evaluate(() =>
   ((window as unknown as { dataLayer?: ArrayLike<unknown>[] }).dataLayer || []).map(a => Array.from(a)));
 const events = async (page: Page, name?: string) => (await pushed(page)).filter(a => a[0] === 'event' && (!name || a[1] === name));
 
-test.describe('Analytics consent (ANA-01)', () => {
-  test('asks once on Today, and loads nothing before an answer', async ({ page }) => {
-    const requests = await stubGoogle(page);
-    await signIn(page);
-    await expect(page.locator('.consent')).toContainText('Help improve TikTym?');
-    await tab(page, 'Insights').click();
-    await tab(page, 'Today').click();
-    expect(requests).toHaveLength(0);
-    expect(await pushed(page)).toHaveLength(0);
-  });
+async function allowInSetup(page: Page) {
+  await tab(page, 'Setup').click();
+  await page.locator('.li', { hasText: 'Share anonymous usage stats' }).click();
+  await tab(page, 'Today').click();
+}
 
-  test('"No thanks" is remembered and nothing is sent', async ({ page }) => {
-    const requests = await stubGoogle(page);
-    await signIn(page);
-    await page.locator('.consent button', { hasText: 'No thanks' }).click();
-    await expect(page.locator('.consent')).toHaveCount(0);
-    await page.reload();
-    await expect(page.locator('.hello')).toBeVisible();
-    await expect(page.locator('.consent')).toHaveCount(0);
-    await page.locator('.cat').nth(0).locator('.qbtn').click();
-    expect(requests).toHaveLength(0);
-  });
+test('no consent card on Today, and nothing loads without consent (ANA-01)', async ({ page }) => {
+  const requests = await stubGoogle(page);
+  await signIn(page);
+  await expect(page.locator('.consent')).toHaveCount(0);
+  await page.locator('.cat').nth(0).locator('.qbtn').click();
+  await tab(page, 'Insights').click();
+  await tab(page, 'Setup').click();
+  await expect(page.locator('.li', { hasText: 'Share anonymous usage stats' })).toHaveAttribute('aria-pressed', 'false');
+  expect(requests).toHaveLength(0);
+  expect(await pushed(page)).toHaveLength(0);
 });
 
-test.describe('What Allow sends (ANA-02)', () => {
+test.describe('What switching it on sends (ANA-02)', () => {
   test.beforeEach(async ({ page }) => {
     await stubGoogle(page);
     await signIn(page);
-    await page.locator('.consent button', { hasText: 'Allow' }).click();
-    await expect(page.locator('.consent')).toHaveCount(0);
+    await allowInSetup(page);
   });
 
   test('loads Google Analytics with advertising features off', async ({ page }) => {
@@ -58,7 +51,7 @@ test.describe('What Allow sends (ANA-02)', () => {
     await tab(page, 'Insights').click();
     await tab(page, 'Setup').click();
     const titles = (await events(page, 'page_view')).map(e => (e[2] as { page_title: string }).page_title);
-    expect(titles).toEqual(['today', 'insights', 'setup']);
+    expect(titles).toEqual(['today', 'insights', 'setup']); // from the moment it's switched on
   });
 
   test('logging, timers and practices are counted, with no personal details', async ({ page }) => {
@@ -84,7 +77,7 @@ test.describe('What Allow sends (ANA-02)', () => {
 test('Setup › Privacy turns sharing off, stops events and removes the cookies (ANA-03)', async ({ page, context }) => {
   await stubGoogle(page);
   await signIn(page);
-  await page.locator('.consent button', { hasText: 'Allow' }).click();
+  await allowInSetup(page);
   await context.addCookies([{ name: '_ga', value: 'GA1.1.123.456', url: 'http://localhost:4179' }]);
   await tab(page, 'Setup').click();
   const row = page.locator('.li', { hasText: 'Share anonymous usage stats' });
@@ -98,5 +91,6 @@ test('Setup › Privacy turns sharing off, stops events and removes the cookies 
   expect((await events(page)).length).toBe(before);
   await page.reload();
   await expect(page.locator('.hello')).toBeVisible();
-  await expect(page.locator('.consent')).toHaveCount(0); // the "off" choice is remembered too
+  await tab(page, 'Setup').click();
+  await expect(page.locator('.li', { hasText: 'Share anonymous usage stats' })).toHaveAttribute('aria-pressed', 'false'); // remembered
 });

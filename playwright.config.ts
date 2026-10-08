@@ -84,7 +84,8 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
       env: {
-        VITE_BACKEND: 'firebase', VITE_USE_EMULATORS: 'true', VITE_ENABLE_GOOGLE: 'false', VITE_GA_MEASUREMENT_ID: '',
+        // a test Analytics ID, for the sign-up consent checkbox; Google's script is stubbed in those tests
+        VITE_BACKEND: 'firebase', VITE_USE_EMULATORS: 'true', VITE_ENABLE_GOOGLE: 'false', VITE_GA_MEASUREMENT_ID: 'G-TEST12345',
         VITE_FIREBASE_API_KEY: 'fake-api-key', VITE_FIREBASE_PROJECT_ID: 'demo-tiktym', VITE_FIREBASE_AUTH_DOMAIN: 'localhost',
       },
     },

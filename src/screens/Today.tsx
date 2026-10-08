@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'react';
-import { AnalyticsConsent } from '../components/AnalyticsConsent';
 import { Mala, malaFills } from '../components/Mala';
 import { MomentCard } from '../components/MomentCard';
 import { activeCats, showUpStreak } from '../lib/backlog';
@@ -35,7 +34,6 @@ export function Today() {
           <div className="streak" title="Days in a row with at least one entry"><b>{su}</b><span>days showing up</span></div>
         ) : null}
       </header>
-      <AnalyticsConsent />
       {m && <MomentCard m={m} timerOn={!!tm} onHide={() => hideMoment(m.key)} onGo={(cat, goal) => start(cat, goal || undefined)} />}
       <section className={`mala ${intro ? 'intro' : ''} ${m ? 'sm' : ''}`} aria-label={`Today: ${t.doneCap} of ${t.owed} points done`}>
         <Mala fills={malaFills(c, cats, live)} />

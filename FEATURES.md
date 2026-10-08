@@ -428,12 +428,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 ## What's left to test
 
-**Gaps** (testable, no test yet):
-
-- SET-18, SYNC-13: a failed Firebase save shows "Could not save. Check your connection." Needs a way to make Firestore reject a write in the emulator.
-- APP-08: the service worker never caches Firestore or Auth requests. Checkable by inspecting `dist/sw.js` routes.
-- APP-11: days follow the phone's time zone. Run a test in two `timezoneId`s around midnight.
-- APP-14: dark mode colours on every screen. Best done as screenshot comparisons.
+**Gaps** (testable, no test yet): none.
 
 **Manual** (check by hand before a release, on a real phone and the real Firebase project):
 

@@ -65,3 +65,44 @@ test.describe('website (GTM-04)', () => {
     expect(await page.locator('meta[name="description"]').getAttribute('content')).toContain('working professionals');
   });
 });
+
+test.describe('website analytics (ANA-04)', () => {
+  const GTAG = 'https://www.googletagmanager.com/gtag/js**';
+  const pushed = (page: import('@playwright/test').Page) => page.evaluate(() =>
+    ((window as unknown as { dataLayer?: ArrayLike<unknown>[] }).dataLayer || []).map(a => Array.from(a)));
+
+  test('asks first, and loads nothing before an answer', async ({ page }) => {
+    const requests: string[] = [];
+    await page.route(GTAG, r => { requests.push(r.request().url()); return r.fulfill({ contentType: 'text/javascript', body: '' }); });
+    await page.goto('/');
+    await expect(page.locator('.consent-bar')).toBeVisible();
+    await page.locator('#features').scrollIntoViewIfNeeded();
+    expect(requests).toHaveLength(0);
+  });
+
+  test('"No thanks" is remembered and nothing loads', async ({ page }) => {
+    const requests: string[] = [];
+    await page.route(GTAG, r => { requests.push(r.request().url()); return r.fulfill({ contentType: 'text/javascript', body: '' }); });
+    await page.goto('/');
+    await page.locator('.consent-bar [data-deny]').click();
+    await expect(page.locator('.consent-bar')).toBeHidden();
+    await page.reload();
+    await expect(page.locator('.consent-bar')).toBeHidden();
+    expect(requests).toHaveLength(0);
+  });
+
+  test('Allow loads Analytics (ads off, app domain linked) and counts clicks into the app', async ({ page }) => {
+    await page.route(GTAG, r => r.fulfill({ contentType: 'text/javascript', body: 'window.__gtagLoaded = true;' }));
+    await page.goto('/');
+    await page.locator('.consent-bar [data-allow]').click();
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __gtagLoaded?: boolean }).__gtagLoaded)).toBe(true);
+    const config = (await pushed(page)).find(a => a[0] === 'config')!;
+    expect(config[1]).toBe('G-JL1YCFLK23');
+    expect(config[2]).toMatchObject({ allow_google_signals: false, allow_ad_personalization_signals: false });
+    expect((config[2] as { linker: { domains: string[] } }).linker.domains).toContain('tiktym.web.app');
+    // keep the page here: the click still reaches the counting code, only the navigation is cancelled
+    await page.evaluate(() => addEventListener('click', e => e.preventDefault(), true));
+    await page.locator('.hero [data-app-link="hero"]').click();
+    await expect.poll(async () => (await pushed(page)).some(a => a[0] === 'event' && a[1] === 'open_app' && (a[2] as { link_location: string }).link_location === 'hero')).toBe(true);
+  });
+});

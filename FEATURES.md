@@ -32,10 +32,10 @@ Summary of coverage at the time of writing:
 | 8. History | 6 | 6 | 0 | 0 |
 | 9. Insights | 23 | 23 | 0 | 0 |
 | 10. Practices (Setup) | 21 | 21 | 0 | 0 |
-| 11. Settings and data (Setup) | 18 | 16 | 1 | 1 |
+| 11. Settings and data (Setup) | 19 | 16 | 2 | 1 |
 | 12. Sync and storage | 14 | 12 | 1 | 1 |
 | 13. App shell, PWA and platform | 23 | 14 | 4 | 5 |
-| **Total** | **220** | **199** | **6** | **15** |
+| **Total** | **221** | **199** | **7** | **15** |
 
 ---
 
@@ -310,6 +310,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | SET-16 | Test-mode note | Explains data stays in this browser | E2E `setup.spec.ts` |
 | SET-17 | Settings sync | Backlog limit is saved with the account; theme is per device | E2E `firebase/account.spec.ts` |
 | SET-18 | Save fails | "Could not save. Check your connection." | Gap |
+| SET-19 | Destructive actions kept apart | Account shows only name, email and Sign out. Start over and Delete account (Firebase mode only) sit in a red "Danger zone", the last section of Setup, below About | Gap |
 
 ## 12. Sync and storage
 

@@ -11,6 +11,11 @@ Everything still pending, in the order it should happen. Tick items off as they'
 The app is live at https://tiktym.web.app (project `tiktym`, Firestore in `asia-south1`) and installed on a phone. Nothing left here.
 
 
+## Setup layout
+
+- [ ] **Claude:** keep destructive actions away from Sign out: Account keeps only your name, email and Sign out; a red "Danger zone" at the very bottom of Setup, below About, holds Start over and Delete account (SET-19).
+- [ ] **Claude (optional, not started):** replace the browser's plain confirm and "Type DELETE" boxes with an in-app confirmation sheet.
+
 ## Version numbering
 
 - [ ] **Claude:** show the version on the login page and in Setup › About (APP-21).

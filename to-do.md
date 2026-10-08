@@ -85,6 +85,8 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 ## Anonymous usage totals
 
 - [ ] **You:** after the release, look at Firebase › Firestore › `stats`: one document per day with the totals.
+- [ ] **Claude:** Google Sheets report: an Apps Script that pulls `stats/{date}` through your Google login into Daily totals (gaps filled, derived columns, your Notes kept), Weekly and Charts tabs, a TikTym menu and a daily refresh (STAT-04).
+- [ ] **You:** set up the Sheet from `tools/sheets/README.md` (about 10 minutes) and tell Claude what it shows.
 
 ## 5. Remaining test gaps
 

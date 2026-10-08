@@ -33,7 +33,7 @@ function useTimerState() {
       document.title = `${fmtClock(ms)} ${c.name}`;
       setMinute(Math.floor(ms / 60000));
       if (!tm.alerted && ms >= tm.goal * 60000) {
-        set({ ...tm, alerted: true }); chime(); haptic([30, 80, 30, 80, 60]);
+        set({ ...tm, alerted: true }); void chime(); haptic([30, 80, 30, 80, 60]);
         toast(`${c.name}: ${tm.goal} min target reached. Keep going or stop to log.`, 6000);
       }
     };

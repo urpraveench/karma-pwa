@@ -193,7 +193,7 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 | TIMER-02 | Default target | Minutes left today, capped at 120; 25 if under 5 are left | E2E `timer.spec.ts` |
 | TIMER-03 | Focus view | Practice name, one bead per target minute (up to 60), progress ring, clock, "N points so far", time to target | E2E `timer.spec.ts` |
 | TIMER-04 | Change target | Chips for 15, 25, 45, and "(all left)" when 5 to 180 minutes are left | E2E `timer.spec.ts`, `today-states.spec.ts` |
-| TIMER-05 | Target reached | Beads turn gold, chime, vibration on Android, toast; counting continues as overtime | E2E `timer.spec.ts` (sound and vibration are Manual) |
+| TIMER-05 | Target reached | Beads turn gold, chime, vibration on Android, toast; counting continues as overtime. If iOS has suspended audio, it's woken first; if it can't be woken at once, the chime is skipped rather than played late. Any tap wakes suspended audio | E2E `timer.spec.ts`, `chime.spec.ts` (with a fake audio engine; real sound and vibration are Manual) |
 | TIMER-06 | Tab title | Shows the running clock and practice; resets to "TikTym" when stopped | E2E `timer.spec.ts` |
 | TIMER-07 | Screen stays awake | Wake Lock held while the focus view is open, re-acquired on return; "Screen stays on" shown | Manual |
 | TIMER-08 | Minimise | Mini-player above the tab bar on every tab: clock, practice, pause, stop, progress line | E2E `timer.spec.ts` |

@@ -92,12 +92,12 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 From FEATURES.md › "What's left to test".
 
-- [ ] **Claude:** the service worker never caches Firestore or Auth requests (APP-08)
 - [ ] **Claude:** days follow the phone's time zone (APP-11)
 - [ ] **Claude:** dark mode colours on every screen, as text-contrast checks (APP-14)
 
 ## 6. Features not built yet
 
+- [ ] **Claude:** look into a narrow race found while testing (8 October 2026): in Firebase mode, an entry logged about 40 ms before the page reloads was lost, every time; with 300 ms or more it is always kept. Likely Firestore hadn't put the write in its offline queue yet. No one closes the app that fast, but check whether locking the phone straight after a quick tap can lose one, and whether waiting for the queue on `pagehide` helps.
 - [ ] **Claude (before scale):** load only recent months on app open, using the offline cache for older ones. Today every open downloads a user's full history: fine now, but after a year it is about 230 KB and 17 reads per open, which makes Firestore's free 10 GiB/month egress the first limit for long-time users.
 Branch `features/edit-reorder-tests`, merged into main when all of these are done:
 
@@ -112,6 +112,7 @@ Branch `features/edit-reorder-tests`, merged into main when all of these are don
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] The service worker never answers or caches Firestore and Auth requests: checked with it running, in Firebase mode (APP-08), 8 October 2026
 - [x] A save Firestore refuses shows "Could not save. Check your connection." after the screen has updated; deleting an entry (and its Undo) now says so too instead of failing silently (SET-18, SYNC-13), 8 October 2026
 - [x] Reorder practices in Setup with Move up and Move down; new practices always go last (PRAC-20, PRAC-22, PRAC-23), 8 October 2026
 - [x] Tap an entry in History to change its practice, day, minutes or note, with Undo, or delete it (HIST-07, HIST-08, HIST-09), 8 October 2026

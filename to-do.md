@@ -95,13 +95,16 @@ From FEATURES.md › "What's left to test".
 - [ ] **Claude:** a failed Firebase save shows "Could not save. Check your connection." (SET-18, SYNC-13)
 - [ ] **Claude:** the service worker never caches Firestore or Auth requests (APP-08)
 - [ ] **Claude:** days follow the phone's time zone (APP-11)
-- [ ] **Claude:** dark mode colours on every screen, as screenshot comparisons (APP-14)
+- [ ] **Claude:** dark mode colours on every screen, as text-contrast checks (APP-14)
 
 ## 6. Features not built yet
 
 - [ ] **Claude (before scale):** load only recent months on app open, using the offline cache for older ones. Today every open downloads a user's full history: fine now, but after a year it is about 230 KB and 17 reads per open, which makes Firestore's free 10 GiB/month egress the first limit for long-time users.
-- [ ] Reorder practices. `order` exists in the data, but there's no way to change it.
-- [ ] Edit a logged entry. Today you delete it and log again.
+Branch `features/edit-reorder-tests`, merged into main when all of these are done:
+
+- [ ] **Claude:** stores can change a logged entry, including moving it to another month (SYNC-15).
+- [ ] **Claude:** tap an entry in History to edit its practice, day, minutes and note, or delete it (HIST-07, HIST-08, HIST-09).
+- [ ] **Claude:** reorder practices in Setup with Move up and Move down (PRAC-22, PRAC-23).
 - [ ] Phase 2, needs Blaze: push reminders, streak-at-risk alerts, a weekly recap, and a timer alert while the app is closed (Cloud Functions + FCM).
 
 ## 7. Housekeeping

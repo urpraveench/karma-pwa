@@ -29,15 +29,15 @@ Summary of coverage at the time of writing:
 | 5. Moments | 14 | 14 | 0 | 0 |
 | 6. Logging minutes | 20 | 20 | 0 | 0 |
 | 7. Focus timer | 22 | 19 | 0 | 3 |
-| 8. History | 6 | 6 | 0 | 0 |
+| 8. History | 9 | 6 | 3 | 0 |
 | 9. Insights | 23 | 23 | 0 | 0 |
-| 10. Practices (Setup) | 21 | 21 | 0 | 0 |
+| 10. Practices (Setup) | 23 | 21 | 2 | 0 |
 | 11. Settings and data (Setup) | 19 | 17 | 1 | 1 |
-| 12. Sync and storage | 14 | 12 | 1 | 1 |
+| 12. Sync and storage | 15 | 12 | 2 | 1 |
 | 13. App shell, PWA and platform | 28 | 20 | 3 | 5 |
 | 14. Marketing and sharing | 11 | 11 | 0 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **250** | **230** | **5** | **15** |
+| **Total** | **256** | **230** | **11** | **15** |
 
 ---
 
@@ -223,6 +223,9 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 | HIST-04 | Delete an entry | Removed with an Undo toast; totals and backlog recalculate | E2E `history.spec.ts` |
 | HIST-05 | Entry for a deleted practice | Not possible today, because deleting a practice deletes its logs. Shown as "Deleted practice" if it ever happens | E2E `history.spec.ts` |
 | HIST-06 | Only 60 days shown | Older days are kept, just not listed | E2E `history.spec.ts` |
+| HIST-07 | Edit an entry | Tap an entry: a sheet with its practice, day (no future dates), minutes (1 to 1440) and note filled in. Save changes updates History, Today and Insights at once; toast "Entry updated" with Undo | Gap |
+| HIST-08 | Delete from the edit sheet | "Delete entry" removes it, with Undo, as HIST-04 | Gap |
+| HIST-09 | Entry for an archived practice | Its own practice is offered too, so changing the minutes or note doesn't move it | Gap |
 
 ## 9. Insights
 
@@ -291,6 +294,8 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | PRAC-19 | Close without saving | Tap outside or Escape; nothing changes | E2E `setup.spec.ts` |
 | PRAC-20 | Order | New practices go last | E2E `setup.spec.ts` |
 | PRAC-21 | Archived practice in Insights | Kept in history charts, left out of practice health | E2E `setup.spec.ts` |
+| PRAC-22 | Reorder | Move up and Move down beside each practice in Setup; the new order shows on Today, the log sheet and Setup, and is saved | Gap |
+| PRAC-23 | Reorder at the ends | The first practice can't move up and the last can't move down | Gap |
 
 ## 11. Settings and data (Setup)
 
@@ -334,6 +339,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | SYNC-12 | Two devices | Changes on one show on the other after reopening | E2E `firebase/account.spec.ts` |
 | SYNC-13 | Optimistic updates | The screen updates immediately; a failed save shows a toast | Gap |
 | SYNC-14 | Firebase SDK only in Firebase mode | Test mode never downloads it | Manual (check the network tab) |
+| SYNC-15 | Edit a log | Same month: only that entry changes. Another month: removed from the old month and added to the new one in one batch | Gap |
 
 ## 13. App shell, PWA and platform
 
@@ -352,7 +358,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | APP-11 | Time zone | Days follow the phone's local time zone | Gap |
 | APP-12 | Escape key | Closes the focus view first, otherwise the open sheet | E2E `today.spec.ts`, `timer.spec.ts` |
 | APP-13 | Toasts | One at a time; Undo where the action can be undone | E2E (many specs) |
-| APP-14 | Dark mode colours | Every screen readable in dark | Gap |
+| APP-14 | Dark mode colours | Every screen readable in dark: text contrast at least 4.5:1 (3:1 for large text) on login, Today, Insights, History, Setup and the sheets | Gap |
 | APP-15 | Reduced motion | Animations off when the phone asks for reduced motion | E2E `app.spec.ts` |
 | APP-16 | Screen readers | Buttons have labels (for example "Log 30 minutes of Reading"); dialogs are marked as dialogs | E2E `app.spec.ts` |
 | APP-17 | Haptics | Light vibration on log, pick and steps (Android) | Manual |

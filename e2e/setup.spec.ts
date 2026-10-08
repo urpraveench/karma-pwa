@@ -232,3 +232,13 @@ test('destructive actions sit in a Danger zone at the bottom, away from Sign out
   await danger.locator('.li', { hasText: 'Start over' }).click();
   await expect(toast(page)).toHaveText('Started over');
 });
+
+test('Send feedback opens an email to support with the version (GTM-02)', async ({ page }) => {
+  await signIn(page);
+  await tab(page, 'Setup').click();
+  const link = page.locator('a.li', { hasText: 'Send feedback' });
+  const href = await link.getAttribute('href');
+  const version = JSON.parse(await (await page.request.get('/version.json')).text()).version;
+  expect(href).toMatch(/^mailto:praveen\.cherukuru@gmail\.com\?subject=/);
+  expect(decodeURIComponent(href!)).toContain(`TikTym feedback (${version})`);
+});

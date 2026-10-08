@@ -35,8 +35,8 @@ Summary of coverage at the time of writing:
 | 11. Settings and data (Setup) | 19 | 17 | 1 | 1 |
 | 12. Sync and storage | 14 | 12 | 1 | 1 |
 | 13. App shell, PWA and platform | 28 | 20 | 3 | 5 |
-| 14. Marketing and sharing | 2 | 1 | 1 | 0 |
-| **Total** | **229** | **208** | **6** | **15** |
+| 14. Marketing and sharing | 2 | 2 | 0 | 0 |
+| **Total** | **229** | **209** | **5** | **15** |
 
 ---
 
@@ -372,7 +372,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
 | GTM-01 | Link preview | Sharing the app's link (WhatsApp, LinkedIn, X, Slack) shows the TikTym title, a one-line description and a 1200×630 preview image | E2E `app.spec.ts` (how each service renders it: checked live after release) |
-| GTM-02 | Send feedback | Setup › About › Send feedback opens an email to support with the app version and build filled in | Gap |
+| GTM-02 | Send feedback | Setup › About › Send feedback opens an email to support with the app version and build filled in | Unit `feedback.test.ts`, E2E `setup.spec.ts` |
 
 ---
 

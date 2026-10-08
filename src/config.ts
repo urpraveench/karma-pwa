@@ -21,6 +21,8 @@ export const config = {
   devCredentials: { email: 'demo@tiktym.local', password: 'tiktym123' },
   showDevHint: flag(env.VITE_SHOW_DEV_HINT, true),
   enableGoogle: flag(env.VITE_ENABLE_GOOGLE, false),
+  /** Where feedback and support requests go (also on the Terms and Privacy pages). */
+  supportEmail: 'praveen.cherukuru@gmail.com',
   /** The app's own Terms and Privacy pages (public/terms, public/privacy), unless .env.local points elsewhere. */
   legal: { terms: env.VITE_TERMS_URL || '/terms/', privacy: env.VITE_PRIVACY_URL || '/privacy/' },
 };
@@ -34,4 +36,11 @@ export const FIREBASE_READY = config.backend === 'firebase' && !!(firebaseConfig
 export function appCheckSiteKey(e: { VITE_BACKEND?: string; VITE_USE_EMULATORS?: string; VITE_RECAPTCHA_SITE_KEY?: string } = env): string | null {
   if (e.VITE_BACKEND !== 'firebase' || e.VITE_USE_EMULATORS === 'true') return null;
   return e.VITE_RECAPTCHA_SITE_KEY?.trim() || null;
+}
+
+/** A mailto: link for feedback, with the version and build filled in so every report says which build it's about. */
+export function feedbackLink(build: { version: string; commit: string }, email = config.supportEmail): string {
+  const subject = `TikTym feedback (${build.version})`;
+  const body = `\n\n---\nTikTym ${build.version}, build ${build.commit}`;
+  return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }

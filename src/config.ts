@@ -27,7 +27,7 @@ export const config = {
 export const FIREBASE_READY = config.backend === 'firebase' && !!(firebaseConfig.apiKey && firebaseConfig.projectId);
 
 /**
- * The reCAPTCHA v3 site key for Firebase App Check, or null when App Check should stay off:
+ * The reCAPTCHA Enterprise (Google Cloud Fraud Defense) site key for Firebase App Check, or null when App Check should stay off:
  * no key configured, test mode, or the local emulators (which don't check App Check tokens).
  */
 export function appCheckSiteKey(e: { VITE_BACKEND?: string; VITE_USE_EMULATORS?: string; VITE_RECAPTCHA_SITE_KEY?: string } = env): string | null {

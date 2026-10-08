@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore, initializeFirestore, persistentLocalCache, type Firestore } from 'firebase/firestore';
 import { appCheckSiteKey, firebaseConfig } from '../config';
@@ -11,7 +11,7 @@ const app = initializeApp(firebaseConfig);
 // App Check: proves requests come from this app on tiktym.web.app, so Firestore and Auth can refuse anything else
 // once enforcement is on in the Firebase console. Must start before Auth and Firestore are used.
 const siteKey = appCheckSiteKey();
-if (siteKey) initializeAppCheck(app, { provider: new ReCaptchaV3Provider(siteKey), isTokenAutoRefreshEnabled: true });
+if (siteKey) initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(siteKey), isTokenAutoRefreshEnabled: true });
 export const auth = getAuth(app);
 
 // Offline persistence: logging works without signal and syncs later.

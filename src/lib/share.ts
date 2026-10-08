@@ -12,6 +12,7 @@ export interface CardStats {
   streak: number;
   best: number;
   activeDays: number;     // days this month with at least one entry
+  entries: number;        // entries this month
   top: CardPractice[];    // up to three, most time first
 }
 
@@ -32,6 +33,7 @@ export function cardStats(data: AppData, c: Calc, T: DateStr): CardStats {
     streak: c.streak,
     best: c.best,
     activeDays: new Set(thisMonth.map(l => l.date)).size,
+    entries: thisMonth.length,
     top,
   };
 }
@@ -41,4 +43,11 @@ export function formatTime(minutes: number): string {
   if (minutes < 60) return `${minutes} min`;
   const h = minutes / 60;
   return h < 10 ? `${(Math.round(h * 10) / 10).toString()} h` : `${Math.round(h)} h`;
+}
+
+/** The card's first stat: the current streak; with none, the best streak; with neither, this month's entries. A card never shows "0-day streak". */
+export function streakStat(s: CardStats): { value: number; label: string } {
+  if (s.streak > 0) return { value: s.streak, label: 'day streak' };
+  if (s.best > 0) return { value: s.best, label: 'day best streak' };
+  return { value: s.entries, label: s.entries === 1 ? 'entry this month' : 'entries this month' };
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { calc } from '../src/lib/backlog';
-import { cardStats, formatTime } from '../src/lib/share';
+import { cardStats, formatTime, streakStat, type CardStats } from '../src/lib/share';
 import type { AppData, Category, Log } from '../src/lib/types';
 
 const T = '2026-10-07';
@@ -46,7 +46,7 @@ describe('progress card stats (SHARE-01)', () => {
 
   it('is empty, not broken, with no entries this month', () => {
     const empty = cardStats({ ...data, logs: [] }, calc({ ...data, logs: [] }, T), T);
-    expect(empty).toMatchObject({ minutes: 0, activeDays: 0, top: [] });
+    expect(empty).toMatchObject({ minutes: 0, activeDays: 0, entries: 0, top: [] });
   });
 });
 
@@ -56,5 +56,19 @@ describe('formatTime', () => {
     expect(formatTime(60)).toBe('1 h');
     expect(formatTime(210)).toBe('3.5 h');
     expect(formatTime(2820)).toBe('47 h');
+  });
+});
+
+describe('the streak stat never shows "0-day streak"', () => {
+  const base: CardStats = { month: 'October', minutes: 0, streak: 0, best: 0, activeDays: 0, entries: 0, top: [] };
+  it('shows the current streak when there is one', () => {
+    expect(streakStat({ ...base, streak: 12, best: 20 })).toEqual({ value: 12, label: 'day streak' });
+  });
+  it('falls back to the best streak', () => {
+    expect(streakStat({ ...base, best: 9 })).toEqual({ value: 9, label: 'day best streak' });
+  });
+  it("falls back to this month's entries", () => {
+    expect(streakStat({ ...base, entries: 1 })).toEqual({ value: 1, label: 'entry this month' });
+    expect(streakStat({ ...base, entries: 14 })).toEqual({ value: 14, label: 'entries this month' });
   });
 });

@@ -331,6 +331,11 @@ input[type=date].in::-webkit-date-and-time-value{text-align:left}
 .switch.on i{left:21px}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink-2);margin:0 0 6px;cursor:pointer}
 .check input{flex:none;width:20px;height:20px;margin:1px 0 0;accent-color:var(--ink)}
+.share-btn{flex:none;align-self:center}
+.card-preview{border-radius:16px;overflow:hidden;background:#0F1B19;aspect-ratio:1080/1350;max-height:52vh;margin:0 auto 14px;display:grid;place-items:center}
+.card-preview img{width:100%;height:100%;object-fit:contain;display:block}
+.card-wait{color:#93A89F;font-size:14px}
+.li.toggle{border:1px solid var(--line);border-radius:14px}
 .login .legal{margin:18px 0 0}
 .login .recaptcha{margin:8px 0 0;font-size:11.5px}
 .login .hint a,.li a{color:inherit}

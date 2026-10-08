@@ -6,7 +6,12 @@ import { useApp } from '../state/app';
 
 const W = 320;
 
-const Head = ({ sub }: { sub: string }) => <header className="top"><div><p className="date">{sub}</p><h1 className="hello">Insights</h1></div></header>;
+const Head = ({ sub, onShare }: { sub: string; onShare?: () => void }) => (
+  <header className="top">
+    <div><p className="date">{sub}</p><h1 className="hello">Insights</h1></div>
+    {onShare && <button className="chip share-btn" type="button" onClick={onShare}>Share</button>}
+  </header>
+);
 
 function Delta({ s, unit = '' }: { s: WeekStat; unit?: string }) {
   if (s.prev === null) return <span className="delta flat">no data last week</span>;
@@ -16,13 +21,13 @@ function Delta({ s, unit = '' }: { s: WeekStat; unit?: string }) {
 }
 
 export function Insights() {
-  const { data, c, T, range, setRange } = useApp();
+  const { data, c, T, range, setRange, openSheet } = useApp();
   const ins = useMemo(() => buildInsights(data, c, T, range), [data, c, T, range]);
   if (!ins) return <><Head sub="Your patterns show up here" /><div className="empty">Log a couple of days and this page starts coaching you: what's slipping, what's improving, and how close your next milestone is.</div></>;
   const { week, coach } = ins;
   return (
     <>
-      <Head sub={`Since ${fmtShort(ins.earliest)}`} />
+      <Head sub={`Since ${fmtShort(ins.earliest)}`} onShare={() => openSheet({ kind: 'share' })} />
       <section className="coach" aria-label="What to do next">
         <h2>What to do next</h2>
         <ul>{coach.map((t, i) => <li key={i} style={{ '--tone': t.tone } as CSSProperties}><i /><span><b>{t.strong}</b>{t.rest}</span></li>)}</ul>

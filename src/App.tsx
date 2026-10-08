@@ -1,4 +1,5 @@
 import { Shell } from './Shell';
+import { UpdateBar } from './components/UpdateBar';
 import { Login } from './screens/Login';
 import { AppProvider, useApp } from './state/app';
 import { TimerProvider } from './state/timer';
@@ -18,6 +19,7 @@ export function App() {
   return (
     <FeedbackProvider>
       <AppProvider>
+        <UpdateBar />
         <Root />
       </AppProvider>
     </FeedbackProvider>

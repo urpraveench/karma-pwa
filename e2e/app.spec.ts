@@ -63,3 +63,53 @@ test('the version shows on the login page and in Setup › About (APP-21)', asyn
   await expect(page.locator('.li.about .t')).toContainText(`TikTym ${version}`);
   await expect(page.locator('.li.about small')).toContainText(/^Build [0-9a-f]{7,}/);
 });
+
+test.describe('update bar (APP-22)', () => {
+  const NEWER = { version: '9.9.9', commit: 'abcdef0', builtAt: '2026-10-09T10:00:00Z' };
+
+  test('no bar when this is the live version', async ({ page }) => {
+    const checked = page.waitForResponse('**/version.json');
+    await signIn(page);
+    await checked;
+    await expect(page.locator('.update-bar')).toHaveCount(0);
+  });
+
+  test('a newer live version shows the bar on login and every tab; Reload loads it', async ({ page }) => {
+    await page.route('**/version.json', r => r.fulfill({ json: NEWER }));
+    await open(page);
+    await expect(page.locator('.update-bar')).toContainText('New version ready (9.9.9)');
+    await page.fill('#em', DEMO.email);
+    await page.fill('#pw', DEMO.password);
+    await page.click('button[type=submit]');
+    for (const t of ['Today', 'Insights', 'History', 'Setup']) {
+      await tab(page, t).click();
+      await expect(page.locator('.update-bar')).toBeVisible();
+    }
+    await page.mouse.wheel(0, 1500);
+    await expect(page.locator('.update-bar')).toBeInViewport(); // pinned while scrolling
+    await page.unroute('**/version.json'); // after reloading, the app is the live version
+    const checkedAfterReload = page.waitForResponse('**/version.json');
+    await Promise.all([page.waitForEvent('load'), page.locator('.update-bar button').click()]);
+    await expect(page.locator('.hello')).toBeVisible();
+    await checkedAfterReload;
+    await expect(page.locator('.update-bar')).toHaveCount(0);
+  });
+
+  test('a rebuild with the same version number still counts as new', async ({ page }) => {
+    const own = await (await page.request.get('/version.json')).json();
+    await page.route('**/version.json', r => r.fulfill({ json: { ...own, commit: 'fedcba9' } }));
+    await open(page);
+    await expect(page.locator('.update-bar')).toContainText(`New version ready (${own.version} · fedcba9)`);
+  });
+
+  test('no bar when the version file is missing', async ({ page, consoleErrors }) => {
+    await page.route('**/version.json', r => r.fulfill({ status: 404, body: '' }));
+    const checked = page.waitForResponse('**/version.json');
+    await open(page);
+    await checked;
+    await expect(page.locator('.update-bar')).toHaveCount(0);
+    // Chrome itself logs the 404; that's the scenario, not an app error
+    const i = consoleErrors.findIndex(e => e.includes('status of 404'));
+    if (i >= 0) consoleErrors.splice(i, 1);
+  });
+});

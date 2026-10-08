@@ -86,6 +86,28 @@ Starting targets, to revise with real data:
 
 Firebase already shows sign-ups. Any in-app counting (anonymous daily totals only) needs a Privacy Policy update first.
 
+## Capacity on the free plan
+
+Worked out on 8 October 2026 from Firebase's published Spark limits and TikTym's measured behaviour. Assumes an active user opens the app 3 times a day and logs 4 entries.
+
+| Limit (Spark plan) | What uses it | Roughly how many users |
+|---|---|---|
+| reCAPTCHA (App Check): 10,000 checks a month | one check whenever a device needs a new App Check token | **about 100 daily users** with the default 1-hour tokens; **about 2,000** with 7-day tokens |
+| Firestore reads: 50,000 a day | each open reads every practice, every month of history, and settings: about 6 reads for a new user, 17 after a year | about 2,700 daily users (new) down to about 1,000 (a year of history) |
+| Firestore writes: 20,000 a day | one per log, edit or undo; 6 at sign-up | about 5,000 daily users |
+| Firestore egress: 10 GiB a month | each open downloads the full history: about 20 KB for a new user, about 230 KB after a year | about 5,000 users in their first month; about 500 daily users with a year of history |
+| Firestore storage: 1 GiB | about 19 KB per user per month | about 4,500 user-years |
+| Hosting transfer: 360 MB a day, shared by app and website | a new device's first app load: 360 KB; a returning open: a few KB; a website visit: 113 KB (bounce) to 712 KB (every clip) | about 1,000 new installs or website visits a day |
+| Authentication: 50,000 monthly active users | sign-ins | not a limit at this stage |
+
+**What this means**
+
+- Today, the first limit is App Check's 10,000 reCAPTCHA checks. Setting App Check's token time to live to 7 days moves it to about 2,000 daily users.
+- After that, Firestore reads (about 1,000–2,700 daily users) and Hosting transfer (about 1,000 new installs or website visits a day) come next. One good LinkedIn post can reach the Hosting limit.
+- When a free limit runs out, that service stops until it resets: daily limits at midnight Pacific time (about 12:30–1:30 pm in India), monthly ones at the start of the month. Data isn't lost, but the app or site stops working until then.
+- Move to Blaze, with a budget alert, before any real promotion. At these volumes it costs little.
+- Before growing past about 1,000 long-term users, change the app to load only recent months on each open (in to-do.md).
+
 ## Running costs
 
 | Item | Cost |

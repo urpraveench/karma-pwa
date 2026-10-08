@@ -44,7 +44,8 @@ Google sign-in works on https://tiktym.web.app: in Safari, on a laptop, and in t
 
 **App Check** (only the real TikTym app can use your Firebase data; reCAPTCHA Enterprise, free on the Spark plan)
 
-- [ ] **You:** around 10 October 2026, check Firebase › App Check › APIs: Cloud Firestore and Authentication should show mostly **Verified** requests. Then turn on **Enforce** for both. Firebase › App Check also has a debug token option if you ever need to run the real app on localhost after that.
+- [ ] **You (now):** in Firebase › App Check › Apps › TikTym › reCAPTCHA Enterprise, set **Token time to live** to **7 days**. On the free plan reCAPTCHA allows 10,000 checks a month; with the default 1-hour tokens that's only about 100 daily users, with 7-day tokens about 2,000.
+- [ ] **You:** **don't turn on Enforce while on the Spark plan.** When the 10,000 monthly reCAPTCHA checks run out, Google refuses new ones, and with Enforce on that would lock users out. Turn on Enforce for Cloud Firestore and Authentication after moving to Blaze, once Firebase › App Check › APIs shows mostly **Verified** requests.
 
 **Trademark**
 
@@ -60,7 +61,7 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 **Other launch items**
 
-- [ ] **You:** account emails (password reset) land in spam because they come from `noreply@tiktym.firebaseapp.com`. Send them from a domain you own: Firebase › Authentication › Templates › **Customize domain**, then add the DNS records Firebase shows (SPF and DKIM) at your domain's DNS host. Tell Claude which domain (AUTH-28).
+- [ ] **You:** account emails (password reset) land in spam because they come from `noreply@tiktym.firebaseapp.com`. Send them from tiktym.com: Firebase › Authentication › **Templates** tab › click **Password reset** › click the **pencil (edit)** icon › under the sender address, **Customize domain** › enter `tiktym.com` › add the DNS records shown (a TXT for verification, plus SPF and two DKIM CNAMEs) in GoDaddy › **Verify** (up to 48 hours). If that link isn't there, use **SMTP settings** in the same Templates list to send through your own mailbox provider instead. Tell Claude which records you added and Claude will check them (AUTH-28).
 - [ ] **You:** customise the password-reset email template in Authentication › Templates: sender name **TikTym**, a clear subject such as "Reset your TikTym password", and a reply-to address.
 - [ ] **You:** after both, send yourself a reset email and check it arrives in the inbox, not spam (AUTH-28).
 - [ ] **You:** before moving to the paid Blaze plan, set budget alerts on the billing account. Alerts notify you; they don't cap spend.
@@ -69,8 +70,8 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 **Phase 0: Foundations**
 
-- [ ] **You:** connect the domains in Firebase › Hosting. On the **tiktym-site** site: Add custom domain › `tiktym.com` (and `www.tiktym.com`, redirecting to it). Add the records Firebase shows in GoDaddy › DNS, and tell Claude when they're in. `app.tiktym.com` for the app comes with GTM-06.
-- [ ] **You:** move the Firebase project to the **Blaze** plan and set a budget alert (for example ₹500 a month) before any promotion.
+- [ ] **You (reminder, check around 9 October):** tiktym.com is added to the tiktym-site Hosting site and its DNS is correct (checked 8 October: `tiktym.com` → 199.36.158.100 with the `hosting-site=tiktym-site` TXT, `www` → tiktym-site.web.app). Firebase is still verifying and issuing the certificate (up to 24 hours). Check Firebase › Hosting › tiktym-site shows **Connected**, then open https://tiktym.com. Tell Claude, who will switch the website's links and previews to tiktym.com.
+- [ ] **You:** stay on the free Spark plan for now (decided 8 October). Watch usage weekly in Firebase › Usage and billing; GTM.md › "Capacity on the free plan" lists the limits and what hits them first. Move to Blaze with a budget alert before any real promotion.
 - [ ] **Claude (optional):** first-run choice of practices, so people can adjust the defaults before day one; the current defaults already suit professionals (GTM-03).
 
 **Phase 1: Website**
@@ -102,6 +103,7 @@ From FEATURES.md › "What's left to test".
 
 ## 6. Features not built yet
 
+- [ ] **Claude (before scale):** load only recent months on app open, using the offline cache for older ones. Today every open downloads a user's full history: fine now, but after a year it is about 230 KB and 17 reads per open, which makes Firestore's free 10 GiB/month egress the first limit for long-time users.
 - [ ] Reorder practices. `order` exists in the data, but there's no way to change it.
 - [ ] Edit a logged entry. Today you delete it and log again.
 - [ ] Phase 2, needs Blaze: push reminders, streak-at-risk alerts, a weekly recap, and a timer alert while the app is closed (Cloud Functions + FCM).

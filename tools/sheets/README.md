@@ -7,7 +7,10 @@ Pulls the app's anonymous daily totals (Firestore `stats/{date}`) into a Google 
 1. **Create a Sheet:** go to [sheets.new](https://sheets.new) while signed in to the Google account that owns the Firebase project. Name it, for example, "TikTym usage".
 2. **Open Apps Script:** in the Sheet, **Extensions › Apps Script**.
 3. **Paste the code:** replace everything in `Code.gs` with the contents of [`Code.gs`](Code.gs) from this folder. Save (⌘S).
-4. **Paste the settings:** click the gear (**Project Settings**), tick **Show "appsscript.json" manifest file in editor**, go back to the editor, open `appsscript.json`, and replace its contents with [`appsscript.json`](appsscript.json). Save.
+4. **Paste the settings:** don't create a new file for this (Apps Script would name it `appsscript.json.gs`). The file already exists, hidden:
+   - Click the **gear** (**Project Settings**) in the far-left sidebar and tick **Show "appsscript.json" manifest file in editor**.
+   - Back in the editor (the `< >` icon), `appsscript.json` now appears in the file list. Open it, replace its contents with [`appsscript.json`](appsscript.json), and save.
+   - It grants the script permission to read Firestore; without it, refresh fails with "Firestore said 403".
 5. **Run it once:** choose `refresh` in the function list at the top and click **Run**. Google asks for permission:
    - **Review permissions** › choose your account.
    - Google warns that the app isn't verified. That's expected for your own script: **Advanced** › **Go to … (unsafe)** › **Allow**.
@@ -42,5 +45,6 @@ The counter list lives in three places, kept in step by `tests/sheets.test.ts`: 
 
 ## If something goes wrong
 
-- **"Firestore said 403"**: the Google account running the script isn't an owner or editor of the `tiktym` Firebase project.
+- **"Firestore said 403"**: either the `appsscript.json` settings weren't pasted (step 4), or the Google account running the script isn't an owner or editor of the `tiktym` Firebase project.
+- **A file called `appsscript.json.gs`**: delete it (⋮ › Delete) and follow step 4 instead.
 - **"Firestore said 404" or an empty sheet**: there's no data yet. Use the app (signed in) for a minute, then switch away from it so it saves, and refresh.

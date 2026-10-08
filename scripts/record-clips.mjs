@@ -43,7 +43,7 @@ await prep.close();
 /** Records one scene; `scene` runs once the app is on screen. Returns the trimmed MP4's size. */
 async function record(name, scene, { at = NOW, seconds } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'tiktym-clip-'));
-  const ctx = await browser.newContext({ ...PHONE, storageState: state, recordVideo: { dir, size: { width: 780, height: 1688 } } });
+  const ctx = await browser.newContext({ ...PHONE, storageState: state, recordVideo: { dir, size: PHONE.viewport } });
   const page = await ctx.newPage();
   const started = Date.now();
   await page.clock.install({ time: at });
@@ -57,7 +57,7 @@ async function record(name, scene, { at = NOW, seconds } = {}) {
   const raw = await video.path();
   const mp4 = join(OUT, `${name}.mp4`), jpg = join(OUT, `${name}.jpg`);
   const trim = ['-ss', from.toFixed(2), ...(seconds ? ['-t', String(seconds)] : [])];
-  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...trim, '-i', raw, '-vf', 'scale=600:-2,fps=30', '-c:v', 'libx264', '-preset', 'slow', '-crf', '30',
+  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...trim, '-i', raw, '-vf', 'scale=390:-2,fps=30', '-c:v', 'libx264', '-preset', 'slow', '-crf', '30',
     '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-an', mp4]);
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', '2.5', '-i', mp4, '-frames:v', '1', '-q:v', '4', jpg]);
   rmSync(dir, { recursive: true, force: true });

@@ -60,7 +60,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 **Other launch items**
 
-- [ ] **You:** customise the password-reset email template in Authentication › Templates: sender name **TikTym**, a clear subject such as "Reset your TikTym password", and a reply-to address. Then use Forgot password on the login screen and check the email arrives from `@tiktym.com` **in the inbox, not spam** (AUTH-28).
 - [ ] **You:** before moving to the paid Blaze plan, set budget alerts on the billing account. Alerts notify you; they don't cap spend.
 
 ## Go-to-market (see GTM.md)
@@ -114,6 +113,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Password-reset email arrives in the Gmail inbox (not spam), sender "TikTym", subject "Reset your password for TikTym" (AUTH-28), 8 October 2026
 - [x] Account emails sent from tiktym.com: domain verified in Firebase; SPF, `firebase=tiktym` and both DKIM records confirmed in DNS (AUTH-28), 8 October 2026
 - [x] App Check token time to live set to 7 days, so the free 10,000 reCAPTCHA checks a month cover about 2,000 daily users, 8 October 2026
 - [x] Released 1.2.0 (commit e878f1a): link previews for WhatsApp, LinkedIn and X; Send feedback in Setup, 8 October 2026

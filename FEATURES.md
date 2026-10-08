@@ -78,7 +78,7 @@ The app has two modes, set by `VITE_BACKEND`. **Test mode** (`local`) keeps data
 | AUTH-24 | Google with an email that already has a password account | Opens that same account with its data (Firebase's default: one account per email) | E2E `firebase-google/google.spec.ts` |
 | AUTH-26 | Password after Google takes over an unverified account | In production, Firebase removes the password from an account whose email was never verified once Google signs in with that email; sign in with Google from then on, or use Forgot password to set a new one | Manual: checked on iPhone, 8 October 2026 |
 | AUTH-27 | Google sign-in in an app installed on an iPhone or iPad home screen | Uses a full-page redirect instead of a pop-up (a pop-up opens in Safari, whose storage the installed app can't see) and comes back signed in | E2E `firebase-google/google.spec.ts` (emulated iPhone home-screen app; a real iPhone is in to-do.md) |
-| AUTH-28 | Account emails reach the inbox | Password-reset and other account emails come from a TikTym-owned domain with SPF and DKIM, named "TikTym", and arrive in the inbox rather than spam | Manual |
+| AUTH-28 | Account emails reach the inbox | Password-reset and other account emails come from a TikTym-owned domain with SPF and DKIM, named "TikTym", and arrive in the inbox rather than spam | Manual: checked in Gmail on iPhone, 8 October 2026 |
 | AUTH-25 | First Google sign-in | Creates the account, seeds the default practices, greets by the Google first name | E2E `firebase-google/google.spec.ts` |
 
 ## 2. First run

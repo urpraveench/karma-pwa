@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, it } from 'vitest';
 import { assertFails, assertSucceeds, initializeTestEnvironment, type RulesTestEnvironment } from '@firebase/rules-unit-testing';
 import { readFileSync } from 'node:fs';
-import { deleteDoc, doc, getDoc, getDocs, collection, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, getDocs, collection, increment, setDoc } from 'firebase/firestore';
 
 // SYNC-10: each user can read and write only users/{their uid}.
 let env: RulesTestEnvironment;
@@ -50,5 +50,38 @@ describe('firestore.rules', () => {
     const db = env.authenticatedContext('alice').firestore();
     await assertFails(setDoc(doc(db, 'public/x'), { x: 1 }));
     await assertFails(getDoc(doc(db, 'public/x')));
+  });
+});
+
+// STAT-03: anonymous daily totals: only small increments to known counters, never readable from an app.
+describe('stats/{day} rules', () => {
+  const day = 'stats/2026-10-08';
+  const signedIn = () => env.authenticatedContext('anyone').firestore();
+
+  it('a signed-in app can add to known counters', async () => {
+    await assertSucceeds(setDoc(doc(signedIn(), day), { logs: increment(1), minutes: increment(30), logQuick: increment(1) }, { merge: true }));
+    await assertSucceeds(setDoc(doc(signedIn(), day), { logs: increment(2), activeDevices: increment(1) }, { merge: true }));
+  });
+
+  it('nobody can read the totals from an app, even signed in', async () => {
+    await env.withSecurityRulesDisabled(c => setDoc(doc(c.firestore(), day), { logs: 5 }));
+    await assertFails(getDoc(doc(signedIn(), day)));
+    await assertFails(getDocs(collection(signedIn(), 'stats')));
+  });
+
+  it('signed-out visitors cannot write', async () => {
+    await assertFails(setDoc(doc(env.unauthenticatedContext().firestore(), day), { logs: increment(1) }, { merge: true }));
+  });
+
+  it('rejects unknown fields, decreases, big jumps, non-numbers and badly named days', async () => {
+    await env.withSecurityRulesDisabled(c => setDoc(doc(c.firestore(), day), { logs: 10, minutes: 100 }));
+    const db = signedIn();
+    await assertFails(setDoc(doc(db, day), { userId: 'abc' }, { merge: true }));
+    await assertFails(setDoc(doc(db, day), { logs: increment(-1) }, { merge: true }));
+    await assertFails(setDoc(doc(db, day), { logs: increment(500) }, { merge: true }));
+    await assertFails(setDoc(doc(db, day), { minutes: increment(6000) }, { merge: true }));
+    await assertFails(setDoc(doc(db, day), { logs: 'many' }, { merge: true }));
+    await assertFails(setDoc(doc(db, 'stats/hello'), { logs: increment(1) }, { merge: true }));
+    await assertFails(deleteDoc(doc(db, day)));
   });
 });

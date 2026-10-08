@@ -36,8 +36,8 @@ Summary of coverage at the time of writing:
 | 12. Sync and storage | 14 | 12 | 1 | 1 |
 | 13. App shell, PWA and platform | 28 | 20 | 3 | 5 |
 | 14. Marketing and sharing | 8 | 8 | 0 | 0 |
-| 15. Analytics | 10 | 6 | 4 | 0 |
-| **Total** | **246** | **222** | **9** | **15** |
+| 15. Analytics | 10 | 7 | 3 | 0 |
+| **Total** | **246** | **223** | **8** | **15** |
 
 ---
 
@@ -395,7 +395,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | LEGAL-05 | Privacy wording matches | The Privacy Policy and the website describe optional, consent-based Google Analytics: what's collected, why, how to turn it off | E2E `legal.spec.ts`, `site/site.spec.ts` |
 | STAT-01 | Anonymous daily totals | For every Firebase-mode user, with no consent needed because nothing identifies anyone: `stats/{date}` counts active devices, sign-ups, entries (total and by method), minutes, timers started and reaching their target, practices added and progress cards shared. No user ID, device ID, names, notes or cookies are sent | Gap |
 | STAT-02 | Batched writes | Counts collect in the app and are saved together (after about 15 seconds, and when the app is hidden or closed), so a typical user adds 2–3 writes a day; active devices count once per device per day using only a local date | Gap |
-| STAT-03 | Totals are tamper-resistant and private | Firestore rules let signed-in users only add 0–100 to known counters (minutes 0–5,000) on a correctly named day document; no new fields, no decreases, no reads from any app | Gap |
+| STAT-03 | Totals are tamper-resistant and private | Firestore rules let signed-in users only add 0–100 to known counters (minutes 0–5,000) on a correctly named day document; no new fields, no decreases, no reads from any app | Emulator `tests-emulator/rules.test.ts` |
 | LEGAL-06 | Totals disclosed | The Privacy Policy explains the anonymous daily totals and why they aren't personal data | Gap |
 
 ---

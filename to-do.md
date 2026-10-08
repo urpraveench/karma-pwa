@@ -85,7 +85,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 ## Anonymous usage totals
 
 - [ ] **Claude:** count anonymous daily totals for everyone in Firestore `stats/{date}`: active devices, sign-ups, entries (by how), minutes, timers started and finished, practices added, cards shared. Batched in the app; no user ID, device ID, names or cookies (STAT-01, STAT-02).
-- [ ] **Claude:** security rules: signed-in users may only add small amounts to known counters; nobody can read the totals from the app; tested on the emulator (STAT-03).
 - [ ] **Claude:** say so in the Privacy Policy (LEGAL-06).
 - [ ] **You:** after the release, look at Firebase › Firestore › `stats`: one document per day with the totals.
 
@@ -114,6 +113,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Security rules for anonymous totals: only small increments to known counters, no reads from apps (STAT-03), 8 October 2026
 - [x] Google Analytics data retention set to 14 months, matching the Privacy Policy; Google signals are switched off by the app and website on every hit, 8 October 2026
 - [x] Progress card shared from the iPhone and looks right (SHARE-03), 8 October 2026
 - [x] Released 1.4.0 (commit 7fabc30): shareable progress card in Insights, 8 October 2026

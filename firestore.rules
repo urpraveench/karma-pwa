@@ -5,5 +5,28 @@ service cloud.firestore {
     match /users/{uid}/{document=**} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
+
+    // Anonymous daily usage totals, one document per day (stats/2026-10-08). No user or device identifiers live here.
+    // A signed-in app may only add a small amount to known counters; nobody can read them from an app (view them in
+    // the Firebase console). Keep the counter list in step with src/store/stats.ts.
+    match /stats/{day} {
+      function counters() {
+        return ['activeDevices', 'signUps', 'logs', 'minutes', 'logQuick', 'logTile', 'logAllLeft', 'logCustom',
+                'logTimer', 'logOther', 'timersStarted', 'timersReachedTarget', 'practicesAdded', 'cardsShared'];
+      }
+      function before(f) { return resource == null ? 0 : resource.data.get(f, 0); }
+      function added(f, max) {
+        let after = request.resource.data.get(f, 0);
+        return after is int && after >= before(f) && after - before(f) <= max;
+      }
+      allow read, delete: if false;
+      allow create, update: if request.auth != null
+        && day.matches('^20[0-9]{2}-[01][0-9]-[0-3][0-9]$')
+        && request.resource.data.keys().hasOnly(counters())
+        && added('activeDevices', 100) && added('signUps', 100) && added('logs', 100) && added('minutes', 5000)
+        && added('logQuick', 100) && added('logTile', 100) && added('logAllLeft', 100) && added('logCustom', 100)
+        && added('logTimer', 100) && added('logOther', 100) && added('timersStarted', 100)
+        && added('timersReachedTarget', 100) && added('practicesAdded', 100) && added('cardsShared', 100);
+    }
   }
 }

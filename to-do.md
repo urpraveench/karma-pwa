@@ -15,10 +15,6 @@ The app is live at https://tiktym.web.app (project `tiktym`, Firestore in `asia-
 
 - [ ] **Claude (optional, not started):** replace the browser's plain confirm and "Type DELETE" boxes with an in-app confirmation sheet.
 
-## Version numbering
-
-- [ ] **Claude:** show the version on the login page and in Setup › About (APP-21).
-
 ## 2. Check by hand before release
 
 These can't be automated, or need the real project and a real phone. IDs refer to [FEATURES.md](FEATURES.md).

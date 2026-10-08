@@ -1,4 +1,5 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
+import { track, trackScreen } from '../lib/analytics';
 import { appCheckSiteKey, config, FIREBASE_READY } from '../config';
 import { useApp } from '../state/app';
 import { useFeedback } from '../ui/feedback';
@@ -13,13 +14,16 @@ export function Login({ error: initialError = '' }: { error?: string }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(initialError);
   const testMode = !FIREBASE_READY, signup = !testMode && mode === 'signup';
+  useEffect(() => { trackScreen('login'); }, []);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
     const em = email.trim();
     if (!em || !password) { setError('Enter your email and password.'); return; }
     if (!auth) return;
-    setError((signup ? await auth.signUp(em, password) : await auth.signIn(em, password)) || '');
+    const err = signup ? await auth.signUp(em, password) : await auth.signIn(em, password);
+    setError(err || '');
+    if (!err) track(signup ? 'sign_up' : 'login', { method: 'email' });
   }
 
   async function reset() {
@@ -34,6 +38,7 @@ export function Login({ error: initialError = '' }: { error?: string }) {
   async function google() {
     const msg = auth ? await auth.google() : null;
     if (msg) toast(msg, 4200);
+    else track('login', { method: 'google' });
   }
 
   return (

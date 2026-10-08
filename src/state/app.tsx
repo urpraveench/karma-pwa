@@ -3,6 +3,7 @@ import { errCode, startAuth, type AuthApi } from '../auth';
 import { calc } from '../lib/backlog';
 import { editCategory, newCategory, type CategoryForm } from '../lib/categories';
 import { dayLabel, today, ymd } from '../lib/date';
+import { track } from '../lib/analytics';
 import { haptic } from '../lib/feedback';
 import { moment as findMoment, type Moment } from '../lib/moments';
 import { defaultCategories, sampleData } from '../lib/sample';
@@ -13,6 +14,7 @@ import type { Store } from '../store/types';
 import { useFeedback } from '../ui/feedback';
 
 export type View = 'today' | 'insights' | 'history' | 'setup';
+export type LogMethod = 'quick' | 'tile' | 'all_left' | 'custom' | 'timer' | 'other';
 export type Sheet = { kind: 'log'; catId?: string; custom?: boolean } | { kind: 'editCat'; id?: string } | null;
 type Phase = { kind: 'boot' } | { kind: 'login'; error?: string } | { kind: 'loading' } | { kind: 'ready' };
 
@@ -105,7 +107,8 @@ function useAppState() {
     try { await fn(); if (okMsg) toast(okMsg); } catch (e) { console.error(e); toast(SAVE_FAILED); }
   }, [toast]);
 
-  const logEntry = useCallback((catId: string, mins: number, date: DateStr, note = '') => {
+  /** `method` says how the minutes were logged, for anonymous analytics (with consent). */
+  const logEntry = useCallback((catId: string, mins: number, date: DateStr, note = '', method: LogMethod = 'other') => {
     if (!store) return;
     if (!(mins > 0 && mins <= 1440)) { toast('Enter between 1 and 1440 minutes'); return; }
     const T0 = today(); if (date > T0) date = T0;
@@ -116,6 +119,7 @@ function useAppState() {
     setData(d1);
     store.addLog(l).catch(() => toast(SAVE_FAILED));
     const after = calc(d1, T0); haptic(12);
+    track('log_entry', { method, minutes: mins, backfill: date !== T0 });
     const undo = () => {
       const cur = dataRef.current; setData({ ...cur, logs: cur.logs.filter(x => x.id !== l.id) });
       store.deleteLog(l).catch(() => {}); toast('Undone');
@@ -147,7 +151,7 @@ function useAppState() {
   const saveCategory = useCallback((id: string | undefined, f: CategoryForm) => {
     const d0 = dataRef.current, ex = id ? d0.categories.find(x => x.id === id) : undefined;
     if (ex) putCategory(editCategory(ex, f, today()), 'Saved changes');
-    else putCategory(newCategory(f, d0.categories.length), `Added ${f.name}`);
+    else { putCategory(newCategory(f, d0.categories.length), `Added ${f.name}`); track('practice_added'); }
   }, [putCategory]);
 
   const toggleArchive = useCallback((id: string) => {

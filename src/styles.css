@@ -325,6 +325,13 @@ input[type=date].in::-webkit-date-and-time-value{text-align:left}
 .gbtn{background:var(--surface);color:var(--ink);border:1.5px solid var(--line)}
 .devhint{margin-top:22px;font-size:13.5px;color:var(--ink-2);background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:10px 12px}
 .err{color:var(--due);font-size:14px;min-height:20px;margin:6px 0}
+.consent{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;margin:10px 0 6px;font-size:14.5px}
+.consent p{margin:0 0 12px}
+.consent .btn{padding:11px;font-size:15px}
+.switch{flex:none;width:46px;height:28px;border-radius:999px;background:var(--surface-2);position:relative;transition:background .2s}
+.switch i{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .2s}
+.switch.on{background:var(--ok)}
+.switch.on i{left:21px}
 .login .legal{margin:18px 0 0}
 .login .recaptcha{margin:8px 0 0;font-size:11.5px}
 .login .hint a,.li a{color:inherit}

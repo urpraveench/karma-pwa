@@ -3,7 +3,7 @@ import { Sheet } from '../components/Sheet';
 import { activeCats } from '../lib/backlog';
 import { addDays, dayLabel, parse } from '../lib/date';
 import { haptic } from '../lib/feedback';
-import { useApp } from '../state/app';
+import { useApp, type LogMethod } from '../state/app';
 import { useTimer } from '../state/timer';
 import { useFeedback } from '../ui/feedback';
 import { Icon } from '../ui/icons';
@@ -30,12 +30,12 @@ export function LogSheet({ catId: initialCat, custom: initialCustom = false }: {
   useEffect(() => { if (custom) { minsRef.current?.focus(); minsRef.current?.select(); } }, [custom]);
   if (!cat) return null;
 
-  const log = (v: number) => { closeSheet(); logEntry(cat.id, v, date, note.trim()); };
+  const log = (v: number, method: LogMethod) => { closeSheet(); logEntry(cat.id, v, date, note.trim(), method); };
   const submitCustom = (e: FormEvent) => {
     e.preventDefault();
     const v = parseInt(mins, 10);
     if (!(v > 0)) { toast('Enter the minutes'); return; }
-    log(v);
+    log(v, 'custom');
   };
   const days: [string, string][] = [[T, 'Today'], [addDays(T, -1), 'Yesterday'], [addDays(T, -2), parse(addDays(T, -2)).toLocaleDateString(undefined, { weekday: 'short' })]];
 
@@ -58,10 +58,10 @@ export function LogSheet({ catId: initialCat, custom: initialCustom = false }: {
       </>}
       <div style={{ '--c': cat.color } as CSSProperties}>
         {left > 0
-          ? <button type="button" className="tile-all" onClick={() => log(left)}><span>All that's left</span><b>{left}</b></button>
+          ? <button type="button" className="tile-all" onClick={() => log(left, 'all_left')}><span>All that's left</span><b>{left}</b></button>
           : <p className="sheet-sub" style={{ margin: '0 0 12px' }}>{cat.name} is clear {dayLabel(date, T)}. Extra minutes still go into your history.</p>}
         <div className="tiles">
-          {TILES.map(v => <button type="button" className="tile" key={v} onClick={() => log(v)} aria-label={`Log ${v} minutes`}>{v}</button>)}
+          {TILES.map(v => <button type="button" className="tile" key={v} onClick={() => log(v, 'tile')} aria-label={`Log ${v} minutes`}>{v}</button>)}
           <button type="button" className="tile tile-ghost" onClick={() => setCustom(x => !x)}>Other</button>
         </div>
       </div>

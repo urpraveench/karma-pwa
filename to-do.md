@@ -73,7 +73,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 **Phase 1: Website**
 
 - [ ] **Claude:** move the app to `app.tiktym.com`, with `tiktym.web.app` redirecting so installed apps keep working (GTM-06).
-- [ ] **Claude:** Google Analytics in the app (GA4 property G-JL1YCFLK23): asks consent once on Today, loads nothing before it, Setup › Privacy to change it; screen views and a few anonymous events; never in test mode (ANA-01, ANA-02, ANA-03, ANA-05).
 - [ ] **Claude:** Google Analytics on the website, same property: a consent bar, nothing before Allow, an "open app" event, and visits linked to the app across domains (ANA-04).
 - [ ] **Claude:** update the Privacy Policy and the website's "no analytics" wording to describe optional, consent-based Google Analytics (LEGAL-05).
 - [ ] **You:** in Google Analytics › Admin: check the data stream lists tiktym.web.app, tiktym.com and www.tiktym.com, keep Google signals off, and set data retention (14 months is the most). Then open the app and website, choose Allow, and watch Reports › Realtime.
@@ -116,6 +115,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Consent-based Google Analytics in the app: asks once on Today, Setup › Privacy switch, page views and anonymous events (ANA-01, ANA-02, ANA-03, ANA-05), 8 October 2026
 - [x] Released 1.2.1 (commit 72abb4e): goal chime fix for iPhone, 8 October 2026
 - [x] Fixed: the goal chime could play minutes late on iPhone. It now wakes suspended audio first, skips the sound rather than playing it late, and every tap keeps audio awake (TIMER-05), 8 October 2026
 - [x] https://tiktym.com and https://www.tiktym.com both serve the website, 8 October 2026

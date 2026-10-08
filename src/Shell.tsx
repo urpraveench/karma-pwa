@@ -1,4 +1,5 @@
 import { useEffect, type ComponentType } from 'react';
+import { trackScreen } from './lib/analytics';
 import { activeCats } from './lib/backlog';
 import { Insights } from './screens/Insights';
 import { History } from './screens/History';
@@ -27,6 +28,8 @@ export function Shell() {
   const { focusOpen, closeFocus } = useTimer();
   const { toast } = useFeedback();
   const Screen = SCREENS[view];
+
+  useEffect(() => { trackScreen(view); }, [view]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key !== 'Escape') return; if (focusOpen) closeFocus(); else closeSheet(); };

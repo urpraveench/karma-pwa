@@ -132,3 +132,14 @@ test('sharing the link shows a title, description and preview image (GTM-01)', a
   expect(body.readUInt32BE(16)).toBe(1200); // PNG header: width
   expect(body.readUInt32BE(20)).toBe(630);  // and height
 });
+
+test('without a measurement ID, Analytics never asks or loads (ANA-05)', async ({ page }) => {
+  const requests: string[] = [];
+  page.on('request', r => { if (/googletagmanager|google-analytics/.test(r.url())) requests.push(r.url()); });
+  await signIn(page);
+  await expect(page.locator('.consent')).toHaveCount(0);
+  await page.locator('.cat').nth(0).locator('.qbtn').click();
+  await tab(page, 'Setup').click();
+  await expect(page.locator('.sect-h h2', { hasText: 'Privacy' })).toHaveCount(0);
+  expect(requests).toHaveLength(0);
+});

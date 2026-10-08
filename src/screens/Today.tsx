@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { AnalyticsConsent } from '../components/AnalyticsConsent';
 import { Mala, malaFills } from '../components/Mala';
 import { MomentCard } from '../components/MomentCard';
 import { activeCats, showUpStreak } from '../lib/backlog';
@@ -34,6 +35,7 @@ export function Today() {
           <div className="streak" title="Days in a row with at least one entry"><b>{su}</b><span>days showing up</span></div>
         ) : null}
       </header>
+      <AnalyticsConsent />
       {m && <MomentCard m={m} timerOn={!!tm} onHide={() => hideMoment(m.key)} onGo={(cat, goal) => start(cat, goal || undefined)} />}
       <section className={`mala ${intro ? 'intro' : ''} ${m ? 'sm' : ''}`} aria-label={`Today: ${t.doneCap} of ${t.owed} points done`}>
         <Mala fills={malaFills(c, cats, live)} />
@@ -71,7 +73,7 @@ export function Today() {
               ? <button className="tbtn live" onClick={openFocus} aria-label={`Open the running ${cat.name} timer`}>{minute}′</button>
               : <button className="tbtn" onClick={() => start(cat.id)} aria-label={`Start a ${cat.name} timer`}><Icon.play /></button>}
             {r.end > 0
-              ? <button className="qbtn" onClick={() => logEntry(cat.id, r.end, T)} aria-label={`Log ${r.end} minutes of ${cat.name}`}>+{r.end}</button>
+              ? <button className="qbtn" onClick={() => logEntry(cat.id, r.end, T, '', 'quick')} aria-label={`Log ${r.end} minutes of ${cat.name}`}>+{r.end}</button>
               : <button className="qbtn done" onClick={() => openSheet({ kind: 'log', catId: cat.id })} aria-label={`Log more ${cat.name}`}>✓</button>}
           </div>
         );

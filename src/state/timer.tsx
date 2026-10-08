@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { calc } from '../lib/backlog';
 import { today } from '../lib/date';
+import { track } from '../lib/analytics';
 import { chime, haptic, primeAudio } from '../lib/feedback';
 import { elapsedMin, elapsedMs, fmtClock, loadTimer, saveTimer, type Timer } from '../lib/timer';
 import type { Category } from '../lib/types';
@@ -34,6 +35,7 @@ function useTimerState() {
       setMinute(Math.floor(ms / 60000));
       if (!tm.alerted && ms >= tm.goal * 60000) {
         set({ ...tm, alerted: true }); void chime(); haptic([30, 80, 30, 80, 60]);
+        track('timer_target_reached', { goal_minutes: tm.goal });
         toast(`${c.name}: ${tm.goal} min target reached. Keep going or stop to log.`, 6000);
       }
     };
@@ -59,7 +61,7 @@ function useTimerState() {
     if (cur) {
       const other = catOf(cur), m = elapsedMin(cur);
       if (!confirm(`Stop the ${other?.name || ''} timer${m ? ` and log ${m} min` : ''}, then start ${c.name}?`)) return;
-      set(null); if (m >= 1) logEntry(cur.catId, m, today());
+      set(null); if (m >= 1) logEntry(cur.catId, m, today(), '', 'timer');
     }
     const left = calc(getData(), today()).per[catId]?.today.end ?? 0;
     primeAudio(); haptic(12);
@@ -85,7 +87,7 @@ function useTimerState() {
     if (mins > 240 && !confirm(`The timer ran for ${fmtClock(ms)}. Log all ${mins} minutes?`)) {
       set(null); setFocusOpen(false); openSheet({ kind: 'log', catId: tm.catId, custom: true }); return;
     }
-    set(null); setFocusOpen(false); logEntry(tm.catId, mins, today());
+    set(null); setFocusOpen(false); logEntry(tm.catId, mins, today(), '', 'timer');
   }, [set, toast, openSheet, logEntry]);
 
   const discard = useCallback(() => {

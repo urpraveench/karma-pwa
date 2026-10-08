@@ -12,3 +12,4 @@ firebase-debug.log
 firestore-debug.log
 dist-e2e-google
 dist-clips
+dist-e2e-ga

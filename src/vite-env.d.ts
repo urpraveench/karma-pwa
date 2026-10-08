@@ -17,6 +17,8 @@ interface ImportMetaEnv {
   readonly VITE_FIREBASE_APP_ID?: string;
   /** reCAPTCHA Enterprise (Fraud Defense) site key for Firebase App Check; App Check is off without it. */
   readonly VITE_RECAPTCHA_SITE_KEY?: string;
+  /** Google Analytics (GA4) measurement ID. Without it the app never asks for consent or loads Analytics. */
+  readonly VITE_GA_MEASUREMENT_ID?: string;
   /** Browser tests only: talk to the local Auth and Firestore emulators. */
   readonly VITE_USE_EMULATORS?: string;
 }

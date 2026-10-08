@@ -17,7 +17,7 @@ const PHONE = { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isM
 const pause = (page, ms) => page.waitForTimeout(ms);
 
 // --- build and serve the app in test mode ---
-execFileSync('npx', ['vite', 'build', '--outDir', 'dist-clips', '--emptyOutDir'], { cwd: ROOT, stdio: 'ignore', env: { ...process.env, VITE_BACKEND: 'local', VITE_SHOW_DEV_HINT: 'false' } });
+execFileSync('npx', ['vite', 'build', '--outDir', 'dist-clips', '--emptyOutDir'], { cwd: ROOT, stdio: 'ignore', env: { ...process.env, VITE_BACKEND: 'local', VITE_SHOW_DEV_HINT: 'false', VITE_GA_MEASUREMENT_ID: '', VITE_RECAPTCHA_SITE_KEY: '' } }); // no consent card or real Analytics in the clips
 const server = spawn('npx', ['vite', 'preview', '--outDir', 'dist-clips', '--port', String(PORT), '--strictPort'], { cwd: ROOT, stdio: 'ignore' });
 for (let i = 0; i < 60; i++) { try { if ((await fetch(URL_)).ok) break; } catch { /* starting */ } await new Promise(r => setTimeout(r, 500)); }
 

@@ -242,3 +242,41 @@ test('Send feedback opens an email to support with the version (GTM-02)', async 
   expect(href).toMatch(/^mailto:praveen\.cherukuru@gmail\.com\?subject=/);
   expect(decodeURIComponent(href!)).toContain(`TikTym feedback (${version})`);
 });
+
+test.describe('Reordering practices', () => {
+  const names = (page: Page) => page.locator('.list').first().locator('.li .t');
+  const three = () => seedData([{ id: 'r', name: 'Reading' }, { id: 'w', name: 'Writing' }, { id: 'g', name: 'Guitar' }]);
+
+  test('move up and down changes the order on Setup, Today and the log sheet, and is saved (PRAC-22)', async ({ page }) => {
+    await signInWith(page, three());
+    await tab(page, 'Setup').click();
+    await page.getByRole('button', { name: 'Move Guitar up' }).click();
+    await expect(names(page)).toHaveText([/^Reading/, /^Guitar/, /^Writing/]);
+    await page.getByRole('button', { name: 'Move Reading down' }).click();
+    await expect(names(page)).toHaveText([/^Guitar/, /^Reading/, /^Writing/]);
+    await tab(page, 'Today').click();
+    await expect(page.locator('.cat .cat-name')).toHaveText(['Guitar', 'Reading', 'Writing']);
+    await page.locator('.tab-log').click();
+    await expect(page.locator('.sheet .pick .chip')).toHaveText([/^Guitar/, /^Reading/, /^Writing/]);
+    await page.keyboard.press('Escape');
+    await page.reload();
+    await expect(page.locator('.cat .cat-name')).toHaveText(['Guitar', 'Reading', 'Writing']);
+  });
+
+  test('the first practice can\'t move up, and the last can\'t move down (PRAC-23)', async ({ page }) => {
+    await signInWith(page, three());
+    await tab(page, 'Setup').click();
+    await expect(page.getByRole('button', { name: 'Move Reading up' })).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Move Reading down' })).toBeEnabled();
+    await expect(page.getByRole('button', { name: 'Move Guitar down' })).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Move Guitar up' })).toBeEnabled();
+  });
+
+  test('tapping the practice itself still opens it for editing (PRAC-22)', async ({ page }) => {
+    await signInWith(page, three());
+    await tab(page, 'Setup').click();
+    await page.locator('.li', { hasText: 'Writing' }).click();
+    await expect(page.locator('.sheet h2')).toHaveText('Edit practice');
+    await expect(page.locator('#cn')).toHaveValue('Writing');
+  });
+});

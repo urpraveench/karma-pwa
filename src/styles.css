@@ -307,6 +307,10 @@ input[type=date].in::-webkit-date-and-time-value{text-align:left}
 .li .t{flex:1}
 .li .t small{display:block;color:var(--ink-2);font-size:13px}
 .li .chev{color:var(--ink-2)}
+.li-prac{padding:6px 8px 6px 16px}
+.li-open{display:flex;align-items:center;gap:12px;flex:1;min-width:0;padding:8px 0;text-align:left;background:none;color:inherit}
+.move{display:flex;flex:none}
+.move .x:disabled{opacity:.25}
 .badge{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--surface-2)}
 .badge.test{background:var(--due-soft);color:var(--due)}
 .danger-h{margin-top:34px}

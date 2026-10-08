@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { errCode, startAuth, type AuthApi } from '../auth';
 import { calc } from '../lib/backlog';
-import { editCategory, newCategory, type CategoryForm } from '../lib/categories';
+import { editCategory, moveCategory, newCategory, nextOrder, type CategoryForm } from '../lib/categories';
 import { dayLabel, today, ymd } from '../lib/date';
 import { track } from '../lib/analytics';
 import { count, countActiveDevice, flushStats, type Counter } from '../lib/stats';
@@ -169,8 +169,18 @@ function useAppState() {
   const saveCategory = useCallback((id: string | undefined, f: CategoryForm) => {
     const d0 = dataRef.current, ex = id ? d0.categories.find(x => x.id === id) : undefined;
     if (ex) putCategory(editCategory(ex, f, today()), 'Saved changes');
-    else { putCategory(newCategory(f, d0.categories.length), `Added ${f.name}`); track('practice_added'); count('practicesAdded'); }
+    else { putCategory(newCategory(f, nextOrder(d0.categories)), `Added ${f.name}`); track('practice_added'); count('practicesAdded'); }
   }, [putCategory]);
+
+  /** Moves a practice one place up or down (PRAC-22). */
+  const reorderCategory = useCallback((id: string, dir: -1 | 1) => {
+    if (!store) return;
+    const d0 = dataRef.current, changed = new Map(moveCategory(d0.categories, id, dir).map(c => [c.id, c]));
+    if (!changed.size) return;
+    setData({ ...d0, categories: d0.categories.map(c => changed.get(c.id) ?? c) });
+    haptic(6);
+    Promise.all([...changed.values()].map(c => store.putCategory(c))).catch(() => toast(SAVE_FAILED));
+  }, [store, setData, toast]);
 
   const toggleArchive = useCallback((id: string) => {
     const ex = dataRef.current.categories.find(x => x.id === id); if (!ex) return;
@@ -241,7 +251,7 @@ function useAppState() {
     getData,
     view, setView, range, setRange, sheet, openSheet, closeSheet,
     hideMoment, tipHidden, hideTip,
-    logEntry, deleteLog, updateLog, saveCategory, toggleArchive, deleteCategory, setBacklogCap,
+    logEntry, deleteLog, updateLog, saveCategory, reorderCategory, toggleArchive, deleteCategory, setBacklogCap,
     loadSample, startOver, importBackup, exportBackup, signOut, deleteAccount,
   };
 }

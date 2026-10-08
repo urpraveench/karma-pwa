@@ -5,6 +5,7 @@ import { fmtShort } from '../lib/date';
 import { sum } from '../lib/util';
 import { useApp } from '../state/app';
 import { useTheme, type Theme } from '../state/theme';
+import { Icon } from '../ui/icons';
 import { BUILD } from '../version';
 import { AnalyticsSwitch } from '../components/AnalyticsConsent';
 
@@ -14,7 +15,7 @@ const CAPS: [number, string][] = [[0, 'None'], [1, '1 day'], [2, '2 days'], [3, 
 const THEMES: Theme[] = ['system', 'light', 'dark'];
 
 export function Setup() {
-  const { data, T, user, openSheet, setBacklogCap, loadSample, exportBackup, importBackup, startOver, signOut, deleteAccount } = useApp();
+  const { data, T, user, openSheet, reorderCategory, setBacklogCap, loadSample, exportBackup, importBackup, startOver, signOut, deleteAccount } = useApp();
   const [theme, setTheme] = useTheme();
   const cats = [...data.categories].sort(byOrder);
   const total = sum(activeCats(data.categories, T).map(c => dueOn(c, T)));
@@ -26,14 +27,19 @@ export function Setup() {
 
       <div className="sect-h"><h2>Practices</h2><button className="chip" onClick={() => openSheet({ kind: 'editCat' })}>Add practice</button></div>
       <div className="list">
-        {cats.length ? cats.map(c => {
+        {cats.length ? cats.map((c, i) => {
           const t = targetOn(c, T)!;
           return (
-            <button className="li" key={c.id} onClick={() => openSheet({ kind: 'editCat', id: c.id })} style={{ '--c': c.color } as CSSProperties}>
-              <i />
-              <span className="t">{c.name}{c.archivedFrom && <> <span className="badge">Archived</span></>}<small>{t.minutes} min {dayTxt(t.days)}, since {fmtShort(c.startDate)}</small></span>
-              <span className="chev">›</span>
-            </button>
+            <div className="li li-prac" key={c.id} style={{ '--c': c.color } as CSSProperties}>
+              <button className="li-open" type="button" onClick={() => openSheet({ kind: 'editCat', id: c.id })}>
+                <i />
+                <span className="t">{c.name}{c.archivedFrom && <> <span className="badge">Archived</span></>}<small>{t.minutes} min {dayTxt(t.days)}, since {fmtShort(c.startDate)}</small></span>
+              </button>
+              <span className="move">
+                <button className="x" type="button" aria-label={`Move ${c.name} up`} disabled={i === 0} onClick={() => reorderCategory(c.id, -1)}><Icon.up /></button>
+                <button className="x" type="button" aria-label={`Move ${c.name} down`} disabled={i === cats.length - 1} onClick={() => reorderCategory(c.id, 1)}><Icon.down /></button>
+              </span>
+            </div>
           );
         }) : <p className="li">No practices yet.</p>}
       </div>

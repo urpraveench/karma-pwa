@@ -31,13 +31,13 @@ Summary of coverage at the time of writing:
 | 7. Focus timer | 22 | 19 | 0 | 3 |
 | 8. History | 9 | 9 | 0 | 0 |
 | 9. Insights | 23 | 23 | 0 | 0 |
-| 10. Practices (Setup) | 23 | 21 | 2 | 0 |
+| 10. Practices (Setup) | 23 | 23 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 17 | 1 | 1 |
 | 12. Sync and storage | 15 | 13 | 1 | 1 |
 | 13. App shell, PWA and platform | 28 | 20 | 3 | 5 |
 | 14. Marketing and sharing | 11 | 11 | 0 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **256** | **234** | **7** | **15** |
+| **Total** | **256** | **236** | **5** | **15** |
 
 ---
 
@@ -292,10 +292,10 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | PRAC-17 | Day picker order | Monday first | E2E `setup.spec.ts` |
 | PRAC-18 | Edit sheet hint | "New minutes or days apply from today. Past days keep their old target." | E2E `setup.spec.ts` |
 | PRAC-19 | Close without saving | Tap outside or Escape; nothing changes | E2E `setup.spec.ts` |
-| PRAC-20 | Order | New practices go last | E2E `setup.spec.ts` |
+| PRAC-20 | Order | New practices go last, even after deletions left gaps | E2E `setup.spec.ts`, Unit `categories.test.ts` |
 | PRAC-21 | Archived practice in Insights | Kept in history charts, left out of practice health | E2E `setup.spec.ts` |
-| PRAC-22 | Reorder | Move up and Move down beside each practice in Setup; the new order shows on Today, the log sheet and Setup, and is saved | Gap |
-| PRAC-23 | Reorder at the ends | The first practice can't move up and the last can't move down | Gap |
+| PRAC-22 | Reorder | Move up and Move down beside each practice in Setup; the new order shows on Today, the log sheet and Setup, and is saved | E2E `setup.spec.ts`, Unit `categories.test.ts` |
+| PRAC-23 | Reorder at the ends | The first practice can't move up and the last can't move down | E2E `setup.spec.ts`, Unit `categories.test.ts` |
 
 ## 11. Settings and data (Setup)
 

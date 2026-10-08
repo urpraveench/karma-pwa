@@ -15,6 +15,8 @@ interface ImportMetaEnv {
   readonly VITE_FIREBASE_STORAGE_BUCKET?: string;
   readonly VITE_FIREBASE_MESSAGING_SENDER_ID?: string;
   readonly VITE_FIREBASE_APP_ID?: string;
+  /** reCAPTCHA v3 site key for Firebase App Check; App Check is off without it. */
+  readonly VITE_RECAPTCHA_SITE_KEY?: string;
   /** Browser tests only: talk to the local Auth and Firestore emulators. */
   readonly VITE_USE_EMULATORS?: string;
 }

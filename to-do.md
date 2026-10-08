@@ -47,7 +47,6 @@ Google sign-in works on https://tiktym.web.app: in Safari, on a laptop, and in t
 
 **App Check** (only the real TikTym app can use your Firebase data)
 
-- [ ] **Claude:** App Check code with reCAPTCHA v3: switched on by `VITE_RECAPTCHA_SITE_KEY`, off in test mode and with the emulators (APP-24).
 - [ ] **You:** create a reCAPTCHA v3 key for `tiktym.web.app` and register it in Firebase › App Check (steps from Claude).
 - [ ] **Claude:** deploy with the key and confirm requests show as verified in Firebase › App Check.
 - [ ] **You:** after a day or two of verified traffic, turn on **Enforce** for Cloud Firestore and Authentication in Firebase › App Check.
@@ -86,6 +85,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] App Check code (reCAPTCHA v3), switched on by `VITE_RECAPTCHA_SITE_KEY`; off in test mode and with the emulators (APP-24), 8 October 2026
 - [x] Version shown on the login page and in Setup › About (APP-21), shipped in 1.0.0; recorded late, 8 October 2026
 - [x] On iPhone 14 Plus: the "New version ready (1.0.1)" bar appeared, Reload updated the app, and the Danger zone shows at the bottom of Setup (APP-22, SET-19), 8 October 2026
 - [x] Released 1.0.1 (commit eebd399): Danger zone in Setup, keeping Start over and Delete account away from Sign out, 8 October 2026

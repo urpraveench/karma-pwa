@@ -113,6 +113,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.2.1 (commit 72abb4e): goal chime fix for iPhone, 8 October 2026
 - [x] Fixed: the goal chime could play minutes late on iPhone. It now wakes suspended audio first, skips the sound rather than playing it late, and every tap keeps audio awake (TIMER-05), 8 October 2026
 - [x] https://tiktym.com and https://www.tiktym.com both serve the website, 8 October 2026
 - [x] Branded password-reset email written (`email/password-reset.html`), header image live at www.tiktym.com/email/header.png (`npm run email:header` redraws it) (AUTH-29), 8 October 2026

@@ -23,7 +23,7 @@ Summary of coverage at the time of writing:
 | Area | Scenarios | Tested | Gap | Manual |
 |---|---|---|---|---|
 | 1. Accounts and sign-in | 28 | 25 | 0 | 3 |
-| 2. First run | 7 | 6 | 0 | 1 |
+| 2. First run | 12 | 5 | 6 | 1 |
 | 3. Backlog rules | 13 | 13 | 0 | 0 |
 | 4. Today screen | 16 | 16 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
@@ -37,7 +37,7 @@ Summary of coverage at the time of writing:
 | 13. App shell, PWA and platform | 30 | 25 | 0 | 5 |
 | 14. Marketing and sharing | 11 | 11 | 0 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **262** | **248** | **0** | **14** |
+| **Total** | **267** | **247** | **6** | **14** |
 
 ---
 
@@ -87,12 +87,17 @@ The app has two modes, set by `VITE_BACKEND`. **Test mode** (`local`) keeps data
 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
-| FIRST-01 | First sign-in with no data | Seeds Exercise 30, Reading 30, Course study 30 and Meditation 10 minutes, every day, starting today | E2E `today.spec.ts`, E2E `firebase/account.spec.ts` |
+| FIRST-01 | First sign-in with no data | "What do you want to make time for?" before Today, with Exercise 30, Reading 30, Course study 30 and Meditation 10 ticked. Start right away and those four begin today, every day, as before | Gap |
 | FIRST-02 | User deletes every practice | Defaults are not re-seeded on the next load (the `seeded` flag is kept) | E2E `firebase/account.spec.ts` |
 | FIRST-03 | Loading screen | From the very first moment, before any code arrives: the TikTym name and "Loading TikTym…". The same screen stays up while Firebase starts and data loads, so the page is never blank | E2E `loading.spec.ts`, `firebase/loading.spec.ts` |
 | FIRST-05 | Slow connection | After 5 seconds still loading: "Your connection seems slow. TikTym is still loading, and it opens instantly next time." | E2E `loading.spec.ts` |
 | FIRST-06 | Stuck loading | After 20 seconds: "Still loading? Check your connection, then try again." with a Reload button | E2E `loading.spec.ts` |
 | FIRST-07 | Offline on first visit | "You're offline. TikTym needs a connection the first time it opens; after that it works offline." with a Reload button; when the connection returns, it loads by itself | E2E `loading.spec.ts` |
+| FIRST-08 | Choosing practices | Eight suggestions for working professionals (also Coding practice 30, Language learning 15, Journaling 10, Walking 20); tap to tick or untick. Start creates the ticked ones, every day from today, in the order shown | Gap |
+| FIRST-09 | Adjusting minutes | − and + beside a ticked practice change its daily target by 5 minutes, from 5 to 240 | Gap |
+| FIRST-10 | Adding your own | "Add your own" adds a ticked practice of 20 minutes; a name already on the list ticks that one instead | Gap |
+| FIRST-11 | Nothing ticked | The Start button says "Pick at least one" and does nothing | Gap |
+| FIRST-12 | Leaving before Start | Nothing is saved, so the next open (on any device) asks again; once started, it never asks again, even if every practice is later deleted (FIRST-02) | Gap |
 | FIRST-04 | Data fails to load | Back to login with "Could not load your data. Check Firestore rules and your connection." | Manual |
 
 ## 3. Backlog rules

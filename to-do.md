@@ -63,7 +63,7 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 **Phase 0: Foundations**
 
 - [ ] **You:** stay on the free Spark plan for now (decided 8 October). Watch usage weekly in Firebase › Usage and billing; GTM.md › "Capacity on the free plan" lists the limits and what hits them first. Move to Blaze with a budget alert before any real promotion.
-- [ ] **Claude (optional):** first-run choice of practices, so people can adjust the defaults before day one; the current defaults already suit professionals (GTM-03).
+- [ ] **Claude:** a new account chooses its practices before day one: suggestions for working professionals with the four current defaults ticked, minutes to adjust, and "add your own" (GTM-03, FIRST-01, FIRST-08 to FIRST-12). Branch `feat/first-run`.
 
 **Phase 1: Website**
 

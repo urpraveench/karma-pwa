@@ -39,10 +39,27 @@ Google sign-in works on https://tiktym.web.app: in Safari, on a laptop, and in t
 
 ## 4. Public launch
 
-- [ ] **You:** write Terms and Privacy pages. **Claude:** set `VITE_TERMS_URL` and `VITE_PRIVACY_URL`, then check the links on the sign-up screen (AUTH-21).
+**Terms and Privacy**
+
+- [ ] **You:** tell Claude the company's exact legal name and the country it's registered in (for the operator line and the governing-law clause).
+- [ ] **Claude:** draft global Terms and Privacy pages from what the app actually collects; publish them at `/terms` and `/privacy`; link them on the login screen and in Setup › About (LEGAL-01, LEGAL-02, AUTH-21).
+- [ ] **You:** read both drafts and get them checked if you can. They're a starting point, not legal advice.
+
+**App Check** (only the real TikTym app can use your Firebase data)
+
+- [ ] **Claude:** App Check code with reCAPTCHA v3: switched on by `VITE_RECAPTCHA_SITE_KEY`, off in test mode and with the emulators (APP-24).
+- [ ] **You:** create a reCAPTCHA v3 key for `tiktym.web.app` and register it in Firebase › App Check (steps from Claude).
+- [ ] **Claude:** deploy with the key and confirm requests show as verified in Firebase › App Check.
+- [ ] **You:** after a day or two of verified traffic, turn on **Enforce** for Cloud Firestore and Authentication in Firebase › App Check.
+
+**Trademark**
+
+- [ ] **Claude:** preliminary search for "TikTym" conflicts and an honest read of the risk next to "TikTok"; findings below.
+- [ ] **You:** decide on the name, and for a serious launch get a trademark search or filing done by a professional.
+
+**Other launch items**
+
 - [ ] **You:** customise the password-reset email template in Authentication › Templates.
-- [ ] **You + Claude:** turn on **App Check** (reCAPTCHA Enterprise) so only your app can call Firestore.
-- [ ] **You:** check "TikTym" for trademark conflicts before publishing, since it sounds close to "TikTok".
 - [ ] **You:** before moving to the paid Blaze plan, set budget alerts on the billing account. Alerts notify you; they don't cap spend.
 
 ## 5. Remaining test gaps

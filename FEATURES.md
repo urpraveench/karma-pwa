@@ -22,7 +22,7 @@ Summary of coverage at the time of writing:
 
 | Area | Scenarios | Tested | Gap | Manual |
 |---|---|---|---|---|
-| 1. Accounts and sign-in | 26 | 23 | 0 | 3 |
+| 1. Accounts and sign-in | 26 | 23 | 1 | 2 |
 | 2. First run | 4 | 2 | 0 | 2 |
 | 3. Backlog rules | 13 | 13 | 0 | 0 |
 | 4. Today screen | 16 | 16 | 0 | 0 |
@@ -34,8 +34,8 @@ Summary of coverage at the time of writing:
 | 10. Practices (Setup) | 21 | 21 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 17 | 1 | 1 |
 | 12. Sync and storage | 14 | 12 | 1 | 1 |
-| 13. App shell, PWA and platform | 23 | 15 | 3 | 5 |
-| **Total** | **221** | **201** | **5** | **15** |
+| 13. App shell, PWA and platform | 26 | 15 | 6 | 5 |
+| **Total** | **224** | **201** | **9** | **14** |
 
 ---
 
@@ -71,7 +71,7 @@ The app has two modes, set by `VITE_BACKEND`. **Test mode** (`local`) keeps data
 | AUTH-18 | Forgot password with an email | Toast: a reset link is on its way (shown whether or not the account exists) | E2E `firebase/account.spec.ts` |
 | AUTH-19 | Google sign-in when enabled | Popup sign-in; falls back to a redirect if the popup is blocked; opens Today; signing in again on another device returns to the same data | E2E `firebase-google/google.spec.ts` (emulator; a real phone is in to-do.md) |
 | AUTH-20 | Google sign-in when `VITE_ENABLE_GOOGLE` is off | Toast explaining it isn't set up | E2E `firebase/account.spec.ts` |
-| AUTH-21 | Legal links configured | Terms and Privacy links show below the form | Manual |
+| AUTH-21 | Legal links | Terms and Privacy links show on the login screen and in Setup › About, and open the pages | Gap |
 | AUTH-22 | Firebase SDK fails to load | Login screen with "Could not load Firebase. Check your connection and .env.local." | Manual |
 | AUTH-23 | Sign out | Returns to login | E2E `firebase/account.spec.ts` |
 | AUTH-24 | Google with an email that already has a password account | Opens that same account with its data (Firebase's default: one account per email) | E2E `firebase-google/google.spec.ts` |
@@ -358,6 +358,9 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | APP-21 | Version shown | Login page and Setup › About show the version, commit and build date, e.g. "TikTym 1.0.0 · 63836b6 · 8 Oct 2026" | E2E `app.spec.ts` |
 | APP-22 | Newer version live | A bar at the top of every screen, including login: "New version ready (1.0.1)" with Reload; Reload loads the new version. No bar when up to date, offline, or in the dev server | E2E `app.spec.ts` (the offline case isn't tested) |
 | APP-23 | Version file | Each build publishes `version.json` (version, commit, build date); the service worker never caches it | Unit `version.test.ts`, E2E `pwa.spec.ts` |
+| APP-24 | App Check | With `VITE_RECAPTCHA_SITE_KEY` set, the app attaches a reCAPTCHA v3 App Check token to Firebase requests; without it, and in test mode or with the emulators, App Check is off | Gap |
+| LEGAL-01 | Terms page | `/terms` shows the Terms of Service: operator, the service, accounts, acceptable use, user content, availability, liability, termination, changes, governing law, contact | Gap |
+| LEGAL-02 | Privacy page | `/privacy` shows what's collected (account, practice data, device storage), why, where it's stored, who processes it (Google Firebase, reCAPTCHA), retention, the rights to access, export, correct and delete, children, changes, contact | Gap |
 
 ---
 

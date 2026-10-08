@@ -35,7 +35,6 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 
 Google sign-in is live on https://tiktym.web.app. What remains is checking it on your phone.
 
-- [ ] **Claude:** find a way to make Google sign-in work in the installed iPhone app, or explain the limit in the app (AUTH-27).
 - [ ] **You:** test Google sign-in in the installed app on your iPhone again after that (AUTH-27). Safari already works (AUTH-19).
 - [ ] **You:** if your TikTym account uses the same email as your Google account, check whether password sign-in still works afterwards (AUTH-26). Firebase removes the password from accounts whose email was never verified; your data stays. Use Forgot password to set a new one if you want both.
 
@@ -71,6 +70,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] No further app change needed for Google sign-in in the installed iPhone app: the redirect fix (1.0.0) works. The earlier unfocusable email field didn't recur (AUTH-27), 8 October 2026
 - [x] iPhone simulator set up (iOS 18.6, iPhone 16 Plus). It did not reproduce the stuck email field: Google's page took focus and typing, 8 October 2026
 - [x] Released 1.0.0 (commit 730b51e): first versioned release. Version on login and Setup › About, "New version ready" bar, Google sign-in in iPhone home-screen apps, service worker fix for Google sign-in, 8 October 2026
 - [x] "New version ready" bar with Reload, on every screen including login, pinned while scrolling (APP-22), 8 October 2026

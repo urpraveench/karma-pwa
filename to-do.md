@@ -109,6 +109,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.4.0 (commit 7fabc30): shareable progress card in Insights, 8 October 2026
 - [x] Shareable progress card: Insights › Share, 1080×1350 preview, Share or Download, practice-names switch (SHARE-02, SHARE-03, SHARE-04), 8 October 2026
 - [x] Progress card stats: month's time, streak, best, active days, top three practices (SHARE-01), 8 October 2026
 - [x] A new deploy reaches the installed iPhone app: the "New version ready" bar appeared and Reload updated it (APP-07), 8 October 2026

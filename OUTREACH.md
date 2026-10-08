@@ -25,6 +25,7 @@ LinkedIn profile first, then one-to-one WhatsApp messages, then Status, then one
 - [ ] Sun 11 Oct: follow up with anyone who tried it: "What was confusing?" Note answers in the Feedback log.
 - [x] Tue 13 Oct: post 2, "busy weeks carry forward", with the post image (scheduled)
 - [ ] Wed 14 Oct: first WhatsApp group: college batch. Write it fresh, don't forward, and stay to answer replies.
+- [ ] As soon as you can: get `tiktym.com` and `app.tiktym.com` categorised as "Education" (or "Information Technology") by the main web filters, so college and office firewalls stop blocking them: Fortinet https://www.fortiguard.com/webfilter, Palo Alto https://urlfiltering.paloaltonetworks.com, Cisco Talos https://talosintelligence.com/reputation_center, Zscaler https://sitereview.zscaler.com, Broadcom/Symantec https://sitereview.bluecoat.com, and Sophos (search "Sophos website categorization request"). Note each submission in the Share log's Notes or here.
 - [ ] Mon 19 Oct: weekly review (below), then plan week 2
 
 **Week 2 ideas** (plan them at the review): the second group (friends), Status again with post 2's image, post 3 (a 30-second walkthrough of the timer, backlog limit and Insights), and the 30-day learning challenge once 20 or more people use TikTym.
@@ -94,7 +95,7 @@ Everything people say about the app: confusion, bugs, requests, praise. Bring an
 
 | Date | From | What they said | Bug, idea or praise | Done? |
 |---|---|---|---|---|
-| 8 Oct | Friend (WhatsApp, direct link) | "Not accepting https; on http a blank white screen, on web and mobile" | Bug? | Checking. The link works from public DNS and in Chrome on desktop and phone, http and https. Likely his network (same Wi-Fi on both devices; office firewalls block new domains). Asked him to try mobile data and send a screenshot. Then he said it was slow; on a slow connection the app was blank until it loaded. Fixed in 1.6.2 (8 Oct): a start screen with "connection seems slow" messages. Ask him to try again. |
+| 8 Oct | Friend (WhatsApp, direct link) | "Not accepting https; on http a blank white screen", then "slow"; screenshot showed "Not secure" and a blank page on his college network | Network, not the app | Two causes. (1) Slow connections showed a blank page while loading: fixed in 1.6.2. (2) His college firewall swaps in its own certificate for uncategorised sites; our certificate is valid (Google Trust Services). Fix: get the domains categorised (task above). Asked him to try mobile data. |
 
 ## Weekly review (every Monday)
 

@@ -1,4 +1,5 @@
 import { Shell } from './Shell';
+import { MovedBar } from './components/MovedBar';
 import { UpdateBar } from './components/UpdateBar';
 import { Login } from './screens/Login';
 import { AppProvider, useApp } from './state/app';
@@ -19,6 +20,7 @@ export function App() {
   return (
     <FeedbackProvider>
       <AppProvider>
+        <MovedBar />
         <UpdateBar />
         <Root />
       </AppProvider>

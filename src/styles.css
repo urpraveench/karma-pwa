@@ -343,6 +343,8 @@ a.li{text-decoration:none;color:inherit}
 .build{margin:22px 0 0;font-size:12px;color:var(--ink-2);text-align:center;font-variant-numeric:tabular-nums}
 .update-bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;display:flex;align-items:center;justify-content:center;gap:14px;padding:9px 16px;background:var(--ink);color:var(--bg);font-size:14.5px;font-weight:600}
 .update-bar button{background:var(--bg);color:var(--ink);border-radius:10px;padding:6px 14px;font-weight:700;font-size:14px}
+.moved-bar{justify-content:space-between;text-align:left}
+.moved-bar a{flex:none;background:var(--bg);color:var(--ink);border-radius:10px;padding:6px 14px;font-weight:700;font-size:14px;text-decoration:none}
 
 .toast{display:flex;align-items:center;gap:16px;position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;
   background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;font-weight:600;font-size:15px;max-width:90vw;animation:up .25s}

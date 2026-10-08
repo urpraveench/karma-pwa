@@ -75,7 +75,6 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 - [ ] **You:** Firebase › Authentication › Settings › Authorized domains: check `app.tiktym.com` is listed (add it if not).
 - [ ] **You:** Google Cloud › APIs & Services › Credentials › the Web client (961077922651…): add `https://app.tiktym.com/__/auth/handler` to Authorized redirect URIs and `https://app.tiktym.com` to Authorized JavaScript origins. Keep the `tiktym.web.app` ones.
 - [ ] **You:** Google Cloud › Security › reCAPTCHA › the TikTym key: add `app.tiktym.com` to its domains (keep `tiktym.web.app`).
-- [ ] **Claude:** the old address in a browser tab goes to the same page on `app.tiktym.com` (GTM-08); an app installed from the old address keeps working and shows a "TikTym has moved" bar (GTM-09).
 - [ ] **Claude:** release and deploy the app and the website once `app.tiktym.com` is connected; check sign-in (email and Google) there and the redirect from the old address.
 
 **Phase 2: App stores**
@@ -118,6 +117,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] The old address in a browser tab goes to the same page on `app.tiktym.com` (GTM-08); an app installed from it keeps working with a "TikTym has moved" bar and an Open button (GTM-09); not deployed until the domain is connected, 8 October 2026
 - [x] Everything points at `app.tiktym.com`: sign-in domain (`.env.local`), link preview, website buttons, Terms and Privacy links, Analytics cross-domain list, docs (GTM-06); not deployed until the domain is connected, 8 October 2026
 - [x] Google Sheet set to refresh every morning, 7–8 am IST (STAT-04), 8 October 2026
 - [x] Anonymous daily totals arriving in Firestore `stats` (seen through the Sheet), 8 October 2026

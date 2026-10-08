@@ -35,9 +35,9 @@ Summary of coverage at the time of writing:
 | 11. Settings and data (Setup) | 19 | 17 | 1 | 1 |
 | 12. Sync and storage | 14 | 12 | 1 | 1 |
 | 13. App shell, PWA and platform | 28 | 20 | 3 | 5 |
-| 14. Marketing and sharing | 11 | 9 | 2 | 0 |
+| 14. Marketing and sharing | 11 | 11 | 0 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **250** | **228** | **7** | **15** |
+| **Total** | **250** | **230** | **5** | **15** |
 
 ---
 
@@ -382,8 +382,8 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | GTM-05 | Feature clips | `npm run site:clips` records short looping MP4 clips of the real app (sample data, fixed date) for the website: Today, quick log, focus timer, backlog, Insights; each with a poster image | Unit `site-clips.test.ts` (files and sizes; content checked by eye at recording) |
 | GTM-04 | Website | `tiktym.com` (`site/`): Home with the pitch and "Open TikTym", How it works, Features with clips, For working professionals, Install (iPhone, Android), Privacy promise, FAQ, links to Terms and Privacy; fast and readable on a phone, no console errors | E2E `site/site.spec.ts` (phone and desktop) |
 | GTM-06 | App address | The app lives at `app.tiktym.com`: sign-in (email and Google, including the installed iPhone app) goes through it, and the link preview, website buttons, Terms and Privacy links point to it | E2E `app.spec.ts`, `site/site.spec.ts`; sign-in at the new address: Manual |
-| GTM-08 | Old address in a browser | Opening `tiktym.web.app` or `tiktym.firebaseapp.com` in a browser tab goes straight to the same page on `app.tiktym.com` (path, query and #fragment kept); Terms, Privacy and the sign-in handler stay where they are | Gap |
-| GTM-09 | App installed from the old address | Keeps working as before, with a bar above every screen: "TikTym has moved. Open app.tiktym.com and add it to your home screen" and an Open button that opens the new address in the browser. Data stays in the account, so nothing is lost | Gap |
+| GTM-08 | Old address in a browser | Opening `tiktym.web.app` or `tiktym.firebaseapp.com` in a browser tab goes straight to the same page on `app.tiktym.com` (path, query and #fragment kept); Terms, Privacy and the sign-in handler stay where they are | Unit `moved.test.ts`, E2E `moved.spec.ts` |
+| GTM-09 | App installed from the old address | Keeps working as before, with a bar above every screen: "TikTym has moved. Open app.tiktym.com and add it to your home screen" and an Open button that opens the new address in the browser. Data stays in the account, so nothing is lost | Unit `moved.test.ts`, E2E `moved.spec.ts` |
 
 
 ## 15. Analytics

@@ -71,7 +71,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site serves both addresses, so the old one keeps working; nothing is deployed until the new address is live.
 
-- [ ] **Claude:** release and deploy the app and the website once `app.tiktym.com` is connected; check sign-in (email and Google) there and the redirect from the old address.
 
 **Phase 2: App stores**
 
@@ -108,6 +107,7 @@ From FEATURES.md › "What's left to test". None left: every scenario has a test
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.6.0: the app moves to https://app.tiktym.com (old address redirects; installed apps show a "TikTym has moved" bar), edit a logged entry, reorder practices, failed deletes now say so, better text contrast in dark and light. Website redeployed with new links and clips. Checked live: both addresses serve 1.6.0, the old one redirects with path and query kept, 8 October 2026
 - [x] Text contrast checked on every screen, sheet and the focus timer in dark and light (WCAG AA). Fixed what it found: white text on the green and amber practice colours (fills now 8% darker), the time-of-day bar's Morning and Night labels, the light-mode streak number, and "points so far" on the dark focus timer (APP-14, APP-25), 8 October 2026
 - [x] Days follow the phone's time zone: checked in Los Angeles and India at times when UTC is on another date (APP-11), 8 October 2026
 - [x] The service worker never answers or caches Firestore and Auth requests: checked with it running, in Firebase mode (APP-08), 8 October 2026

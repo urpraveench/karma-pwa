@@ -69,7 +69,6 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 **Phase 1: Website**
 
 - [ ] **Claude:** move the app to `app.tiktym.com`, with `tiktym.web.app` redirecting so installed apps keep working (GTM-06).
-- [ ] **You (small):** in Google Analytics › Admin, confirm Google signals is off and data retention is 14 months, as the Privacy Policy says.
 
 **Phase 2: App stores**
 
@@ -108,6 +107,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Google Analytics data retention set to 14 months, matching the Privacy Policy; Google signals are switched off by the app and website on every hit, 8 October 2026
 - [x] Progress card shared from the iPhone and looks right (SHARE-03), 8 October 2026
 - [x] Released 1.4.0 (commit 7fabc30): shareable progress card in Insights, 8 October 2026
 - [x] Shareable progress card: Insights › Share, 1080×1350 preview, Share or Download, practice-names switch (SHARE-02, SHARE-03, SHARE-04), 8 October 2026

@@ -60,15 +60,14 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 **Other launch items**
 
-- [ ] **You:** customise the password-reset email template in Authentication › Templates: sender name **TikTym**, a clear subject such as "Reset your TikTym password", and a reply-to address.
-- [ ] **You:** after both, send yourself a reset email and check it arrives in the inbox, not spam (AUTH-28).
+- [ ] **You:** customise the password-reset email template in Authentication › Templates: sender name **TikTym**, a clear subject such as "Reset your TikTym password", and a reply-to address. Then use Forgot password on the login screen and check the email arrives from `@tiktym.com` **in the inbox, not spam** (AUTH-28).
 - [ ] **You:** before moving to the paid Blaze plan, set budget alerts on the billing account. Alerts notify you; they don't cap spend.
 
 ## Go-to-market (see GTM.md)
 
 **Phase 0: Foundations**
 
-- [ ] **You (reminder, check around 9 October):** tiktym.com is added to the tiktym-site Hosting site and its DNS is correct (checked 8 October: `tiktym.com` → 199.36.158.100 with the `hosting-site=tiktym-site` TXT, `www` → tiktym-site.web.app). Firebase is still verifying and issuing the certificate (up to 24 hours). Check Firebase › Hosting › tiktym-site shows **Connected**, then open https://tiktym.com. Tell Claude, who will switch the website's links and previews to tiktym.com.
+- [ ] **You (reminder, check around 9 October):** https://www.tiktym.com is live (8 October); plain https://tiktym.com still shows Firebase's "Site Not Found". In Firebase › Hosting › tiktym-site, check `tiktym.com` shows **Connected** (add it there if only `www` was added, ideally redirecting to `www` or the other way round). Tell Claude, who will switch the website's links and previews to the final address.
 - [ ] **You:** stay on the free Spark plan for now (decided 8 October). Watch usage weekly in Firebase › Usage and billing; GTM.md › "Capacity on the free plan" lists the limits and what hits them first. Move to Blaze with a budget alert before any real promotion.
 - [ ] **Claude (optional):** first-run choice of practices, so people can adjust the defaults before day one; the current defaults already suit professionals (GTM-03).
 

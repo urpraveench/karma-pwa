@@ -53,8 +53,15 @@ Google sign-in works on https://tiktym.web.app: in Safari, on a laptop, and in t
 
 **Trademark**
 
-- [ ] **Claude:** preliminary search for "TikTym" conflicts and an honest read of the risk next to "TikTok"; findings below.
 - [ ] **You:** decide on the name, and for a serious launch get a trademark search or filing done by a professional.
+
+Preliminary findings (web search, 8 October 2026; not legal advice):
+
+- **TikTim** (tiktim.com), by Chawk Technology: a live daily-planner and productivity app with tasks, reminders and goals. Nearly the same name, spoken identically, in the same category as TikTym. This is the closest conflict.
+- **TikTok** (ByteDance) actively opposes "Tik…" names, for example *TickTickTrader* (2023) and domain cases like *tikitoks.com*. It lost against *TIKI* in Singapore (2024), where the visual differences were judged enough. "TikTym" shares "Tik" and the "-T…" rhythm, so expect scrutiny if you file.
+- Similar productivity apps: *TikTik, Simple Timer* (time tracking) and *TikTikTik* (metronome).
+- `tiktym.com` is registered (GoDaddy, since December 2023, owner not checked). `tiktym.app` and `tiktym.in` lookups were inconclusive.
+- Where to search formally: India's trademark search (ipindiaonline.gov.in/tmrpublicsearch), the USPTO (tmsearch.uspto.gov) and WIPO's Global Brand Database (branddb.wipo.int), in class 9 (software) and 42 (online services).
 
 **Other launch items**
 
@@ -85,6 +92,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Preliminary trademark search for "TikTym": findings under Public launch › Trademark, 8 October 2026
 - [x] App Check code (reCAPTCHA v3), switched on by `VITE_RECAPTCHA_SITE_KEY`; off in test mode and with the emulators (APP-24), 8 October 2026
 - [x] Version shown on the login page and in Setup › About (APP-21), shipped in 1.0.0; recorded late, 8 October 2026
 - [x] On iPhone 14 Plus: the "New version ready (1.0.1)" bar appeared, Reload updated the app, and the Danger zone shows at the bottom of Setup (APP-22, SET-19), 8 October 2026

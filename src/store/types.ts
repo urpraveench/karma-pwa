@@ -9,6 +9,8 @@ export interface Store {
   deleteCategory(id: string): Promise<void>;
   addLog(l: Log): Promise<void>;
   deleteLog(l: Pick<Log, 'id' | 'date'>): Promise<void>;
+  /** Replaces a log with `next` (same id); `prev` says where it lives now, in case its date moves it. */
+  updateLog(prev: Pick<Log, 'id' | 'date'>, next: Log): Promise<void>;
   putSettings(s: Settings): Promise<void>;
   /** Wipes everything and writes `d` in its place. */
   replaceAll(d: AppData): Promise<void>;

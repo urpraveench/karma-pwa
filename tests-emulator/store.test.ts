@@ -43,6 +43,19 @@ describe('FirebaseStore on the emulator', () => {
     expect(d.settings).toMatchObject({ seeded: true, backlogCap: 3, schema: 2 });
   });
 
+  it('edits a log in place and moves it between months (SYNC-15)', async () => {
+    const st = FirebaseStore(db, auth, uid);
+    const l = log('e1', 'a', '2026-10-05');
+    await st.addLog(l);
+    await st.updateLog(l, { ...l, minutes: 45, note: 'Edited' });
+    let d = await FirebaseStore(db, auth, uid).loadAll();
+    expect(d.logs.find(x => x.id === 'e1')).toMatchObject({ minutes: 45, note: 'Edited', date: '2026-10-05' });
+    await st.updateLog(l, { ...l, minutes: 45, note: 'Edited', date: '2026-08-31' });
+    d = await FirebaseStore(db, auth, uid).loadAll();
+    expect(d.logs.filter(x => x.id === 'e1')).toEqual([{ ...l, minutes: 45, note: 'Edited', date: '2026-08-31' }]);
+    await st.deleteLog({ id: 'e1', date: '2026-08-31' });
+  });
+
   it('deleting a practice removes its logs in every month (SYNC-07)', async () => {
     const st = FirebaseStore(db, auth, uid);
     await st.deleteCategory('b');

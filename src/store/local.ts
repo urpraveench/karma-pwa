@@ -16,6 +16,7 @@ export function LocalStore(key: string, onSaveError: () => void = () => {}): Sto
     async deleteCategory(id) { data.categories = data.categories.filter(c => c.id !== id); data.logs = data.logs.filter(l => l.catId !== id); save(); },
     async addLog(l) { data.logs.push(l); save(); },
     async deleteLog(l) { data.logs = data.logs.filter(x => x.id !== l.id); save(); },
+    async updateLog(_prev, next) { data.logs = data.logs.map(x => x.id === next.id ? next : x); save(); },
     async putSettings(s) { data.settings = s; save(); },
     async replaceAll(d) { data = structuredClone(d); save(); },
   };

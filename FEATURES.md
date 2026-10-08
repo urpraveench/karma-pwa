@@ -33,11 +33,11 @@ Summary of coverage at the time of writing:
 | 9. Insights | 23 | 23 | 0 | 0 |
 | 10. Practices (Setup) | 23 | 21 | 2 | 0 |
 | 11. Settings and data (Setup) | 19 | 17 | 1 | 1 |
-| 12. Sync and storage | 15 | 12 | 2 | 1 |
+| 12. Sync and storage | 15 | 13 | 1 | 1 |
 | 13. App shell, PWA and platform | 28 | 20 | 3 | 5 |
 | 14. Marketing and sharing | 11 | 11 | 0 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **256** | **230** | **11** | **15** |
+| **Total** | **256** | **231** | **10** | **15** |
 
 ---
 
@@ -339,7 +339,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | SYNC-12 | Two devices | Changes on one show on the other after reopening | E2E `firebase/account.spec.ts` |
 | SYNC-13 | Optimistic updates | The screen updates immediately; a failed save shows a toast | Gap |
 | SYNC-14 | Firebase SDK only in Firebase mode | Test mode never downloads it | Manual (check the network tab) |
-| SYNC-15 | Edit a log | Same month: only that entry changes. Another month: removed from the old month and added to the new one in one batch | Gap |
+| SYNC-15 | Edit a log | Same month: only that entry changes. Another month: removed from the old month and added to the new one in one batch | Unit `firestore-store.test.ts`, Emulator `tests-emulator/store.test.ts` |
 
 ## 13. App shell, PWA and platform
 

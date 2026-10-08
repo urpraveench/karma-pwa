@@ -63,6 +63,13 @@ export function FirebaseStore(db: Firestore, auth: Auth, uid: string): Store {
     },
     addLog: l => setDoc(monthRef(mk(l.date)), { entries: { [l.id]: l } }, { merge: true }),
     deleteLog: l => updateDoc(monthRef(mk(l.date)), { [`entries.${l.id}`]: deleteField() }),
+    async updateLog(prev, next) {
+      if (mk(prev.date) === mk(next.date)) return updateDoc(monthRef(mk(next.date)), { [`entries.${next.id}`]: next });
+      const b = writeBatch(db); // moved to another month: out of the old doc and into the new one together
+      b.update(monthRef(mk(prev.date)), { [`entries.${prev.id}`]: deleteField() });
+      b.set(monthRef(mk(next.date)), { entries: { [next.id]: next } }, { merge: true });
+      await b.commit();
+    },
     putSettings: s => setDoc(settingsDoc(), { ...s, schema: 2 }, { merge: true }),
     async replaceAll(d: AppData) {
       await wipe();

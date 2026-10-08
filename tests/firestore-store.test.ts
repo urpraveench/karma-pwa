@@ -99,6 +99,19 @@ describe('FirebaseStore', () => {
     expect(d.logs.some(l => l.id === 'new1')).toBe(false);
   });
 
+  it('updateLog changes an entry in place, or moves it to another month (SYNC-15)', async () => {
+    const l = { id: 'ed1', catId: 'a', date: '2026-10-07', minutes: 25, note: '', createdAt: 0 };
+    await st.addLog(l);
+    await st.updateLog(l, { ...l, minutes: 40, note: 'Chapter 3' });
+    expect(db.get(`users/${uid}/months/2026-10`).entries.ed1).toMatchObject({ minutes: 40, note: 'Chapter 3' });
+    await st.updateLog(l, { ...l, minutes: 40, date: '2026-09-30' });
+    expect(db.get(`users/${uid}/months/2026-10`).entries.ed1).toBeUndefined();
+    expect(db.get(`users/${uid}/months/2026-09`).entries.ed1).toMatchObject({ date: '2026-09-30', minutes: 40 });
+    const d = await st.loadAll();
+    expect(d.logs.filter(x => x.id === 'ed1')).toHaveLength(1);
+    await st.deleteLog({ id: 'ed1', date: '2026-09-30' });
+  });
+
   it('deleteCategory removes its logs and the category', async () => {
     await st.deleteCategory('a');
     const d = await st.loadAll();

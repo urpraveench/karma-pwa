@@ -34,10 +34,10 @@ Summary of coverage at the time of writing:
 | 10. Practices (Setup) | 23 | 23 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 15 | 14 | 0 | 1 |
-| 13. App shell, PWA and platform | 28 | 22 | 1 | 5 |
+| 13. App shell, PWA and platform | 29 | 24 | 0 | 5 |
 | 14. Marketing and sharing | 11 | 11 | 0 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **256** | **240** | **1** | **15** |
+| **Total** | **257** | **242** | **0** | **15** |
 
 ---
 
@@ -358,7 +358,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | APP-11 | Time zone | Days follow the phone's local time zone | E2E `timezone.spec.ts` |
 | APP-12 | Escape key | Closes the focus view first, otherwise the open sheet | E2E `today.spec.ts`, `timer.spec.ts` |
 | APP-13 | Toasts | One at a time; Undo where the action can be undone | E2E (many specs) |
-| APP-14 | Dark mode colours | Every screen readable in dark: text contrast at least 4.5:1 (3:1 for large text) on login, Today, Insights, History, Setup and the sheets | Gap |
+| APP-14 | Dark mode colours | Every screen readable in dark: text contrast at least 4.5:1 (3:1 for large text) on login, Today, Insights, History, Setup and the sheets | E2E `colours.spec.ts` |
 | APP-15 | Reduced motion | Animations off when the phone asks for reduced motion | E2E `app.spec.ts` |
 | APP-16 | Screen readers | Buttons have labels (for example "Log 30 minutes of Reading"); dialogs are marked as dialogs | E2E `app.spec.ts` |
 | APP-17 | Haptics | Light vibration on log, pick and steps (Android) | Manual |
@@ -369,6 +369,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | APP-22 | Newer version live | A bar at the top of every screen, including login: "New version ready (1.0.1)" with Reload; Reload loads the new version. No bar when up to date, offline, or in the dev server | E2E `app.spec.ts` (the offline case isn't tested) |
 | APP-23 | Version file | Each build publishes `version.json` (version, commit, build date); the service worker never caches it | Unit `version.test.ts`, E2E `pwa.spec.ts` |
 | APP-24 | App Check | With `VITE_RECAPTCHA_SITE_KEY` set, the app attaches a reCAPTCHA Enterprise (Google Cloud Fraud Defense) App Check token to Firebase requests; without it, and in test mode or with the emulators, App Check is off | Unit `app-check.test.ts` (the on/off switch; live tokens are checked in the Firebase console, see to-do.md) |
+| APP-25 | Light mode colours | The same contrast check as APP-14, in light: login, Today, Insights, History, Setup, the sheets and the focus timer | E2E `colours.spec.ts` |
 | LEGAL-01 | Terms page | `/terms/` shows the Terms of Service under Indian law: operator Pramal IT Services Private Limited (CIN), eligibility, accounts, acceptable use, your data, no medical advice, availability, liability, termination, governing law and courts in Andhra Pradesh, grievance contact | E2E `legal.spec.ts` |
 | LEGAL-02 | Privacy page | `/privacy/` shows, for India's DPDP Act 2023: what's collected (account, practice data, device storage, reCAPTCHA signals), why, where it's stored (Mumbai), processors (Google), retention, rights (access, correction, export, erasure, grievance, Data Protection Board), 18+, changes, contact | E2E `legal.spec.ts` |
 | LEGAL-03 | reCAPTCHA notice | With App Check on, the login screen says "Protected by reCAPTCHA" with links to Google's Privacy Policy and Terms, as Google requires when the badge is hidden | Unit `app-check.test.ts` (when it shows); E2E `legal.spec.ts` (hidden while App Check is off). Shown live with App Check on: checked after each release |

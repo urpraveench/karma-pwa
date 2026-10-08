@@ -92,11 +92,10 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 From FEATURES.md › "What's left to test".
 
-- [ ] **Claude:** dark mode colours on every screen, as text-contrast checks (APP-14)
 
 ## 6. Features not built yet
 
-- [ ] **Claude:** look into a narrow race found while testing (8 October 2026): in Firebase mode, an entry logged about 40 ms before the page reloads was lost, every time; with 300 ms or more it is always kept. Likely Firestore hadn't put the write in its offline queue yet. No one closes the app that fast, but check whether locking the phone straight after a quick tap can lose one, and whether waiting for the queue on `pagehide` helps.
+- [ ] **Claude:** look into a narrow race found while testing (8 October 2026): in Firebase mode, an entry logged about 40 ms before the page reloads was lost, every time; with 300 ms or more it is always kept. Likely Firestore hadn't put the write in its offline queue yet. No one closes the app that fast, but check whether locking the phone straight after a quick tap can lose one, and whether waiting for the queue on `pagehide` helps. It may also explain the occasionally flaky Google test AUTH-19, which logs and then at once opens a second device.
 - [ ] **Claude (before scale):** load only recent months on app open, using the offline cache for older ones. Today every open downloads a user's full history: fine now, but after a year it is about 230 KB and 17 reads per open, which makes Firestore's free 10 GiB/month egress the first limit for long-time users.
 Branch `features/edit-reorder-tests`, merged into main when all of these are done:
 
@@ -111,6 +110,7 @@ Branch `features/edit-reorder-tests`, merged into main when all of these are don
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Text contrast checked on every screen, sheet and the focus timer in dark and light (WCAG AA). Fixed what it found: white text on the green and amber practice colours (fills now 8% darker), the time-of-day bar's Morning and Night labels, the light-mode streak number, and "points so far" on the dark focus timer (APP-14, APP-25), 8 October 2026
 - [x] Days follow the phone's time zone: checked in Los Angeles and India at times when UTC is on another date (APP-11), 8 October 2026
 - [x] The service worker never answers or caches Firestore and Auth requests: checked with it running, in Firebase mode (APP-08), 8 October 2026
 - [x] A save Firestore refuses shows "Could not save. Check your connection." after the screen has updated; deleting an entry (and its Undo) now says so too instead of failing silently (SET-18, SYNC-13), 8 October 2026

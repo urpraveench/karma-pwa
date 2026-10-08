@@ -14,7 +14,8 @@ export interface WeekStat { value: number; prev: number | null }
 const DUE = 'var(--due)', OK = 'var(--ok)', GOLD = 'var(--gold)';
 const STREAK_MILESTONES = [3, 7, 14, 21, 30, 50, 75, 100, 108, 150, 200, 365];
 const HOUR_MILESTONES = [5, 10, 25, 50, 100, 200, 300, 500, 750, 1000];
-export const TOD_BUCKETS = [['Morning', 5, 12, 'var(--gold)'], ['Afternoon', 12, 17, '#3E5BA9'], ['Evening', 17, 22, '#8A4FA3'], ['Night', 22, 29, 'var(--ink)']] as const;
+/** Name, from hour, to hour, bar colour, and a text colour that stays readable on that bar in light and dark. */
+export const TOD_BUCKETS = [['Morning', 5, 12, 'var(--gold)', '#16302E'], ['Afternoon', 12, 17, '#3E5BA9', '#fff'], ['Evening', 17, 22, '#8A4FA3', '#fff'], ['Night', 22, 29, 'var(--ink)', 'var(--bg)']] as const;
 
 export const isClear = (r: { owed: number; end: number }) => r.owed > 0 && r.end === 0;
 

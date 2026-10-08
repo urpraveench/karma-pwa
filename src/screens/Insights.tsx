@@ -151,7 +151,7 @@ function Rhythm({ ins }: { ins: Data }) {
       {todSum > 0 && <>
         <h3 style={{ marginTop: 14 }}>When you log</h3>
         <p className="sub">{`${['Mostly mornings', 'Mostly afternoons', 'Mostly evenings', 'Mostly late at night'][topB]}, by when entries were saved in the last 30 days.`}</p>
-        <div className="tod">{ins.tod.map((v, i) => v ? <i key={i} style={{ width: `${v / todSum * 100}%`, background: TOD_BUCKETS[i][3] }}>{v / todSum >= .14 ? Math.round(v / todSum * 100) + '%' : ''}</i> : null)}</div>
+        <div className="tod">{ins.tod.map((v, i) => v ? <i key={i} style={{ width: `${v / todSum * 100}%`, background: TOD_BUCKETS[i][3], color: TOD_BUCKETS[i][4] }}>{v / todSum >= .14 ? Math.round(v / todSum * 100) + '%' : ''}</i> : null)}</div>
         <div className="tod-key">{TOD_BUCKETS.map(b => <span key={b[0]} style={{ '--k': b[3] } as CSSProperties}>{b[0]}</span>)}</div>
       </>}
     </section>

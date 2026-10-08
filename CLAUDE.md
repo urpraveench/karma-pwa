@@ -17,6 +17,8 @@ Before each commit, run the checks for what changed. All must pass:
 - `npm run test:e2e:headless`: for any UI or behaviour change
 - `npm run test:emulator`: for changes to `src/store/`, `src/auth.ts` or `firestore.rules`
 
+Gate the commit on each command's exit code (`set -o pipefail` when piping output), never on a printed summary line: Playwright prints failures above its last line, and the emulator projects retry once, so a summary can look green when it isn't.
+
 Push only when the user asks.
 
 If the user asks for something that skips a step (for example "just fix it quickly"), still do steps 1 to 4, but say so in one line rather than asking.

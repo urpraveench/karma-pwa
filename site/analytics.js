@@ -18,7 +18,7 @@
     gtag('config', ID, {
       allow_google_signals: false,
       allow_ad_personalization_signals: false,
-      linker: { domains: ['tiktym.com', 'www.tiktym.com', 'tiktym.web.app'] },
+      linker: { domains: ['tiktym.com', 'www.tiktym.com', 'app.tiktym.com'] },
     });
     const s = document.createElement('script');
     s.async = true;

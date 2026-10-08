@@ -143,3 +143,10 @@ test('without a measurement ID, Analytics never asks or loads (ANA-05)', async (
   await expect(page.locator('.sect-h h2', { hasText: 'Privacy' })).toHaveCount(0);
   expect(requests).toHaveLength(0);
 });
+
+test('the link preview gives the app address, app.tiktym.com (GTM-06)', async ({ page }) => {
+  await page.goto('/');
+  const meta = (sel: string) => page.locator(sel).getAttribute('content');
+  expect(await meta('meta[property="og:url"]')).toBe('https://app.tiktym.com/');
+  expect(await meta('meta[property="og:image"]')).toBe('https://app.tiktym.com/og.png');
+});

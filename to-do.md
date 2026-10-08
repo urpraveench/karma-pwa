@@ -15,6 +15,7 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 These can't be automated, or need the real project and a real phone. IDs refer to [FEATURES.md](FEATURES.md).
 
+- [ ] Sign in with email and with Google at https://app.tiktym.com, in a browser and in the iPhone app added from the new address (GTM-06)
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] **You:** after the fix, run the 5-minute Meditation test again: the chime should play right as the timer reaches its target (TIMER-05).
@@ -74,7 +75,6 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 - [ ] **You:** Firebase › Authentication › Settings › Authorized domains: check `app.tiktym.com` is listed (add it if not).
 - [ ] **You:** Google Cloud › APIs & Services › Credentials › the Web client (961077922651…): add `https://app.tiktym.com/__/auth/handler` to Authorized redirect URIs and `https://app.tiktym.com` to Authorized JavaScript origins. Keep the `tiktym.web.app` ones.
 - [ ] **You:** Google Cloud › Security › reCAPTCHA › the TikTym key: add `app.tiktym.com` to its domains (keep `tiktym.web.app`).
-- [ ] **Claude:** point everything at `app.tiktym.com`: sign-in domain, link preview, website links, Terms and Privacy links, Analytics cross-domain list, docs (GTM-06).
 - [ ] **Claude:** the old address in a browser tab goes to the same page on `app.tiktym.com` (GTM-08); an app installed from the old address keeps working and shows a "TikTym has moved" bar (GTM-09).
 - [ ] **Claude:** release and deploy the app and the website once `app.tiktym.com` is connected; check sign-in (email and Google) there and the redirect from the old address.
 
@@ -118,6 +118,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Everything points at `app.tiktym.com`: sign-in domain (`.env.local`), link preview, website buttons, Terms and Privacy links, Analytics cross-domain list, docs (GTM-06); not deployed until the domain is connected, 8 October 2026
 - [x] Google Sheet set to refresh every morning, 7–8 am IST (STAT-04), 8 October 2026
 - [x] Anonymous daily totals arriving in Firestore `stats` (seen through the Sheet), 8 October 2026
 - [x] Google Sheet set up; Refresh pulls the anonymous totals from Firestore (STAT-04), 8 October 2026

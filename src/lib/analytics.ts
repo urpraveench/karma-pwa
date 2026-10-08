@@ -7,7 +7,7 @@ import { BUILD } from '../version';
 
 const ID = import.meta.env.VITE_GA_MEASUREMENT_ID?.trim() || '';
 const KEY = 'tiktym:analytics';
-const LINKED_DOMAINS = ['tiktym.com', 'www.tiktym.com', 'tiktym.web.app'];
+const LINKED_DOMAINS = ['tiktym.com', 'www.tiktym.com', 'app.tiktym.com'];
 
 export type Consent = 'granted' | 'denied' | null;
 type GtagWindow = Window & { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void } & Record<string, unknown>;

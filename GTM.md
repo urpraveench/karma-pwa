@@ -39,7 +39,7 @@ How TikTym gets its first users in India, and what has to be true before it does
 
 ## Phase 1: Website (tiktym.com)
 
-The website lives at `tiktym.com`; the app moves to `app.tiktym.com` (`tiktym.web.app` keeps working and redirects, so installed apps don't break). Both are Firebase Hosting sites in the same project. The website sits in this repo (`site/`) and ships with the same release process.
+The website lives at `tiktym.com`; the app lives at `app.tiktym.com` (`tiktym.web.app` sends browser tabs there, and apps installed from it keep working with a "TikTym has moved" bar). Both are Firebase Hosting sites in the same project. The website sits in this repo (`site/`) and ships with the same release process.
 
 **Pages**
 

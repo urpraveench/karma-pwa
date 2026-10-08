@@ -8,7 +8,7 @@ import { appCheckSiteKey, firebaseConfig } from '../config';
 
 const app = initializeApp(firebaseConfig);
 
-// App Check: proves requests come from this app on tiktym.web.app, so Firestore and Auth can refuse anything else
+// App Check: proves requests come from this app on app.tiktym.com, so Firestore and Auth can refuse anything else
 // once enforcement is on in the Firebase console. Must start before Auth and Firestore are used.
 const siteKey = appCheckSiteKey();
 if (siteKey) initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(siteKey), isTokenAutoRefreshEnabled: true });

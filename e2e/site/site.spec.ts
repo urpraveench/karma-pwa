@@ -1,10 +1,10 @@
 import { expect, test } from '../helpers';
 
 // The marketing website (site/, tiktym.com), on a phone and on a desktop.
-const APP = 'https://tiktym.web.app/';
+const APP = 'https://app.tiktym.com/';
 
 test.describe('website (GTM-04)', () => {
-  test('pitch, sections and calls to action', async ({ page }) => {
+  test('pitch, sections and calls to action, which open app.tiktym.com (GTM-06)', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveTitle("TikTym: make time for what you're learning");
     await expect(page.locator('h1')).toHaveText("Make time for what you're learning.");
@@ -45,7 +45,7 @@ test.describe('website (GTM-04)', () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
   });
 
-  test('FAQ answers open, and legal links point at the app pages', async ({ page }) => {
+  test('FAQ answers open, and legal links point at the app pages on app.tiktym.com (GTM-06)', async ({ page }) => {
     await page.goto('/');
     await page.locator('summary', { hasText: 'What happens if I miss a day?' }).click();
     await expect(page.locator('details[open] p')).toContainText('choose None for no limit');
@@ -105,7 +105,7 @@ test.describe('website analytics (ANA-04)', () => {
     const config = (await pushed(page)).find(a => a[0] === 'config')!;
     expect(config[1]).toBe('G-JL1YCFLK23');
     expect(config[2]).toMatchObject({ allow_google_signals: false, allow_ad_personalization_signals: false });
-    expect((config[2] as { linker: { domains: string[] } }).linker.domains).toContain('tiktym.web.app');
+    expect((config[2] as { linker: { domains: string[] } }).linker.domains).toContain('app.tiktym.com');
     // keep the page here: the click still reaches the counting code, only the navigation is cancelled
     await page.evaluate(() => addEventListener('click', e => e.preventDefault(), true));
     await page.locator('.hero [data-app-link="hero"]').click();

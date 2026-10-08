@@ -85,7 +85,7 @@ Settings are Vite env vars. Copy `.env.example` to `.env.local` and fill it in. 
 
 Switched on with `VITE_ENABLE_GOOGLE=true`; the setup steps are in [to-do.md](to-do.md).
 
-Sign-in goes through `https://tiktym.web.app/__/auth/handler` because `VITE_FIREBASE_AUTH_DOMAIN` is the hosting domain, which keeps Google sign-in working in iOS Safari and installed apps. That address must be listed under Authorized redirect URIs on the project's OAuth client in Google Cloud Console, or Google rejects sign-in with `redirect_uri_mismatch`. The service worker leaves all `/__/` addresses to the network (see `navigateFallbackDenylist` in `vite.config.ts`).
+Sign-in goes through `https://app.tiktym.com/__/auth/handler` because `VITE_FIREBASE_AUTH_DOMAIN` is the hosting domain, which keeps Google sign-in working in iOS Safari and installed apps. That address must be listed under Authorized redirect URIs on the project's OAuth client in Google Cloud Console, or Google rejects sign-in with `redirect_uri_mismatch`. The service worker leaves all `/__/` addresses to the network (see `navigateFallbackDenylist` in `vite.config.ts`).
 
 ## Focus timer
 
@@ -125,7 +125,7 @@ The marketing website (tiktym.com) is plain HTML and CSS in `site/`, with no bui
 
 | Hosting target | Site | Serves | Deploy |
 |---|---|---|---|
-| `app` | `tiktym` (tiktym.web.app) | the app, from `dist/` | `firebase deploy --only hosting:app` |
+| `app` | `tiktym` (app.tiktym.com; tiktym.web.app sends people there) | the app, from `dist/` | `firebase deploy --only hosting:app` |
 | `site` | `tiktym-site` (tiktym-site.web.app) | the website, from `site/` | `firebase deploy --only hosting:site` |
 
 Account emails: the password-reset message body is `email/password-reset.html`, pasted into Firebase › Authentication › Templates; its header image is `site/email/header.png` (`npm run email:header`).

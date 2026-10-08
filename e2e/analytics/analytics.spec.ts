@@ -44,7 +44,7 @@ test.describe('What switching it on sends (ANA-02)', () => {
     const config = (await pushed(page)).find(a => a[0] === 'config')!;
     expect(config[1]).toBe('G-TEST12345');
     expect(config[2]).toMatchObject({ send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false });
-    expect((config[2] as { linker: { domains: string[] } }).linker.domains).toEqual(['tiktym.com', 'www.tiktym.com', 'tiktym.web.app']);
+    expect((config[2] as { linker: { domains: string[] } }).linker.domains).toEqual(['tiktym.com', 'www.tiktym.com', 'app.tiktym.com']);
   });
 
   test('a page view per tab', async ({ page }) => {

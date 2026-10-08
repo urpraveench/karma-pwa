@@ -111,6 +111,7 @@ From FEATURES.md › "What's left to test".
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.5.0 (commit 8cd3aeb) with the new Firestore rules: anonymous daily totals, 8 October 2026
 - [x] Privacy Policy explains the anonymous daily totals (LEGAL-06), 8 October 2026
 - [x] Anonymous daily totals for everyone in Firestore `stats/{date}`, batched, no identifiers (STAT-01, STAT-02), 8 October 2026
 - [x] Security rules for anonymous totals: only small increments to known counters, no reads from apps (STAT-03), 8 October 2026

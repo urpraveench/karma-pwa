@@ -92,7 +92,6 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 From FEATURES.md › "What's left to test".
 
-- [ ] **Claude:** days follow the phone's time zone (APP-11)
 - [ ] **Claude:** dark mode colours on every screen, as text-contrast checks (APP-14)
 
 ## 6. Features not built yet
@@ -112,6 +111,7 @@ Branch `features/edit-reorder-tests`, merged into main when all of these are don
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Days follow the phone's time zone: checked in Los Angeles and India at times when UTC is on another date (APP-11), 8 October 2026
 - [x] The service worker never answers or caches Firestore and Auth requests: checked with it running, in Firebase mode (APP-08), 8 October 2026
 - [x] A save Firestore refuses shows "Could not save. Check your connection." after the screen has updated; deleting an entry (and its Undo) now says so too instead of failing silently (SET-18, SYNC-13), 8 October 2026
 - [x] Reorder practices in Setup with Move up and Move down; new practices always go last (PRAC-20, PRAC-22, PRAC-23), 8 October 2026

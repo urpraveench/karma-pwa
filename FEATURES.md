@@ -34,10 +34,10 @@ Summary of coverage at the time of writing:
 | 10. Practices (Setup) | 23 | 23 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 15 | 14 | 0 | 1 |
-| 13. App shell, PWA and platform | 28 | 21 | 2 | 5 |
+| 13. App shell, PWA and platform | 28 | 22 | 1 | 5 |
 | 14. Marketing and sharing | 11 | 11 | 0 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **256** | **239** | **2** | **15** |
+| **Total** | **256** | **240** | **1** | **15** |
 
 ---
 
@@ -355,7 +355,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | APP-08 | Firestore and Auth traffic | Never cached by the service worker | E2E `firebase/sw-network.spec.ts` |
 | APP-09 | Midnight | Date, greeting, totals and moment roll over within a minute | E2E `today-states.spec.ts` |
 | APP-10 | Returning to the app | Screen refreshes immediately | E2E `app.spec.ts` |
-| APP-11 | Time zone | Days follow the phone's local time zone | Gap |
+| APP-11 | Time zone | Days follow the phone's local time zone | E2E `timezone.spec.ts` |
 | APP-12 | Escape key | Closes the focus view first, otherwise the open sheet | E2E `today.spec.ts`, `timer.spec.ts` |
 | APP-13 | Toasts | One at a time; Undo where the action can be undone | E2E (many specs) |
 | APP-14 | Dark mode colours | Every screen readable in dark: text contrast at least 4.5:1 (3:1 for large text) on login, Today, Insights, History, Setup and the sheets | Gap |

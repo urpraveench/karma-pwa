@@ -5,6 +5,7 @@ import { fmtShort } from '../lib/date';
 import { sum } from '../lib/util';
 import { useApp } from '../state/app';
 import { useTheme, type Theme } from '../state/theme';
+import { BUILD } from '../version';
 
 const SHORT_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const dayTxt = (d: number[]) => d.length === 7 ? 'every day' : d.length === 0 ? 'no days' : [1, 2, 3, 4, 5, 6, 0].filter(x => d.includes(x)).map(x => SHORT_DAYS[x]).join(', ');
@@ -63,6 +64,10 @@ export function Setup() {
         <div className="li"><span className="t">{user?.name || user?.email}<small>{user?.email || ''}</small></span></div>
         <button className="li" onClick={() => { if (confirm('Sign out?')) void signOut(); }}><span className="t">Sign out</span></button>
         {FIREBASE_READY && <button className="li" onClick={() => void deleteAccount()}><span className="t" style={{ color: 'var(--due)' }}>Delete account<small>Removes your account and all data permanently</small></span></button>}
+      </div>
+      <div className="sect-h"><h2>About</h2></div>
+      <div className="list">
+        <div className="li about"><span className="t">TikTym {BUILD.version}<small>Build {BUILD.commit}, {new Date(BUILD.builtAt).toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</small></span></div>
       </div>
       {!FIREBASE_READY && <p className="devhint">Test mode keeps data in this browser only. Set <b>VITE_BACKEND=firebase</b> and your Firebase keys in .env.local to sync across devices.</p>}
     </>

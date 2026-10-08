@@ -1,4 +1,5 @@
-import { expect, test, signIn, tab } from './helpers';
+import { readFileSync } from 'node:fs';
+import { DEMO, expect, open, test, signIn, tab } from './helpers';
 
 test('tab bar highlights the current tab and scrolls to the top (APP-01)', async ({ page }) => {
   await signIn(page);
@@ -49,4 +50,16 @@ test('a failed save on this device is reported (SYNC-02)', async ({ page }) => {
   });
   await page.locator('.cat').nth(0).locator('.qbtn').click();
   await expect(page.locator('.toast span')).toHaveText('Could not save on this device');
+});
+
+test('the version shows on the login page and in Setup › About (APP-21)', async ({ page }) => {
+  const version = JSON.parse(readFileSync('package.json', 'utf8')).version;
+  await open(page);
+  await expect(page.locator('.login .build')).toHaveText(new RegExp(`^TikTym ${version.replace(/\./g, '\\.')} · [0-9a-f]{7,}(-dirty)? · \\d+ \\w{3} \\d{4}$`));
+  await page.fill('#em', DEMO.email);
+  await page.fill('#pw', DEMO.password);
+  await page.click('button[type=submit]');
+  await tab(page, 'Setup').click();
+  await expect(page.locator('.li.about .t')).toContainText(`TikTym ${version}`);
+  await expect(page.locator('.li.about small')).toContainText(/^Build [0-9a-f]{7,}/);
 });

@@ -319,6 +319,7 @@ input[type=date].in::-webkit-date-and-time-value{text-align:left}
 .gbtn{background:var(--surface);color:var(--ink);border:1.5px solid var(--line)}
 .devhint{margin-top:22px;font-size:13.5px;color:var(--ink-2);background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:10px 12px}
 .err{color:var(--due);font-size:14px;min-height:20px;margin:6px 0}
+.build{margin:22px 0 0;font-size:12px;color:var(--ink-2);text-align:center;font-variant-numeric:tabular-nums}
 
 .toast{display:flex;align-items:center;gap:16px;position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;
   background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;font-weight:600;font-size:15px;max-width:90vw;animation:up .25s}

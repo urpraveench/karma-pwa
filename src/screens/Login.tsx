@@ -3,6 +3,7 @@ import { config, FIREBASE_READY } from '../config';
 import { useApp } from '../state/app';
 import { useFeedback } from '../ui/feedback';
 import { GoogleLogo, Mark } from '../ui/icons';
+import { buildLabel } from '../version';
 
 export function Login({ error: initialError = '' }: { error?: string }) {
   const { auth } = useApp();
@@ -62,6 +63,7 @@ export function Login({ error: initialError = '' }: { error?: string }) {
       {!testMode && config.legal && (
         <p className="hint" style={{ marginTop: 18 }}>By continuing you agree to the <a href={config.legal.terms}>Terms</a> and <a href={config.legal.privacy}>Privacy Policy</a>.</p>
       )}
+      <p className="build">{buildLabel()}</p>
     </main>
   );
 }

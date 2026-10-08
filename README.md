@@ -83,7 +83,9 @@ Settings are Vite env vars. Copy `.env.example` to `.env.local` and fill it in. 
 
 ## Google sign-in
 
-Not turned on yet; until it is, the Google button shows a "not set up yet" message. The setup steps are in [to-do.md](to-do.md).
+Switched on with `VITE_ENABLE_GOOGLE=true`; the setup steps are in [to-do.md](to-do.md).
+
+Sign-in goes through `https://tiktym.web.app/__/auth/handler` because `VITE_FIREBASE_AUTH_DOMAIN` is the hosting domain, which keeps Google sign-in working in iOS Safari and installed apps. That address must be listed under Authorized redirect URIs on the project's OAuth client in Google Cloud Console, or Google rejects sign-in with `redirect_uri_mismatch`. The service worker leaves all `/__/` addresses to the network (see `navigateFallbackDenylist` in `vite.config.ts`).
 
 ## Focus timer
 

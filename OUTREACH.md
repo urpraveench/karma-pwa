@@ -20,7 +20,7 @@ LinkedIn profile first, then one-to-one WhatsApp messages, then Status, then one
 - [x] Thu 8 Oct: publish launch post 1 with the video, link in the first comment
 - [ ] Thu 8 Oct: reply to every comment on post 1 within the first hour, ideally with a question back
 - [ ] Fri 9 Oct: reshare post 1 from your personal LinkedIn profile, with a line or two in your own words (link: LinkedIn profile, below)
-- [ ] Fri 9 to Sun 11 Oct: send the one-to-one WhatsApp message to 10 to 15 friends who are working and want to learn or get fit. Log each one. **5 sent so far (9 Oct).**
+- [ ] Fri 9 to Sun 11 Oct: send the one-to-one WhatsApp message to 10 to 15 friends who are working and want to learn or get fit. Log each one. **5 sent on 8 Oct (evening).**
 - [ ] Sat 10 Oct: post the WhatsApp Status with the video or the post image
 - [ ] Sun 11 Oct: follow up with anyone who tried it: "What was confusing?" Note answers in the Feedback log.
 - [x] Tue 13 Oct: post 2, "busy weeks carry forward", with the post image (scheduled)
@@ -88,11 +88,11 @@ One row per share. "Replies" is anyone who answered; "Tried it" is anyone who sa
 | Date | Channel | Where or who | Link used | Replies | Tried it | Notes |
 |---|---|---|---|---|---|---|
 | 8 Oct | LinkedIn company | Post 1 | company | | | Launch post with video |
-| 9 Oct | WhatsApp one-to-one | Rahul | direct | | | |
-| 9 Oct | WhatsApp one-to-one | Raman | direct | | | |
-| 9 Oct | WhatsApp one-to-one | Gopi | direct | | | |
-| 9 Oct | WhatsApp one-to-one | Kiran | direct | | | |
-| 9 Oct | WhatsApp one-to-one | Anand | direct | | | |
+| 8 Oct | WhatsApp one-to-one | Rahul | direct | Liked the message | Not yet | |
+| 8 Oct | WhatsApp one-to-one | Raman | direct | Liked the message | Not yet | |
+| 8 Oct | WhatsApp one-to-one | Gopi | direct | Yes, reported a problem | Looked at the website; hasn't signed up yet | Site didn't open on one Wi-Fi network; works on mobile data and other Wi-Fi (see Feedback log) |
+| 8 Oct | WhatsApp one-to-one | Kiran | direct | Liked the message | Not yet | |
+| 8 Oct | WhatsApp one-to-one | Anand | direct | Liked the message | Not yet | |
 
 ## Feedback log
 
@@ -100,7 +100,7 @@ Everything people say about the app: confusion, bugs, requests, praise. Bring an
 
 | Date | From | What they said | Bug, idea or praise | Done? |
 |---|---|---|---|---|
-| 8 Oct | Friend (WhatsApp, direct link) | "Not accepting https; on http a blank white screen", then "slow"; screenshot showed "Not secure" and a blank page on his college network | Network, not the app | Two causes. (1) Slow connections showed a blank page while loading: fixed in 1.6.2. (2) His college firewall swaps in its own certificate for uncategorised sites; our certificate is valid (Google Trust Services). Fix: get the domains categorised (task above). Confirmed: works fine on mobile data. Later (9 Oct): it also works for others on the college Wi-Fi, so it was one particular network, not the college or the site. |
+| 8 Oct | Gopi (WhatsApp, direct link) | "Not accepting https; on http a blank white screen", then "slow"; screenshot showed "Not secure" and a blank page on his college network | Network, not the app | Two causes. (1) Slow connections showed a blank page while loading: fixed in 1.6.2. (2) His college firewall swaps in its own certificate for uncategorised sites; our certificate is valid (Google Trust Services). Fix: get the domains categorised (task above). Confirmed: works fine on mobile data. Later (9 Oct): it also works for others on the college Wi-Fi, so it was one particular network, not the college or the site. |
 
 ## Weekly review (every Monday)
 

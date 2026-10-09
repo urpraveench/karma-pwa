@@ -88,14 +88,37 @@ Each channel gets its own link, so Google Analytics (Reports › Acquisition ›
 >
 > Would love to hear what you think. Replies welcome, even "this is confusing" 😄
 
+## Content ideas
+
+Ideas for posts and challenges, with the plan for each. Add new ones here as they come.
+
+### The maths of mastery: 10,000 hours (your idea, 9 Oct)
+
+- **Hook:** "10,000 hours makes you an expert." For a working professional, 1 hour a day is 27 years; 30 minutes a day is 55. The real point: expertise comes from showing up daily for years, which is what TikTym measures.
+- **Stay accurate:** the number was popularised by Malcolm Gladwell's *Outliers*, from Anders Ericsson's research. Ericsson said it's an average, not a threshold, and that deliberate practice matters more than raw hours. Say so; it makes the post more credible.
+- **Close with:** "How many hours have you put into the skill you care about most? TikTym counts them for you."
+- **Media:** a simple graphic of the maths (hours a day vs years to 10,000), in the brand style (ask Claude).
+- **When:** post 3, around Thu 15 Oct.
+- **Product idea:** hours towards mastery per practice (logged in to-do.md).
+
+### 100 Days, 100 Minutes: consistency challenge (your idea, 9 Oct)
+
+- **The visual:** the mala has 108 beads, one per minute, so a 100-minute day almost fills it. "Fill your mala for 100 days."
+- **Open question (decide before announcing):** 100 minutes a day is a lot for busy professionals. Options: (a) 100 minutes as the stretch goal, a day counts at 30+ (Claude's pick); (b) 100 minutes a week; (c) keep it pure, fewer finishers but a stronger story.
+- **Replaces the 30-day challenge**, with day 30 as the first checkpoint.
+- **Timing:** announce once 20+ people use TikTym (week 3); start Mon 2 Nov 2026, finish Tue 9 Feb 2027.
+- **Content it gives:** launch post, weekly check-ins with your progress card, milestone posts at days 30, 50 and 100, and finishers' stories.
+- **Product idea:** a "Day 34 of 100" challenge view (logged in to-do.md); not needed to start.
+
 ## LinkedIn posts
 
 | # | Date | Topic | Media | Status |
 |---|---|---|---|---|
 | 1 | Thu 8 Oct | Why I built TikTym: office, home, sleep, repeat | 16-second app video | Posted |
 | 2 | Tue 13 Oct | Busy weeks carry forward, never pile up (30 minutes a day, 4 days missed: 90, not 150) | Post image | Scheduled |
-| 3 | Week 2 | 30-second walkthrough: timer, backlog limit, Insights | New video (ask Claude) | Idea |
-| 4 | When 20+ users | 30-day learning challenge invitation | (ask Claude) | Idea |
+| 3 | Thu 15 Oct | The maths of mastery: 10,000 hours (see Content ideas) | Graphic of the maths (ask Claude) | Idea |
+| 4 | Week 3 | 30-second walkthrough: timer, backlog limit, Insights | New video (ask Claude) | Idea |
+| 5 | Week 3, once 20+ users | 100 Days, 100 Minutes challenge announcement, starting Mon 2 Nov | Mala graphic or video (ask Claude) | Idea |
 
 Media files (in Downloads): `tiktym-linkedin-video.mp4`, `tiktym-linkedin-post.png`, `tiktym-linkedin-logo.png`, `tiktym-linkedin-cover.png`. Ask Claude to redo any of them after the app changes.
 

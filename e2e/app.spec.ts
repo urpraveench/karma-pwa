@@ -4,11 +4,13 @@ import { DEMO, expect, open, test, signIn, tab, startWithDefaults } from './help
 test('tab bar highlights the current tab and scrolls to the top (APP-01)', async ({ page }) => {
   await signIn(page);
   await expect(tab(page, 'Today')).toHaveAttribute('aria-current', 'page');
-  await page.mouse.wheel(0, 2000);
+  // scroll instantly: a mouse-wheel scroll animates, and can still be running after the tap (a finger tap stops a fling)
+  await page.evaluate(() => window.scrollTo({ top: 2000, behavior: 'instant' }));
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
   await tab(page, 'Setup').click();
   await expect(tab(page, 'Setup')).toHaveAttribute('aria-current', 'page');
   await expect(tab(page, 'Today')).not.toHaveAttribute('aria-current', 'page');
-  expect(await page.evaluate(() => window.scrollY)).toBe(0);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
 });
 
 test('system theme follows the phone (SET-03)', async ({ page }) => {

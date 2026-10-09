@@ -112,6 +112,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Home page description shortened from 194 to 140 characters, as Bing Webmaster Tools asked; every page's description is now checked to be 25 to 160 characters (GTM-18), 9 October 2026
 - [x] Google Search Console: tiktym.com verified as a Domain property, 9 October 2026
 - [x] Website deployed with robots.txt, sitemap.xml, llms.txt and structured data; all checked live. The app's robots.txt goes out with the next app release, 9 October 2026
 - [x] Structured data on tiktym.com (organisation with its LinkedIn page, website, TikTym as a free web app, and the FAQ word for word, checked by a test) and tiktym.com/llms.txt for AI tools (GTM-16, GTM-17), 9 October 2026

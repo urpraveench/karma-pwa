@@ -182,3 +182,16 @@ test('an llms.txt summary for AI tools (GTM-17)', async ({ request }) => {
   expect(text).toMatch(/^# TikTym/);
   for (const link of ['https://tiktym.com/', 'https://app.tiktym.com/', 'https://tiktym.com/updates/']) expect(text).toContain(link);
 });
+
+test('every page has a search description of 25 to 160 characters (GTM-18)', async ({ page }) => {
+  for (const path of ['/', '/updates/']) {
+    await page.goto(path);
+    const d = (await page.locator('meta[name="description"]').getAttribute('content')) ?? '';
+    expect(d.length, `${path}: "${d}"`).toBeGreaterThanOrEqual(25);
+    expect(d.length, `${path}: "${d}"`).toBeLessThanOrEqual(160);
+  }
+  await page.goto('/');
+  const data = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() ?? '{}');
+  const app = (data['@graph'] as { '@type': string; description?: string }[]).find(g => g['@type'] === 'WebApplication')!;
+  expect(app.description).toBe(await page.locator('meta[name="description"]').getAttribute('content'));
+});

@@ -96,3 +96,12 @@ test.describe('legal links (AUTH-21)', () => {
     await expect(page.locator('.login .recaptcha')).toHaveCount(0);
   });
 });
+
+test('the app, Terms and Privacy have search descriptions of 25 to 160 characters (GTM-18)', async ({ page }) => {
+  for (const path of ['/', '/terms/', '/privacy/']) {
+    await page.goto(path);
+    const d = (await page.locator('meta[name="description"]').getAttribute('content')) ?? '';
+    expect(d.length, `${path}: "${d}"`).toBeGreaterThanOrEqual(25);
+    expect(d.length, `${path}: "${d}"`).toBeLessThanOrEqual(160);
+  }
+});

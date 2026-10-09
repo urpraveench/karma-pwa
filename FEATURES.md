@@ -35,9 +35,9 @@ Summary of coverage at the time of writing:
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 16 | 15 | 0 | 1 |
 | 13. App shell, PWA and platform | 30 | 25 | 0 | 5 |
-| 14. Marketing and sharing | 19 | 19 | 0 | 0 |
+| 14. Marketing and sharing | 20 | 20 | 0 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **276** | **262** | **0** | **14** |
+| **Total** | **277** | **263** | **0** | **14** |
 
 ---
 
@@ -401,6 +401,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | GTM-15 | Search engines can crawl | tiktym.com/robots.txt allows everything and names the sitemap; tiktym.com/sitemap.xml lists the home page and What's new (dated by the newest release); app.tiktym.com/robots.txt is a real robots file, not the app's page | Unit `changelog.test.ts`, E2E `site/site.spec.ts`, `app.spec.ts` |
 | GTM-16 | Structured data | The home page describes, in schema.org JSON-LD, the organisation (with its LinkedIn page), the website, TikTym as a free web app, and the FAQ, word for word as shown on the page | E2E `site/site.spec.ts` |
 | GTM-17 | Summary for AI tools | tiktym.com/llms.txt: a short plain-text summary of what TikTym is, who it's for, how it differs, and its links | E2E `site/site.spec.ts` |
+| GTM-18 | Search descriptions | Every page on tiktym.com and the app has a description of 25 to 160 characters (what search results show); the home page's matches its structured data | E2E `site/site.spec.ts`, `legal.spec.ts` |
 | SHARE-01 | Progress card stats | This calendar month's minutes (as hours), current and best streak, days with entries this month, and the top three practices by time this month | Unit `share.test.ts` |
 | SHARE-02 | Progress card image | Insights › Share opens a preview of a 1080×1350 image: TikTym brand, the month's time, streak, active days, top practices with their colours, tiktym.com | E2E `share.spec.ts` |
 | SHARE-03 | Sharing the card | Share opens the phone's share sheet with the image (LinkedIn, Instagram, WhatsApp); where sharing images isn't supported, Download saves it as a PNG | E2E `share.spec.ts` (real share sheet checked on iPhone, 8 October 2026) |

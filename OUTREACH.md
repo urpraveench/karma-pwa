@@ -20,7 +20,7 @@ LinkedIn profile first, then one-to-one WhatsApp messages, then Status, then one
 - [x] Thu 8 Oct: publish launch post 1 with the video, link in the first comment
 - [ ] Thu 8 Oct: reply to every comment on post 1 within the first hour, ideally with a question back
 - [ ] Fri 9 Oct: reshare post 1 from your personal LinkedIn profile, with a line or two in your own words (link: LinkedIn profile, below)
-- [ ] Fri 9 to Sun 11 Oct: send the one-to-one WhatsApp message to 10 to 15 friends who are working and want to learn or get fit. Log each one.
+- [ ] Fri 9 to Sun 11 Oct: send the one-to-one WhatsApp message to 10 to 15 friends who are working and want to learn or get fit. Log each one. **5 sent so far (9 Oct).**
 - [ ] Sat 10 Oct: post the WhatsApp Status with the video or the post image
 - [ ] Sun 11 Oct: follow up with anyone who tried it: "What was confusing?" Note answers in the Feedback log.
 - [x] Tue 13 Oct: post 2, "busy weeks carry forward", with the post image (scheduled)
@@ -88,6 +88,11 @@ One row per share. "Replies" is anyone who answered; "Tried it" is anyone who sa
 | Date | Channel | Where or who | Link used | Replies | Tried it | Notes |
 |---|---|---|---|---|---|---|
 | 8 Oct | LinkedIn company | Post 1 | company | | | Launch post with video |
+| 9 Oct | WhatsApp one-to-one | Rahul | direct | | | |
+| 9 Oct | WhatsApp one-to-one | Raman | direct | | | |
+| 9 Oct | WhatsApp one-to-one | Gopi | direct | | | |
+| 9 Oct | WhatsApp one-to-one | Kiran | direct | | | |
+| 9 Oct | WhatsApp one-to-one | Anand | direct | | | |
 
 ## Feedback log
 

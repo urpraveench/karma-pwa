@@ -108,6 +108,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Website deployed with What's new: https://tiktym.com/updates/ is live (with and without the trailing slash) and linked from the footer. The app's What's new link goes out with the next app release, 9 October 2026
 - [x] CLAUDE.md: user-visible changes get a "Coming next" line in CHANGELOG.md; each release turns it into the version's entry, rebuilds What's new and redeploys the website, 9 October 2026
 - [x] "What's new" in Setup › About opens tiktym.com/updates/ (GTM-13); goes out with the next app release, 9 October 2026
 - [x] CHANGELOG.md for users (1.0 to 1.7.1, plus "Coming next"), built into a What's new page at tiktym.com/updates/ by `npm run site:updates`, which also runs before every website deploy; linked from the website footer, with pictures for choosing practices and editing entries (GTM-11, GTM-12), 9 October 2026

@@ -103,8 +103,11 @@ Ideas for posts and challenges, with the plan for each. Add new ones here as the
 
 ### 100 Days, 100 Minutes: consistency challenge (your idea, 9 Oct)
 
+- **The challenge:** 100 minutes a day for 100 days: **30 Exercise + 30 Reading + 30 Upskilling + 10 Meditation**.
+- **Zero setup:** these are exactly the four practices a new account starts with (Exercise, Reading, Course study, Meditation = 100 minutes). Joining is "sign up and tap Start".
+- **The hook:** 100 days × 100 minutes = **10,000 minutes** (about 167 hours). "Mastery takes 10,000 hours. Start with 10,000 minutes." Pairs with the 10,000-hours post.
 - **The visual:** the mala has 108 beads, one per minute, so a 100-minute day almost fills it. "Fill your mala for 100 days."
-- **Open question (decide before announcing):** 100 minutes a day is a lot for busy professionals. Options: (a) 100 minutes as the stretch goal, a day counts at 30+ (Claude's pick); (b) 100 minutes a week; (c) keep it pure, fewer finishers but a stronger story.
+- **The safety net (and the product story):** a busy day's minutes carry forward, up to two days' worth by default, so a missed day can be made up rather than breaking the challenge. A day counts when Today's mala is cleared, carried minutes included.
 - **Replaces the 30-day challenge**, with day 30 as the first checkpoint.
 - **Timing:** announce once 20+ people use TikTym (week 3); start Mon 2 Nov 2026, finish Tue 9 Feb 2027.
 - **Content it gives:** launch post, weekly check-ins with your progress card, milestone posts at days 30, 50 and 100, and finishers' stories.
@@ -118,7 +121,7 @@ Ideas for posts and challenges, with the plan for each. Add new ones here as the
 | 2 | Tue 13 Oct | Busy weeks carry forward, never pile up (30 minutes a day, 4 days missed: 90, not 150) | Post image | Scheduled |
 | 3 | Thu 15 Oct | The maths of mastery: 10,000 hours (see Content ideas) | Graphic of the maths (ask Claude) | Idea |
 | 4 | Week 3 | 30-second walkthrough: timer, backlog limit, Insights | New video (ask Claude) | Idea |
-| 5 | Week 3, once 20+ users | 100 Days, 100 Minutes challenge announcement, starting Mon 2 Nov | Mala graphic or video (ask Claude) | Idea |
+| 5 | Week 3, once 20+ users | 100 Days, 100 Minutes (30 Exercise, 30 Reading, 30 Upskilling, 10 Meditation) announcement, starting Mon 2 Nov | Mala graphic or video (ask Claude) | Idea |
 
 Media files (in Downloads): `tiktym-linkedin-video.mp4`, `tiktym-linkedin-post.png`, `tiktym-linkedin-logo.png`, `tiktym-linkedin-cover.png`. Ask Claude to redo any of them after the app changes.
 

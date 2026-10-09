@@ -266,3 +266,11 @@ test.describe('Anonymous daily totals (STAT-01, STAT-02)', () => {
     for (const k of keys) expect(['activeDevices', 'signUps', 'logs', 'minutes', 'logQuick', 'logTile', 'logAllLeft', 'logCustom', 'logTimer', 'logOther', 'timersStarted', 'timersReachedTarget', 'practicesAdded', 'cardsShared']).toContain(k);
   });
 });
+
+test('creating an account keeps Google first too (AUTH-30)', async ({ page }) => {
+  await openLogin(page);
+  await page.locator('.link', { hasText: 'Create an account' }).click();
+  await expect(page.locator('button[type=submit]')).toHaveText('Create account');
+  const google = await page.locator('.gbtn').boundingBox(), email = await page.locator('#em').boundingBox();
+  expect(google!.y).toBeLessThan(email!.y);
+});

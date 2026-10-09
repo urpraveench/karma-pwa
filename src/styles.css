@@ -331,7 +331,8 @@ input[type=date].in::-webkit-date-and-time-value{text-align:left}
 .login p.lead{color:var(--ink-2);margin:6px 0 28px;font-size:17px}
 .or{display:flex;align-items:center;gap:12px;color:var(--ink-2);font-size:13px;margin:18px 0}
 .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
-.gbtn{background:var(--surface);color:var(--ink);border:1.5px solid var(--line)}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:12px}
+.gbtn svg{flex:none;width:30px;height:30px;padding:6px;border-radius:50%;background:#fff}
 .devhint{margin-top:22px;font-size:13.5px;color:var(--ink-2);background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:10px 12px}
 .err{color:var(--due);font-size:14px;min-height:20px;margin:6px 0}
 .switch{flex:none;width:46px;height:28px;border-radius:999px;background:var(--surface-2);position:relative;transition:background .2s}

@@ -58,3 +58,12 @@ test.describe('Sign-in (test mode)', () => {
     expect(await page.locator('.log').count()).toBeGreaterThan(50);
   });
 });
+
+test('Continue with Google comes first, as the main button; email sits below (AUTH-30)', async ({ page }) => {
+  await open(page);
+  const order = await page.locator('.login').evaluate(el =>
+    [...el.querySelectorAll('h1, .lead, .gbtn, .or, form, #em')].map(e => e.matches('.gbtn') ? 'google' : e.matches('.or') ? e.textContent : e.matches('#em') ? 'email' : e.tagName.toLowerCase() === 'form' ? 'form' : e.matches('h1') ? 'title' : 'tagline'));
+  expect(order).toEqual(['title', 'tagline', 'google', 'or use your email', 'form', 'email']);
+  await expect(page.locator('.gbtn')).toHaveText('Continue with Google');
+  await expect(page.locator('button[type=submit]')).toHaveClass(/btn-2/); // the lighter button
+});

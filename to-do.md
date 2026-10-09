@@ -110,6 +110,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Website FAQ, first question: "How is TikTym different from other habit apps?" (GTM-14), 9 October 2026
 - [x] Test fix: the What's new website test no longer expects a "Coming next" card; it checks one is first only when there is one. It failed after 1.7.2 shipped everything (the release ran only the changelog unit tests, not the website tests), 9 October 2026
 - [x] Released 1.7.2: "12 min" on the running timer (Gopi's feedback), Follow TikTym on LinkedIn and What's new in Setup › About. Website redeployed: What's new shows 1.7.2. Checked live, 9 October 2026
 - [x] Website deployed with What's new: https://tiktym.com/updates/ is live (with and without the trailing slash) and linked from the footer. The app's What's new link goes out with the next app release, 9 October 2026

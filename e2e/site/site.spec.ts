@@ -139,3 +139,12 @@ test.describe("What's new (GTM-11, GTM-12)", () => {
     await expect(page.locator('h1')).toHaveText("What's new in TikTym");
   });
 });
+
+test('the first FAQ answers how TikTym differs from other habit apps (GTM-14)', async ({ page }) => {
+  await page.goto('/');
+  const first = page.locator('#faq details').first();
+  await expect(first.locator('summary')).toHaveText('How is TikTym different from other habit apps?');
+  await first.locator('summary').click();
+  await expect(first.locator('p')).toContainText('Every minute counts');
+  await expect(first.locator('p')).toContainText('never pile up');
+});

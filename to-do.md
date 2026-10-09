@@ -15,7 +15,6 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 These can't be automated, or need the real project and a real phone. IDs refer to [FEATURES.md](FEATURES.md).
 
-- [ ] Create a new account at https://app.tiktym.com (e.g. a spare Google account) and check the "What do you want to make time for?" screen on a real phone (FIRST-08)
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] **You:** after the fix, run the 5-minute Meditation test again: the chime should play right as the timer reaches its target (TIMER-05).
@@ -109,6 +108,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Checked on a real phone with a new account: the "What do you want to make time for?" screen works (FIRST-08), 9 October 2026
 - [x] Released 1.7.0: a new account chooses its practices before day one. Checked live: https://app.tiktym.com/version.json shows 1.7.0 and the live code has the new screen, 9 October 2026
 - [x] A new account chooses its practices before day one: "What do you want to make time for?" with eight suggestions (the four old defaults ticked), − and + for minutes, and "Add your own"; nothing is saved until Start (GTM-03, FIRST-01, FIRST-08 to FIRST-12), 8 October 2026
 - [x] Released 1.6.2: a start screen instead of a blank page on slow connections, with slow, stuck and offline messages; fonts no longer block the first paint. Checked live on a throttled phone connection (50 KB/s): start screen at 1.3 s, sign-in at 9.3 s, where it was blank for all 9 s before, 8 October 2026

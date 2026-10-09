@@ -16,6 +16,7 @@
     "test:all": "npm test && npm run test:emulator && npm run test:e2e:headless",
     "og:image": "node scripts/og-image.mjs",
     "site:clips": "node scripts/record-clips.mjs",
+    "site:updates": "node scripts/site-updates.mjs",
     "email:header": "node scripts/email-header.mjs"
   },
   "dependencies": {

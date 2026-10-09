@@ -76,6 +76,9 @@
     {
       "target": "site",
       "public": "site",
+      "predeploy": [
+        "npm run site:updates"
+      ],
       "ignore": [
         "**/.*"
       ],

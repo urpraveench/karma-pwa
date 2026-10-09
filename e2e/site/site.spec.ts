@@ -113,3 +113,27 @@ test.describe('website analytics (ANA-04)', () => {
     await expect.poll(async () => (await pushed(page)).some(a => a[0] === 'event' && a[1] === 'open_app' && (a[2] as { link_location: string }).link_location === 'hero')).toBe(true);
   });
 });
+
+test.describe("What's new (GTM-11, GTM-12)", () => {
+  test('lists coming changes, then releases newest first, with pictures for headline features', async ({ page }) => {
+    await page.goto('/updates/');
+    await expect(page).toHaveTitle("What's new in TikTym");
+    await expect(page.locator('h1')).toHaveText("What's new in TikTym");
+    const releases = page.locator('.u-release');
+    await expect(releases.first()).toHaveClass(/u-next/);
+    await expect(releases.first().locator('h2')).toHaveText('Coming in the next update');
+    const versions = await page.locator('.u-release[id]').evaluateAll(els => els.map(e => e.id.slice(1)));
+    const sorted = [...versions].sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
+    expect(versions).toEqual(sorted);
+    for (const img of await page.locator('.u-shot img').all()) {
+      await img.scrollIntoViewIfNeeded();
+      await expect.poll(() => img.evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(0);
+    }
+  });
+
+  test('the home page footer links to it', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('footer a', { hasText: "What's new" }).click();
+    await expect(page.locator('h1')).toHaveText("What's new in TikTym");
+  });
+});

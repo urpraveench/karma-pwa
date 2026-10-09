@@ -35,9 +35,9 @@ Summary of coverage at the time of writing:
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 16 | 15 | 0 | 1 |
 | 13. App shell, PWA and platform | 30 | 25 | 0 | 5 |
-| 14. Marketing and sharing | 15 | 12 | 3 | 0 |
+| 14. Marketing and sharing | 15 | 14 | 1 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **272** | **255** | **3** | **14** |
+| **Total** | **272** | **257** | **1** | **14** |
 
 ---
 
@@ -394,8 +394,8 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | GTM-01 | Link preview | Sharing the app's link (WhatsApp, LinkedIn, X, Slack) shows the TikTym title, a one-line description and a 1200×630 preview image | E2E `app.spec.ts` (how each service renders it: checked live after release) |
 | GTM-02 | Send feedback | Setup › About › Send feedback opens an email to support with the app version and build filled in | Unit `feedback.test.ts`, E2E `setup.spec.ts` |
 | GTM-10 | Follow on LinkedIn | Setup › About has "Follow TikTym on LinkedIn" and the website footer has a LinkedIn link; both open https://www.linkedin.com/company/tiktym/ in a new tab | E2E `setup.spec.ts`, `site/site.spec.ts` |
-| GTM-11 | What's new page | tiktym.com/updates lists each release people would notice, newest first: version, date, a short title, what changed in plain words, and a picture for headline features; "Coming in the next update" sits at the top while there is any | Gap |
-| GTM-12 | Built from the changelog | The page is generated from CHANGELOG.md (`npm run site:updates`), and again before every website deploy, so the two never disagree; the website footer links to it | Gap |
+| GTM-11 | What's new page | tiktym.com/updates lists each release people would notice, newest first: version, date, a short title, what changed in plain words, and a picture for headline features; "Coming in the next update" sits at the top while there is any | E2E `site/site.spec.ts`, Unit `changelog.test.ts` |
+| GTM-12 | Built from the changelog | The page is generated from CHANGELOG.md (`npm run site:updates`), and again before every website deploy, so the two never disagree; the website footer links to it | Unit `changelog.test.ts`, E2E `site/site.spec.ts` |
 | GTM-13 | What's new in the app | Setup › About has "What's new", opening tiktym.com/updates | Gap |
 | SHARE-01 | Progress card stats | This calendar month's minutes (as hours), current and best streak, days with entries this month, and the top three practices by time this month | Unit `share.test.ts` |
 | SHARE-02 | Progress card image | Insights › Share opens a preview of a 1080×1350 image: TikTym brand, the month's time, streak, active days, top practices with their colours, tiktym.com | E2E `share.spec.ts` |

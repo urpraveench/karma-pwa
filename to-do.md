@@ -78,7 +78,6 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 Day-to-day outreach (tasks by date, messages, tracking links, share and feedback logs, weekly review) lives in [OUTREACH.md](OUTREACH.md).
 
-- [ ] **Claude:** CHANGELOG.md, written for users and backfilled from 1.0 to 1.7.1, turned into a What's new page at tiktym.com/updates by `npm run site:updates` (also run before every website deploy), linked from the website footer (GTM-11, GTM-12).
 - [ ] **Claude:** a "What's new" link in Setup › About; goes out with the next app release (GTM-13).
 - [ ] **Claude:** add "update CHANGELOG.md and redeploy the website" to the release steps in CLAUDE.md.
 - [ ] **You:** post on the TikTym LinkedIn page 2 or 3 times a week (page set up 8 October) (building in public, "busy weeks carry forward", monthly progress with Insights screenshots).
@@ -111,6 +110,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] CHANGELOG.md for users (1.0 to 1.7.1, plus "Coming next"), built into a What's new page at tiktym.com/updates/ by `npm run site:updates`, which also runs before every website deploy; linked from the website footer, with pictures for choosing practices and editing entries (GTM-11, GTM-12), 9 October 2026
 - [x] Test fix: signing in again with Google clicks the emulator's saved account until its pop-up closes; it sometimes ignored the first click (AUTH-19; 16 of 16 passed without retries after), 9 October 2026
 - [x] The running timer's button on Today shows "12 min" (number over a small "min") instead of "12′", after Gopi found the ′ confusing (TIMER-09); goes out with the next app release, 9 October 2026
 - [x] Website deployed with the LinkedIn link in the footer; checked live on tiktym.com. The app's "Follow TikTym on LinkedIn" row waits for the next app release, 9 October 2026

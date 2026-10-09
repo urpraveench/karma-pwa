@@ -78,6 +78,10 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 Day-to-day outreach (tasks by date, messages, tracking links, share and feedback logs, weekly review) lives in [OUTREACH.md](OUTREACH.md).
 
+- [ ] **Claude:** robots.txt and sitemap.xml for tiktym.com (sitemap built with the What's new page), and a robots.txt for app.tiktym.com (GTM-15).
+- [ ] **Claude:** structured data on tiktym.com (organisation, website, the app as a free web app, the FAQ) and an llms.txt summary for AI tools (GTM-16, GTM-17).
+- [ ] **You:** Google Search Console: add tiktym.com as a Domain property (TXT record at GoDaddy), submit https://tiktym.com/sitemap.xml, and request indexing for https://tiktym.com/ and https://tiktym.com/updates/.
+- [ ] **You:** Bing Webmaster Tools: Import from Google Search Console (Bing feeds ChatGPT search, Copilot and DuckDuckGo).
 - [ ] **You:** post on the TikTym LinkedIn page 2 or 3 times a week (page set up 8 October) (building in public, "busy weeks carry forward", monthly progress with Insights screenshots).
 - [ ] **You:** run a 30-day learning challenge with your network, using TikTym.
 - [ ] **You:** take part in r/developersIndia, r/IndianWorkplace and tech Slack/Discord communities before sharing TikTym.

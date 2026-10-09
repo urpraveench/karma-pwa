@@ -35,9 +35,9 @@ Summary of coverage at the time of writing:
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 16 | 15 | 0 | 1 |
 | 13. App shell, PWA and platform | 30 | 25 | 0 | 5 |
-| 14. Marketing and sharing | 16 | 16 | 0 | 0 |
+| 14. Marketing and sharing | 19 | 16 | 3 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **273** | **259** | **0** | **14** |
+| **Total** | **276** | **259** | **3** | **14** |
 
 ---
 
@@ -398,6 +398,9 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | GTM-12 | Built from the changelog | The page is generated from CHANGELOG.md (`npm run site:updates`), and again before every website deploy, so the two never disagree; the website footer links to it | Unit `changelog.test.ts`, E2E `site/site.spec.ts` |
 | GTM-13 | What's new in the app | Setup › About has "What's new", opening tiktym.com/updates/ in a new tab | E2E `setup.spec.ts` |
 | GTM-14 | How TikTym is different | The website's first FAQ question, "How is TikTym different from other habit apps?": every minute counts, busy days carry forward but never pile up, one balanced daily target, made for demanding jobs; free, no ads, offline, data in India | E2E `site/site.spec.ts` |
+| GTM-15 | Search engines can crawl | tiktym.com/robots.txt allows everything and names the sitemap; tiktym.com/sitemap.xml lists the home page and What's new (dated by the newest release); app.tiktym.com/robots.txt is a real robots file, not the app's page | Gap |
+| GTM-16 | Structured data | The home page describes, in schema.org JSON-LD, the organisation (with its LinkedIn page), the website, TikTym as a free web app, and the FAQ, word for word as shown on the page | Gap |
+| GTM-17 | Summary for AI tools | tiktym.com/llms.txt: a short plain-text summary of what TikTym is, who it's for, how it differs, and its links | Gap |
 | SHARE-01 | Progress card stats | This calendar month's minutes (as hours), current and best streak, days with entries this month, and the top three practices by time this month | Unit `share.test.ts` |
 | SHARE-02 | Progress card image | Insights › Share opens a preview of a 1080×1350 image: TikTym brand, the month's time, streak, active days, top practices with their colours, tiktym.com | E2E `share.spec.ts` |
 | SHARE-03 | Sharing the card | Share opens the phone's share sheet with the image (LinkedIn, Instagram, WhatsApp); where sharing images isn't supported, Download saves it as a PNG | E2E `share.spec.ts` (real share sheet checked on iPhone, 8 October 2026) |

@@ -58,6 +58,20 @@ Each channel gets its own link, so Google Analytics (Reports › Acquisition ›
 >
 > (Open it on your phone and add it to your home screen, no app store needed.)
 
+**WhatsApp follow-up** (a day or two later, to anyone who liked or replied but hasn't signed up; send the app link, since they've seen the pitch):
+
+> Hey [name], thanks for the 👍! I built TikTym for busy working people like us: between work and home, there's never time left for ourselves. It helps you make a little time every day for what you keep putting off, like learning, reading, exercise or just a few calm minutes.
+>
+> If you have 30 seconds today, try it: tap Continue with Google, pick what you want to make time for, and log your first few minutes. https://app.tiktym.com
+>
+> Then tell me the one thing that felt confusing. That's the feedback I need most right now 🙏
+
+**WhatsApp follow-up, to someone who already looked but didn't sign up:**
+
+> I made TikTym for busy working people like us, to carve out a little time every day for ourselves: learning, reading, exercise, whatever keeps slipping.
+>
+> Did anything stop you from signing up? Even "didn't feel like it yet" is useful to know 😄 If you try it, it takes 30 seconds: https://app.tiktym.com
+
 **WhatsApp Status** (with the video or the post image):
 
 > Launched something I built 🚀 TikTym: one minute, one point. For anyone who keeps saying "I'll start learning next week". Free → tiktym.com

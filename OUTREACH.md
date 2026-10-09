@@ -14,12 +14,16 @@ Use first names or initials for people, never phone numbers or full names, even 
 
 LinkedIn profile first, then one-to-one WhatsApp messages, then Status, then one group every few days. Personal messages convert best; groups convert worst, so they come last, one at a time, never all at once.
 
+## Decisions
+
+- **Personal LinkedIn profile (9 Oct):** TikTym isn't listed as experience on your profile until it reaches about 10,000 users. You reshare one TikTym post a month from your profile; other weeks, the page grows through its own posts, comments as the page, links from the website and app, and asking happy users to follow.
+
 ## This week's tasks (8 to 14 October 2026)
 
 - [x] Thu 8 Oct: set up the TikTym LinkedIn page (logo, cover, tagline, description, location)
 - [x] Thu 8 Oct: publish launch post 1 with the video, link in the first comment
 - [ ] Thu 8 Oct: reply to every comment on post 1 within the first hour, ideally with a question back
-- [ ] Fri 9 Oct: reshare post 1 from your personal LinkedIn profile, with a line or two in your own words (link: LinkedIn profile, below)
+- [ ] Fri 9 Oct: reshare post 1 from your personal LinkedIn profile, with a line or two in your own words (link: LinkedIn profile, below) This is October's monthly reshare.
 - [ ] Fri 9 to Sun 11 Oct: send the one-to-one WhatsApp message to 10 to 15 friends who are working and want to learn or get fit. Log each one. **6 sent: 5 on 8 Oct (evening), 1 on 9 Oct. 1 installed (Gopi).**
 - [ ] Sat 10 Oct: post the WhatsApp Status with the video or the post image
 - [ ] Sun 11 Oct: follow up with anyone who tried it: "What was confusing?" Note answers in the Feedback log.

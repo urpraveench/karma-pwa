@@ -108,6 +108,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Website deployed with the LinkedIn link in the footer; checked live on tiktym.com. The app's "Follow TikTym on LinkedIn" row waits for the next app release, 9 October 2026
 - [x] The TikTym LinkedIn page is linked from Setup › About ("Follow TikTym on LinkedIn") and the website footer (GTM-10), 9 October 2026
 - [x] Released 1.7.1: Continue with Google first on the sign-in screen. Checked live: version.json shows 1.7.1 and the live code has the new layout, 9 October 2026
 - [x] Test fix: the Google tests click the emulator's "Add new account" until its form shows; it sometimes ignored the first click, which made AUTH-19 and AUTH-24 flaky (12 of 12 passed without retries after), 9 October 2026

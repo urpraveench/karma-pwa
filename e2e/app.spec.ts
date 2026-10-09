@@ -154,3 +154,11 @@ test('the link preview gives the app address, app.tiktym.com (GTM-06)', async ({
   expect(await meta('meta[property="og:url"]')).toBe('https://app.tiktym.com/');
   expect(await meta('meta[property="og:image"]')).toBe('https://app.tiktym.com/og.png');
 });
+
+test('the app address has a real robots.txt, not the app page (GTM-15)', async ({ request }) => {
+  const robots = await request.get('/robots.txt');
+  expect(robots.ok()).toBe(true);
+  const text = await robots.text();
+  expect(text).toContain('User-agent: *');
+  expect(text).not.toContain('<html');
+});

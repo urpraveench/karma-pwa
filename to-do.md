@@ -78,7 +78,6 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 Day-to-day outreach (tasks by date, messages, tracking links, share and feedback logs, weekly review) lives in [OUTREACH.md](OUTREACH.md).
 
-- [ ] **Claude:** robots.txt and sitemap.xml for tiktym.com (sitemap built with the What's new page), and a robots.txt for app.tiktym.com (GTM-15).
 - [ ] **Claude:** structured data on tiktym.com (organisation, website, the app as a free web app, the FAQ) and an llms.txt summary for AI tools (GTM-16, GTM-17).
 - [ ] **You:** Google Search Console: add tiktym.com as a Domain property (TXT record at GoDaddy), submit https://tiktym.com/sitemap.xml, and request indexing for https://tiktym.com/ and https://tiktym.com/updates/.
 - [ ] **You:** Bing Webmaster Tools: Import from Google Search Console (Bing feeds ChatGPT search, Copilot and DuckDuckGo).
@@ -114,6 +113,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] robots.txt and sitemap.xml for tiktym.com (the sitemap is rebuilt with What's new, dated by the newest release), and a real robots.txt for app.tiktym.com (GTM-15), 9 October 2026
 - [x] Website FAQ, first question: "How is TikTym different from other habit apps?" (GTM-14), 9 October 2026
 - [x] Test fix: the What's new website test no longer expects a "Coming next" card; it checks one is first only when there is one. It failed after 1.7.2 shipped everything (the release ran only the changelog unit tests, not the website tests), 9 October 2026
 - [x] Released 1.7.2: "12 min" on the running timer (Gopi's feedback), Follow TikTym on LinkedIn and What's new in Setup › About. Website redeployed: What's new shows 1.7.2. Checked live, 9 October 2026

@@ -1,0 +1,5 @@
+# tiktym.com: everything may be crawled.
+User-agent: *
+Allow: /
+
+Sitemap: https://tiktym.com/sitemap.xml

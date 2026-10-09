@@ -148,3 +148,14 @@ test('the first FAQ answers how TikTym differs from other habit apps (GTM-14)', 
   await expect(first.locator('p')).toContainText('Every minute counts');
   await expect(first.locator('p')).toContainText('never pile up');
 });
+
+test('search engines get a robots.txt and a sitemap (GTM-15)', async ({ request }) => {
+  const robots = await request.get('/robots.txt');
+  expect(robots.ok()).toBe(true);
+  expect(await robots.text()).toContain('Sitemap: https://tiktym.com/sitemap.xml');
+  const sitemap = await request.get('/sitemap.xml');
+  expect(sitemap.ok()).toBe(true);
+  const xml = await sitemap.text();
+  expect(xml).toContain('<loc>https://tiktym.com/</loc>');
+  expect(xml).toContain('<loc>https://tiktym.com/updates/</loc>');
+});

@@ -127,3 +127,24 @@ ${releases.map(releaseHtml).join('\n')}
 </html>
 `;
 }
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+/** "9 October 2026" → "2026-10-09"; null if it isn't a date like that. */
+export function isoDate(d: string): string | null {
+  const m = d.trim().match(/^(\d{1,2}) ([A-Z][a-z]+) (\d{4})$/);
+  const month = m ? MONTHS.indexOf(m[2]) + 1 : 0;
+  return m && month ? `${m[3]}-${String(month).padStart(2, '0')}-${m[1].padStart(2, '0')}` : null;
+}
+
+/** sitemap.xml for tiktym.com (GTM-15): the home page and What's new, dated by the newest release. */
+export function renderSitemap(releases: Release[]): string {
+  const newest = releases.find(r => r.version);
+  const lastmod = newest ? isoDate(newest.date) : null;
+  const url = (loc: string) => `  <url>\n    <loc>${loc}</loc>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ''}\n  </url>`;
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${url('https://tiktym.com/')}
+${url('https://tiktym.com/updates/')}
+</urlset>
+`;
+}

@@ -1,0 +1,6 @@
+# app.tiktym.com: the app itself. Search engines may crawl it (sign-in, Terms, Privacy);
+# the website at https://tiktym.com/ is the page to rank.
+User-agent: *
+Allow: /
+
+Sitemap: https://tiktym.com/sitemap.xml

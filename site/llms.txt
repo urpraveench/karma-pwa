@@ -1,0 +1,27 @@
+# TikTym
+
+> TikTym is a free habit tracker for working professionals in India: it turns the minutes you spend learning, reading, exercising or meditating into points, and carries busy days forward without letting them pile up. It runs in the browser, installs to the home screen on iPhone and Android, and works offline.
+
+## What it does
+
+- One minute, one point: set a small daily target for each practice and log minutes with one tap, or let the focus timer log them.
+- Busy weeks carry forward, but never pile up: missed minutes carry into the next day, up to a limit you choose (two days of the target by default); older misses are forgiven.
+- One balanced daily target across learning, health and a calm mind, instead of a long list of habits.
+- Insights: streaks, consistency over 16 weeks, and the time of day you practise best; a shareable monthly progress card.
+- New accounts choose their practices first (for example Course study, Reading, Exercise, Meditation, Coding practice, Language learning).
+
+## Facts
+
+- Price: free, no ads.
+- Platforms: any modern browser; add to the home screen for an app-like experience. A Google Play listing is planned.
+- Data: stored in India; never sold; export or delete any time.
+- Made by Pramal IT Services Private Limited, India.
+
+## Links
+
+- Website: https://tiktym.com/
+- Open the app: https://app.tiktym.com/
+- What's new (every release): https://tiktym.com/updates/
+- Privacy Policy: https://app.tiktym.com/privacy/
+- Terms: https://app.tiktym.com/terms/
+- LinkedIn: https://www.linkedin.com/company/tiktym/

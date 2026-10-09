@@ -159,3 +159,26 @@ test('search engines get a robots.txt and a sitemap (GTM-15)', async ({ request 
   expect(xml).toContain('<loc>https://tiktym.com/</loc>');
   expect(xml).toContain('<loc>https://tiktym.com/updates/</loc>');
 });
+
+test('structured data describes TikTym, and its FAQ matches the page word for word (GTM-16)', async ({ page }) => {
+  await page.goto('/');
+  const data = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() ?? '{}');
+  const byType = Object.fromEntries((data['@graph'] as { '@type': string }[]).map(g => [g['@type'], g as Record<string, any>]));
+  expect(Object.keys(byType)).toEqual(['Organization', 'WebSite', 'WebApplication', 'FAQPage']);
+  expect(byType.Organization.sameAs).toContain('https://www.linkedin.com/company/tiktym/');
+  expect(byType.WebApplication).toMatchObject({ url: 'https://app.tiktym.com/', offers: { price: '0', priceCurrency: 'INR' } });
+  const shown = await page.locator('#faq details').evaluateAll(ds => ds.map(d => ({
+    q: d.querySelector('summary')!.textContent!.trim(),
+    a: d.querySelector('p')!.textContent!.replace(/\s+/g, ' ').trim(),
+  })));
+  const marked = (byType.FAQPage.mainEntity as { name: string; acceptedAnswer: { text: string } }[]).map(e => ({ q: e.name, a: e.acceptedAnswer.text }));
+  expect(marked).toEqual(shown);
+});
+
+test('an llms.txt summary for AI tools (GTM-17)', async ({ request }) => {
+  const res = await request.get('/llms.txt');
+  expect(res.ok()).toBe(true);
+  const text = await res.text();
+  expect(text).toMatch(/^# TikTym/);
+  for (const link of ['https://tiktym.com/', 'https://app.tiktym.com/', 'https://tiktym.com/updates/']) expect(text).toContain(link);
+});

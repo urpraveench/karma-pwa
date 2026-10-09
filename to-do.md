@@ -78,6 +78,9 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 Day-to-day outreach (tasks by date, messages, tracking links, share and feedback logs, weekly review) lives in [OUTREACH.md](OUTREACH.md).
 
+- [ ] **Claude:** CHANGELOG.md, written for users and backfilled from 1.0 to 1.7.1, turned into a What's new page at tiktym.com/updates by `npm run site:updates` (also run before every website deploy), linked from the website footer (GTM-11, GTM-12).
+- [ ] **Claude:** a "What's new" link in Setup › About; goes out with the next app release (GTM-13).
+- [ ] **Claude:** add "update CHANGELOG.md and redeploy the website" to the release steps in CLAUDE.md.
 - [ ] **You:** post on the TikTym LinkedIn page 2 or 3 times a week (page set up 8 October) (building in public, "busy weeks carry forward", monthly progress with Insights screenshots).
 - [ ] **You:** run a 30-day learning challenge with your network, using TikTym.
 - [ ] **You:** take part in r/developersIndia, r/IndianWorkplace and tech Slack/Discord communities before sharing TikTym.

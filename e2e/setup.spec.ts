@@ -280,3 +280,11 @@ test.describe('Reordering practices', () => {
     await expect(page.locator('#cn')).toHaveValue('Writing');
   });
 });
+
+test('Setup › About links to the TikTym LinkedIn page (GTM-10)', async ({ page }) => {
+  await signIn(page);
+  await tab(page, 'Setup').click();
+  const link = page.locator('a.li', { hasText: 'Follow TikTym on LinkedIn' });
+  await expect(link).toHaveAttribute('href', 'https://www.linkedin.com/company/tiktym/');
+  await expect(link).toHaveAttribute('target', '_blank');
+});

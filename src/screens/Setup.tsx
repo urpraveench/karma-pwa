@@ -78,6 +78,7 @@ export function Setup() {
       <div className="list">
         <div className="li about"><span className="t">TikTym {BUILD.version}<small>Build {BUILD.commit}, {new Date(BUILD.builtAt).toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</small></span></div>
         <a className="li" href={feedbackLink(BUILD)}><span className="t">Send feedback<small>Ideas, problems, anything. It goes straight to the people who build TikTym.</small></span><span className="chev">›</span></a>
+        <a className="li" href={config.linkedin} target="_blank" rel="noopener"><span className="t">Follow TikTym on LinkedIn<small>Tips, updates and what's coming next</small></span><span className="chev">›</span></a>
         <a className="li" href={config.legal.terms}><span className="t">Terms of Service</span><span className="chev">›</span></a>
         <a className="li" href={config.legal.privacy}><span className="t">Privacy Policy</span><span className="chev">›</span></a>
       </div>

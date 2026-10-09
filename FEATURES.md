@@ -35,9 +35,9 @@ Summary of coverage at the time of writing:
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 16 | 15 | 0 | 1 |
 | 13. App shell, PWA and platform | 30 | 25 | 0 | 5 |
-| 14. Marketing and sharing | 11 | 11 | 0 | 0 |
+| 14. Marketing and sharing | 12 | 12 | 0 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **268** | **254** | **0** | **14** |
+| **Total** | **269** | **255** | **0** | **14** |
 
 ---
 
@@ -393,6 +393,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 |---|---|---|---|
 | GTM-01 | Link preview | Sharing the app's link (WhatsApp, LinkedIn, X, Slack) shows the TikTym title, a one-line description and a 1200×630 preview image | E2E `app.spec.ts` (how each service renders it: checked live after release) |
 | GTM-02 | Send feedback | Setup › About › Send feedback opens an email to support with the app version and build filled in | Unit `feedback.test.ts`, E2E `setup.spec.ts` |
+| GTM-10 | Follow on LinkedIn | Setup › About has "Follow TikTym on LinkedIn" and the website footer has a LinkedIn link; both open https://www.linkedin.com/company/tiktym/ in a new tab | E2E `setup.spec.ts`, `site/site.spec.ts` |
 | SHARE-01 | Progress card stats | This calendar month's minutes (as hours), current and best streak, days with entries this month, and the top three practices by time this month | Unit `share.test.ts` |
 | SHARE-02 | Progress card image | Insights › Share opens a preview of a 1080×1350 image: TikTym brand, the month's time, streak, active days, top practices with their colours, tiktym.com | E2E `share.spec.ts` |
 | SHARE-03 | Sharing the card | Share opens the phone's share sheet with the image (LinkedIn, Instagram, WhatsApp); where sharing images isn't supported, Download saves it as a PNG | E2E `share.spec.ts` (real share sheet checked on iPhone, 8 October 2026) |

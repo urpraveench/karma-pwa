@@ -45,12 +45,13 @@ test.describe('website (GTM-04)', () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
   });
 
-  test('FAQ answers open, and legal links point at the app pages on app.tiktym.com (GTM-06)', async ({ page }) => {
+  test('FAQ answers open, and legal links point at the app pages on app.tiktym.com (GTM-06), plus LinkedIn (GTM-10)', async ({ page }) => {
     await page.goto('/');
     await page.locator('summary', { hasText: 'What happens if I miss a day?' }).click();
     await expect(page.locator('details[open] p')).toContainText('choose None for no limit');
     await expect(page.locator('footer a', { hasText: 'Terms' })).toHaveAttribute('href', `${APP}terms/`);
     await expect(page.locator('footer a', { hasText: 'Privacy' })).toHaveAttribute('href', `${APP}privacy/`);
+    await expect(page.locator('footer a', { hasText: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/company/tiktym/');
   });
 
   test('serves the email header image (AUTH-29)', async ({ request }) => {

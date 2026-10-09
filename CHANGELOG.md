@@ -13,7 +13,7 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
-## Coming next
+## 1.7.2 · 9 October 2026 · Small things from your feedback
 
 - **Follow TikTym on LinkedIn** from Setup › About, for tips and updates.
 - **A running timer now says "12 min"** on its button in Today, instead of "12′". Thanks, [Gopi Aitham](https://www.linkedin.com/in/gopi-aitham/), for pointing it out.

@@ -21,11 +21,11 @@ test.describe('Focus timer', () => {
     await expect(page.locator('.f-sub')).toHaveText('15 min to target');
   });
 
-  test('minimises to the mini-player and shows live minutes on the practice', async ({ page }) => {
+  test('minimises to the mini-player and shows live minutes on the practice (TIMER-09, TIMER-10)', async ({ page }) => {
     await page.clock.fastForward('12:00');
     await page.click('.f-min');
     await expect(page.locator('.mini')).toBeVisible();
-    await expect(page.locator('.tbtn.live')).toHaveText('12′');
+    await expect(page.locator('.tbtn.live')).toHaveText('12 min'); // a number over "min", not 12′ (TIMER-09)
     await expect(page.locator('.mala circle.bd.live')).toHaveCount(13); // 12 of 100 owed → 13 of 108 beads pulse (TIMER-09)
     await page.click('.mini-open');
     await expect(page.locator('.focus')).toBeVisible();

@@ -119,6 +119,7 @@ Everything people say about the app: confusion, bugs, requests, praise. Bring an
 
 | Date | From | What they said | Bug, idea or praise | Done? |
 |---|---|---|---|---|
+| 9 Oct | Gopi | "At first glance 1′ confused me. I don't use timing apps, so I wasn't sure ′ means minutes." | Idea (wording) | Fixed: the running timer now shows "1 min". Goes out with the next app release |
 | 9 Oct | Gopi | "Logged in just now and started. Simple interface, easy navigation." Will send more. | Praise | Ask him tomorrow how the first day went |
 | 8 Oct | Gopi (WhatsApp, direct link) | "Not accepting https; on http a blank white screen", then "slow"; screenshot showed "Not secure" and a blank page on his college network | Network, not the app | Two causes. (1) Slow connections showed a blank page while loading: fixed in 1.6.2. (2) His college firewall swaps in its own certificate for uncategorised sites; our certificate is valid (Google Trust Services). Fix: get the domains categorised (task above). Confirmed: works fine on mobile data. Later (9 Oct): it also works for others on the college Wi-Fi, so it was one particular network, not the college or the site. |
 

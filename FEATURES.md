@@ -207,7 +207,7 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 | TIMER-06 | Tab title | Shows the running clock and practice; resets to "TikTym" when stopped | E2E `timer.spec.ts` |
 | TIMER-07 | Screen stays awake | Wake Lock held while the focus view is open, re-acquired on return; "Screen stays on" shown | Manual |
 | TIMER-08 | Minimise | Mini-player above the tab bar on every tab: clock, practice, pause, stop, progress line | E2E `timer.spec.ts` |
-| TIMER-09 | Live minutes on Today | The practice's ▶ shows running minutes; mala shows pulsing live beads | E2E `timer.spec.ts` |
+| TIMER-09 | Live minutes on Today | The practice's ▶ shows the running minutes as a number over a small "min" ("12 min", not "12′"); mala shows pulsing live beads | E2E `timer.spec.ts` |
 | TIMER-10 | Reopen | Tap the mini-player or the live minutes button | E2E `timer.spec.ts` |
 | TIMER-11 | Pause and resume | From the focus view or the mini-player; paused time isn't counted; clock blinks | E2E `timer.spec.ts` |
 | TIMER-12 | Stop and log | Logs the whole minutes, same toasts and celebration as manual logging | E2E `timer.spec.ts` |

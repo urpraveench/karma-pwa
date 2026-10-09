@@ -68,7 +68,7 @@ export function Today() {
               </span>
             </button>
             {isLive
-              ? <button className="tbtn live" onClick={openFocus} aria-label={`Open the running ${cat.name} timer`}>{minute}′</button>
+              ? <button className="tbtn live" onClick={openFocus} aria-label={`Open the running ${cat.name} timer`}><b>{minute}</b> <small>min</small></button>
               : <button className="tbtn" onClick={() => start(cat.id)} aria-label={`Start a ${cat.name} timer`}><Icon.play /></button>}
             {r.end > 0
               ? <button className="qbtn" onClick={() => logEntry(cat.id, r.end, T, '', 'quick')} aria-label={`Log ${r.end} minutes of ${cat.name}`}>+{r.end}</button>

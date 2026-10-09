@@ -119,9 +119,11 @@ test.describe("What's new (GTM-11, GTM-12)", () => {
     await page.goto('/updates/');
     await expect(page).toHaveTitle("What's new in TikTym");
     await expect(page.locator('h1')).toHaveText("What's new in TikTym");
-    const releases = page.locator('.u-release');
-    await expect(releases.first()).toHaveClass(/u-next/);
-    await expect(releases.first().locator('h2')).toHaveText('Coming in the next update');
+    // "Coming in the next update" appears only while something is waiting to ship, and then always first
+    const kinds = await page.locator('.u-release').evaluateAll(els => els.map(e => e.classList.contains('u-next') ? 'next' : 'release'));
+    expect(kinds.indexOf('next')).toBeLessThanOrEqual(0);
+    expect(kinds.filter(k => k === 'next').length).toBeLessThanOrEqual(1);
+    if (kinds[0] === 'next') await expect(page.locator('.u-next h2')).toHaveText('Coming in the next update');
     const versions = await page.locator('.u-release[id]').evaluateAll(els => els.map(e => e.id.slice(1)));
     const sorted = [...versions].sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
     expect(versions).toEqual(sorted);

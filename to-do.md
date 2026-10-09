@@ -78,7 +78,7 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 Day-to-day outreach (tasks by date, messages, tracking links, share and feedback logs, weekly review) lives in [OUTREACH.md](OUTREACH.md).
 
-- [ ] **You:** Google Search Console: add tiktym.com as a Domain property (TXT record at GoDaddy), submit https://tiktym.com/sitemap.xml, and request indexing for https://tiktym.com/ and https://tiktym.com/updates/.
+- [ ] **You:** Google Search Console (verified 9 October): submit `sitemap.xml` under Sitemaps, and use URL inspection › Request indexing for https://tiktym.com/ and https://tiktym.com/updates/.
 - [ ] **You:** Bing Webmaster Tools: Import from Google Search Console (Bing feeds ChatGPT search, Copilot and DuckDuckGo).
 - [ ] **You:** post on the TikTym LinkedIn page 2 or 3 times a week (page set up 8 October) (building in public, "busy weeks carry forward", monthly progress with Insights screenshots).
 - [ ] **You:** run a 30-day learning challenge with your network, using TikTym.
@@ -112,6 +112,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Google Search Console: tiktym.com verified as a Domain property, 9 October 2026
 - [x] Website deployed with robots.txt, sitemap.xml, llms.txt and structured data; all checked live. The app's robots.txt goes out with the next app release, 9 October 2026
 - [x] Structured data on tiktym.com (organisation with its LinkedIn page, website, TikTym as a free web app, and the FAQ word for word, checked by a test) and tiktym.com/llms.txt for AI tools (GTM-16, GTM-17), 9 October 2026
 - [x] robots.txt and sitemap.xml for tiktym.com (the sitemap is rebuilt with What's new, dated by the newest release), and a real robots.txt for app.tiktym.com (GTM-15), 9 October 2026

@@ -24,6 +24,7 @@ export const config = {
   /** Where feedback and support requests go (also on the Terms and Privacy pages). */
   supportEmail: 'praveen.cherukuru@gmail.com',
   linkedin: 'https://www.linkedin.com/company/tiktym/',
+  whatsNew: 'https://tiktym.com/updates/',
   /** The app's own Terms and Privacy pages (public/terms, public/privacy), unless .env.local points elsewhere. */
   legal: { terms: env.VITE_TERMS_URL || '/terms/', privacy: env.VITE_PRIVACY_URL || '/privacy/' },
 };

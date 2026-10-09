@@ -24,7 +24,7 @@ LinkedIn profile first, then one-to-one WhatsApp messages, then Status, then one
 - [x] Thu 8 Oct: publish launch post 1 with the video, link in the first comment
 - [ ] Thu 8 Oct: reply to every comment on post 1 within the first hour, ideally with a question back
 - [ ] Fri 9 Oct: reshare post 1 from your personal LinkedIn profile, with a line or two in your own words (link: LinkedIn profile, below) This is October's monthly reshare.
-- [ ] Fri 9 to Sun 11 Oct: send the one-to-one WhatsApp message to 10 to 15 friends who are working and want to learn or get fit. Log each one. **6 sent: 5 on 8 Oct (evening), 1 on 9 Oct. 2 signed up (Gopi, Charuthi).**
+- [ ] Fri 9 to Sun 11 Oct: send the one-to-one WhatsApp message to 10 to 15 friends who are working and want to learn or get fit. Log each one. **6 sent: 5 on 8 Oct (evening), 1 on 9 Oct. 3 signed up (Gopi, Charuthi, Kiran).**
 - [ ] Sat 10 Oct: post the WhatsApp Status with the video or the post image
 - [ ] Sun 11 Oct: follow up with anyone who tried it: "What was confusing?" Note answers in the Feedback log.
 - [x] Tue 13 Oct: post 2, "busy weeks carry forward", with the post image (scheduled)
@@ -135,7 +135,7 @@ One row per share. "Replies" is anyone who answered; "Tried it" is anyone who sa
 | 8 Oct | WhatsApp one-to-one | Rahul | direct | Liked the message | Not yet | |
 | 8 Oct | WhatsApp one-to-one | Raman | direct | Liked the message | Not yet | |
 | 8 Oct | WhatsApp one-to-one | Gopi | direct | Yes, reported a problem | Yes: installed (9 Oct), after the follow-up | Site didn't open on one Wi-Fi network; works on mobile data and other Wi-Fi (see Feedback log) |
-| 8 Oct | WhatsApp one-to-one | Kiran | direct | Liked the message | Not yet | |
+| 8 Oct | WhatsApp one-to-one | Kiran | direct | Liked the message | Yes: registered (9 Oct) | |
 | 8 Oct | WhatsApp one-to-one | Anand | direct | Liked the message | Not yet | |
 | 9 Oct | WhatsApp one-to-one | Charuthi | direct | Yes | Yes: registered (9 Oct) | "Good, but there are so many apps, right?" (see Feedback log) |
 

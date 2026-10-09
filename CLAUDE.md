@@ -1,6 +1,6 @@
 # TikTym
 
-Habit-tracking PWA: React 19 + TypeScript + Vite, Firebase (Auth + Firestore) for sync, localStorage in test mode. The marketing website is plain HTML in `site/`. See README.md for setup, FEATURES.md for every scenario, to-do.md for pending work, GTM.md for the go-to-market plan, OUTREACH.md for day-to-day outreach tasks and logs.
+Habit-tracking PWA: React 19 + TypeScript + Vite, Firebase (Auth + Firestore) for sync, localStorage in test mode. The marketing website is plain HTML in `site/`. See README.md for setup, FEATURES.md for every scenario, to-do.md for pending work, GTM.md for the go-to-market plan, OUTREACH.md for day-to-day outreach tasks and logs, CHANGELOG.md for what changed in each release, written for users.
 
 ## Workflow for every change
 
@@ -8,7 +8,7 @@ Follow these steps, in order, for every feature, fix or change. Don't skip one b
 
 1. **Log it in `to-do.md`.** Before writing code, add the work as one or more `- [ ]` items in the right section, marked **You** or **Claude**. Split a big task into items small enough to commit one at a time.
 2. **Update `FEATURES.md`.** Add or change the scenario rows the work affects, each with an ID, the expected behaviour, and Coverage set to `Gap` for now. Removed behaviour: delete its rows. Recount the summary table from the rows; don't edit the numbers by hand.
-3. **Build it and test it.** Write the code and the tests together. Every new or changed scenario gets a test (unit in `tests/`, emulator in `tests-emulator/`, browser in `e2e/`), with its FEATURES ID in the test name, for example `(LOG-04)`. Then set the row's Coverage to the test file. Use `Manual` only for what can't be automated (real phone, real Firebase project), and add that check to to-do.md › "Check by hand before release".
+3. **Build it and test it.** Write the code and the tests together. Every new or changed scenario gets a test (unit in `tests/`, emulator in `tests-emulator/`, browser in `e2e/`), with its FEATURES ID in the test name, for example `(LOG-04)`. Then set the row's Coverage to the test file. If users would notice the change, add a line for it under "Coming next" in CHANGELOG.md, in their words, and run `npm run site:updates` (a unit test fails if the website's What's new page doesn't match the changelog). Use `Manual` only for what can't be automated (real phone, real Firebase project), and add that check to to-do.md › "Check by hand before release".
 4. **Check in one to-do item at a time.** When an item is done and its tests pass, tick it in to-do.md, move it to the **Done** section with the date, and commit the code, tests, FEATURES.md and to-do.md together in one commit. Then start the next item. Never bundle several to-do items into one commit.
 
 Before each commit, run the checks for what changed. All must pass:
@@ -30,9 +30,9 @@ If the user asks for something that skips a step (for example "just fix it quick
 Every deploy gets a new version, so the app's version label and update bar mean something.
 
 1. Bump the version: `npm version patch --no-git-tag-version` for fixes (1.0.0 → 1.0.1), `npm version minor --no-git-tag-version` for new features (1.0.1 → 1.1.0). Use `major` only for a change users must relearn.
-2. Commit the bump on its own ("Release 1.0.1") after the work it ships, so the build isn't stamped `-dirty`.
+2. In CHANGELOG.md, turn "## Coming next" into `## 1.0.1 · <date> · <short title>` (skip this for a release with nothing users would notice, and fold its fixes into the next entry), then run `npm run site:updates`. Commit the bump, the changelog and `site/updates/` together ("Release 1.0.1"), after the work it ships, so the build isn't stamped `-dirty`. A unit test fails if the changelog's newest version isn't the app's version.
 3. `firebase deploy --only hosting:app` (it rebuilds `dist/` first), then check https://app.tiktym.com/version.json shows the new version and commit. If `firestore.rules` changed, deploy them in the same command (`--only hosting:app,firestore:rules`); an app that writes something the live rules don't allow fails silently.
-   If the release changes anything visible, re-record the website's clips (`npm run site:clips`), check them by eye, and deploy the website: `firebase deploy --only hosting:site`.
+   Then deploy the website too (`firebase deploy --only hosting:site`, which rebuilds the What's new page first) so tiktym.com/updates/ shows the release. If the release changes anything the clips show, re-record them first (`npm run site:clips`) and check them by eye.
 4. Add a line under Done in to-do.md: "Released 1.0.1: <what changed>".
 
 ## Commands
@@ -47,6 +47,7 @@ Every deploy gets a new version, so the app's version label and update bar mean 
 | `npm run test:all` | All three suites |
 | `npm run build` | Type-check and production build into `dist/` |
 | `npm run site:clips` | Re-record the website's feature clips from the real app |
+| `npm run site:updates` | Rebuild the website's What's new page (`site/updates/`) from CHANGELOG.md |
 | `npm run og:image` | Redraw the link-preview image (app and website) |
 
 ## Conventions

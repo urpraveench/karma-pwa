@@ -108,6 +108,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Test fix: the Google tests click the emulator's "Add new account" until its form shows; it sometimes ignored the first click, which made AUTH-19 and AUTH-24 flaky (12 of 12 passed without retries after), 9 October 2026
 - [x] Test fix: the tab-bar scroll test (APP-01) scrolls instantly, since a mouse-wheel scroll could still be animating after the tap and fail it now and then, 9 October 2026
 - [x] Continue with Google is now the main button at the top of the sign-in screen; email and password sit below "or use your email" (AUTH-30), 9 October 2026
 - [x] Checked on a real phone with a new account: the "What do you want to make time for?" screen works (FIRST-08), 9 October 2026

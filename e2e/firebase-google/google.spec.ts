@@ -10,7 +10,11 @@ const POPUP = { timeout: 20_000 };
 
 async function continueWithGoogle(page: Page, email: string, name: string) {
   const [popup] = await Promise.all([page.waitForEvent('popup', POPUP), page.click('.gbtn')]);
-  await popup.locator('text=Add new account').click(POPUP);
+  // the emulator's page sometimes ignores the first click on "Add new account" while it settles: click until the form shows
+  await expect(async () => {
+    await popup.locator('text=Add new account').click({ timeout: 3_000 });
+    await expect(popup.locator('#email-input')).toBeVisible({ timeout: 2_000 });
+  }).toPass(POPUP);
   await popup.fill('#email-input', email);
   await popup.fill('#display-name-input', name);
   await popup.locator('button', { hasText: 'Sign in with Google.com' }).click(POPUP);

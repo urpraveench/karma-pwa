@@ -23,7 +23,12 @@ async function continueWithGoogle(page: Page, email: string, name: string) {
 
 async function signInAgainWithGoogle(page: Page, email: string) {
   const [popup] = await Promise.all([page.waitForEvent('popup', POPUP), page.click('.gbtn')]);
-  await popup.locator('li', { hasText: email }).click(POPUP); // the emulator lists accounts it has seen
+  // the emulator lists accounts it has seen; like "Add new account", it sometimes ignores the first click
+  await expect(async () => {
+    if (popup.isClosed()) return;
+    await popup.locator('li', { hasText: email }).click({ timeout: 3_000 });
+    await popup.waitForEvent('close', { timeout: 3_000 });
+  }).toPass(POPUP);
   await startWithDefaults(page, POPUP);
 }
 

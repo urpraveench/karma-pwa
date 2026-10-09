@@ -12,8 +12,10 @@ export interface Release {
 }
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-/** Escapes text, then turns **bold** into <strong>. */
-export const inline = (s: string) => esc(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+/** Escapes text, then turns **bold** into <strong> and [text](https://…) into a link that opens in a new tab. */
+export const inline = (s: string) => esc(s)
+  .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
 
 /** Releases in file order (newest first). Skips the title, the comment and anything before the first "## ". */
 export function parseChangelog(md: string): Release[] {

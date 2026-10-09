@@ -35,6 +35,11 @@ describe('the What\'s new page (GTM-11, GTM-12)', () => {
     expect(parseChangelog('## Coming next\n\n## 1.0.0 · 8 October 2026 · Hi\n- x').map(r => r.version)).toEqual(['1.0.0']);
   });
 
+  it('turns [text](https://…) into a link that opens in a new tab, and nothing else', () => {
+    expect(inline('Thanks, [Gopi](https://www.linkedin.com/in/gopi-aitham/)!')).toBe('Thanks, <a href="https://www.linkedin.com/in/gopi-aitham/" target="_blank" rel="noopener">Gopi</a>!');
+    expect(inline('[bad](javascript:alert(1))')).toBe('[bad](javascript:alert(1))');
+  });
+
   it('escapes text, keeps **bold**, and makes picture paths absolute', () => {
     expect(inline('**One** <script> & "x"')).toBe('<strong>One</strong> &lt;script&gt; &amp; &quot;x&quot;');
     const html = renderUpdatesPage(parseChangelog(SAMPLE));

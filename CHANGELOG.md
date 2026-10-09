@@ -10,13 +10,13 @@ Format, newest first:
   ## 1.7.0 · 9 October 2026 · Title      a release: version · date · short title
   ![What the picture shows](media/x.jpg) optional, for headline features (files in site/updates/media/)
   - What changed, one line each
-  Plain lines become paragraphs; **bold** works.
+  Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
 ## Coming next
 
 - **Follow TikTym on LinkedIn** from Setup › About, for tips and updates.
-- **A running timer now says "12 min"** on its button in Today, instead of "12′". Thanks, Gopi, for pointing it out.
+- **A running timer now says "12 min"** on its button in Today, instead of "12′". Thanks, [Gopi Aitham](https://www.linkedin.com/in/gopi-aitham/), for pointing it out.
 - **What's new** in Setup › About opens this page.
 
 ## 1.7.1 · 9 October 2026 · Google sign-in comes first

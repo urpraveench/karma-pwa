@@ -113,7 +113,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **You:** create a Resend API key (Sending access, tiktym.com) and store it with `firebase functions:secrets:set RESEND_API_KEY --project tiktym`. Never paste it into chat or code.
 - [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
-- [ ] **Claude:** email building blocks, tested: the welcome and first-minute emails (HTML and plain text), signed one-tap unsubscribe links, and who should get what (NOTIF-03, NOTIF-04, NOTIF-05).
 - [ ] **Claude:** Cloud Functions in asia-south1: send the welcome after first-run Start, the first-minute nudge about 24 hours later if nothing is logged, and an unsubscribe page at app.tiktym.com/unsubscribe (NOTIF-03, NOTIF-04, NOTIF-05).
 - [ ] **Claude:** deploy the functions with the app and website release, after the Resend key is stored; check with a test account (Manual).
 - [ ] **Claude:** weekly recap and product news emails, then push reminders (daily reminder, streak at risk).
@@ -128,6 +127,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Email building blocks in functions/src/mail.ts: the welcome and first-minute emails (HTML and plain text, TikTym's style, from Praveen), signed one-tap unsubscribe links with Gmail's unsubscribe headers, and who gets what; unit-tested. Not sending yet (NOTIF-03 to NOTIF-05), 10 October 2026
 - [x] Website Analytics on by default with a notice (OK, Opt out); opting out stops it, removes the cookies and is remembered; the privacy promise says so. Website tests now block Google's servers, so they can't report to the real property (ANA-04, LEGAL-05). Not deployed yet, 10 October 2026
 - [x] Setup › Notifications and privacy (three email types and usage statistics, all on to start); Analytics on by default once signed in, kept off where a device said no, and for older accounts only after the one-time notice on Today (ANA-01, ANA-03, NOTIF-01, NOTIF-02). Not deployed yet, 10 October 2026
 - [x] Privacy Policy and Terms (dated 10 October) describe on-by-default emails, phone reminders and usage statistics, Resend as the email processor, backups kept up to 8 weeks, and how to turn each off; the sign-in screen says what an account includes (LEGAL-05, LEGAL-07). Not deployed until the settings and emails exist, 10 October 2026

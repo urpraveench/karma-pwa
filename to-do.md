@@ -115,7 +115,6 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 Decided 10 October 2026: everything on by default, each switchable off in Setup or from any email. Emails come from "Praveen from TikTym" <hello@tiktym.com>, replies to the support Gmail; the welcome goes out after first-run Start.
 
 - [ ] **You:** create a Resend API key (Sending access, tiktym.com) and store it with `firebase functions:secrets:set RESEND_API_KEY --project tiktym`. Never paste it into chat or code.
-- [ ] **You:** when 1.8.0 is live, message Gopi, Charuthi and Kiran about emails and usage statistics now being on (text in the chat of 10 October).
 - [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
 - [ ] **Claude:** weekly recap email, Monday 8 am IST, for anyone active in the last 2 weeks (Weekly recap switch).
@@ -137,6 +136,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **You:** messaged Gopi, Charuthi and Kiran about emails and usage statistics now being on, 10 October 2026
 - [x] Checked live with a test account: the welcome email arrives in the inbox (not spam), and its unsubscribe link turns the switch off in Setup (NOTIF-03, NOTIF-05), 10 October 2026
 - [x] Website deployed with the install videos; all four files load on tiktym.com, 10 October 2026
 - [x] Install videos on the website: iPhone Safari (iOS simulator, driven by a UI test) and Android Chrome (emulator, driven over adb), recorded from the live 1.8.0 app with `npm run site:install-videos` and shown next to their guides; the Android guide now mentions Android's extra "Add to home screen" confirmation. Chrome on iPhone can't run in the simulator, so its guide has steps only (GTM-20), 10 October 2026

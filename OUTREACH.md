@@ -27,7 +27,7 @@ LinkedIn profile first, then one-to-one WhatsApp messages, then Status, then one
 - [ ] Thu 8 Oct: reply to every comment on post 1 within the first hour, ideally with a question back
 - [ ] Fri 9 Oct: reshare post 1 from your personal LinkedIn profile, with a line or two in your own words (link: LinkedIn profile, below) This is October's monthly reshare.
 - [ ] Fri 9 to Sun 11 Oct: send the one-to-one WhatsApp message to 10 to 15 friends who are working and want to learn or get fit. Log each one. **6 sent: 5 on 8 Oct (evening), 1 on 9 Oct. 3 signed up (Gopi, Charuthi, Kiran).**
-- [ ] Sat 10 Oct: post the WhatsApp Status with the video or the post image
+- [x] Sat 10 Oct: post the WhatsApp Status with the video or the post image. **Done 10 Oct: a still image first (loads fast on slow networks) with the link, then the tall video.**
 - [ ] Sun 11 Oct: follow up with anyone who tried it: "What was confusing?" Note answers in the Feedback log.
 - [x] Tue 13 Oct: post 2, "busy weeks carry forward", with the post image (scheduled)
 - [ ] Wed 14 Oct: first WhatsApp group: college batch. Write it fresh, don't forward, and stay to answer replies.
@@ -128,7 +128,7 @@ Ideas for posts and challenges, with the plan for each. Add new ones here as the
 | 4 | Week 3 | 30-second walkthrough: timer, backlog limit, Insights | New video (ask Claude) | Idea |
 | 5 | Week 3, once 20+ users | 100 Days, 100 Minutes (30 Exercise, 30 Reading, 30 Upskilling, 10 Meditation) announcement, starting Mon 2 Nov | Mala graphic or video (ask Claude) | Idea |
 
-Media files (in Downloads): `tiktym-linkedin-video.mp4`, `tiktym-linkedin-post.png`, `tiktym-linkedin-logo.png`, `tiktym-linkedin-cover.png`. Ask Claude to redo any of them after the app changes.
+Media files (in Downloads): `tiktym-linkedin-video.mp4`, `tiktym-linkedin-post.png`, `tiktym-linkedin-logo.png`, `tiktym-linkedin-cover.png`; for WhatsApp Status (tall, 1080 × 1920): `tiktym-whatsapp-status-image.jpg` (post first, with the link) and `tiktym-whatsapp-status.mp4`. Ask Claude to redo any of them after the app changes.
 
 ## Share log
 
@@ -143,6 +143,7 @@ One row per share. "Replies" is anyone who answered; "Tried it" is anyone who sa
 | 8 Oct | WhatsApp one-to-one | Kiran | direct | Liked the message | Yes: registered (9 Oct) | |
 | 8 Oct | WhatsApp one-to-one | Anand | direct | Liked the message | Not yet | |
 | 9 Oct | WhatsApp one-to-one | Charuthi | direct | Yes | Yes: registered (9 Oct) | "Good, but there are so many apps, right?" (see Feedback log) |
+| 10 Oct | WhatsApp Status | Image, then video | status | | | Image first for slow networks; full caption with the link on the image |
 
 ## Feedback log
 

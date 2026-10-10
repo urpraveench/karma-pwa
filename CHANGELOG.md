@@ -13,7 +13,7 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
-## Coming next
+## 1.8.0 · 10 October 2026 · 100 minutes a day for your productive life
 
 - **Help adding TikTym to your home screen.** After your first minutes, a card shows how on your phone: one Install button on Android, the two Safari steps on iPhone, or how to open TikTym in your browser if a link opened inside WhatsApp or Instagram. It's also in Setup any time.
 - **A new promise: 100 minutes a day for your productive life.** 30 minutes to move, 30 to read, 30 to grow and 10 to breathe, the four practices every new account starts with. Busy days still carry forward.

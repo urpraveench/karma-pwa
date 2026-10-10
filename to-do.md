@@ -96,6 +96,12 @@ From FEATURES.md › "What's left to test". None left: every scenario has a test
 
 ## 6. Features not built yet
 
+Help people add TikTym to their home screen (friends didn't know how; most only know app stores). Part of 1.8.0.
+
+- [ ] **Claude:** an install card on Today after the first logged minutes: Install button on Android (the browser's own prompt), picture steps on iPhone (Share › Add to Home Screen), and "open in your browser first" for links opened inside WhatsApp, LinkedIn or Instagram; dismiss snoozes 3 days, a second dismiss hides it for good; never shown once installed (APP-27 to APP-30).
+- [ ] **Claude:** Setup › "Add TikTym to your home screen", opening the same guide at any time (APP-31).
+- [ ] **Claude:** the website's Install section shows the visitor's own phone first and warns about in-app browsers; the WhatsApp messages get an "open in browser" line (GTM-19).
+
 - [ ] **Deferred (10 October 2026, your call):** while a timer runs, Today's big number stays at saved points even though the beads already show the timer's minutes, so the two disagree (found by Praveen). Proposed: the number counts down live (capped at what the practice still needs), no extra line in the circle, and "20 of 30 · timing" on the practice's row.
 - [ ] **Deferred (10 October 2026, your call):** the weekend card's "291 short, about 146 a day" doesn't match Today's "195 left" (the card splits the week's shortfall evenly and counts every minute; Today asks for carried minutes per practice). Proposed: the card says "Clear today's 195, including 95 carried over, then tomorrow's 100, and the week is done", with stats done this week / weekly goal / left today (MOM-03).
 

@@ -34,6 +34,17 @@ export interface Settings {
   backlogCap?: number;
   /** Email types this account has turned off; a missing or true value means on (NOTIF-01). */
   emails?: Partial<Record<'tips' | 'recap' | 'news', boolean>>;
+  /** Daily push reminder: on unless false, at `time` ('HH:MM', local) in time zone `tz` (NOTIF-09). */
+  reminder?: { on?: boolean; time?: string; tz?: string };
+  /** Practices left today on the app icon; a missing or true value means on (NOTIF-13). */
+  badge?: boolean;
+}
+
+/** A device that allowed notifications, saved at users/{uid}/devices/{id} (the id is a hash of the endpoint). */
+export interface PushDevice {
+  endpoint: string;
+  keys: { p256dh: string; auth: string };
+  createdAt: number;
 }
 
 export interface AppData {

@@ -20,6 +20,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] A day after signing up with the spare test account (without logging anything), check the first-minute nudge arrives (NOTIF-04)
 - [ ] After the comeback email is deployed: the next morning, `firebase functions:log --only comebackDaily` shows how many were queued; for a test account left 3 full days without an entry, check the comeback arrives at about 9 am, only once (NOTIF-07)
 - [ ] The first Monday after the weekly recap is deployed: check it arrives at about 8 am for an account that logged last week, that the numbers match History for that week, and that the function's log says how many went (NOTIF-06)
+- [ ] After push reminders are deployed: on an iPhone with TikTym on the home screen and on Android Chrome, allow reminders, set a time 15 minutes ahead, and check the reminder arrives once, names what's left, and opens TikTym; `firebase functions:log --only reminderSend` shows it (NOTIF-09)
 - [ ] **You:** remove the last line of the LinkedIn page description ("TikTym is built by Pramal IT Services Private Limited.") in LinkedIn › Edit page
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
@@ -125,7 +126,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **Claude:** first-week tips emails on days 3 and 6, only while still active (Tips and reminders).
 - [ ] **Claude:** monthly progress email on the 1st (Weekly recap switch), first on 1 November.
 - [ ] **Claude:** the "at most one email a day, mornings IST" rule across all scheduled emails.
-- [ ] **Claude:** push reminders 2/5: sending. TikTym's own web-push keys; each device that allows notifications is saved in the account; every 15 minutes a job queues a reminder for the people whose chosen time it is (the queue design), once a day, skipped when today is clear; expired devices removed (NOTIF-09, NOTIF-11).
 - [ ] **Claude:** push reminders 3/5: in the app: the service worker shows the reminder and opens TikTym on tap; a "Remind me tomorrow" card on Today after the first entry (never on first open); Setup › Daily reminder with a time; deleting the account removes its devices (NOTIF-12, NOTIF-14).
 - [ ] **Claude:** push reminders 4/5: app badge, practices still due today on the home-screen icon (iPhone home screen and installed desktop apps; not Android), set while open, cleared when the day is clear, refreshed by each reminder; "Show count on app icon", on by default. NOTIFICATIONS.md › App badge (NOTIF-13).
 - [ ] **Claude:** push reminders 5/5: Privacy Policy and Terms describe push reminders and the badge; changelog line.
@@ -141,6 +141,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** push reminders 2/5: sending. TikTym's own web-push keys; each device that allows notifications is saved in the account; every 15 minutes a job queues a reminder for the people whose chosen time it is (the queue design), once a day, skipped when today is clear; expired devices removed (NOTIF-09, NOTIF-11). Built and unit-tested, not deployed yet, 10 October 2026
 - [x] **Claude:** push reminders 1/5: the server counts the practices still due today with the app's own code (a generated copy of `src/lib/backlog.ts`, checked identical by a unit test), so reminders and the badge always agree with Today (NOTIF-10)., 10 October 2026
 - [x] **You:** submitted `sitemap.xml` in Google Search Console, 10 October 2026
 - [x] **Claude:** install guides on the website: the two with a video (iPhone Safari, Android Chrome) first, the two without as plain cards below, with no empty video space (GTM-20), 10 October 2026

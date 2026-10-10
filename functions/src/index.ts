@@ -1,5 +1,5 @@
 // TikTym's Cloud Functions (asia-south1, next to the database): the welcome, first-minute, weekly recap and comeback
-// emails, and the unsubscribe page. What each email says, and who gets it, lives in mail.ts (unit-tested); this file reads,
+// emails, the unsubscribe page, and daily push reminders. What each email says, and who gets it, lives in mail.ts (unit-tested); this file reads,
 // sends and records. NOTIFICATIONS.md has the plan.
 import { initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
@@ -18,6 +18,11 @@ import {
   recapEmail, REPLY_TO, unsubscribedPage, unsubscribeLink, welcomeEmail, type Email, type Practice,
 } from './mail.js';
 import { addDays, lastWeekStart, weekRecap, type RecapCategory, type RecapLog } from './recap.js';
+import webpush from 'web-push';
+import { reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from './push.js';
+import { practicesLeft } from './shared/backlog.js';
+import { badgeOn, slotAt, VAPID_PUBLIC_KEY } from './shared/reminders.js';
+import type { AppData, Category, Log, PushDevice, Settings } from './shared/types.js';
 
 setGlobalOptions({ region: 'asia-south1', maxInstances: 3 });
 initializeApp();
@@ -27,6 +32,8 @@ const db = getFirestore();
 const RESEND_API_KEY = defineSecret('RESEND_API_KEY');
 /** Signs unsubscribe links, so nobody can unsubscribe someone else. */
 const UNSUBSCRIBE_SECRET = defineSecret('UNSUBSCRIBE_SECRET');
+/** The private half of TikTym's web-push key pair (the public half is VAPID_PUBLIC_KEY in src/lib/reminders.ts). */
+const VAPID_PRIVATE_KEY = defineSecret('VAPID_PRIVATE_KEY');
 
 /**
  * Server-only record per account, mail/{uid} (apps can't read or write it): when first-run Start happened, when the
@@ -185,6 +192,69 @@ export const comebackSend = onTaskDispatched({
   await send(to.email, email, `comeback-${uid}-${m!.lastLogged}`);
   await mailDoc(uid).set({ comebackFor: m!.lastLogged, comebackAt: Timestamp.now(), lastEmailDay: today }, { merge: true });
   logger.info('comeback sent', { uid, away: daysAway(m!.lastLogged!, today) });
+});
+
+const reminderDoc = (uid: string) => db.doc(`reminders/${uid}`);
+
+/** Keeps reminders/{uid} in step with the account's reminder settings and its devices (NOTIF-09). */
+async function syncReminder(uid: string) {
+  const [settings, devices] = await Promise.all([settingsDoc(uid).get(), db.collection(`users/${uid}/devices`).count().get()]);
+  const n = devices.data().count;
+  if (!n && !(await reminderDoc(uid).get()).exists) return; // never allowed notifications: nothing to keep
+  await reminderDoc(uid).set(reminderTarget(settings.data() as Settings | undefined, n, new Date()), { merge: true });
+}
+
+export const reminderSettings = onDocumentWritten({ document: 'users/{uid}/meta/settings' }, event => syncReminder(event.params.uid));
+export const reminderDevices = onDocumentWritten({ document: 'users/{uid}/devices/{id}' }, event => syncReminder(event.params.uid));
+
+/**
+ * Every 15 minutes: queue a reminder for each account whose chosen time falls in this slot (NOTIF-09). The query reads
+ * only those accounts, and the queue sends at a steady rate with retries, so it scales like the comeback.
+ */
+export const remindersDue = onSchedule({ schedule: '*/15 * * * *', timeZone: 'UTC' }, async () => {
+  const slot = slotAt(new Date());
+  const due = await db.collection('reminders').where('slot', '==', slot).get();
+  const queue = getFunctions().taskQueue('locations/asia-south1/functions/reminderSend');
+  await Promise.all(due.docs.map(d => queue.enqueue({ uid: d.id })));
+  if (due.size) logger.info('reminders queued', { slot, queued: due.size });
+});
+
+/** Sends one account's reminder to each of its devices, if anything is still due today; removes devices that are gone (NOTIF-09 to NOTIF-11). */
+export const reminderSend = onTaskDispatched({
+  retryConfig: { maxAttempts: 3, minBackoffSeconds: 60 },
+  rateLimits: { maxDispatchesPerSecond: 20, maxConcurrentDispatches: 10 },
+  secrets: [VAPID_PRIVATE_KEY],
+}, async req => {
+  const uid = String((req.data as { uid?: unknown })?.uid ?? '');
+  if (!uid) return;
+  const doc = (await reminderDoc(uid).get()).data() as ReminderDoc | undefined;
+  if (!doc?.slot) return;
+  const check = reminderCheck(doc, new Date());
+  if (check.slot !== doc.slot) await reminderDoc(uid).update({ slot: check.slot }); // daylight saving moved it
+  if (check.act !== 'send') return;
+
+  const [settings, cats, months, devices] = await Promise.all([
+    settingsDoc(uid).get(), db.collection(`users/${uid}/categories`).get(), db.collection(`users/${uid}/months`).get(), db.collection(`users/${uid}/devices`).get(),
+  ]);
+  const data: AppData = {
+    settings: (settings.data() || {}) as Settings,
+    categories: cats.docs.map(d => d.data() as Category),
+    logs: months.docs.flatMap(m => Object.values((m.data().entries || {}) as Record<string, Log>)),
+  };
+  const left = practicesLeft(data, check.date);
+  if (!left.length) return; // today is clear, or a rest day
+  const payload = reminderPayload(left, badgeOn(data.settings));
+  const options = {
+    vapidDetails: { subject: 'mailto:hello@tiktym.com', publicKey: VAPID_PUBLIC_KEY, privateKey: VAPID_PRIVATE_KEY.value() },
+    TTL: 3 * 3600, urgency: 'normal' as const, topic: 'daily-reminder',
+  };
+  const { sent, removed, failed } = await sendToDevices(devices.docs,
+    d => { const device = d.data() as PushDevice; return webpush.sendNotification({ endpoint: device.endpoint, keys: device.keys }, payload, options); },
+    d => d.ref.delete());
+  if (failed) logger.warn('push failed on a device', { uid, error: String(failed) });
+  if (sent) await reminderDoc(uid).update({ lastSent: check.date });
+  else if (failed) throw failed; // nothing reached: let the queue retry
+  logger.info('reminder sent', { uid, devices: sent, removed, left: left.length });
 });
 
 /**

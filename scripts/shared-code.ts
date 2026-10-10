@@ -3,7 +3,7 @@
 // `npm run functions:shared` writes it (also before every functions deploy); a unit test fails if it's out of date.
 
 /** The files copied, from src/lib/. They may only import each other. */
-export const SHARED = ['backlog', 'date', 'util', 'types'] as const;
+export const SHARED = ['backlog', 'date', 'util', 'types', 'reminders'] as const;
 
 /** A file as the functions need it: a do-not-edit note, and './date' imports spelled './date.js' (Node's ES modules need the extension). */
 export function forFunctions(name: string, source: string): string {

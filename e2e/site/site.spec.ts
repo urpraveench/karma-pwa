@@ -213,3 +213,24 @@ test('every page has a search description of 25 to 160 characters (GTM-18)', asy
   const app = (data['@graph'] as { '@type': string; description?: string }[]).find(g => g['@type'] === 'WebApplication')!;
   expect(app.description).toBe(await page.locator('meta[name="description"]').getAttribute('content'));
 });
+
+test.describe('install help on the website (GTM-19)', () => {
+  test.describe('on an iPhone', () => {
+    test.use({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1' });
+    test("iPhone steps first, marked as your phone; no in-app warning in Safari", async ({ page }) => {
+      await page.goto('/');
+      await expect(page.locator('.install > div').first()).toHaveAttribute('data-platform', 'ios');
+      await expect(page.locator('.install .mine h3')).toContainText('Your phone');
+      await expect(page.locator('.install-warn')).toBeHidden();
+    });
+  });
+  test.describe('inside Instagram on Android', () => {
+    test.use({ userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 7; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/129.0 Mobile Safari/537.36 Instagram 350.0.0' });
+    test('Android first, with the open-in-browser warning', async ({ page }) => {
+      await page.goto('/');
+      await expect(page.locator('.install > div').first()).toHaveAttribute('data-platform', 'android');
+      await expect(page.locator('.install-warn')).toBeVisible();
+      await expect(page.locator('.install-warn')).toContainText('Open in browser');
+    });
+  });
+});

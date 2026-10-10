@@ -35,10 +35,10 @@ Summary of coverage at the time of writing:
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 17 | 15 | 0 | 2 |
 | 13. App shell, PWA and platform | 35 | 30 | 0 | 5 |
-| 14. Marketing and sharing | 21 | 20 | 1 | 0 |
+| 14. Marketing and sharing | 21 | 21 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 4 | 4 | 0 | 0 |
-| **Total** | **288** | **272** | **1** | **15** |
+| **Total** | **288** | **273** | **0** | **15** |
 
 ---
 
@@ -408,7 +408,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | GTM-16 | Structured data | The home page describes, in schema.org JSON-LD, the organisation (with its LinkedIn page), the website, TikTym as a free web app, and the FAQ, word for word as shown on the page | E2E `site/site.spec.ts` |
 | GTM-17 | Summary for AI tools | tiktym.com/llms.txt: a short plain-text summary of what TikTym is, who it's for, how it differs, and its links | E2E `site/site.spec.ts` |
 | GTM-18 | Search descriptions | Every page on tiktym.com and the app has a description of 25 to 160 characters (what search results show); the home page's matches its structured data | E2E `site/site.spec.ts`, `legal.spec.ts` |
-| GTM-19 | Install help on the website | The Install section shows the visitor's own phone first (iPhone or Android) and, inside WhatsApp, Instagram, Facebook or LinkedIn, says to open the page in the browser before installing | Gap |
+| GTM-19 | Install help on the website | The Install section shows the visitor's own phone first (iPhone or Android) and, inside WhatsApp, Instagram, Facebook or LinkedIn, says to open the page in the browser before installing | E2E `site/site.spec.ts` |
 | SHARE-01 | Progress card stats | This calendar month's minutes (as hours), current and best streak, days with entries this month, and the top three practices by time this month | Unit `share.test.ts` |
 | SHARE-02 | Progress card image | Insights › Share opens a preview of a 1080×1350 image: TikTym brand, the month's time, streak, active days, top practices with their colours, tiktym.com | E2E `share.spec.ts` |
 | SHARE-03 | Sharing the card | Share opens the phone's share sheet with the image (LinkedIn, Instagram, WhatsApp); where sharing images isn't supported, Download saves it as a PNG | E2E `share.spec.ts` (real share sheet checked on iPhone, 8 October 2026) |

@@ -63,7 +63,7 @@ Each channel gets its own link, so Google Analytics (Reports › Acquisition ›
 >
 > https://tiktym.com/?utm_source=whatsapp&utm_medium=direct
 >
-> (Open it on your phone and add it to your home screen, no app store needed.)
+> (Open it on your phone and add it to your home screen, no app store needed. If it opens inside WhatsApp, tap ⋮ › Open in browser first; TikTym shows you the rest.)
 
 **WhatsApp follow-up** (a day or two later, to anyone who liked or replied but hasn't signed up; send the app link, since they've seen the pitch):
 
@@ -88,6 +88,8 @@ Each channel gets its own link, so Google Analytics (Reports › Acquisition ›
 > Hi all 👋 Hope everyone's doing well! I built a small app for people like us whose days go office → home → sleep: TikTym. It's built around 100 minutes a day for yourself: 30 to move, 30 to read, 30 to grow and 10 to breathe, and it keeps you going. Miss a busy day and it carries forward without piling up.
 >
 > It's free and works on any phone: https://tiktym.com/?utm_source=whatsapp&utm_medium=group&utm_campaign=college
+>
+> Tip: if it opens inside WhatsApp, tap ⋮ › Open in browser, and TikTym will show you how to add it to your home screen.
 >
 > Would love to hear what you think. Replies welcome, even "this is confusing" 😄
 

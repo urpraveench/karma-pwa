@@ -275,9 +275,10 @@
     <p class="eyebrow">Install</p>
     <h2>On your home screen in 10 seconds.</h2>
     <p class="lead">TikTym is a web app: no app store, no download, always the latest version. Add it to your home screen and it opens full screen, like any other app.</p>
+    <p class="install-warn" hidden><strong>You're reading this inside another app</strong> (WhatsApp, Instagram, Facebook or LinkedIn), which can't add apps to your home screen. Tap <strong>⋯</strong> or <strong>⋮</strong> and choose <strong>Open in browser</strong> (or <strong>Open in Safari</strong>) first.</p>
     <div class="install">
-      <div><h3>iPhone and iPad</h3><ol><li>Open <a href="https://app.tiktym.com/" data-app-link="install-iphone">TikTym</a> in Safari.</li><li>Tap the Share button (the square with an arrow).</li><li>Choose <strong>Add to Home Screen</strong>, then <strong>Add</strong>.</li></ol></div>
-      <div><h3>Android</h3><ol><li>Open <a href="https://app.tiktym.com/" data-app-link="install-android">TikTym</a> in Chrome.</li><li>Tap <strong>Install app</strong> when it appears, or the ⋮ menu, then <strong>Add to Home screen</strong>.</li><li>Open TikTym from your home screen.</li></ol></div>
+      <div data-platform="ios"><h3>iPhone and iPad</h3><ol><li>Open <a href="https://app.tiktym.com/" data-app-link="install-iphone">TikTym</a> in Safari.</li><li>Tap the Share button (the square with an arrow).</li><li>Choose <strong>Add to Home Screen</strong>, then <strong>Add</strong>.</li></ol></div>
+      <div data-platform="android"><h3>Android</h3><ol><li>Open <a href="https://app.tiktym.com/" data-app-link="install-android">TikTym</a> in Chrome.</li><li>Tap <strong>Install app</strong> when it appears, or the ⋮ menu, then <strong>Add to Home screen</strong>.</li><li>Open TikTym from your home screen.</li></ol></div>
     </div>
   </div>
 </section>
@@ -340,6 +341,18 @@
   <div><button type="button" class="btn small ghost" data-deny>Opt out</button><button type="button" class="btn small" data-allow>OK</button></div>
 </div>
 <script src="/analytics.js" defer></script>
+<script>
+// Install help (GTM-19): the visitor's own phone first, and a warning inside apps' built-in browsers, where
+// adding to the home screen is impossible. Keep the in-app list in step with src/lib/install.ts.
+(() => {
+  const ua = navigator.userAgent;
+  const phone = /iPhone|iPad|iPod/.test(ua) ? 'ios' : /Android/.test(ua) ? 'android' : '';
+  const box = document.querySelector('.install');
+  const mine = phone && box.querySelector(`[data-platform="${phone}"]`);
+  if (mine) { box.prepend(mine); mine.classList.add('mine'); mine.querySelector('h3').insertAdjacentHTML('beforeend', ' <span class="badge-mine">Your phone</span>'); }
+  if (/FBAN|FBAV|FB_IAB|Instagram|LinkedInApp|WhatsApp|Snapchat|Line\/|; wv\)/i.test(ua)) document.querySelector('.install-warn').hidden = false;
+})();
+</script>
 
 <script>
 // Clips play only while on screen (saves battery and data), and never automatically when the visitor

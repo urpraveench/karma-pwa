@@ -55,14 +55,12 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 **Other launch items**
 
 - [ ] **You (blocked, 8 October 2026):** Firebase refuses to save template changes for this project: "Email template updates are currently unavailable for this project. For assistance with template changes, contact Firebase support." Likely an anti-spam restriction on new or Spark-plan projects (unconfirmed). The plain default email works and reaches the inbox, so it stays for now. After moving to Blaze, try pasting `email/password-reset.html` again; if it's still refused, ask Firebase support (console › ? › Contact support). If it's never allowed, send account emails ourselves (Cloud Function + Resend or Brevo from noreply@tiktym.com, needs Blaze) (AUTH-29).
-- [ ] **You:** before moving to the paid Blaze plan, set budget alerts on the billing account. Alerts notify you; they don't cap spend.
 
 ## Go-to-market (see GTM.md)
 
 
 **Phase 0: Foundations**
 
-- [ ] **You (decided 10 October 2026):** move to the Blaze plan. First create a budget of about ₹500 a month in Google Cloud Console › Billing › Budgets & alerts (alerts at 50%, 90% and 100%), then upgrade in Firebase › Usage and billing. Then tell Claude.
 
 **Phase 1: Website**
 
@@ -125,6 +123,7 @@ Planned 10 October 2026; nothing built yet. Decide the open questions in NOTIFIC
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Monthly budget alert set on the billing account, and the project moved to the Blaze plan, 10 October 2026
 - [x] Home page description shortened from 194 to 140 characters, as Bing Webmaster Tools asked; every page's description is now checked to be 25 to 160 characters (GTM-18), 9 October 2026
 - [x] Google Search Console: tiktym.com verified as a Domain property, 9 October 2026
 - [x] Website deployed with robots.txt, sitemap.xml, llms.txt and structured data; all checked live. The app's robots.txt goes out with the next app release, 9 October 2026

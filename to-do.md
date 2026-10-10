@@ -81,7 +81,6 @@ Day-to-day outreach (tasks by date, messages, tracking links, share and feedback
 
 - [ ] **You:** Google Search Console (verified 9 October): submit `sitemap.xml` under Sitemaps, and use URL inspection › Request indexing for https://tiktym.com/ and https://tiktym.com/updates/.
 - [ ] **You:** Bing Webmaster Tools: Import from Google Search Console (Bing feeds ChatGPT search, Copilot and DuckDuckGo).
-- [ ] **Claude:** new LinkedIn cover, post image and video, and OUTREACH.md messages with the new line.
 - [ ] **You:** post on the TikTym LinkedIn page 2 or 3 times a week (page set up 8 October) (building in public, "busy weeks carry forward", monthly progress with Insights screenshots).
 - [ ] **You:** run a 30-day learning challenge with your network, using TikTym.
 - [ ] **You:** take part in r/developersIndia, r/IndianWorkplace and tech Slack/Discord communities before sharing TikTym.
@@ -135,6 +134,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] New brand line in the LinkedIn cover, post image and video (in Downloads), and in the OUTREACH.md messages; the LinkedIn tagline and description wording is a task in OUTREACH.md, 10 October 2026
 - [x] New brand line in the emails: header image "TikTym · 100 minutes a day", the welcome's daily total "N minutes a day · your productive life", and tip 1 "Every minute counts towards your N" using each person's own total (NOTIF-03), 10 October 2026
 - [x] New brand line on the website: title and link preview, hero ("100 minutes a day for your productive life" with 30/30/30/10), how it works ("counts towards your 100"), the professionals section (wellbeing, not only learning; "Start your 100 minutes today"; 100 minutes as the suggested start), the closing, search description, llms.txt and structured data (GTM-04). Not deployed yet, 10 October 2026
 - [x] New brand line in the app: sign-in tagline, install description, link preview text and image ("100 minutes a day for your productive life", 30 to move · 30 to read · 30 to grow · 10 to breathe), share message, and the progress card ("for a productive life", "100 minutes a day") (AUTH-01, GTM-01, SHARE-02), 10 October 2026

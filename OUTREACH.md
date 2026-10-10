@@ -18,6 +18,8 @@ LinkedIn profile first, then one-to-one WhatsApp messages, then Status, then one
 
 - **Personal LinkedIn profile (9 Oct):** TikTym isn't listed as experience on your profile until it reaches about 10,000 users. You reshare one TikTym post a month from your profile; other weeks, the page grows through its own posts, comments as the page, links from the website and app, and asking happy users to follow.
 
+- **Brand line (10 Oct):** "100 minutes a day for your productive life", explained as 30 to move, 30 to read, 30 to grow, 10 to breathe. "One minute, one point" is retired as a tagline; points and minutes still work the same in the app. 100 minutes is the recommended start, never a requirement.
+
 ## This week's tasks (8 to 14 October 2026)
 
 - [x] Thu 8 Oct: set up the TikTym LinkedIn page (logo, cover, tagline, description, location)
@@ -30,6 +32,7 @@ LinkedIn profile first, then one-to-one WhatsApp messages, then Status, then one
 - [x] Tue 13 Oct: post 2, "busy weeks carry forward", with the post image (scheduled)
 - [ ] Wed 14 Oct: first WhatsApp group: college batch. Write it fresh, don't forward, and stay to answer replies.
 - [ ] **Deferred (9 Oct, your call):** get `tiktym.com` and `app.tiktym.com` categorised as "Education" (or "Information Technology") by the main web filters, so college and office firewalls stop blocking them: Fortinet https://www.fortiguard.com/webfilter, Palo Alto https://urlfiltering.paloaltonetworks.com, Cisco Talos https://talosintelligence.com/reputation_center, Zscaler https://sitereview.zscaler.com, Broadcom/Symantec https://sitereview.bluecoat.com, and Sophos (search "Sophos website categorization request"). Note each submission in the Share log's Notes or here.
+- [ ] LinkedIn page, new brand line: tagline "100 minutes a day for your productive life: 30 to move, 30 to read, 30 to grow, 10 to breathe."; description's first line "TikTym helps busy professionals spend 100 minutes a day on themselves."; upload the new cover (Downloads › tiktym-linkedin-cover.png). Use the new post image and video for future posts.
 - [ ] Mon 19 Oct: weekly review (below), then plan week 2
 
 **Week 2 ideas** (plan them at the review): the second group (friends), Status again with post 2's image, post 3 (a 30-second walkthrough of the timer, backlog limit and Insights), and the 30-day learning challenge once 20 or more people use TikTym.
@@ -50,11 +53,11 @@ Each channel gets its own link, so Google Analytics (Reports › Acquisition ›
 
 **LinkedIn profile reshare** (add above the reshared post, in your own words):
 
-> I built this for myself after years of office → home → sleep. Now it's live and free. If you've been meaning to get back to learning, give it a week and tell me what you think.
+> I built this for myself after years of office → home → sleep. Now it's live and free. If you've been meaning to find time for yourself, try 100 minutes a day for a week and tell me what you think.
 
 **WhatsApp one-to-one:**
 
-> Hi [name]! I've been building something on the side and launched it this week: TikTym, a free app that helps working people make time for learning, reading, exercise or meditation, a few minutes a day.
+> Hi [name]! I've been building something on the side and launched it this week: TikTym, a free app that helps busy working people spend 100 minutes a day on themselves: 30 to move, 30 to read, 30 to grow and 10 to breathe.
 >
 > Could you try it for a few days and tell me honestly what's confusing or annoying? Your feedback would really help.
 >
@@ -78,11 +81,11 @@ Each channel gets its own link, so Google Analytics (Reports › Acquisition ›
 
 **WhatsApp Status** (with the video or the post image):
 
-> Launched something I built 🚀 TikTym: one minute, one point. For anyone who keeps saying "I'll start learning next week". Free → tiktym.com
+> Launched something I built 🚀 TikTym: 100 minutes a day for your productive life. For anyone who keeps saying "I'll start next week". Free → tiktym.com
 
 **WhatsApp group:**
 
-> Hi all 👋 Hope everyone's doing well! I built a small app for people like us whose days go office → home → sleep: TikTym. You set a few minutes a day for things like upskilling, reading or exercise, and it keeps you going. Miss a busy day and it carries forward without piling up.
+> Hi all 👋 Hope everyone's doing well! I built a small app for people like us whose days go office → home → sleep: TikTym. It's built around 100 minutes a day for yourself: 30 to move, 30 to read, 30 to grow and 10 to breathe, and it keeps you going. Miss a busy day and it carries forward without piling up.
 >
 > It's free and works on any phone: https://tiktym.com/?utm_source=whatsapp&utm_medium=group&utm_campaign=college
 >

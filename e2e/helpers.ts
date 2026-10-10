@@ -59,7 +59,7 @@ export function seedData(cats: Cat[], logs: Log[] = [], settings: Record<string,
       targets: [{ from: c.start ?? '2026-10-07', minutes: c.minutes ?? 30, days: c.days ?? [0, 1, 2, 3, 4, 5, 6] }],
     })),
     logs: logs.map(([catId, date, minutes], i) => ({ id: `seed${i}`, catId, date, minutes, note: '', createdAt: 0 })),
-    settings: { seeded: true, notice: '2026-10-10', ...settings }, // the on-by-default notice already seen (NOTIF-02)
+    settings: { seeded: true, ...settings },
   };
 }
 

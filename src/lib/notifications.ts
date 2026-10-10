@@ -1,6 +1,6 @@
 import type { Settings } from './types';
 
-// Emails and statistics are on by default, and each can be turned off (NOTIF-01, NOTIF-02; NOTIFICATIONS.md).
+// Emails and statistics are on by default, and each can be turned off (NOTIF-01; NOTIFICATIONS.md).
 
 export type EmailKind = 'tips' | 'recap' | 'news';
 
@@ -12,9 +12,3 @@ export const EMAIL_KINDS: readonly (readonly [EmailKind, string, string])[] = [
 ];
 
 export const emailOn = (s: Settings, kind: EmailKind) => s.emails?.[kind] !== false;
-
-/** Bump when what's on by default changes, so accounts see the notice again. */
-export const NOTICE = '2026-10-10';
-
-/** Accounts from before the change see the notice once; new accounts are told at sign-up instead. */
-export const needsNotice = (s: Settings) => !!s.seeded && s.notice !== NOTICE;

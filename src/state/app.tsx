@@ -4,7 +4,7 @@ import { calc } from '../lib/backlog';
 import { editCategory, moveCategory, newCategory, nextOrder, type CategoryForm } from '../lib/categories';
 import { dayLabel, today, ymd } from '../lib/date';
 import { startAccountAnalytics, track } from '../lib/analytics';
-import { NOTICE, type EmailKind } from '../lib/notifications';
+import type { EmailKind } from '../lib/notifications';
 import { count, countActiveDevice, flushStats, type Counter } from '../lib/stats';
 import { haptic } from '../lib/feedback';
 import { moment as findMoment, type Moment } from '../lib/moments';
@@ -115,8 +115,7 @@ function useAppState() {
   /** Creates the practices picked on first run and opens Today (FIRST-08). */
   const choosePractices = useCallback((picked: Pick<Choice, 'name' | 'minutes'>[]) => {
     if (!store || !picked.length) return;
-    // told what an account includes at sign-up, so no notice later (NOTIF-02)
-    const d0 = dataRef.current, categories = startingCategories(picked, today()), settings = { ...d0.settings, seeded: true, notice: NOTICE };
+    const d0 = dataRef.current, categories = startingCategories(picked, today()), settings = { ...d0.settings, seeded: true };
     setData({ ...d0, categories, settings });
     void persist(() => Promise.all([...categories.map(c => store.putCategory(c)), store.putSettings(settings)]));
     count('signUps'); // a brand-new account, however it signed up
@@ -217,14 +216,6 @@ function useAppState() {
     void persist(() => store.putSettings(settings));
   }, [store, setData, persist]);
 
-  /** The one-time notice for accounts from before on-by-default (NOTIF-02): information only; everything is already on. */
-  const dismissNotice = useCallback(() => {
-    if (!store) return;
-    const d0 = dataRef.current, settings = { ...d0.settings, notice: NOTICE };
-    setData({ ...d0, settings });
-    void persist(() => store.putSettings(settings));
-  }, [store, setData, persist]);
-
   const setBacklogCap = useCallback((v: number) => {
     if (!store) return;
     const d0 = dataRef.current, settings = { ...d0.settings, backlogCap: v };
@@ -244,7 +235,7 @@ function useAppState() {
 
   const startOver = useCallback(() => {
     if (!confirm('Delete all logs and reset to the default practices?')) return;
-    replaceAll({ categories: defaultCategories(today()), logs: [], settings: { seeded: true, notice: NOTICE, emails: dataRef.current.settings.emails } }, 'Started over');
+    replaceAll({ categories: defaultCategories(today()), logs: [], settings: { seeded: true, emails: dataRef.current.settings.emails } }, 'Started over');
   }, [replaceAll]);
 
   const importBackup = useCallback(async (file: File) => {
@@ -280,7 +271,7 @@ function useAppState() {
     getData,
     view, setView, range, setRange, sheet, openSheet, closeSheet,
     hideMoment, tipHidden, hideTip,
-    logEntry, deleteLog, updateLog, saveCategory, reorderCategory, toggleArchive, deleteCategory, setBacklogCap, setEmailPref, dismissNotice,
+    logEntry, deleteLog, updateLog, saveCategory, reorderCategory, toggleArchive, deleteCategory, setBacklogCap, setEmailPref,
     loadSample, startOver, importBackup, exportBackup, signOut, deleteAccount,
   };
 }

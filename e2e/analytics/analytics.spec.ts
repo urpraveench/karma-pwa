@@ -55,11 +55,10 @@ test('a "no" stored before 1.8.0 (the old unticked sign-up box) no longer counts
   expect(await page.evaluate(() => localStorage.getItem('tiktym:analytics'))).toBeNull(); // the old choice is cleared
 });
 
-test('an account from before is on straight away; the notice only informs (ANA-01, NOTIF-02)', async ({ page }) => {
+test('an account from before is on straight away (ANA-01)', async ({ page }) => {
   const requests = await stubGoogle(page);
-  await signInWith(page, seedData([{ id: 'r', name: 'Reading' }], [], { notice: undefined }));
-  await expect(page.locator('.notice')).toBeVisible();
-  await expect.poll(() => requests.length).toBeGreaterThan(0); // without waiting for OK
+  await signInWith(page, seedData([{ id: 'r', name: 'Reading' }]));
+  await expect.poll(() => requests.length).toBeGreaterThan(0);
 });
 
 test.describe('What it sends (ANA-02)', () => {

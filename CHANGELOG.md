@@ -17,7 +17,7 @@ Format, newest first:
 
 - **Notifications and privacy in Setup**: switches for each kind of email (tips and reminders, weekly recap, news) and for usage statistics. They're on from the start, and each turns off with one tap.
 - **A welcome email** when you start, with the practices you chose and how to add TikTym to your home screen, and a gentle nudge a day later if you haven't logged your first minutes. Every email has an unsubscribe link.
-- **Updated Privacy Policy and Terms** explaining what's on and how to turn it off. If you joined before today, TikTym shows you a short note about it once.
+- **Updated Privacy Policy and Terms** explaining what's on and how to turn it off.
 
 ## 1.7.2 · 9 October 2026 · Small things from your feedback
 

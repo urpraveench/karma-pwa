@@ -112,6 +112,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 Decided 10 October 2026: everything on by default, each switchable off in Setup or from any email. Emails come from "Praveen from TikTym" <hello@tiktym.com>, replies to the support Gmail; the welcome goes out after first-run Start.
 
 - [ ] **You:** create a Resend API key (Sending access, tiktym.com) and store it with `firebase functions:secrets:set RESEND_API_KEY --project tiktym`. Never paste it into chat or code.
+- [ ] **You:** when 1.8.0 is live, message Gopi, Charuthi and Kiran about emails and usage statistics now being on (text in the chat of 10 October).
 - [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
 - [ ] **Claude:** deploy the functions with the app and website release, after the Resend key is stored; check with a test account (Manual).
@@ -133,6 +134,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Removed the one-time notice on Today (Praveen tells existing users himself); the Privacy Policy now promises to announce significant changes "in the app or by email or message", 10 October 2026
 - [x] Existing accounts get emails and usage statistics on straight away; the one-time notice on Today only informs. The device's choice is stored under a new name from 1.8.0, so earlier stored "no"s (mostly the old unticked sign-up box) no longer count; turning it off from 1.8.0 on is respected (Praveen's decision, 10 October 2026; ANA-01, NOTIF-02)
 - [x] The first email switch is now "Tips and reminders" (welcome, first-week tips, the first-minute nudge and comeback); the email schedule and rules are in NOTIFICATIONS.md, and the Privacy Policy and Terms list every planned email, 10 October 2026
 - [x] Removed the unused branded password-reset template (`email/password-reset.html`, which Firebase never accepted) and its test; password resets use Firebase's default email. The header image stays for the welcome and first-minute emails, 10 October 2026

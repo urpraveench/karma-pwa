@@ -217,7 +217,6 @@ test.describe('Analytics on by default for a new account (ANA-01)', () => {
     expect(events).toContain('sign_up');
     await page.locator('.tab', { hasText: 'Setup' }).click();
     await expect(page.locator('.li', { hasText: 'Usage statistics' })).toHaveAttribute('aria-pressed', 'true');
-    await expect(page.locator('.notice')).toHaveCount(0); // told at sign-up, so no notice later
   });
 });
 

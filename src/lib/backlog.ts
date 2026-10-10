@@ -105,6 +105,14 @@ export function calc(data: AppData, asOf: DateStr = today()): Calc {
   return { per, totals, streak, best, done };
 }
 
+/**
+ * Practices with minutes still due today (carried-over minutes included), in the order shown. A practice logged only
+ * partly still counts. The reminder and the app badge use this, on the server too (NOTIF-10, NOTIF-13).
+ */
+export function practicesLeft(data: AppData, asOf: DateStr = today(), c: Calc = calc(data, asOf)): Category[] {
+  return activeCats(data.categories, asOf).filter(cat => c.per[cat.id].today.end > 0);
+}
+
 /** Totals across all categories for one day. */
 export function dayAll(c: Calc, categories: Category[], d: DateStr) {
   let due = 0, done = 0, end = 0, owed = 0;

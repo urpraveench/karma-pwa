@@ -18,7 +18,8 @@
     "site:clips": "node scripts/record-clips.mjs",
     "site:updates": "node scripts/site-updates.mjs",
     "site:install-videos": "scripts/install-videos/record.sh",
-    "email:header": "node scripts/email-header.mjs"
+    "email:header": "node scripts/email-header.mjs",
+    "functions:shared": "node scripts/functions-shared.mjs"
   },
   "dependencies": {
     "firebase": "^12.19.0",

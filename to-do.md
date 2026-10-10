@@ -81,7 +81,7 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 Day-to-day outreach (tasks by date, messages, tracking links, share and feedback logs, weekly review) lives in [OUTREACH.md](OUTREACH.md).
 
-- [ ] **You:** Google Search Console (verified 9 October): submit `sitemap.xml` under Sitemaps, and use URL inspection › Request indexing for https://tiktym.com/ and https://tiktym.com/updates/.
+- [ ] **You:** Google Search Console: use URL inspection › Request indexing for https://tiktym.com/ and https://tiktym.com/updates/.
 - [ ] **You:** Bing Webmaster Tools: Import from Google Search Console (Bing feeds ChatGPT search, Copilot and DuckDuckGo).
 - [ ] **You:** post on the TikTym LinkedIn page 2 or 3 times a week (page set up 8 October) (building in public, "busy weeks carry forward", monthly progress with Insights screenshots).
 - [ ] **You:** run a 30-day learning challenge with your network, using TikTym.
@@ -125,8 +125,11 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **Claude:** first-week tips emails on days 3 and 6, only while still active (Tips and reminders).
 - [ ] **Claude:** monthly progress email on the 1st (Weekly recap switch), first on 1 November.
 - [ ] **Claude:** the "at most one email a day, mornings IST" rule across all scheduled emails.
-- [ ] **Claude:** push reminders (daily reminder at a chosen time, streak at risk).
-- [ ] **Claude:** app badge, built with push reminders: practices still due today on the home-screen icon (iPhone home screen and installed desktop apps; not Android), set while open, cleared when the day is cleared, refreshed by each morning's push; a "Show count on app icon" switch, on by default. NOTIFICATIONS.md › App badge.
+- [ ] **Claude:** push reminders 2/5: sending. TikTym's own web-push keys; each device that allows notifications is saved in the account; every 15 minutes a job queues a reminder for the people whose chosen time it is (the queue design), once a day, skipped when today is clear; expired devices removed (NOTIF-09, NOTIF-11).
+- [ ] **Claude:** push reminders 3/5: in the app: the service worker shows the reminder and opens TikTym on tap; a "Remind me tomorrow" card on Today after the first entry (never on first open); Setup › Daily reminder with a time; deleting the account removes its devices (NOTIF-12, NOTIF-14).
+- [ ] **Claude:** push reminders 4/5: app badge, practices still due today on the home-screen icon (iPhone home screen and installed desktop apps; not Android), set while open, cleared when the day is clear, refreshed by each reminder; "Show count on app icon", on by default. NOTIFICATIONS.md › App badge (NOTIF-13).
+- [ ] **Claude:** push reminders 5/5: Privacy Policy and Terms describe push reminders and the badge; changelog line.
+- [ ] **Claude:** streak-at-risk push (evening, 3+ day streak, nothing logged), within the one-push-a-day rule. After daily reminders are live.
 - [ ] **Claude:** phase 1 in-app: install tip, first-week tips, milestone celebrations, progress-card reminder, What's new dot, feedback ask.
 
 ## 7. Housekeeping
@@ -138,6 +141,8 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** push reminders 1/5: the server counts the practices still due today with the app's own code (a generated copy of `src/lib/backlog.ts`, checked identical by a unit test), so reminders and the badge always agree with Today (NOTIF-10)., 10 October 2026
+- [x] **You:** submitted `sitemap.xml` in Google Search Console, 10 October 2026
 - [x] **Claude:** install guides on the website: the two with a video (iPhone Safari, Android Chrome) first, the two without as plain cards below, with no empty video space (GTM-20), 10 October 2026
 - [x] **Claude:** comeback email after 3 full days with nothing logged, once per absence (Tips and reminders), on the scalable design: a trigger keeps each account's last-logged date, a daily 9 am job queries only people away 4 to 14 days and queues one task each (rate-limited, retried); waits a day if another email went that day (NOTIF-07, NOTIF-08). Built, unit-tested and deployed (functions `trackLastLogged`, `comebackDaily` at 9 am India time, `comebackSend` on a Cloud Tasks queue), 10 October 2026
 - [x] Deployed the weekly recap (function `weeklyRecap`, Mondays 8 am India time); the first goes out Monday 12 October for 5 to 11 October, 10 October 2026

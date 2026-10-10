@@ -126,7 +126,7 @@
       "source": "functions",
       "codebase": "default",
       "ignore": ["node_modules", ".git", "*.log"],
-      "predeploy": ["npm --prefix functions run build"]
+      "predeploy": ["npm run functions:shared", "npm --prefix functions run build"]
     }
   ],
   "firestore": {

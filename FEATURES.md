@@ -37,8 +37,8 @@ Summary of coverage at the time of writing:
 | 13. App shell, PWA and platform | 35 | 30 | 0 | 5 |
 | 14. Marketing and sharing | 22 | 22 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
-| 16. Notifications | 7 | 7 | 0 | 0 |
-| **Total** | **292** | **277** | **0** | **15** |
+| 16. Notifications | 13 | 8 | 5 | 0 |
+| **Total** | **298** | **278** | **5** | **15** |
 
 ---
 
@@ -451,6 +451,12 @@ See NOTIFICATIONS.md for the plan. Emails and usage statistics are on by default
 | NOTIF-06 | Weekly recap email | Mondays at 8 am India time, if "Weekly recap" is on and something was logged in the last two weeks: last week (Monday to Sunday) in minutes against the targets, days shown up, best day, each practice with a bar, the show-up streak, how it compares with the week before (never as a telling-off), and one gentle suggestion. A practice that started mid-week counts from its start. A week with nothing logged gets a short "no catching up needed, 5 minutes today" note instead. Once per account per week | Unit `recap.test.ts` (sending: Manual) |
 | NOTIF-07 | Comeback email | After 3 full days with nothing logged, the next morning (9 am India time), if "Tips and reminders" is on: "no need to make up for the missed days", with 5 minutes of the shortest practice and an Open TikTym button. Once per absence: no second one until the person logs again and goes quiet again. Only for absences that began in the last two weeks. The server keeps each account's last-logged date as entries are saved, so it looks only at people who are away | Unit `comeback.test.ts` (sending: Manual) |
 | NOTIF-08 | At most one email a day | A scheduled email (comeback) waits until the next day if another TikTym email already went to that person today, India time (for example Monday's recap) | Unit `comeback.test.ts` |
+| NOTIF-09 | Daily push reminder | Once notifications are allowed, a reminder at the time chosen in Setup (15-minute steps, 7 am to 9:45 pm, in the person's own time zone) on every device that allowed them: which practices are still due today ("2 practices left today: Exercise and Reading. Even 5 minutes counts."). At most one a day. Tapping it opens TikTym | Gap |
+| NOTIF-10 | Reminder counts like Today | The server works out what's still due with the app's own backlog code (a generated copy, checked identical by a test), so carry-over and rest days count exactly as on Today. No reminder when today is clear or a rest day | Unit `shared.test.ts` |
+| NOTIF-11 | Expired devices | A device the push service reports gone (notifications turned off, app removed) is deleted from the account and never tried again; the other devices still get the reminder | Gap |
+| NOTIF-12 | Asking for notifications | Never on first open. Once something is logged today, Today offers "Remind me tomorrow at <this time>" where notifications can work and haven't been decided; Allow asks the browser and saves the device; "Not now" hides it for good. Setup › Notifications and privacy has Daily reminder (switch and time). On an iPhone outside the home-screen app it explains that reminders need TikTym on the home screen; if notifications are blocked, it says where to unblock them | Gap |
+| NOTIF-13 | App badge | The home-screen icon shows how many practices are still due today (a practice logged partly still counts; never minutes), set while the app is open, cleared when the day is clear, and refreshed by each reminder. "Show count on app icon" in Setup, on by default, shown only where the device supports badges (iPhone home screen, installed computer apps; not Android) | Gap |
+| NOTIF-14 | Devices go with the account | Deleting the account removes its saved notification devices along with everything else | Gap |
 
 ---
 

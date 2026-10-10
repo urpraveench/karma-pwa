@@ -7,6 +7,7 @@ const UA = {
   iphoneInstagram: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 350.0.0',
   androidWebView: 'Mozilla/5.0 (Linux; Android 14; Pixel 7; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/129.0 Mobile Safari/537.36',
   facebook: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 [FBAN/FBIOS;FBAV/480.0]',
+  iphoneChrome: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/129.0 Mobile/15E148 Safari/604.1',
   mac: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15',
 };
 
@@ -15,6 +16,7 @@ describe('where are we installing from (APP-27 to APP-29)', () => {
     expect(installEnv({ ua: UA.iphoneSafari, standalone: true, canPrompt: false })).toBe('installed');
     expect(installEnv({ ua: UA.androidChrome, standalone: false, canPrompt: true })).toBe('prompt');
     expect(installEnv({ ua: UA.iphoneSafari, standalone: false, canPrompt: false })).toBe('ios');
+    expect(installEnv({ ua: UA.iphoneChrome, standalone: false, canPrompt: false })).toBe('ios-chrome');
     expect(installEnv({ ua: UA.androidChrome, standalone: false, canPrompt: false })).toBe('android');
     expect(installEnv({ ua: UA.mac, standalone: false, canPrompt: false })).toBe('other');
   });

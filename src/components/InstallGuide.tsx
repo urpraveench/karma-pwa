@@ -22,11 +22,18 @@ export function InstallSteps({ env }: { env: InstallEnv }) {
       return (
         <>
           <ol className="install-steps">
-            <Step n={1}>Tap <strong>Share</strong> <Glyph><Icon.share /></Glyph> at the bottom of Safari.</Step>
+            <Step n={1}>Tap <strong>Share</strong> <Glyph><Icon.share /></Glyph> at the bottom of Safari (on newer iPhones, tap <strong>⋯</strong> first).</Step>
             <Step n={2}>Choose <strong>Add to Home Screen</strong> <Glyph><Icon.addSquare /></Glyph>, then <strong>Add</strong>.</Step>
           </ol>
           <p className="install-p small">No Share button at the bottom? You're inside another app: open this page in Safari first.</p>
         </>
+      );
+    case 'ios-chrome':
+      return (
+        <ol className="install-steps">
+          <Step n={1}>Tap <strong>Share</strong> <Glyph><Icon.share /></Glyph> in the address bar at the top right.</Step>
+          <Step n={2}>Scroll down, tap <strong>Add to Home Screen</strong> <Glyph><Icon.addSquare /></Glyph>, then <strong>Add</strong>.</Step>
+        </ol>
       );
     case 'in-app':
       return (

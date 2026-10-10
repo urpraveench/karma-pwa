@@ -6,11 +6,12 @@ import type { DateStr } from './types';
 
 /**
  * installed: already on the home screen. prompt: the browser offers its own install dialog (Android Chrome,
- * Samsung Internet, Edge). ios: iPhone or iPad, where it's Share › Add to Home Screen. in-app: inside WhatsApp,
+ * Samsung Internet, Edge). ios: Safari on iPhone or iPad, where it's Share › Add to Home Screen. ios-chrome: Chrome,
+ * Firefox or Edge on iPhone, where Share is in the address bar. in-app: inside WhatsApp,
  * Instagram, Facebook or LinkedIn, where installing is impossible. android: an Android browser without the dialog
  * (yet). other: a computer without the dialog.
  */
-export type InstallEnv = 'installed' | 'prompt' | 'ios' | 'in-app' | 'android' | 'other';
+export type InstallEnv = 'installed' | 'prompt' | 'ios' | 'ios-chrome' | 'in-app' | 'android' | 'other';
 
 /** Apps' built-in browsers, from their user agents; "; wv)" is an Android in-app WebView. */
 const IN_APP = /FBAN|FBAV|FB_IAB|Instagram|LinkedInApp|WhatsApp|Snapchat|Line\/|; wv\)/i;
@@ -19,7 +20,7 @@ export function installEnv(o: { ua: string; standalone: boolean; canPrompt: bool
   if (o.standalone) return 'installed';
   if (IN_APP.test(o.ua)) return 'in-app';
   if (o.canPrompt) return 'prompt';
-  if (/iPhone|iPad|iPod/.test(o.ua)) return 'ios';
+  if (/iPhone|iPad|iPod/.test(o.ua)) return /CriOS|FxiOS|EdgiOS/.test(o.ua) ? 'ios-chrome' : 'ios';
   if (/Android/.test(o.ua)) return 'android';
   return 'other';
 }

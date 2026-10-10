@@ -98,7 +98,6 @@ From FEATURES.md › "What's left to test". None left: every scenario has a test
 
 Help people add TikTym to their home screen (friends didn't know how; most only know app stores). Part of 1.8.0.
 
-- [ ] **Claude:** install steps for each browser: iPhone Safari (Share, inside ⋯ on newer iOS), iPhone Chrome (Share in the address bar), Android Chrome, Samsung Internet; on the website (visitor's own phone and browser highlighted) and in the app's guide (APP-28, GTM-19).
 - [ ] **You:** record three short screen recordings (about 10–15 seconds each) of adding TikTym to the home screen: iPhone Safari, iPhone Chrome, Android Chrome. Then Claude trims and embeds them next to the steps (GTM-20).
 - [ ] **Claude:** embed the recordings on the website, each next to its steps, loading only when scrolled to (GTM-20).
 
@@ -140,6 +139,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Install steps for each browser: the website has guides for iPhone Safari, iPhone Chrome, Android Chrome and Samsung Internet (the visitor's own first, marked "Your phone"); the app's guide has separate Chrome-on-iPhone steps, and Safari's mention ⋯ on newer iPhones (APP-28, GTM-19), 10 October 2026
 - [x] Website Install section: the visitor's own phone first ("Your phone"), and an open-in-browser warning inside WhatsApp, Instagram, Facebook or LinkedIn; WhatsApp messages in OUTREACH.md say to open in the browser first (GTM-19), 10 October 2026
 - [x] Install help: a card on Today after the first logged minutes (Install button on Android, Share › Add to Home Screen with icons on iPhone, "open in browser" with Copy the link inside WhatsApp, Instagram, Facebook or LinkedIn); Not now snoozes 3 days, twice ends it; hidden once installed; and Setup › Add TikTym to your home screen (APP-27 to APP-31). The card and the Setup row went in one commit because they share the guide, 10 October 2026
 - [x] New brand line in the LinkedIn cover, post image and video (in Downloads), and in the OUTREACH.md messages; the LinkedIn tagline and description wording is a task in OUTREACH.md, 10 October 2026

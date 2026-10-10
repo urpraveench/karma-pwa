@@ -44,9 +44,18 @@ test.describe('iPhone', () => {
     await signIn(page);
     await logFirstMinutes(page);
     const steps = card(page).locator('.install-steps li');
-    await expect(steps).toHaveText([/Tap Share .*at the bottom of Safari/, /Choose Add to Home Screen .*, then Add/]);
+    await expect(steps).toHaveText([/Tap Share .*at the bottom of Safari \(on newer iPhones, tap ⋯ first\)/, /Choose Add to Home Screen .*, then Add/]);
     await expect(steps.locator('.glyph svg')).toHaveCount(2);
     await expect(card(page)).toContainText("No Share button at the bottom? You're inside another app");
+  });
+});
+
+test.describe('Chrome on iPhone', () => {
+  test.use({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/129.0 Mobile/15E148 Safari/604.1' });
+  test('Share is in the address bar, then Add to Home Screen (APP-28)', async ({ page }) => {
+    await signIn(page);
+    await logFirstMinutes(page);
+    await expect(card(page).locator('.install-steps li')).toHaveText([/Tap Share .*in the address bar at the top right/, /Scroll down, tap Add to Home Screen .*, then Add/]);
   });
 });
 

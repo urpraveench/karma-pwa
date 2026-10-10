@@ -214,21 +214,36 @@ test('every page has a search description of 25 to 160 characters (GTM-18)', asy
   expect(app.description).toBe(await page.locator('meta[name="description"]').getAttribute('content'));
 });
 
-test.describe('install help on the website (GTM-19)', () => {
+test.describe('install help on the website, for each phone and browser (GTM-19)', () => {
   test.describe('on an iPhone', () => {
     test.use({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1' });
-    test("iPhone steps first, marked as your phone; no in-app warning in Safari", async ({ page }) => {
+    test("iPhone guides first, Safari marked as your phone; no in-app warning in Safari", async ({ page }) => {
       await page.goto('/');
-      await expect(page.locator('.install > div').first()).toHaveAttribute('data-platform', 'ios');
+      await expect(page.locator('.install > div h3')).toHaveText([/^iPhone · Safari/, /^iPhone · Chrome/, /^Android · Chrome/, /^Android · Samsung Internet/]);
       await expect(page.locator('.install .mine h3')).toContainText('Your phone');
       await expect(page.locator('.install-warn')).toBeHidden();
     });
   });
+  test.describe('Chrome on an iPhone', () => {
+    test.use({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/129.0 Mobile/15E148 Safari/604.1' });
+    test('the iPhone Chrome guide first, marked as your phone', async ({ page }) => {
+      await page.goto('/');
+      await expect(page.locator('.install > div h3').first()).toContainText('iPhone · Chrome');
+      await expect(page.locator('.install .mine h3')).toContainText('Your phone');
+    });
+  });
+  test.describe('Samsung Internet', () => {
+    test.use({ userAgent: 'Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/26.0 Chrome/122.0 Mobile Safari/537.36' });
+    test('the Samsung Internet guide first', async ({ page }) => {
+      await page.goto('/');
+      await expect(page.locator('.install > div h3').first()).toContainText('Android · Samsung Internet');
+    });
+  });
   test.describe('inside Instagram on Android', () => {
     test.use({ userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 7; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/129.0 Mobile Safari/537.36 Instagram 350.0.0' });
-    test('Android first, with the open-in-browser warning', async ({ page }) => {
+    test('Android guides first, with the open-in-browser warning', async ({ page }) => {
       await page.goto('/');
-      await expect(page.locator('.install > div').first()).toHaveAttribute('data-platform', 'android');
+      await expect(page.locator('.install > div h3').first()).toContainText('Android · Chrome');
       await expect(page.locator('.install-warn')).toBeVisible();
       await expect(page.locator('.install-warn')).toContainText('Open in browser');
     });

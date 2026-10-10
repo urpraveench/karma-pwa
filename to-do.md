@@ -120,7 +120,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **You:** when 1.8.0 is live, message Gopi, Charuthi and Kiran about emails and usage statistics now being on (text in the chat of 10 October).
 - [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
-- [ ] **Claude:** deploy the functions with the app and website release, after the Resend key is stored; check with a test account (Manual).
 - [ ] **Claude:** weekly recap email, Monday 8 am IST, for anyone active in the last 2 weeks (Weekly recap switch).
 - [ ] **Claude:** comeback email after 3 days with nothing logged, once per absence, stopping after 3 with no return (Tips and reminders).
 - [ ] **Claude:** news broadcast: Praveen approves the text, it goes to everyone with News on; first use, announcing 100 Days, 100 Minutes in late October.
@@ -139,6 +138,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.8.0: "100 minutes a day for your productive life"; Notifications and privacy settings with emails and usage statistics on by default; the welcome email, first-minute nudge and unsubscribe page (Cloud Functions in asia-south1, first deploy; the welcome function needed a retry while Google set up event permissions); install help for each phone and browser; updated Privacy Policy and Terms. Checked live: version.json 1.8.0 (build efa1dcc; the first upload was stamped -dirty and was redeployed clean), the website's new title and What's new 1.8.0, and a forged unsubscribe link rejected, 10 October 2026
 - [x] Install steps for each browser: the website has guides for iPhone Safari, iPhone Chrome, Android Chrome and Samsung Internet (the visitor's own first, marked "Your phone"); the app's guide has separate Chrome-on-iPhone steps, and Safari's mention ⋯ on newer iPhones (APP-28, GTM-19), 10 October 2026
 - [x] Website Install section: the visitor's own phone first ("Your phone"), and an open-in-browser warning inside WhatsApp, Instagram, Facebook or LinkedIn; WhatsApp messages in OUTREACH.md say to open in the browser first (GTM-19), 10 October 2026
 - [x] Install help: a card on Today after the first logged minutes (Install button on Android, Share › Add to Home Screen with icons on iPhone, "open in browser" with Copy the link inside WhatsApp, Instagram, Facebook or LinkedIn); Not now snoozes 3 days, twice ends it; hidden once installed; and Setup › Add TikTym to your home screen (APP-27 to APP-31). The card and the Setup row went in one commit because they share the guide, 10 October 2026

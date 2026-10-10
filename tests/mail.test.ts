@@ -52,7 +52,7 @@ describe('the emails (NOTIF-03, NOTIF-04)', () => {
   it('the welcome greets by name and lists the chosen practices, in their colours, with the daily total', () => {
     const e = welcomeEmail({ name: 'Asha', practices: practices.map((p, i) => ({ ...p, color: ['#1F8A70', '#3E5BA9', '#8A4FA3'][i] })), unsubscribe });
     expect(e.subject).toBe('Welcome to TikTym, Asha');
-    for (const s of ['Welcome to TikTym, Asha', '3 practices in all:', '>Meditation</td>', '10 min a day', 'background:#8A4FA3', '70 points a day', 'Busy days carry forward.', 'Add it to your home screen', 'reply to this email', 'https://app.tiktym.com/?utm_source=email', "family=Bricolage+Grotesque"])
+    for (const s of ['Welcome to TikTym, Asha', '3 practices in all:', '>Meditation</td>', '10 min a day', 'background:#8A4FA3', '70 minutes a day', 'Every minute counts towards your 70.', 'Busy days carry forward.', 'Add it to your home screen', 'reply to this email', 'https://app.tiktym.com/?utm_source=email', "family=Bricolage+Grotesque"])
       expect(e.html).toContain(s);
     expect(e.text).toContain('- Exercise: 30 min a day');
     expect(e.text).toContain(`Unsubscribe: ${unsubscribe}`);
@@ -80,7 +80,7 @@ describe('the emails (NOTIF-03, NOTIF-04)', () => {
     expect(e.html).toContain('<strong>5 minutes of Meditation</strong>');
     expect(e.html).toContain('Start 5 minutes of Meditation');
     expect(e.html).toContain('5 min today'); // not "a day": the target itself doesn't change
-    expect(e.html).not.toContain('points a day');
+    expect(e.html).not.toContain('minutes a day</strong>'); // the nudge shows no daily total
   });
 
   it('escapes names and practice names, and only uses real colours', () => {

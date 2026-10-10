@@ -78,7 +78,7 @@ function practicesCard(ps: Practice[], per = 'a day'): string {
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 8px;background:${BG};border:1px solid ${LINE};border-radius:12px;font-family:${FONT};">
         ${rows}
       </table>
-      <p style="margin:0 0 22px;font-size:14px;color:${INK2};font-family:${FONT};"><strong style="color:${GOLD};">${total} points a day</strong> · one minute, one point</p>`;
+      <p style="margin:0 0 22px;font-size:14px;color:${INK2};font-family:${FONT};"><strong style="color:${GOLD};">${total} minutes a day</strong> · your productive life</p>`;
 }
 
 /** Short tips with gold numbers, in TikTym's voice. */
@@ -105,7 +105,7 @@ function frame(o: { title: string; body: string[]; why: string; unsubscribe: str
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${BG};padding:24px 0;">
   <tr><td align="center" style="padding:0 12px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;background:${SURFACE};border:1px solid ${LINE};border-radius:16px;overflow:hidden;">
-      <tr><td style="padding:0;"><img src="https://tiktym.com/email/header.png" width="600" alt="TikTym · One minute, one point" style="display:block;width:100%;max-width:600px;height:auto;border:0;"></td></tr>
+      <tr><td style="padding:0;"><img src="https://tiktym.com/email/header.png" width="600" alt="TikTym · 100 minutes a day" style="display:block;width:100%;max-width:600px;height:auto;border:0;"></td></tr>
       <tr><td style="padding:28px 32px 8px;font-family:${FONT};color:${INK};">
         <h1 style="margin:0 0 16px;font-family:${DISPLAY};font-size:28px;line-height:1.15;font-weight:800;letter-spacing:-0.02em;color:${INK};">${o.title}</h1>
         ${o.body.join('\n        ')}
@@ -126,8 +126,9 @@ const unsubscribeHeaders = (url: string) => ({ 'List-Unsubscribe': `<${url}>`, '
 
 const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? '' : 's'}`;
 
-const WELCOME_TIPS: [string, string][] = [
-  ['Every minute is a point.', 'Ten minutes on a hectic day still counts.'],
+/** The welcome's three tips; the first uses the person's own daily total (100 is only the suggested start). */
+const welcomeTips = (total: number): [string, string][] => [
+  [`Every minute counts towards your ${total}.`, 'Ten minutes on a hectic day still counts.'],
   ['Busy days carry forward.', 'Missed minutes move to the next day, up to two days of each practice (change it in Setup), so a bad week never becomes a mountain.'],
   ['Tap ▶ for a focus timer.', 'It logs the minutes for you when you stop.'],
 ];
@@ -141,7 +142,7 @@ export function welcomeEmail(o: { name: string; practices: Practice[]; unsubscri
     body: [
       para(`Thanks for starting TikTym. Here's what you're making time for, ${plural(o.practices.length, 'practice')} in all:`),
       practicesCard(o.practices),
-      tips(WELCOME_TIPS),
+      tips(welcomeTips(total)),
       button('Open TikTym', appLink('welcome')),
       para('<strong>Add it to your home screen</strong> so it opens like an app: on iPhone, open it in Safari and tap Share › Add to Home Screen; on Android, tap Install app in Chrome.'),
       para("I built TikTym because I couldn't find time to learn alongside a full-time job. If anything is confusing, or you'd like something added, just reply to this email. I read every one."),
@@ -153,8 +154,8 @@ export function welcomeEmail(o: { name: string; practices: Practice[]; unsubscri
     hi.replace(/&amp;/g, '&'), '',
     `Thanks for starting TikTym. Here's what you're making time for, ${plural(o.practices.length, 'practice')} in all:`,
     ...o.practices.map(p => `- ${p.name}: ${p.minutes} min a day`),
-    `${total} points a day: one minute, one point.`, '',
-    ...WELCOME_TIPS.map(([lead, rest], n) => `${n + 1}. ${lead} ${rest.replace('▶', 'the play button')}`), '',
+    `${total} minutes a day: your productive life.`, '',
+    ...welcomeTips(total).map(([lead, rest], n) => `${n + 1}. ${lead} ${rest.replace('▶', 'the play button')}`), '',
     `Open TikTym: ${appLink('welcome')}`, '',
     'Add it to your home screen so it opens like an app: on iPhone, open it in Safari and tap Share > Add to Home Screen; on Android, tap Install app in Chrome.', '',
     "I built TikTym because I couldn't find time to learn alongside a full-time job. If anything is confusing, or you'd like something added, just reply to this email. I read every one.", '',

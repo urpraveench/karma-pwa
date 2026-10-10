@@ -24,7 +24,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8">
   span{margin-left:auto;font-size:15px;font-weight:600;color:#55685F}
 </style></head><body>
   <svg viewBox="0 0 100 100">${beads}<circle cx="50" cy="12" r="6" fill="#C98E0E"/></svg>
-  <b>TikTym</b><span>One minute, one point</span>
+  <b>TikTym</b><span>100 minutes a day</span>
 </body></html>`;
 
 const browser = await chromium.launch({ channel: 'chrome' });

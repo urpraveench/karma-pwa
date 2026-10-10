@@ -1,5 +1,5 @@
-// TikTym's Cloud Functions (asia-south1, next to the database): the welcome and first-minute emails, and the
-// unsubscribe page. What each email says, and who gets it, lives in mail.ts (unit-tested); this file reads,
+// TikTym's Cloud Functions (asia-south1, next to the database): the welcome, first-minute and weekly recap emails,
+// and the unsubscribe page. What each email says, and who gets it, lives in mail.ts (unit-tested); this file reads,
 // sends and records. NOTIFICATIONS.md has the plan.
 import { initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
@@ -12,8 +12,9 @@ import { onRequest } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import {
   confirmUnsubscribePage, easiest, emailOn, FROM, firstName, justStarted, NUDGE_AFTER_MS, nudgeEmail, readUnsubscribe,
-  REPLY_TO, unsubscribedPage, unsubscribeLink, welcomeEmail, type Email, type Practice,
+  recapEmail, REPLY_TO, unsubscribedPage, unsubscribeLink, welcomeEmail, type Email, type Practice,
 } from './mail.js';
+import { addDays, lastWeekStart, weekRecap, type RecapCategory, type RecapLog } from './recap.js';
 
 setGlobalOptions({ region: 'asia-south1', maxInstances: 3 });
 initializeApp();
@@ -93,6 +94,48 @@ export const firstMinute = onSchedule({ schedule: 'every 60 minutes', timeZone: 
       logger.error('first-minute nudge failed; will retry next hour', { uid, error: String(e) });
     }
   }
+});
+
+/** Resend's free plan takes 2 emails a second; a gap between sends keeps well under it. */
+const pause = (ms: number) => new Promise(r => setTimeout(r, ms));
+
+/**
+ * Mondays at 8 am India time: last week's recap to everyone with Weekly recap on who logged something in the last two
+ * weeks (NOTIF-06). mail/{uid}.recapWeek records the week sent, so a retry never sends twice.
+ */
+export const weeklyRecap = onSchedule({ schedule: '0 8 * * 1', timeZone: 'Asia/Kolkata', timeoutSeconds: 540, secrets: [RESEND_API_KEY, UNSUBSCRIBE_SECRET] }, async () => {
+  const week = lastWeekStart(new Date());
+  const months = [...new Set([addDays(week, -7), addDays(week, 6)].map(d => d.slice(0, 7)))];
+  let sent = 0, pageToken: string | undefined;
+  do {
+    const page = await getAuth().listUsers(1000, pageToken);
+    pageToken = page.pageToken;
+    for (const u of page.users) {
+      if (!u.email) continue;
+      const uid = u.uid;
+      try {
+        const [settings, mail] = await Promise.all([settingsDoc(uid).get(), mailDoc(uid).get()]);
+        if (!settings.exists || !emailOn(settings.data(), 'recap') || mail.data()?.recapWeek === week) continue;
+        const [cats, monthDocs] = await Promise.all([
+          db.collection(`users/${uid}/categories`).get(),
+          db.getAll(...months.map(m => db.doc(`users/${uid}/months/${m}`))),
+        ]);
+        const categories = cats.docs.map(d => d.data() as RecapCategory);
+        const logs = monthDocs.flatMap(m => Object.values((m.data()?.entries || {}) as Record<string, RecapLog>));
+        const recap = weekRecap(categories, logs, week);
+        if (!recap) continue;
+        const current = categories.filter(c => !c.archivedFrom).map(c => ({ name: c.name, minutes: Number(c.targets?.[c.targets.length - 1]?.minutes ?? 0) }));
+        const email = recapEmail({ name: firstName(u.displayName, u.email), recap, easiest: easiest(current)?.name, unsubscribe: unsubscribeLink(uid, 'recap', UNSUBSCRIBE_SECRET.value()) });
+        await send(u.email, email, `recap-${uid}-${week}`);
+        await mailDoc(uid).set({ recapWeek: week, recapAt: Timestamp.now() }, { merge: true });
+        sent++;
+        await pause(600);
+      } catch (e) {
+        logger.error('weekly recap failed', { uid, week, error: String(e) });
+      }
+    }
+  } while (pageToken);
+  logger.info('weekly recaps sent', { week, sent });
 });
 
 /**

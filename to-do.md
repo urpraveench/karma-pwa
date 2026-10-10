@@ -18,6 +18,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] From 11 October: run `firebase firestore:backups:list --project tiktym` and check a daily backup appears each day (SYNC-17)
 - [ ] Once, before real promotion: a restore drill. Restore the latest backup into a new database (README › Backups and restoring), check it in the console, then delete it (SYNC-17)
 - [ ] A day after signing up with the spare test account (without logging anything), check the first-minute nudge arrives (NOTIF-04)
+- [ ] The first Monday after the weekly recap is deployed: check it arrives at about 8 am for an account that logged last week, that the numbers match History for that week, and that the function's log says how many went (NOTIF-06)
 - [ ] **You:** remove the last line of the LinkedIn page description ("TikTym is built by Pramal IT Services Private Limited.") in LinkedIn › Edit page
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
@@ -117,7 +118,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **You:** create a Resend API key (Sending access, tiktym.com) and store it with `firebase functions:secrets:set RESEND_API_KEY --project tiktym`. Never paste it into chat or code.
 - [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
-- [ ] **Claude:** weekly recap email, Monday 8 am IST, for anyone active in the last 2 weeks (Weekly recap switch).
 - [ ] **Claude:** comeback email after 3 days with nothing logged, once per absence, stopping after 3 with no return (Tips and reminders).
 - [ ] **Claude:** news broadcast: Praveen approves the text, it goes to everyone with News on; first use, announcing 100 Days, 100 Minutes in late October.
 - [ ] **Claude:** first-week tips emails on days 3 and 6, only while still active (Tips and reminders).
@@ -136,6 +136,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** weekly recap email, Monday 8 am IST, for anyone active in the last 2 weeks (Weekly recap switch): last week's minutes against the targets, days shown up, best day, each practice with a bar, the show-up streak, one gentle suggestion; a quiet week gets a no-catching-up note instead (NOTIF-06). Built and unit-tested; sends from the first Monday after the functions deploy, 10 October 2026
 - [x] **You:** messaged Gopi, Charuthi and Kiran about emails and usage statistics now being on, 10 October 2026
 - [x] Checked live with a test account: the welcome email arrives in the inbox (not spam), and its unsubscribe link turns the switch off in Setup (NOTIF-03, NOTIF-05), 10 October 2026
 - [x] Website deployed with the install videos; all four files load on tiktym.com, 10 October 2026

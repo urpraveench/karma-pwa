@@ -1,7 +1,8 @@
-// TikTym's emails (NOTIF-03, NOTIF-04, NOTIF-05): content, signed unsubscribe links, and who gets what.
+// TikTym's emails (NOTIF-03 to NOTIF-06): content, signed unsubscribe links, and who gets what.
 // Pure functions, so they're unit-tested (tests/mail.test.ts); index.ts does the reading, sending and writing.
 import { Buffer } from 'node:buffer';
 import { createHmac, timingSafeEqual } from 'node:crypto';
+import { suggestion, type Recap } from './recap.js';
 
 export type EmailKind = 'tips' | 'recap' | 'news';
 export const EMAIL_KINDS: EmailKind[] = ['tips', 'recap', 'news'];
@@ -192,6 +193,129 @@ export function nudgeEmail(o: { name: string; practice: Practice; unsubscribe: s
     `You're getting this because you created a TikTym account and haven't logged anything yet. Unsubscribe: ${o.unsubscribe}`,
   ].join('\n');
   return { subject: 'Your first five minutes on TikTym', html, text, headers: unsubscribeHeaders(o.unsubscribe) };
+}
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const dayMonth = (d: string) => [Number(d.slice(8, 10)), MONTHS[Number(d.slice(5, 7)) - 1]] as const;
+const weekdayOf = (d: string) => WEEKDAYS[new Date(`${d}T00:00:00Z`).getUTCDay()];
+
+/** "5 to 11 October", or "28 September to 4 October" across a month end. */
+export function weekLabel(start: string, end: string): string {
+  const [d1, m1] = dayMonth(start), [d2, m2] = dayMonth(end);
+  return m1 === m2 ? `${d1} to ${d2} ${m2}` : `${d1} ${m1} to ${d2} ${m2}`;
+}
+
+/** The week's three numbers, side by side. */
+function statsRow(cells: [string, string][]): string {
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 18px;background:${BG};border:1px solid ${LINE};border-radius:12px;font-family:${FONT};"><tr>
+          ${cells.map(([big, small], i) => `<td width="${Math.floor(100 / cells.length)}%" align="center" valign="top" style="padding:16px 6px;${i ? `border-left:1px solid ${LINE};` : ''}">
+            <div style="font-family:${DISPLAY};font-size:24px;line-height:1.1;font-weight:800;color:${INK};">${big}</div>
+            <div style="margin-top:4px;font-size:13px;line-height:1.35;color:${INK2};">${small}</div>
+          </td>`).join('\n          ')}
+        </tr></table>`;
+}
+
+/** Each practice with its colour, minutes against its target, and a bar (full once the target is met). */
+function practiceBars(r: Recap): string {
+  const rows = r.practices.map(p => {
+    const pct = p.target ? Math.min(100, Math.round((p.done / p.target) * 100)) : 100;
+    const bar = pct > 0
+      ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${LINE};border-radius:4px;"><tr><td width="${pct}%" style="height:8px;font-size:0;line-height:0;background:${safeColor(p.color)};border-radius:4px;">&nbsp;</td>${pct < 100 ? '<td style="font-size:0;line-height:0;">&nbsp;</td>' : ''}</tr></table>`
+      : `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${LINE};border-radius:4px;"><tr><td style="height:8px;font-size:0;line-height:0;">&nbsp;</td></tr></table>`;
+    const of = p.target ? `${p.done} of ${p.target} min` : `${p.done} min`;
+    return `<tr><td style="padding:12px 16px 4px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+              <td width="20"><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:${safeColor(p.color)};"></span></td>
+              <td style="font-size:16px;font-weight:700;color:${INK};">${esc(p.name)}</td>
+              <td align="right" style="font-size:15px;color:${INK2};white-space:nowrap;">${p.target && p.done >= p.target ? `<strong style="color:${GOLD};">✓</strong> ` : ''}${of}</td>
+            </tr></table>
+          </td></tr>
+          <tr><td style="padding:4px 16px 12px;">${bar}</td></tr>`;
+  });
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 18px;background:${BG};border:1px solid ${LINE};border-radius:12px;font-family:${FONT};">
+          ${rows.join(`\n          <tr><td style="border-top:1px solid ${LINE};font-size:0;line-height:0;">&nbsp;</td></tr>\n          `)}
+        </table>`;
+}
+
+/** The suggestion, set apart with a gold edge. */
+const callout = (t: string) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 20px;font-family:${FONT};"><tr>
+          <td width="4" style="background:${GOLD};border-radius:2px;font-size:0;">&nbsp;</td>
+          <td style="padding:4px 0 4px 14px;font-size:16px;line-height:1.55;color:${INK};">${t}</td>
+        </tr></table>`;
+
+/** How the week compares with the one before: good news is said, a lighter week is never a telling-off. */
+function compared(r: Recap): string {
+  if (r.prev === null || r.prev === 0) return '';
+  const diff = r.done - r.prev;
+  if (diff > 0) return `That's ${diff} minutes more than the week before.`;
+  if (diff === 0) return 'The same as the week before: steady.';
+  return 'A lighter week than the one before, and that\'s fine. Every minute counts.';
+}
+
+/** The suggestion's words; plain text, with **bold** marked for the HTML. */
+function suggestionText(r: Recap, easiest?: string): string {
+  const s = suggestion(r);
+  if (s.kind === 'all-met') return 'You met every target last week. **Keep the same rhythm this week**; if one feels easy, you can raise it in Setup.';
+  if (s.kind === 'lowest') {
+    const p = s.practice!;
+    return p.done === 0
+      ? `**${p.name}** didn't get any time last week. **Try 10 minutes of it early this week**, while the week is fresh. Every minute counts.`
+      : `**${p.name}** got ${p.done} of ${p.target} minutes. **Try a short session of it early this week**, while the week is fresh. Every minute counts.`;
+  }
+  return `Last week was quiet, and that's okay. **You don't need to make up for it**: just start with **5 minutes${easiest ? ` of ${easiest}` : ''} today**.`;
+}
+
+const bold = (t: string) => esc(t).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+/** The weekly recap, Mondays at 8 am India time, for anyone active in the last two weeks (NOTIF-06). */
+export function recapEmail(o: { name: string; recap: Recap; easiest?: string; unsubscribe: string }): Email {
+  const r = o.recap, quiet = r.done === 0, when = weekLabel(r.start, r.end);
+  const hi = o.name ? `Hi ${esc(o.name)},` : 'Hi,';
+  const tip = suggestionText(r, o.easiest);
+  const streak = r.streak >= 2 ? `You've shown up ${r.streak} days in a row. Log something today to keep it going.` : '';
+  const vs = compared(r);
+  const best = r.best ? [`${r.best.minutes} min`, `best day, ${weekdayOf(r.best.date)}`] as [string, string] : ['–', 'best day'] as [string, string];
+  const title = quiet ? 'A fresh week' : o.name ? `Your week, ${esc(o.name)}` : 'Your week';
+  const html = frame({
+    title,
+    body: quiet ? [
+      para(hi),
+      callout(bold(tip)),
+      button(`Start 5 minutes${o.easiest ? ` of ${esc(o.easiest)}` : ''}`, appLink('weekly_recap')),
+      para('If something got in the way, reply and tell me. It helps me make TikTym easier.'),
+    ] : [
+      para(`Here's how ${when} went.`),
+      statsRow([
+        [`${r.done}`, r.target ? `minutes, of ${r.target} planned` : 'minutes logged'],
+        [`${r.daysShown} of ${r.days}`, 'days you showed up'],
+        best,
+      ]),
+      practiceBars(r),
+      ...(vs || streak ? [para([vs, streak].filter(Boolean).join(' '))] : []),
+      callout(bold(tip)),
+      button('Open TikTym', appLink('weekly_recap')),
+      para('Reply and tell me what helped this week, or what got in the way. I read every one.'),
+    ],
+    why: "You're getting this because Weekly recap is on in your TikTym account.",
+    unsubscribe: o.unsubscribe,
+  });
+  const plain = (t: string) => t.replace(/\*\*/g, '');
+  const text = [
+    hi.replace(/&amp;/g, '&'), '',
+    ...(quiet ? [plain(tip)] : [
+      `Here's your week on TikTym, ${when}.`, '',
+      `${r.done} minutes${r.target ? ` of ${r.target} planned` : ''} · ${r.daysShown} of ${r.days} days you showed up${r.best ? ` · best day ${weekdayOf(r.best.date)}, ${r.best.minutes} min` : ''}`, '',
+      ...r.practices.map(p => `- ${p.name}: ${p.target ? `${p.done} of ${p.target} min` : `${p.done} min`}`), '',
+      ...(vs || streak ? [[vs, streak].filter(Boolean).join(' '), ''] : []),
+      plain(tip),
+    ]), '',
+    `Open TikTym: ${appLink('weekly_recap')}`, '',
+    'Praveen', SIGN_OFF, '', '--',
+    `You're getting this because Weekly recap is on in your TikTym account. Unsubscribe: ${o.unsubscribe}`,
+  ].join('\n');
+  const subject = quiet ? 'A fresh week on TikTym' : `Your week on TikTym: ${r.done} minutes`;
+  return { subject, html, text, headers: unsubscribeHeaders(o.unsubscribe) };
 }
 
 /** The pages shown by the unsubscribe link (NOTIF-05). */

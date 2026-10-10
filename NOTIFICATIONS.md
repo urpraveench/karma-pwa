@@ -48,7 +48,7 @@ Three switches in Setup › Notifications and privacy control them: **Tips and r
 | First-minute nudge | About 24 hours after Start | Only if nothing has been logged | Tips and reminders | Built |
 | First-week tips | Day 3 and day 6 after Start | Only while still using TikTym; one tip each (day 3: the focus timer; day 6: Insights and your best time of day) | Tips and reminders | Planned |
 | Comeback | After 3 days with nothing logged | Once per absence: "no catching up needed, just 5 minutes today" | Tips and reminders | Planned |
-| Weekly recap | Monday, 8 am IST | Anyone who logged something in the last 2 weeks: last week's points, best day, streak, one suggestion | Weekly recap | Planned |
+| Weekly recap | Monday, 8 am IST | Anyone who logged something in the last 2 weeks: last week's minutes against the targets, days shown up, best day, each practice with a bar, the show-up streak, one gentle suggestion; after a quiet week, a short "5 minutes today" note instead | Weekly recap | Built |
 | Monthly progress | 1st of the month, 8 am IST | Active users: the month's progress card is ready to share | Weekly recap | Planned |
 | News | When there's something to announce, at most monthly | Everyone with News on (e.g. the 100 Days, 100 Minutes launch), text approved by Praveen | News about TikTym | Planned |
 

@@ -37,8 +37,8 @@ Summary of coverage at the time of writing:
 | 13. App shell, PWA and platform | 35 | 30 | 0 | 5 |
 | 14. Marketing and sharing | 22 | 22 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
-| 16. Notifications | 4 | 4 | 0 | 0 |
-| **Total** | **289** | **274** | **0** | **15** |
+| 16. Notifications | 5 | 5 | 0 | 0 |
+| **Total** | **290** | **275** | **0** | **15** |
 
 ---
 
@@ -448,6 +448,7 @@ See NOTIFICATIONS.md for the plan. Emails and usage statistics are on by default
 | NOTIF-03 | Welcome email | Once, when a new account taps Start on first run, if "Tips and reminders" is on: from "Praveen from TikTym" <hello@tiktym.com>, replies to the support address; greets by first name, lists the chosen practices and minutes, explains carry-forward and adding TikTym to the home screen, with an Open TikTym button | Unit `mail.test.ts`, Emulator `tests-emulator/rules.test.ts` (sending: Manual, checked live 10 Oct) |
 | NOTIF-04 | First-minute nudge | Once, about 24 hours after first-run Start, only if nothing has been logged and tips are on: suggests 5 minutes of the shortest practice, with an Open TikTym button | Unit `mail.test.ts` (sending: Manual) |
 | NOTIF-05 | One-tap unsubscribe | Every email has a signed unsubscribe link and the List-Unsubscribe headers. Opening the link shows an Unsubscribe button (so email scanners that open links can't unsubscribe anyone); the button, or Gmail's own one-click button (RFC 8058), turns that email type off in the account without signing in. A tampered link does nothing. The service worker never answers /unsubscribe | Unit `mail.test.ts`, E2E `pwa.spec.ts` (live page: Manual) |
+| NOTIF-06 | Weekly recap email | Mondays at 8 am India time, if "Weekly recap" is on and something was logged in the last two weeks: last week (Monday to Sunday) in minutes against the targets, days shown up, best day, each practice with a bar, the show-up streak, how it compares with the week before (never as a telling-off), and one gentle suggestion. A practice that started mid-week counts from its start. A week with nothing logged gets a short "no catching up needed, 5 minutes today" note instead. Once per account per week | Unit `recap.test.ts` (sending: Manual) |
 
 ---
 

@@ -13,6 +13,10 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
+## Coming next
+
+- **A weekly recap by email, every Monday morning.** Last week's minutes, the days you showed up, your best day and how each practice went, with one small suggestion for the week ahead. Turn it off any time in Setup › Notifications and privacy.
+
 ## 1.8.0 · 10 October 2026 · 100 minutes a day for your productive life
 
 - **Help adding TikTym to your home screen.** After your first minutes, a card shows how on your phone: one Install button on Android, the two Safari steps on iPhone, or how to open TikTym in your browser if a link opened inside WhatsApp or Instagram. It's also in Setup any time.

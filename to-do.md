@@ -113,7 +113,9 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **You:** create a Resend API key (Sending access, tiktym.com) and store it with `firebase functions:secrets:set RESEND_API_KEY --project tiktym`. Never paste it into chat or code.
 - [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
-- [ ] **Claude:** Cloud Functions with Resend: welcome email after first-run Start, first-minute nudge after 24 hours with nothing logged, and one-tap unsubscribe.
+- [ ] **Claude:** email building blocks, tested: the welcome and first-minute emails (HTML and plain text), signed one-tap unsubscribe links, and who should get what (NOTIF-03, NOTIF-04, NOTIF-05).
+- [ ] **Claude:** Cloud Functions in asia-south1: send the welcome after first-run Start, the first-minute nudge about 24 hours later if nothing is logged, and an unsubscribe page at app.tiktym.com/unsubscribe (NOTIF-03, NOTIF-04, NOTIF-05).
+- [ ] **Claude:** deploy the functions with the app and website release, after the Resend key is stored; check with a test account (Manual).
 - [ ] **Claude:** weekly recap and product news emails, then push reminders (daily reminder, streak at risk).
 - [ ] **Claude:** phase 1 in-app: install tip, first-week tips, milestone celebrations, progress-card reminder, What's new dot, feedback ask.
 

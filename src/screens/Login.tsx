@@ -45,7 +45,7 @@ export function Login({ error: initialError = '' }: { error?: string }) {
     <main className="login">
       <Mark className="mark" />
       <h1>TikTym</h1>
-      <p className="lead">{signup ? 'Create your account. Pick your practices next, then log your first minute.' : 'One minute, one point. Clear today, then clear what\'s carried.'}</p>
+      <p className="lead">{signup ? 'Create your account. Pick your practices next, then log your first minute.' : '100 minutes a day for your productive life.'}</p>
       {/* Google first: on most phones in India it's two taps and no typing (AUTH-30) */}
       <button className="btn gbtn" onClick={google}><GoogleLogo /> Continue with Google</button>
       <div className="or">or use your email</div>

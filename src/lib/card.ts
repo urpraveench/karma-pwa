@@ -51,7 +51,7 @@ export async function drawCard(canvas: HTMLCanvasElement, s: CardStats, { names 
   ctx.fillStyle = C.ink; ctx.font = `800 230px ${DISPLAY}`;
   ctx.fillText(formatTime(s.minutes), L - 8, 540);
   ctx.fillStyle = C.ink2; ctx.font = `400 44px ${BODY}`;
-  ctx.fillText('of learning and practice', L, 610);
+  ctx.fillText('for a productive life', L, 610);
 
   // streak and active days
   const box = (x: number, value: string, label: string, color: string) => {
@@ -81,7 +81,7 @@ export async function drawCard(canvas: HTMLCanvasElement, s: CardStats, { names 
 
   // footer
   ctx.fillStyle = C.ink2; ctx.font = `400 36px ${BODY}`;
-  ctx.fillText('One minute, one point', L, CARD.height - 90);
+  ctx.fillText('100 minutes a day', L, CARD.height - 90);
   ctx.fillStyle = C.gold; ctx.font = `700 36px ${BODY}`; ctx.textAlign = 'right';
   ctx.fillText('tiktym.com', L + W, CARD.height - 90);
   ctx.textAlign = 'left';
@@ -91,5 +91,5 @@ export async function drawCard(canvas: HTMLCanvasElement, s: CardStats, { names 
 export function cardSummary(s: CardStats, names: boolean): string {
   const top = s.top.map((p, i) => `${names ? p.name : `Practice ${i + 1}`} ${formatTime(p.minutes)}`).join(', ');
   const first = streakStat(s);
-  return `${s.month} so far: ${formatTime(s.minutes)} of learning and practice, ${first.value} ${first.label}, ${s.activeDays} active days${top ? `. Top: ${top}` : ''}.`;
+  return `${s.month} so far: ${formatTime(s.minutes)} for a productive life, ${first.value} ${first.label}, ${s.activeDays} active days${top ? `. Top: ${top}` : ''}.`;
 }

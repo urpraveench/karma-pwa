@@ -32,7 +32,7 @@ export default defineConfig({
       manifest: {
         name: 'TikTym',
         short_name: 'TikTym',
-        description: 'One minute, one point. Track daily practices and clear your backlog.',
+        description: '100 minutes a day for your productive life: move, read, grow and breathe.',
         start_url: '/',
         scope: '/',
         display: 'standalone',

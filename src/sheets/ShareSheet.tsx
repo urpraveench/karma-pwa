@@ -36,7 +36,7 @@ export function ShareSheet() {
   async function share() {
     if (!file) return;
     try {
-      await navigator.share({ files: [file], title: 'My TikTym progress', text: 'One minute, one point. tiktym.com' });
+      await navigator.share({ files: [file], title: 'My TikTym progress', text: '100 minutes a day for a productive life. tiktym.com' });
       track('share_progress', { method: 'share' }); count('cardsShared');
     } catch (e) {
       if ((e as Error).name !== 'AbortError') toast("Couldn't open sharing here. Try Download instead.");

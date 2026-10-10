@@ -23,13 +23,16 @@ const html = `<!doctype html><html><head><meta charset="utf-8">
   .mala b{position:absolute;inset:0;display:grid;place-items:center;font:800 84px/1 "Bricolage Grotesque";letter-spacing:-.03em}
   .mala b small{display:block;font:500 22px Figtree;color:#93A89F;letter-spacing:0;margin-top:6px;text-align:center}
   h1{font:800 92px/1 "Bricolage Grotesque";letter-spacing:-.03em}
-  p{font-size:34px;line-height:1.3;margin-top:22px;color:#E4ECE7;max-width:640px}
+  p{font-size:38px;line-height:1.25;margin-top:22px;color:#E4ECE7;max-width:660px}
+  p em{font-style:normal;color:#E6B23C;font-weight:700}
+  .mix{font-size:24px;color:#93A89F;margin-top:18px;white-space:nowrap}
   .tag{margin-top:34px;font-size:22px;font-weight:700;color:#E6B23C}
 </style></head><body>
   <div class="mala"><svg viewBox="0 0 400 400" width="400" height="400">${beads}<circle cx="200" cy="32" r="10" fill="#E6B23C"/></svg>
     <b><span>45<small>minutes left today</small></span></b></div>
   <div><h1>TikTym</h1>
-    <p>Make time for what you're learning. One minute, one point. Busy weeks carry forward, never pile up.</p>
+    <p><em>100 minutes</em> a day<br>for your productive life.</p>
+    <p class="mix">30 to move · 30 to read · 30 to grow · 10 to breathe</p>
     <div class="tag">Free · Works offline · Made in India</div></div>
 </body></html>`;
 

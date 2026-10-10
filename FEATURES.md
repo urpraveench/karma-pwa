@@ -50,7 +50,7 @@ The app has two modes, set by `VITE_BACKEND`. **Test mode** (`local`) keeps data
 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
-| AUTH-01 | Open the app signed out | Login screen with the TikTym mark, heading and tagline "One minute, one point. Clear today, then clear what's carried." | E2E `auth.spec.ts` |
+| AUTH-01 | Open the app signed out | Login screen with the TikTym mark, heading and tagline "100 minutes a day for your productive life." | E2E `auth.spec.ts` |
 | AUTH-02 | Test-mode hint | Shows the demo email and password when `VITE_SHOW_DEV_HINT` is on | E2E `auth.spec.ts` |
 | AUTH-03 | Submit with an empty field | "Enter your email and password." | E2E `auth.spec.ts` |
 | AUTH-04 | Wrong email or password | "That email and password don't match the test login." | E2E `auth.spec.ts` |

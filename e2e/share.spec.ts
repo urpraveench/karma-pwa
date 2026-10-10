@@ -14,7 +14,7 @@ test('Insights › Share previews a 1080×1350 card (SHARE-02)', async ({ page }
   await openShare(page);
   const img = page.locator('.card-preview img');
   expect(await img.evaluate(i => [(i as HTMLImageElement).naturalWidth, (i as HTMLImageElement).naturalHeight])).toEqual([1080, 1350]);
-  await expect(img).toHaveAttribute('alt', /^October so far: .+ of learning and practice, \d+ (day streak|day best streak|entr(y|ies) this month), \d+ active days\. Top: .+\.$/);
+  await expect(img).toHaveAttribute('alt', /^October so far: .+ for a productive life, \d+ (day streak|day best streak|entr(y|ies) this month), \d+ active days\. Top: .+\.$/);
 });
 
 test('the names switch hides practice names (SHARE-04)', async ({ page }) => {

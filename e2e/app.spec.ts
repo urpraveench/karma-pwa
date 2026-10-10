@@ -121,9 +121,9 @@ test.describe('update bar (APP-22)', () => {
 test('sharing the link shows a title, description and preview image (GTM-01)', async ({ page, request }) => {
   await page.goto('/');
   const meta = (sel: string) => page.locator(sel).getAttribute('content');
-  expect(await meta('meta[property="og:title"]')).toBe("TikTym: make time for what you're learning");
-  expect(await meta('meta[property="og:description"]')).toContain('Busy weeks carry forward');
-  expect(await meta('meta[name="description"]')).toContain('made in India');
+  expect(await meta('meta[property="og:title"]')).toBe('TikTym: 100 minutes a day for your productive life');
+  expect(await meta('meta[property="og:description"]')).toContain('30 minutes to move, 30 to read, 30 to grow, 10 to breathe');
+  expect(await meta('meta[name="description"]')).toContain('100 minutes a day for your productive life');
   expect(await meta('meta[name="twitter:card"]')).toBe('summary_large_image');
   const image = await meta('meta[property="og:image"]');
   expect(image).toMatch(/^https:\/\/.+\/og\.png$/); // previews need an absolute URL

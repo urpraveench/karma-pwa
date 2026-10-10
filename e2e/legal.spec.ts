@@ -65,14 +65,18 @@ test.describe('Privacy Policy (LEGAL-02)', () => {
   test('discloses emails, reminders, Resend and backups, on by default with a way out (LEGAL-07)', async ({ page }) => {
     await page.goto('/privacy/');
     const body = page.locator('main');
-    for (const what of ['Emails about your practice', 'Phone reminders (when available)'])
+    for (const what of ['Emails about your practice', 'Phone reminders and the app icon count'])
       await expect(page.locator('td', { hasText: new RegExp(`^${what.replace(/[()]/g, '\\$&')}$`) })).toBeVisible();
     await expect(body).toContainText("We don't track whether you open emails");
     await expect(body).toContainText('Resend (Resend, Inc., USA)');
     await expect(body).toContainText('daily backups are kept for 7 days and weekly ones for 8 weeks');
     await expect(body).toContainText('the unsubscribe link in any email');
+    await expect(body).toContainText("your own browser's push service (Google, Apple or Mozilla");
+    await expect(body).toContainText('settings, notification addresses and your sign-in account are deleted');
+    await expect(body).not.toContainText('Firebase Cloud Messaging');
     await page.goto('/terms/');
     await expect(page.locator('main')).toContainText('Each is on from the start, and you can turn each off at any time');
+    await expect(page.locator('main')).toContainText('Daily phone reminders start only if you allow notifications');
   });
 
   test('links to the Terms', async ({ page }) => {

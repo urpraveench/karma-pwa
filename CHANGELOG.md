@@ -17,6 +17,8 @@ Format, newest first:
 
 - **A weekly recap by email, every Monday morning.** Last week's minutes, the days you showed up, your best day and how each practice went, with one small suggestion for the week ahead. Turn it off any time in Setup › Notifications and privacy.
 - **A short note if you've been away for a few days**, with one small way back in: 5 minutes of your shortest practice. Just one per break, and no making up for missed days.
+- **A daily reminder on your phone, at a time you choose.** After your first minutes of the day, TikTym offers to remind you tomorrow; it names what's still left and stays quiet once your day is clear. Change the time or turn it off in Setup. On iPhone, it works once TikTym is on your home screen.
+- **The number of practices left today on TikTym's icon**, on iPhone (from the home screen) and on computers where TikTym is installed. It clears when your day is clear. Turn it off in Setup.
 
 ## 1.8.0 · 10 October 2026 · 100 minutes a day for your productive life
 

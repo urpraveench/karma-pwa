@@ -1,6 +1,6 @@
 # TikTym
 
-Habit-tracking PWA: React 19 + TypeScript + Vite, Firebase (Auth + Firestore) for sync, localStorage in test mode. The marketing website is plain HTML in `site/`. See README.md for setup, FEATURES.md for every scenario, to-do.md for pending work, GTM.md for the go-to-market plan, OUTREACH.md for day-to-day outreach tasks and logs, CHANGELOG.md for what changed in each release, written for users.
+Habit-tracking PWA: React 19 + TypeScript + Vite, Firebase (Auth + Firestore) for sync, localStorage in test mode. The marketing website is plain HTML in `site/`. See README.md for setup, FEATURES.md for every scenario, to-do.md for pending work, GTM.md for the go-to-market plan, OUTREACH.md for day-to-day outreach tasks and logs, CHANGELOG.md for what changed in each release, written for users. NOTIFICATIONS.md is the plan for onboarding emails, reminders and push notifications.
 
 ## Workflow for every change
 

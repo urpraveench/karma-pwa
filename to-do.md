@@ -106,6 +106,15 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 - [ ] **Idea (from content, 9 October 2026):** a challenge view for 100 Days, 100 Minutes (30 Exercise, 30 Reading, 30 Upskilling, 10 Meditation; a day counts when Today is cleared, carried minutes included): "Day 34 of 100", days won, and a shareable challenge card. Only if the challenge goes ahead; streaks and the progress card cover the start.
 - [ ] Phase 2, needs Blaze: push reminders, streak-at-risk alerts, a weekly recap, and a timer alert while the app is closed (Cloud Functions + FCM).
 
+## Notifications (see NOTIFICATIONS.md)
+
+Planned 10 October 2026; nothing built yet. Decide the open questions in NOTIFICATIONS.md first.
+
+- [ ] **You:** decide when to move to Blaze for phase 2 (email and push), and the email provider (Resend or Brevo).
+- [ ] **You:** send a personal welcome email to each new sign-up (phase 1).
+- [ ] **Claude:** phase 1 in-app: install tip, first-week tips, milestone celebrations, progress-card reminder, What's new dot, feedback ask.
+- [ ] **Claude:** phase 2 (after Blaze): notification settings in Setup, Privacy Policy update, email (welcome, first-minute nudge, comeback, weekly recap), push (daily reminder, streak at risk).
+
 ## 7. Housekeeping
 
 - [ ] **You (optional):** rename the GitHub repo from `karma-pwa` to `tiktym` (Settings › Repository name), then run `git remote set-url origin https://github.com/urpraveench/tiktym.git`.

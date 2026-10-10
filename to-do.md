@@ -138,6 +138,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** install guides on the website: the two with a video (iPhone Safari, Android Chrome) first, the two without as plain cards below, with no empty video space (GTM-20), 10 October 2026
 - [x] **Claude:** comeback email after 3 full days with nothing logged, once per absence (Tips and reminders), on the scalable design: a trigger keeps each account's last-logged date, a daily 9 am job queries only people away 4 to 14 days and queues one task each (rate-limited, retried); waits a day if another email went that day (NOTIF-07, NOTIF-08). Built, unit-tested and deployed (functions `trackLastLogged`, `comebackDaily` at 9 am India time, `comebackSend` on a Cloud Tasks queue), 10 October 2026
 - [x] Deployed the weekly recap (function `weeklyRecap`, Mondays 8 am India time); the first goes out Monday 12 October for 5 to 11 October, 10 October 2026
 - [x] **Claude:** weekly recap email, Monday 8 am IST, for anyone active in the last 2 weeks (Weekly recap switch): last week's minutes against the targets, days shown up, best day, each practice with a bar, the show-up streak, one gentle suggestion; a quiet week gets a no-catching-up note instead (NOTIF-06). Built and unit-tested; sends from the first Monday after the functions deploy, 10 October 2026

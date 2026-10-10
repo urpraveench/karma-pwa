@@ -224,6 +224,16 @@ test.describe('install help on the website, for each phone and browser (GTM-19)'
       await expect(page.locator('.install-warn')).toBeHidden();
     });
   });
+  test('on a computer, the two guides with a video first, the two without as plain cards (GTM-20)', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'Website (desktop)', 'a phone puts its own guides first');
+    await page.goto('/');
+    const cards = page.locator('.install > div');
+    await expect(cards.locator('h3')).toHaveText([/^iPhone · Safari/, /^Android · Chrome/, /^iPhone · Chrome/, /^Android · Samsung Internet/]);
+    for (const [i, clips] of [[0, 1], [1, 1], [2, 0], [3, 0]]) await expect(cards.nth(i).locator('video')).toHaveCount(clips);
+    // a card without a video is only as tall as its steps, never stretched to a video card's height
+    const [video, plain] = [await cards.nth(0).boundingBox(), await cards.nth(2).boundingBox()];
+    expect(plain!.height).toBeLessThan(video!.height / 2);
+  });
   test.describe('Chrome on an iPhone', () => {
     test.use({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/129.0 Mobile/15E148 Safari/604.1' });
     test('the iPhone Chrome guide first, marked as your phone', async ({ page }) => {

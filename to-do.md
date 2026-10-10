@@ -22,7 +22,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] The first Monday after the weekly recap is deployed: check it arrives at about 8 am for an account that logged last week, that the numbers match History for that week, and that the function's log says how many went (NOTIF-06)
 - [ ] On Android Chrome: allow reminders, set a time 15 minutes ahead, and check the reminder arrives once, names what's left, shows the white ring in the status bar, and opens TikTym; `firebase functions:log --only reminderSend` shows it (NOTIF-09). iPhone checked 10 October
 - [ ] After the "one tap away" email is deployed: sign in with a spare Google account, stop at the practice picker, and check the email arrives about a day later, once; then tap Start and check the welcome still arrives (NOTIF-15, NOTIF-03)
-- [ ] After push reminders are deployed: on an iPhone with TikTym on the home screen and notifications allowed, the icon shows the number of practices left today, updates after the reminder, and clears when the day is clear (NOTIF-13)
+- [ ] On iPhone: log a practice in full and check the icon's number drops by one; clear the day and check the number disappears (NOTIF-13). The count itself was checked 10 October
 - [ ] **You:** remove the last line of the LinkedIn page description ("TikTym is built by Pramal IT Services Private Limited.") in LinkedIn › Edit page
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
@@ -140,6 +140,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] App badge checked live on iPhone: the icon showed 4, matching the practices left in the reminder (NOTIF-13), 10 October 2026
 - [x] Daily reminder checked live on iPhone (home-screen app): queued at the 8:30 pm IST slot and delivered 6 seconds later, naming the 4 practices left; the server's queue permission works (NOTIF-09), 10 October 2026
 - [x] 10 October 2026: **Claude:** "one tap away" email for people who sign in but never tap Start on the first-run screen (NOTIF-15). Seen 10 October 2026: account `mcgg…` signed in with Google at 13:29 and got no welcome. Sign-up records `mail/{uid}.startDueAt` (an Auth trigger), the hourly job sends once about a day later if still not started and Tips and reminders is on; the welcome no longer assumes `mail/{uid}` doesn't exist yet.
 - [x] Released 1.9.0: daily push reminders at a chosen time, the app badge (practices left today), and the weekly recap and comeback emails in What's new; functions `reminderSettings`, `reminderDevices`, `remindersDue` (every 15 minutes) and `reminderSend` (queue) deployed with the `VAPID_PRIVATE_KEY` secret, 10 October 2026

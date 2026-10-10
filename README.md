@@ -66,7 +66,7 @@ Settings are Vite env vars. Copy `.env.example` to `.env.local` and fill it in. 
 | `VITE_TERMS_URL`, `VITE_PRIVACY_URL` | Legal links shown at sign-up |
 | `VITE_FIREBASE_*` | The web app config from the Firebase Console |
 
-## Deploy to Firebase (Spark plan)
+## Deploy to Firebase
 
 1. Create a project in the Firebase Console. Add a **Web app** and copy its config.
 2. Go to **Build › Firestore Database** and create a database in production mode. Pick a region close to you, such as `asia-south1`.
@@ -118,6 +118,23 @@ users/{uid}/meta/settings     { seeded, schema: 2, backlogCap }
 ```
 
 The rules in `firestore.rules` restrict each user to their own `users/{uid}` tree. Logs are bucketed one doc per month, so an app open costs about (categories + months + 1) reads. A user with a year of history is around 17 reads per open, compared with about 1,500 under the old one-doc-per-log layout. Old data migrates automatically on first load (schema 1 to 2). Firestore offline persistence is enabled, so logging works without signal and syncs later.
+
+## Backups and restoring
+
+Firestore backs up the whole database automatically (SYNC-17, set up 10 October 2026 on the Blaze plan):
+
+- **Daily**, kept for 7 days (the longest Firestore allows for daily backups).
+- **Weekly, on Sunday**, kept for 8 weeks, for problems noticed late.
+
+Check them with `firebase firestore:backups:schedules:list --project tiktym` and `firebase firestore:backups:list --project tiktym`.
+
+**To restore** (after a bad bug or an accidental deletion):
+
+1. Find the backup from before the problem: `firebase firestore:backups:list --project tiktym`.
+2. Restore it into a **new** database, never over the live one: `firebase firestore:databases:restore --project tiktym --database restore-YYYY-MM-DD --backup <backup name from step 1>`. It takes minutes to hours depending on size.
+3. Look at the restored data in the Firebase console (Firestore › the database list) and confirm it has what was lost.
+4. Copy the lost documents back into the live `(default)` database: for one person, their `users/{uid}` documents; ask Claude for a small script. The live database keeps everything written since the backup.
+5. Delete the restored database when done (`firebase firestore:databases:delete restore-YYYY-MM-DD --project tiktym`); it's billed while it exists.
 
 ## Website
 

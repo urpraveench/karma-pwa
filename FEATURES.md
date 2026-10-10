@@ -33,11 +33,11 @@ Summary of coverage at the time of writing:
 | 9. Insights | 23 | 23 | 0 | 0 |
 | 10. Practices (Setup) | 23 | 23 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
-| 12. Sync and storage | 16 | 15 | 0 | 1 |
+| 12. Sync and storage | 17 | 15 | 0 | 2 |
 | 13. App shell, PWA and platform | 30 | 25 | 0 | 5 |
 | 14. Marketing and sharing | 20 | 20 | 0 | 0 |
 | 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **277** | **263** | **0** | **14** |
+| **Total** | **278** | **263** | **0** | **15** |
 
 ---
 
@@ -350,6 +350,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | SYNC-14 | Firebase SDK only in Firebase mode | Test mode never downloads it | Manual (check the network tab) |
 | SYNC-15 | Edit a log | Same month: only that entry changes. Another month: removed from the old month and added to the new one in one batch | Unit `firestore-store.test.ts`, Emulator `tests-emulator/store.test.ts` |
 | SYNC-16 | Closing right after a change | A log, edit, delete, practice change or settings change made just before the app closes or reloads is kept: it's shown when the app opens again and sent to Firebase then. Changes Firebase refuses aren't retried | Unit `outbox.test.ts`, E2E `firebase/quick-close.spec.ts` |
+| SYNC-17 | Backups | Firestore backs up the whole database every day (kept 7 days) and every Sunday (kept 8 weeks), so a bad bug or deletion can be undone by restoring into a new database | Manual (`firebase firestore:backups:schedules:list`; a restore drill) |
 
 ## 13. App shell, PWA and platform
 

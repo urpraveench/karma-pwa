@@ -15,6 +15,8 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 These can't be automated, or need the real project and a real phone. IDs refer to [FEATURES.md](FEATURES.md).
 
+- [ ] From 11 October: run `firebase firestore:backups:list --project tiktym` and check a daily backup appears each day (SYNC-17)
+- [ ] Once, before real promotion: a restore drill. Restore the latest backup into a new database (README › Backups and restoring), check it in the console, then delete it (SYNC-17)
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] **You:** after the fix, run the 5-minute Meditation test again: the chime should play right as the timer reaches its target (TIMER-05).
@@ -110,7 +112,6 @@ Planned 10 October 2026; nothing built yet. Decide the open questions in NOTIFIC
 
 - [ ] **You:** choose the email provider (Claude's pick: Resend), create the account, and add its DNS records (SPF, DKIM) for tiktym.com at GoDaddy.
 - [ ] **You:** send a personal welcome email to each new sign-up (phase 1).
-- [ ] **Claude (after Blaze, first):** daily automatic backups of Firestore, so a bad bug or deletion can be undone.
 - [ ] **Claude:** phase 1 in-app: install tip, first-week tips, milestone celebrations, progress-card reminder, What's new dot, feedback ask.
 - [ ] **Claude:** phase 2 (after Blaze): notification settings in Setup, Privacy Policy update, email (welcome, first-minute nudge, comeback, weekly recap), push (daily reminder, streak at risk).
 
@@ -123,6 +124,7 @@ Planned 10 October 2026; nothing built yet. Decide the open questions in NOTIFIC
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Automatic Firestore backups: daily (kept 7 days) and weekly on Sunday (kept 8 weeks); restore steps in README (SYNC-17), 10 October 2026
 - [x] Monthly budget alert set on the billing account, and the project moved to the Blaze plan, 10 October 2026
 - [x] Home page description shortened from 194 to 140 characters, as Bing Webmaster Tools asked; every page's description is now checked to be 25 to 160 characters (GTM-18), 9 October 2026
 - [x] Google Search Console: tiktym.com verified as a Domain property, 9 October 2026

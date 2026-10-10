@@ -18,7 +18,7 @@ import { useFeedback } from '../ui/feedback';
 
 export type View = 'today' | 'insights' | 'history' | 'setup';
 export type LogMethod = 'quick' | 'tile' | 'all_left' | 'custom' | 'timer' | 'other';
-export type Sheet = { kind: 'log'; catId?: string; custom?: boolean } | { kind: 'editCat'; id?: string } | { kind: 'share' } | { kind: 'editLog'; id: string } | null;
+export type Sheet = { kind: 'log'; catId?: string; custom?: boolean } | { kind: 'editCat'; id?: string } | { kind: 'share' } | { kind: 'editLog'; id: string } | { kind: 'install' } | null;
 type Phase = { kind: 'boot' } | { kind: 'login'; error?: string } | { kind: 'loading' } | { kind: 'choose' } | { kind: 'ready' };
 
 const EMPTY: AppData = { categories: [], logs: [], settings: {} };

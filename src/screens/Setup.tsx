@@ -8,6 +8,7 @@ import { useTheme, type Theme } from '../state/theme';
 import { Icon } from '../ui/icons';
 import { BUILD } from '../version';
 import { NotificationsPrivacy } from '../components/NotificationsPrivacy';
+import { useInstall } from '../state/install';
 
 const SHORT_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const dayTxt = (d: number[]) => d.length === 7 ? 'every day' : d.length === 0 ? 'no days' : [1, 2, 3, 4, 5, 6, 0].filter(x => d.includes(x)).map(x => SHORT_DAYS[x]).join(', ');
@@ -17,6 +18,7 @@ const THEMES: Theme[] = ['system', 'light', 'dark'];
 export function Setup() {
   const { data, T, user, openSheet, reorderCategory, setBacklogCap, loadSample, exportBackup, importBackup, startOver, signOut, deleteAccount } = useApp();
   const [theme, setTheme] = useTheme();
+  const { env: installEnv } = useInstall();
   const cats = [...data.categories].sort(byOrder);
   const total = sum(activeCats(data.categories, T).map(c => dueOn(c, T)));
   const cap = capDays(data.settings);
@@ -76,6 +78,7 @@ export function Setup() {
 
       <div className="sect-h"><h2>About</h2></div>
       <div className="list">
+        {installEnv !== 'installed' && <button className="li" type="button" onClick={() => openSheet({ kind: 'install' })}><span className="t">Add TikTym to your home screen<small>It opens like an app, without an app store</small></span><span className="chev">›</span></button>}
         <div className="li about"><span className="t">TikTym {BUILD.version}<small>Build {BUILD.commit}, {new Date(BUILD.builtAt).toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</small></span></div>
         <a className="li" href={config.whatsNew} target="_blank" rel="noopener"><span className="t">What's new<small>Every update, newest first</small></span><span className="chev">›</span></a>
         <a className="li" href={feedbackLink(BUILD)}><span className="t">Send feedback<small>Ideas, problems, anything. It goes straight to the people who build TikTym.</small></span><span className="chev">›</span></a>

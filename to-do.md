@@ -98,8 +98,6 @@ From FEATURES.md › "What's left to test". None left: every scenario has a test
 
 Help people add TikTym to their home screen (friends didn't know how; most only know app stores). Part of 1.8.0.
 
-- [ ] **Claude:** an install card on Today after the first logged minutes: Install button on Android (the browser's own prompt), picture steps on iPhone (Share › Add to Home Screen), and "open in your browser first" for links opened inside WhatsApp, LinkedIn or Instagram; dismiss snoozes 3 days, a second dismiss hides it for good; never shown once installed (APP-27 to APP-30).
-- [ ] **Claude:** Setup › "Add TikTym to your home screen", opening the same guide at any time (APP-31).
 - [ ] **Claude:** the website's Install section shows the visitor's own phone first and warns about in-app browsers; the WhatsApp messages get an "open in browser" line (GTM-19).
 
 - [ ] **Deferred (10 October 2026, your call):** while a timer runs, Today's big number stays at saved points even though the beads already show the timer's minutes, so the two disagree (found by Praveen). Proposed: the number counts down live (capped at what the practice still needs), no extra line in the circle, and "20 of 30 · timing" on the practice's row.
@@ -140,6 +138,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Install help: a card on Today after the first logged minutes (Install button on Android, Share › Add to Home Screen with icons on iPhone, "open in browser" with Copy the link inside WhatsApp, Instagram, Facebook or LinkedIn); Not now snoozes 3 days, twice ends it; hidden once installed; and Setup › Add TikTym to your home screen (APP-27 to APP-31). The card and the Setup row went in one commit because they share the guide, 10 October 2026
 - [x] New brand line in the LinkedIn cover, post image and video (in Downloads), and in the OUTREACH.md messages; the LinkedIn tagline and description wording is a task in OUTREACH.md, 10 October 2026
 - [x] New brand line in the emails: header image "TikTym · 100 minutes a day", the welcome's daily total "N minutes a day · your productive life", and tip 1 "Every minute counts towards your N" using each person's own total (NOTIF-03), 10 October 2026
 - [x] New brand line on the website: title and link preview, hero ("100 minutes a day for your productive life" with 30/30/30/10), how it works ("counts towards your 100"), the professionals section (wellbeing, not only learning; "Start your 100 minutes today"; 100 minutes as the suggested start), the closing, search description, llms.txt and structured data (GTM-04). Not deployed yet, 10 October 2026

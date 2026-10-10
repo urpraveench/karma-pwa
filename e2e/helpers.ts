@@ -8,7 +8,13 @@ export const DEMO = { email: 'demo@tiktym.local', password: 'tiktym123' };
 const SESSION = { id: 'local-demo@tiktym.local', email: DEMO.email, name: 'Test user' };
 
 /** Every test-mode test fails if the app logs a console error or warning (APP-19). */
-export const test = base.extend<{ consoleErrors: string[] }>({
+export const test = base.extend<{ consoleErrors: string[]; installCard: boolean; hideInstallCard: void }>({
+  /** The install card on Today (APP-30) would appear in most tests (they run as an Android phone and log minutes); off unless a test opts in. */
+  installCard: [false, { option: true }],
+  hideInstallCard: [async ({ page, installCard }, use) => {
+    if (!installCard) await page.addInitScript(() => localStorage.setItem('tiktym:install-nudge', '{"dismissals":2}'));
+    await use();
+  }, { auto: true }],
   consoleErrors: [async ({ page }, use) => {
     const errors: string[] = [];
     page.on('console', m => {

@@ -12,6 +12,10 @@ export const Icon = {
   pause: () => <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4.5" width="4" height="15" rx="1.2" /><rect x="14" y="4.5" width="4" height="15" rx="1.2" /></svg>,
   up: () => <svg viewBox="0 0 24 24" {...stroke} strokeWidth={2.2} strokeLinejoin="round"><path d="M6 15l6-6 6 6" /></svg>,
   down: () => <svg viewBox="0 0 24 24" {...stroke} strokeWidth={2.2} strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>,
+  /** iOS Share: a square with an arrow out of the top */
+  share: () => <svg viewBox="0 0 24 24" {...stroke}><path d="M12 3v12M8 7l4-4 4 4M7 10H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1" /></svg>,
+  /** iOS Add to Home Screen: a plus in a rounded square */
+  addSquare: () => <svg viewBox="0 0 24 24" {...stroke}><rect x="4" y="4" width="16" height="16" rx="4" /><path d="M12 8.5v7M8.5 12h7" /></svg>,
   x: () => <svg viewBox="0 0 24 24" {...stroke}><path d="M6 6l12 12M18 6L6 18" /></svg>,
 };
 

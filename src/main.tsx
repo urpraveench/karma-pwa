@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { installedApp } from './components/MovedBar';
+import './state/install'; // catches the browser's install offer as early as possible (APP-27)
 import { startAnalytics } from './lib/analytics';
 import { moveAction } from './lib/moved';
 import { applyTheme, readTheme } from './state/theme';

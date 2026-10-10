@@ -15,6 +15,7 @@ Format, newest first:
 
 ## Coming next
 
+- **Help adding TikTym to your home screen.** After your first minutes, a card shows how on your phone: one Install button on Android, the two Safari steps on iPhone, or how to open TikTym in your browser if a link opened inside WhatsApp or Instagram. It's also in Setup any time.
 - **A new promise: 100 minutes a day for your productive life.** 30 minutes to move, 30 to read, 30 to grow and 10 to breathe, the four practices every new account starts with. Busy days still carry forward.
 - **Notifications and privacy in Setup**: switches for each kind of email (tips and reminders, weekly recap, news) and for usage statistics. They're on from the start, and each turns off with one tap.
 - **A welcome email** when you start, with the practices you chose and how to add TikTym to your home screen, and a gentle nudge a day later if you haven't logged your first minutes. Every email has an unsubscribe link.

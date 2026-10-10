@@ -34,11 +34,11 @@ Summary of coverage at the time of writing:
 | 10. Practices (Setup) | 23 | 23 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 17 | 15 | 0 | 2 |
-| 13. App shell, PWA and platform | 35 | 25 | 5 | 5 |
+| 13. App shell, PWA and platform | 35 | 30 | 0 | 5 |
 | 14. Marketing and sharing | 21 | 20 | 1 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 4 | 4 | 0 | 0 |
-| **Total** | **288** | **267** | **6** | **15** |
+| **Total** | **288** | **272** | **1** | **15** |
 
 ---
 
@@ -382,11 +382,11 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | APP-24 | App Check | With `VITE_RECAPTCHA_SITE_KEY` set, the app attaches a reCAPTCHA Enterprise (Google Cloud Fraud Defense) App Check token to Firebase requests; without it, and in test mode or with the emulators, App Check is off | Unit `app-check.test.ts` (the on/off switch; live tokens are checked in the Firebase console, see to-do.md) |
 | APP-25 | Light mode colours | The same contrast check as APP-14, in light: login, Today, Insights, History, Setup, the sheets and the focus timer | E2E `colours.spec.ts` |
 | APP-26 | Fonts don't block the first paint | The page draws straight away in the system font and switches to TikTym's fonts when they arrive | E2E `loading.spec.ts` |
-| APP-27 | Install on Android | On Android Chrome, Samsung Internet or Edge, the install card's Install button opens the browser's own install dialog; once installed, the card goes away | Gap |
-| APP-28 | Add to home screen on iPhone | On iPhone, the install card shows two steps with the real icons: tap Share (the square with an arrow, at the bottom of Safari), then Add to Home Screen; and, if there's no Share button, open the page in Safari first | Gap |
-| APP-29 | Opened inside another app | In WhatsApp's, Instagram's, Facebook's or LinkedIn's built-in browser (where installing is impossible), the card says to open TikTym in the phone's browser first and how (⋯ › Open in browser) | Gap |
-| APP-30 | When the install card shows | On Today, only after the first minutes are logged, never once TikTym is installed. Not now hides it for 3 days; a second Not now hides it for good on Today | Gap |
-| APP-31 | Install from Setup | Setup › "Add TikTym to your home screen" opens the same guide at any time; the row is hidden once TikTym is installed | Gap |
+| APP-27 | Install on Android | On Android Chrome, Samsung Internet or Edge, the install card's Install button opens the browser's own install dialog; once installed, the card goes away | E2E `install.spec.ts`, Unit `install.test.ts` |
+| APP-28 | Add to home screen on iPhone | On iPhone, the install card shows two steps with the real icons: tap Share (the square with an arrow, at the bottom of Safari), then Add to Home Screen; and, if there's no Share button, open the page in Safari first | E2E `install.spec.ts`, Unit `install.test.ts` |
+| APP-29 | Opened inside another app | In WhatsApp's, Instagram's, Facebook's or LinkedIn's built-in browser (where installing is impossible), the card says to open TikTym in the phone's browser first and how (⋯ › Open in browser) | E2E `install.spec.ts`, Unit `install.test.ts` |
+| APP-30 | When the install card shows | On Today, only after the first minutes are logged, never once TikTym is installed. Not now hides it for 3 days; a second Not now hides it for good on Today | E2E `install.spec.ts`, Unit `install.test.ts` |
+| APP-31 | Install from Setup | Setup › "Add TikTym to your home screen" opens the same guide at any time; the row is hidden once TikTym is installed | E2E `install.spec.ts` |
 | LEGAL-01 | Terms page | `/terms/` shows the Terms of Service under Indian law: operator Pramal IT Services Private Limited (CIN), eligibility, accounts, acceptable use, your data, no medical advice, availability, liability, termination, governing law and courts in Andhra Pradesh, grievance contact | E2E `legal.spec.ts` |
 | LEGAL-02 | Privacy page | `/privacy/` shows, for India's DPDP Act 2023: what's collected (account, practice data, device storage, reCAPTCHA signals), why, where it's stored (Mumbai), processors (Google), retention, rights (access, correction, export, erasure, grievance, Data Protection Board), 18+, changes, contact | E2E `legal.spec.ts` |
 | LEGAL-03 | reCAPTCHA notice | With App Check on, the login screen says "Protected by reCAPTCHA" with links to Google's Privacy Policy and Terms, as Google requires when the badge is hidden | Unit `app-check.test.ts` (when it shows); E2E `legal.spec.ts` (hidden while App Check is off). Shown live with App Check on: checked after each release |

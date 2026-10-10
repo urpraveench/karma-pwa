@@ -17,6 +17,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 
 - [ ] From 11 October: run `firebase firestore:backups:list --project tiktym` and check a daily backup appears each day (SYNC-17)
 - [ ] Once, before real promotion: a restore drill. Restore the latest backup into a new database (README › Backups and restoring), check it in the console, then delete it (SYNC-17)
+- [ ] After the functions deploy: create a test account and check the welcome email arrives (inbox, not spam), shows the chosen practices, and its unsubscribe link and Gmail's unsubscribe button both turn the switch off in Setup; a day later, check the first-minute nudge (NOTIF-03 to NOTIF-05)
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] **You:** after the fix, run the 5-minute Meditation test again: the chime should play right as the timer reaches its target (TIMER-05).
@@ -113,7 +114,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **You:** create a Resend API key (Sending access, tiktym.com) and store it with `firebase functions:secrets:set RESEND_API_KEY --project tiktym`. Never paste it into chat or code.
 - [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
-- [ ] **Claude:** Cloud Functions in asia-south1: send the welcome after first-run Start, the first-minute nudge about 24 hours later if nothing is logged, and an unsubscribe page at app.tiktym.com/unsubscribe (NOTIF-03, NOTIF-04, NOTIF-05).
 - [ ] **Claude:** deploy the functions with the app and website release, after the Resend key is stored; check with a test account (Manual).
 - [ ] **Claude:** weekly recap and product news emails, then push reminders (daily reminder, streak at risk).
 - [ ] **Claude:** phase 1 in-app: install tip, first-week tips, milestone celebrations, progress-card reminder, What's new dot, feedback ask.
@@ -127,6 +127,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Cloud Functions (asia-south1): welcome after first-run Start, an hourly first-minute nudge for accounts a day in with nothing logged, and app.tiktym.com/unsubscribe (asks first; Gmail's one-click works); server-only mail/ records, out of apps' reach; the service worker leaves /unsubscribe to the network. Built and tested, not deployed (NOTIF-03 to NOTIF-05), 10 October 2026
 - [x] Email building blocks in functions/src/mail.ts: the welcome and first-minute emails (HTML and plain text, TikTym's style, from Praveen), signed one-tap unsubscribe links with Gmail's unsubscribe headers, and who gets what; unit-tested. Not sending yet (NOTIF-03 to NOTIF-05), 10 October 2026
 - [x] Website Analytics on by default with a notice (OK, Opt out); opting out stops it, removes the cookies and is remembered; the privacy promise says so. Website tests now block Google's servers, so they can't report to the real property (ANA-04, LEGAL-05). Not deployed yet, 10 October 2026
 - [x] Setup › Notifications and privacy (three email types and usage statistics, all on to start); Analytics on by default once signed in, kept off where a device said no, and for older accounts only after the one-time notice on Today (ANA-01, ANA-03, NOTIF-01, NOTIF-02). Not deployed yet, 10 October 2026

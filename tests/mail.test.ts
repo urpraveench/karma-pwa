@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { easiest, emailOn, firstName, justStarted, nudgeEmail, readUnsubscribe, unsubscribedPage, unsubscribeLink, welcomeEmail } from '../functions/src/mail';
+import { confirmUnsubscribePage, easiest, emailOn, firstName, justStarted, nudgeEmail, readUnsubscribe, unsubscribedPage, unsubscribeLink, welcomeEmail } from '../functions/src/mail';
 
 const SECRET = 'test-secret';
 const practices = [{ name: 'Exercise', minutes: 30 }, { name: 'Reading', minutes: 30 }, { name: 'Meditation', minutes: 10 }];
@@ -76,6 +76,12 @@ describe('the emails (NOTIF-03, NOTIF-04)', () => {
     const e = welcomeEmail({ name: '<b>', practices: [{ name: 'Guitar & <script>', minutes: 20 }], unsubscribe });
     expect(e.html).not.toContain('<script>');
     expect(e.html).toContain('Guitar &amp; &lt;script&gt;');
+  });
+
+  it('opening the link asks first, with a button that posts, so email scanners can\'t unsubscribe anyone', () => {
+    const html = confirmUnsubscribePage('tips', '/unsubscribe?u=a&k=tips&t=x');
+    expect(html).toContain("You'll stop getting TikTym welcome and first-week tips emails");
+    expect(html).toContain('<form method="post" action="/unsubscribe?u=a&amp;k=tips&amp;t=x">');
   });
 
   it('the unsubscribed page confirms, or says the link failed', () => {

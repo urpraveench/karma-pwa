@@ -68,6 +68,13 @@
       ],
       "rewrites": [
         {
+          "source": "/unsubscribe",
+          "function": {
+            "functionId": "unsubscribe",
+            "region": "asia-south1"
+          }
+        },
+        {
           "source": "**",
           "destination": "/index.html"
         }
@@ -112,6 +119,14 @@
         }
       ],
       "cleanUrls": true
+    }
+  ],
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": ["node_modules", ".git", "*.log"],
+      "predeploy": ["npm --prefix functions run build"]
     }
   ],
   "firestore": {

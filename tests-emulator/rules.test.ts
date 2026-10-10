@@ -51,6 +51,12 @@ describe('firestore.rules', () => {
     await assertFails(setDoc(doc(db, 'public/x'), { x: 1 }));
     await assertFails(getDoc(doc(db, 'public/x')));
   });
+
+  it("the server's email records (mail/) are out of apps' reach, even for their own account (NOTIF-03)", async () => {
+    const db = env.authenticatedContext('alice').firestore();
+    await assertFails(getDoc(doc(db, 'mail/alice')));
+    await assertFails(setDoc(doc(db, 'mail/alice'), { nudgeDueAt: 0 }));
+  });
 });
 
 // STAT-03: anonymous daily totals: only small increments to known counters, never readable from an app.

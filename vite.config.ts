@@ -52,7 +52,7 @@ export default defineConfig({
         navigateFallback: 'index.html',
         // Firebase Hosting's reserved addresses, such as the Google sign-in relay page /__/auth/handler,
         // must reach the network; answering them with the app shell breaks sign-in.
-        navigateFallbackDenylist: [/^\/__\//],
+        navigateFallbackDenylist: [/^\/__\//, /^\/unsubscribe/], // and the email unsubscribe page, served by a Cloud Function
         cleanupOutdatedCaches: true,
         runtimeCaching: [
           {

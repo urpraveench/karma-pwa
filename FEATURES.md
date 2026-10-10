@@ -37,8 +37,8 @@ Summary of coverage at the time of writing:
 | 13. App shell, PWA and platform | 30 | 25 | 0 | 5 |
 | 14. Marketing and sharing | 20 | 20 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
-| 16. Notifications | 5 | 2 | 3 | 0 |
-| **Total** | **284** | **266** | **3** | **15** |
+| 16. Notifications | 5 | 5 | 0 | 0 |
+| **Total** | **284** | **269** | **0** | **15** |
 
 ---
 
@@ -440,9 +440,9 @@ See NOTIFICATIONS.md for the plan. Emails and usage statistics are on by default
 |---|---|---|---|
 | NOTIF-01 | Notifications and privacy settings | Setup has "Notifications and privacy": Welcome and first-week tips, Weekly recap, News about TikTym (emails) and Usage statistics, all on to start; one tap turns each off. Email choices are saved in the account, so the server respects them on any device | E2E `notifications.spec.ts`, Unit `notifications.test.ts` |
 | NOTIF-02 | Notice for accounts from before | Once, on Today: "Emails and usage statistics", what's now on and where to turn it off, with Review settings and OK. Statistics start only once it's seen. New accounts never see it: they were told at sign-up | E2E `notifications.spec.ts`, `analytics/analytics.spec.ts`, Unit `notifications.test.ts` |
-| NOTIF-03 | Welcome email | Once, when a new account taps Start on first run, if "Welcome and first-week tips" is on: from "Praveen from TikTym" <hello@tiktym.com>, replies to the support address; greets by first name, lists the chosen practices and minutes, explains carry-forward and adding TikTym to the home screen, with an Open TikTym button | Gap |
-| NOTIF-04 | First-minute nudge | Once, about 24 hours after first-run Start, only if nothing has been logged and tips are on: suggests 5 minutes of the shortest practice, with an Open TikTym button | Gap |
-| NOTIF-05 | One-tap unsubscribe | Every email has a signed unsubscribe link (and the List-Unsubscribe header for Gmail's button) that turns that email type off in the account without signing in, shows a confirmation page, and works with one click (RFC 8058); a tampered link does nothing | Gap |
+| NOTIF-03 | Welcome email | Once, when a new account taps Start on first run, if "Welcome and first-week tips" is on: from "Praveen from TikTym" <hello@tiktym.com>, replies to the support address; greets by first name, lists the chosen practices and minutes, explains carry-forward and adding TikTym to the home screen, with an Open TikTym button | Unit `mail.test.ts`, Emulator `tests-emulator/rules.test.ts` (sending: Manual) |
+| NOTIF-04 | First-minute nudge | Once, about 24 hours after first-run Start, only if nothing has been logged and tips are on: suggests 5 minutes of the shortest practice, with an Open TikTym button | Unit `mail.test.ts` (sending: Manual) |
+| NOTIF-05 | One-tap unsubscribe | Every email has a signed unsubscribe link and the List-Unsubscribe headers. Opening the link shows an Unsubscribe button (so email scanners that open links can't unsubscribe anyone); the button, or Gmail's own one-click button (RFC 8058), turns that email type off in the account without signing in. A tampered link does nothing. The service worker never answers /unsubscribe | Unit `mail.test.ts`, E2E `pwa.spec.ts` (live page: Manual) |
 
 ---
 

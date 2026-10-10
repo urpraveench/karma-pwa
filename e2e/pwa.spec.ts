@@ -37,6 +37,9 @@ test("Firebase's reserved addresses always come from the network (APP-20)", asyn
   // the Google sign-in relay page: must reach Firebase Hosting, not be answered with the app shell
   const handler = await page.goto('/__/auth/handler?apiKey=x');
   expect(handler?.fromServiceWorker()).toBe(false);
+  // the email unsubscribe page (a Cloud Function): must reach the network too (NOTIF-05)
+  const unsubscribe = await page.goto('/unsubscribe?u=x&k=tips&t=y');
+  expect(unsubscribe?.fromServiceWorker()).toBe(false);
   // ordinary app addresses are still served by the service worker
   const deepLink = await page.goto('/any/deep/link');
   expect(deepLink?.fromServiceWorker()).toBe(true);

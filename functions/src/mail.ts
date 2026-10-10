@@ -156,13 +156,26 @@ export function nudgeEmail(o: { name: string; practice: Practice; unsubscribe: s
   return { subject: 'Your first five minutes on TikTym', html, text, headers: unsubscribeHeaders(o.unsubscribe) };
 }
 
-/** The page shown after unsubscribing (NOTIF-05). */
+const KIND_NAME: Record<EmailKind, string> = { tips: 'welcome and first-week tips', recap: 'weekly recap', news: 'news' };
+
+function page(body: string): string {
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>TikTym emails</title>
+<style>body{margin:0;background:#EDF0EA;color:#16302E;font:16px/1.55 ${FONT};display:grid;place-items:center;min-height:100vh;padding:24px;box-sizing:border-box}main{max-width:440px;background:#F8FAF6;border:1px solid #CBD5CA;border-radius:16px;padding:28px}h1{margin:0 0 10px;font-size:24px}p{margin:0 0 16px}a{color:#16302E;font-weight:700}button{font:inherit;font-weight:700;padding:12px 24px;border:0;border-radius:12px;background:#16302E;color:#EDF0EA;cursor:pointer}</style></head>
+<body><main>${body}</main></body></html>`;
+}
+
+/**
+ * Opening the link shows a button rather than unsubscribing at once: email scanners open every link in a message,
+ * and would otherwise unsubscribe people who never clicked. Gmail's own button posts directly (NOTIF-05).
+ */
+export function confirmUnsubscribePage(kind: EmailKind, action: string): string {
+  return page(`<h1>Unsubscribe?</h1><p>You'll stop getting TikTym ${KIND_NAME[kind]} emails. You can turn them back on any time in Setup › Notifications and privacy.</p>
+<form method="post" action="${esc(action)}"><button type="submit">Unsubscribe</button></form>`);
+}
+
+/** The page shown after unsubscribing, or when a link isn't valid (NOTIF-05). */
 export function unsubscribedPage(kind: EmailKind | null): string {
-  const what = kind === 'tips' ? 'welcome and first-week tips' : kind === 'recap' ? 'weekly recap' : kind === 'news' ? 'news' : '';
-  const body = kind
-    ? `<h1>You're unsubscribed</h1><p>You won't get TikTym ${what} emails any more. Changed your mind? Turn them back on in Setup › Notifications and privacy.</p>`
-    : `<h1>That link didn't work</h1><p>It may be incomplete. You can turn any email off in Setup › Notifications and privacy.</p>`;
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>TikTym emails</title>
-<style>body{margin:0;background:#EDF0EA;color:#16302E;font:16px/1.55 ${FONT};display:grid;place-items:center;min-height:100vh;padding:24px;box-sizing:border-box}main{max-width:440px;background:#F8FAF6;border:1px solid #CBD5CA;border-radius:16px;padding:28px}h1{margin:0 0 10px;font-size:24px}p{margin:0 0 16px}a{color:#16302E;font-weight:700}</style></head>
-<body><main>${body}<p><a href="${APP_URL}">Open TikTym</a></p></main></body></html>`;
+  return page(kind
+    ? `<h1>You're unsubscribed</h1><p>You won't get TikTym ${KIND_NAME[kind]} emails any more. Changed your mind? Turn them back on in Setup › Notifications and privacy.</p><p><a href="${APP_URL}">Open TikTym</a></p>`
+    : `<h1>That link didn't work</h1><p>It may be incomplete. You can turn any email off in Setup › Notifications and privacy.</p><p><a href="${APP_URL}">Open TikTym</a></p>`);
 }

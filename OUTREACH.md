@@ -14,6 +14,61 @@ Use first names or initials for people, never phone numbers or full names, even 
 
 LinkedIn profile first, then one-to-one WhatsApp messages, then Status, then one group every few days. Personal messages convert best; groups convert worst, so they come last, one at a time, never all at once.
 
+**What the first week showed (10 Oct):** one-to-one WhatsApp messages: 6 sent, 3 signed up. WhatsApp Status: about 30 visits, 1 sign-up. Personal asks work about 15 times better than broadcasts, so most of the effort goes there, steadily, rather than into more Status posts.
+
+## The rhythm (from 11 October)
+
+About 30 minutes a day. Claude includes these in "what's next" and goes through them at the Monday review.
+
+| How often | What | Why |
+|---|---|---|
+| Every day, 15 min | Comment on 2 or 3 LinkedIn posts about productivity, careers, learning or fitness, from your personal profile (see **Commenting on LinkedIn**) | People who like your comment look at your profile, and your profile links to TikTym |
+| Twice a week | One educational post on the TikTym page: teach something useful, mention TikTym only in the last line (see **Educational posts**) | Gives people a reason to follow the page before they need the app |
+| Every week | 5 new one-to-one WhatsApp messages to people who work and want to learn or get fit; log each in the Share log | Converted 3 in 6 in week 1 |
+| Every week | Ask each person using TikTym how it's going (one question: "What felt confusing or annoying?"); note answers in the Feedback log | Their words become posts and fixes; a happy user who shares TikTym is worth more than any post |
+| Every Monday | Weekly review (below) | Keep what works, drop what doesn't |
+
+## Commenting on LinkedIn
+
+**Who to follow (5 to 10 people):** people who post regularly about productivity, time management, careers, upskilling or fitness for working professionals, ideally in India, with **5,000 to 50,000 followers**. Bigger accounts bury your comment among hundreds; smaller ones may not have readers yet.
+
+**How to find them (10 minutes, once):** on LinkedIn, search `#productivity`, then `#timemanagement`, `#upskilling`, `#careergrowth`, `#habits` and `#worklifebalance`. Tap **Posts**, filter **Date posted: Past week**, and look for people whose posts get 20 to 200 comments and whose readers are working people like your users. Follow them and tap the bell on their profile, so you see their posts as they go up. Note each one in the table below.
+
+**How to comment:**
+
+- **Early:** in the first hour after a post goes up, when most people read it. The bell notifications help.
+- **Add something:** a number, your own experience, a question, or a polite disagreement. Two to four lines. Never just "Great post!"
+- **No links, no pitch.** Never paste a TikTym link under someone else's post: it looks like spam, and LinkedIn shows such comments to fewer people. Curious readers tap your name; your profile does the rest.
+- **Reply to replies.** A conversation under a popular post is seen by many more people than the comment alone.
+
+**Example comments** (rewrite them in your own words for each post):
+
+> On a post about morning routines: "What helped me most wasn't waking up earlier, it was making the target smaller. 30 minutes a day I actually did beat the 1 hour I kept postponing."
+
+> On a post about streaks or consistency: "The thing that broke my habits was never the hard days, it was the day after a missed one, when the streak said zero. Letting a missed day carry forward (up to a limit) kept me going."
+
+> On a post about upskilling while working: "Doing the maths helped me: 30 minutes on weekdays alone is about 130 hours a year. That's a whole course, without touching the weekends."
+
+> On a post about time-blocking: "Blocking time works until meetings eat the block. What worked for me was a daily minimum instead of a fixed slot: any 30 minutes, whenever the day allows."
+
+| Person | Topic | Followers (about) | Following since | Comments so far |
+|---|---|---|---|---|
+| | | | | |
+
+## Educational posts
+
+Teach first; mention TikTym only in the last line ("I built TikTym around this idea: tiktym.com, link in the first comment"). One idea per post, a number or example in the first line, short paragraphs. Ask Claude for a graphic in the brand style.
+
+| Idea | The hook |
+|---|---|
+| The maths of mastery (already planned as post 3) | "10,000 hours at 30 minutes a day is 55 years. Here's what actually matters." |
+| Why streak apps make you quit | "The day you miss isn't what kills a habit. It's the zero the next morning." |
+| Start with 5 minutes | "The 2-minute rule gets you started; 5 minutes is where it starts to count." |
+| Time when your calendar isn't yours | "Time-blocking fails when meetings move. A daily minimum doesn't." |
+| What 30 minutes of reading adds up to | "30 minutes a day is about 20 books a year." |
+| The carry-forward rule (post 2 covers it) | "Missed 4 days at 30 minutes? You owe 90, not 150. Here's why." |
+| Small wins on bad days | "Ten minutes on a hectic day is still a win. Here's why it counts." |
+
 ## Decisions
 
 - **Personal LinkedIn profile (9 Oct):** TikTym isn't listed as experience on your profile until it reaches about 10,000 users. You reshare one TikTym post a month from your profile; other weeks, the page grows through its own posts, comments as the page, links from the website and app, and asking happy users to follow.
@@ -33,9 +88,20 @@ LinkedIn profile first, then one-to-one WhatsApp messages, then Status, then one
 - [ ] Wed 14 Oct: first WhatsApp group: college batch. Write it fresh, don't forward, and stay to answer replies.
 - [ ] **Deferred (9 Oct, your call):** get `tiktym.com` and `app.tiktym.com` categorised as "Education" (or "Information Technology") by the main web filters, so college and office firewalls stop blocking them: Fortinet https://www.fortiguard.com/webfilter, Palo Alto https://urlfiltering.paloaltonetworks.com, Cisco Talos https://talosintelligence.com/reputation_center, Zscaler https://sitereview.zscaler.com, Broadcom/Symantec https://sitereview.bluecoat.com, and Sophos (search "Sophos website categorization request"). Note each submission in the Share log's Notes or here.
 - [x] LinkedIn page, new brand line (**done 10 Oct**): tagline "100 minutes a day for your productive life: 30 to move, 30 to read, 30 to grow, 10 to breathe."; description's first line "TikTym helps busy professionals spend 100 minutes a day on themselves."; upload the new cover (Downloads › tiktym-linkedin-cover.png). Use the new post image and video for future posts.
+- [ ] Sun 11 Oct: find 5 to 10 people to comment on (see **Commenting on LinkedIn**), follow them, and note them in the table
+- [ ] From Sun 11 Oct, every day: 2 or 3 thoughtful comments on their posts, from your personal profile, no links
 - [ ] Mon 19 Oct: weekly review (below), then plan week 2
 
-**Week 2 ideas** (plan them at the review): the second group (friends), Status again with post 2's image, post 3 (a 30-second walkthrough of the timer, backlog limit and Insights), and the 30-day learning challenge once 20 or more people use TikTym.
+## Week 2 tasks (15 to 21 October 2026)
+
+- [ ] Every day: 2 or 3 LinkedIn comments (15 minutes)
+- [ ] Thu 15 Oct: post 3, the maths of mastery (ask Claude for the graphic)
+- [ ] By Sun 18 Oct: 5 new one-to-one WhatsApp messages (template above), each logged in the Share log
+- [ ] Sat 17 Oct: ask Gopi, Kiran and Charuthi how their first week went: "What felt confusing or annoying?" Note it in the Feedback log
+- [ ] Sun 18 Oct: one more educational post on the TikTym page (pick from **Educational posts**)
+- [ ] Mon 19 Oct: weekly review; check how many of this week's comments got replies or profile views (LinkedIn › your profile › Profile viewers)
+
+**Later, once 20 or more people use TikTym:** the second WhatsApp group (friends), a 30-second walkthrough video (timer, backlog limit, Insights), and the 100 Days, 100 Minutes challenge.
 
 ## Links with tracking
 

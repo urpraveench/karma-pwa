@@ -113,7 +113,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **You:** create a Resend API key (Sending access, tiktym.com) and store it with `firebase functions:secrets:set RESEND_API_KEY --project tiktym`. Never paste it into chat or code.
 - [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
-- [ ] **Claude:** Privacy Policy and Terms updated for on-by-default emails, reminders and analytics, with Resend disclosed; the sign-up screen's notice says what comes with an account (LEGAL, ANA).
 - [ ] **Claude:** Setup › Notifications and privacy, every switch on to start; Google Analytics on for new accounts and anyone who never chose; anyone who said no keeps it.
 - [ ] **Claude:** the website's Analytics notice: on by default, with OK and Opt out.
 - [ ] **Claude:** Cloud Functions with Resend: welcome email after first-run Start, first-minute nudge after 24 hours with nothing logged, and one-tap unsubscribe.
@@ -129,6 +128,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Privacy Policy and Terms (dated 10 October) describe on-by-default emails, phone reminders and usage statistics, Resend as the email processor, backups kept up to 8 weeks, and how to turn each off; the sign-in screen says what an account includes (LEGAL-05, LEGAL-07). Not deployed until the settings and emails exist, 10 October 2026
 - [x] Resend account created and tiktym.com verified for sending (SPF and DKIM at GoDaddy), 10 October 2026
 - [x] Automatic Firestore backups: daily (kept 7 days) and weekly on Sunday (kept 8 weeks); restore steps in README (SYNC-17), 10 October 2026
 - [x] Monthly budget alert set on the billing account, and the project moved to the Blaze plan, 10 October 2026

@@ -74,7 +74,8 @@ export function Login({ error: initialError = '' }: { error?: string }) {
       {testMode && config.showDevHint && (
         <p className="devhint">Test mode: sign in with <b>{config.devCredentials.email}</b> and <b>{config.devCredentials.password}</b>. Data stays in this browser until Firebase is set up.</p>
       )}
-      <p className="hint legal">By continuing you agree to the <a href={config.legal.terms}>Terms</a> and <a href={config.legal.privacy}>Privacy Policy</a>.</p>
+      {/* What an account includes, said before it's created (LEGAL-07): the basis for on-by-default emails and statistics */}
+      <p className="hint legal">By continuing you agree to the <a href={config.legal.terms}>Terms</a> and <a href={config.legal.privacy}>Privacy Policy</a>, including emails about your practice and usage statistics. You can turn either off in Setup or from any email.</p>
       {appCheckSiteKey() && (
         // Required by Google because App Check keeps the reCAPTCHA badge hidden
         <p className="hint recaptcha">This site is protected by reCAPTCHA, and the Google <a href="https://policies.google.com/privacy">Privacy Policy</a> and <a href="https://policies.google.com/terms">Terms of Service</a> apply.</p>

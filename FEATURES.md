@@ -36,8 +36,8 @@ Summary of coverage at the time of writing:
 | 12. Sync and storage | 17 | 15 | 0 | 2 |
 | 13. App shell, PWA and platform | 30 | 25 | 0 | 5 |
 | 14. Marketing and sharing | 20 | 20 | 0 | 0 |
-| 15. Analytics | 11 | 11 | 0 | 0 |
-| **Total** | **278** | **263** | **0** | **15** |
+| 15. Analytics | 12 | 12 | 0 | 0 |
+| **Total** | **279** | **264** | **0** | **15** |
 
 ---
 
@@ -423,12 +423,13 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | ANA-03 | Change your mind | Setup › Privacy › "Share anonymous usage stats" switches it on or off at any time; off stops sending and removes Analytics cookies | E2E `analytics/analytics.spec.ts` |
 | ANA-04 | Website analytics | A slim consent bar; Google Analytics loads only after Allow; clicks on "Open TikTym" are counted; visits link to the app across domains (same GA4 property) | E2E `site/site.spec.ts` (phone and desktop) |
 | ANA-05 | Off without a measurement ID | Builds without `VITE_GA_MEASUREMENT_ID` (test mode, the emulators) never ask and never load Analytics | E2E `app.spec.ts` |
-| LEGAL-05 | Privacy wording matches | The Privacy Policy and the website describe optional, consent-based Google Analytics: what's collected, why, how to turn it off | E2E `legal.spec.ts`, `site/site.spec.ts` |
+| LEGAL-05 | Privacy wording matches | The Privacy Policy describes Google Analytics as on unless turned off: what's collected, why, how to turn it off in the app (Setup › Notifications and privacy) and on the website (Opt out) | E2E `legal.spec.ts` |
 | STAT-01 | Anonymous daily totals | For every Firebase-mode user, with no consent needed because nothing identifies anyone: `stats/{date}` counts active devices, sign-ups, entries (total and by method), minutes, timers started and reaching their target, practices added and progress cards shared. No user ID, device ID, names, notes or cookies are sent | Unit `stats.test.ts`, E2E `firebase/account.spec.ts` (emulator) |
 | STAT-02 | Batched writes | Counts collect in the app and are saved together (after about 15 seconds, and when the app is hidden or closed), so a typical user adds 2–3 writes a day; active devices count once per device per day using only a local date | Unit `stats.test.ts` |
 | STAT-03 | Totals are tamper-resistant and private | Firestore rules let signed-in users only add 0–100 to known counters (minutes 0–5,000) on a correctly named day document; no new fields, no decreases, no reads from any app | Emulator `tests-emulator/rules.test.ts` |
 | STAT-04 | Totals in Google Sheets | An Apps Script reads `stats/{date}` with the owner's Google login (app rules unchanged) into a Daily totals tab: one row per day with gaps as zeros, hours, entries per device and timer completion %, and a Notes column that survives refreshes; plus Weekly totals with week-on-week change, starter charts, a TikTym › Refresh menu and a daily refresh | Unit `sheets.test.ts` (data logic); fetching in Google: checked 8 October 2026; daily trigger set up 8 October 2026 |
 | LEGAL-06 | Totals disclosed | The Privacy Policy explains the anonymous daily totals and why they aren't personal data | E2E `legal.spec.ts` |
+| LEGAL-07 | On by default, disclosed | Before an account is created, the sign-in screen says it includes emails about your practice and usage statistics, each switchable off in Setup or from any email. The Privacy Policy lists the emails, phone reminders, Resend (USA) as the email processor, backups kept up to 8 weeks, and how to turn each off; the Terms say the same in Your account | E2E `legal.spec.ts` |
 
 ---
 

@@ -51,15 +51,28 @@ test.describe('Privacy Policy (LEGAL-02)', () => {
     await expect(page.locator('main')).toContainText("Nothing that identifies you or your device is included");
   });
 
-  test('describes optional Google Analytics and how to turn it off (LEGAL-05)', async ({ page }) => {
+  test('describes Google Analytics, on unless turned off, and how to turn it off (LEGAL-05)', async ({ page }) => {
     await page.goto('/privacy/');
     const body = page.locator('main');
-    await expect(page.locator('td', { hasText: /^Usage statistics \(only if you allow them\)$/ })).toBeVisible();
+    await expect(page.locator('td', { hasText: /^Usage statistics \(on unless you turn them off\)$/ })).toBeVisible();
     await expect(body).toContainText('Advertising features are switched off');
-    await expect(body).toContainText('Setup › Privacy › Share anonymous usage stats');
-    await expect(body).toContainText('unticked checkbox when you create an account');
+    await expect(body).toContainText('turn them off in Setup › Notifications and privacy');
+    await expect(body).toContainText('shows a notice with an Opt out button');
     await expect(body).toContainText('kept in Google Analytics for up to 14 months');
     await expect(body).not.toContainText("we don't use analytics");
+  });
+
+  test('discloses emails, reminders, Resend and backups, on by default with a way out (LEGAL-07)', async ({ page }) => {
+    await page.goto('/privacy/');
+    const body = page.locator('main');
+    for (const what of ['Emails about your practice', 'Phone reminders (when available)'])
+      await expect(page.locator('td', { hasText: new RegExp(`^${what.replace(/[()]/g, '\\$&')}$`) })).toBeVisible();
+    await expect(body).toContainText("We don't track whether you open emails");
+    await expect(body).toContainText('Resend (Resend, Inc., USA)');
+    await expect(body).toContainText('daily backups are kept for 7 days and weekly ones for 8 weeks');
+    await expect(body).toContainText('the unsubscribe link in any email');
+    await page.goto('/terms/');
+    await expect(page.locator('main')).toContainText('Each is on from the start, and you can turn each off at any time');
   });
 
   test('links to the Terms', async ({ page }) => {
@@ -72,7 +85,7 @@ test.describe('Privacy Policy (LEGAL-02)', () => {
 test.describe('legal links (AUTH-21)', () => {
   test('the login screen links to both pages', async ({ page }) => {
     await open(page);
-    await expect(page.locator('.login .legal')).toHaveText('By continuing you agree to the Terms and Privacy Policy.');
+    await expect(page.locator('.login .legal')).toHaveText('By continuing you agree to the Terms and Privacy Policy, including emails about your practice and usage statistics. You can turn either off in Setup or from any email.'); // LEGAL-07
     await page.locator('.login .legal a', { hasText: 'Terms' }).click();
     await expect(page.locator('h1')).toHaveText('Terms of Service');
     await page.goBack();

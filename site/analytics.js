@@ -1,6 +1,7 @@
-// Google Analytics for tiktym.com, only after the visitor chooses Allow (same GA4 property as the app).
-// Nothing loads before that. Clicks on links into the app are counted as "open_app", and the app's domain is
-// linked, so a visitor who moves on to the app counts as one person.
+// Google Analytics for tiktym.com (same GA4 property as the app), on by default (ANA-04): it loads straight away
+// unless this visitor opted out, and a notice says so with OK and Opt out. Opting out stops it at once, removes
+// the cookies and is remembered. Clicks into the app count as "open_app"; the app's domain is linked, so a visitor
+// who moves on to the app counts as one person.
 (() => {
   const ID = 'G-JL1YCFLK23';
   const KEY = 'tiktym:analytics';
@@ -31,10 +32,21 @@
     if (a && loaded) gtag('event', 'open_app', { link_location: a.dataset.appLink || 'page' });
   });
 
+  function optOut() {
+    window['ga-disable-' + ID] = true; // gtag stops sending at once
+    for (const c of document.cookie.split(';')) {
+      const name = c.split('=')[0].trim();
+      if (!name.startsWith('_ga')) continue;
+      for (const domain of ['', '; domain=' + location.hostname, '; domain=.' + location.hostname])
+        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/' + domain;
+    }
+  }
+
   const choice = read();
-  if (choice === 'granted') { load(); return; }
-  if (choice === 'denied' || !bar) return;
+  if (choice === 'denied') return;
+  load();
+  if (choice === 'granted' || !bar) return; // seen the notice before
   bar.hidden = false;
-  bar.querySelector('[data-allow]').addEventListener('click', () => { save('granted'); bar.hidden = true; load(); });
-  bar.querySelector('[data-deny]').addEventListener('click', () => { save('denied'); bar.hidden = true; });
+  bar.querySelector('[data-allow]').addEventListener('click', () => { save('granted'); bar.hidden = true; });
+  bar.querySelector('[data-deny]').addEventListener('click', () => { save('denied'); bar.hidden = true; optOut(); });
 })();

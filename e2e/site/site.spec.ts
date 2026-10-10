@@ -3,6 +3,14 @@ import { expect, test } from '../helpers';
 // The marketing website (site/, tiktym.com), on a phone and on a desktop.
 const APP = 'https://app.tiktym.com/';
 
+// The website loads Google Analytics by default, with the real ID. Tests must never report to it: every request to
+// Google's tag or collection servers is answered here with nothing. Analytics tests add their own stand-in, which
+// Playwright tries first because it was added last.
+const reached: string[] = [];
+test.beforeEach(async ({ page }) => {
+  await page.route(/googletagmanager\.com|google-analytics\.com|analytics\.google\.com/, r => { reached.push(r.request().url()); return r.fulfill({ status: 204, body: '' }); });
+});
+
 test.describe('website (GTM-04)', () => {
   test('pitch, sections and calls to action, which open app.tiktym.com (GTM-06)', async ({ page }) => {
     await page.goto('/');
@@ -60,9 +68,9 @@ test.describe('website (GTM-04)', () => {
     expect(r.headers()['content-type']).toBe('image/png');
   });
 
-  test('the privacy promise matches consent-based analytics (LEGAL-05)', async ({ page }) => {
+  test('the privacy promise matches on-by-default analytics with an opt-out (LEGAL-05)', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('.promise')).toContainText('anonymous usage stats only if you say yes');
+    await expect(page.locator('.promise')).toContainText('usage statistics you can opt out of any time');
     await expect(page.locator('body')).not.toContainText('no analytics');
   });
 
@@ -73,35 +81,45 @@ test.describe('website (GTM-04)', () => {
   });
 });
 
-test.describe('website analytics (ANA-04)', () => {
+test.describe('website analytics, on by default with an opt-out (ANA-04)', () => {
   const GTAG = 'https://www.googletagmanager.com/gtag/js**';
   const pushed = (page: import('@playwright/test').Page) => page.evaluate(() =>
     ((window as unknown as { dataLayer?: ArrayLike<unknown>[] }).dataLayer || []).map(a => Array.from(a)));
 
-  test('asks first, and loads nothing before an answer', async ({ page }) => {
+  test('loads straight away, with a notice offering OK and Opt out', async ({ page }) => {
     const requests: string[] = [];
     await page.route(GTAG, r => { requests.push(r.request().url()); return r.fulfill({ contentType: 'text/javascript', body: '' }); });
     await page.goto('/');
-    await expect(page.locator('.consent-bar')).toBeVisible();
-    await page.locator('#features').scrollIntoViewIfNeeded();
-    expect(requests).toHaveLength(0);
+    const bar = page.locator('.consent-bar');
+    await expect(bar).toContainText('We count visits with Google Analytics');
+    await expect(bar.locator('button')).toHaveText(['Opt out', 'OK']);
+    await expect.poll(() => requests.length).toBeGreaterThan(0);
+    await bar.locator('[data-allow]').click();
+    await expect(bar).toBeHidden();
+    await page.reload();
+    await expect(bar).toBeHidden(); // OK is remembered; Analytics carries on
+    await expect.poll(() => requests.length).toBeGreaterThan(1);
   });
 
-  test('"No thanks" is remembered and nothing loads', async ({ page }) => {
+  test('Opt out stops it, removes the cookies, and is remembered', async ({ page, context }) => {
     const requests: string[] = [];
     await page.route(GTAG, r => { requests.push(r.request().url()); return r.fulfill({ contentType: 'text/javascript', body: '' }); });
     await page.goto('/');
+    await context.addCookies([{ name: '_ga', value: 'GA1.1.123.456', url: page.url() }]);
     await page.locator('.consent-bar [data-deny]').click();
     await expect(page.locator('.consent-bar')).toBeHidden();
+    expect(await page.evaluate(() => (window as unknown as Record<string, unknown>)['ga-disable-G-JL1YCFLK23'])).toBe(true);
+    expect((await context.cookies()).some(c => c.name === '_ga')).toBe(false);
+    const before = requests.length;
     await page.reload();
     await expect(page.locator('.consent-bar')).toBeHidden();
-    expect(requests).toHaveLength(0);
+    await page.locator('#features').scrollIntoViewIfNeeded();
+    expect(requests.length).toBe(before); // nothing loads after opting out
   });
 
-  test('Allow loads Analytics (ads off, app domain linked) and counts clicks into the app', async ({ page }) => {
+  test('Analytics runs with ads off and the app domain linked, and counts clicks into the app', async ({ page }) => {
     await page.route(GTAG, r => r.fulfill({ contentType: 'text/javascript', body: 'window.__gtagLoaded = true;' }));
     await page.goto('/');
-    await page.locator('.consent-bar [data-allow]').click();
     await expect.poll(() => page.evaluate(() => (window as unknown as { __gtagLoaded?: boolean }).__gtagLoaded)).toBe(true);
     const config = (await pushed(page)).find(a => a[0] === 'config')!;
     expect(config[1]).toBe('G-JL1YCFLK23');

@@ -55,4 +55,5 @@ Every deploy gets a new version, so the app's version label and update bar mean 
 - Logic with no UI goes in `src/lib/` as pure functions that take their inputs (data, date, user) as parameters; never read React state or localStorage there. This keeps it unit-testable.
 - Browser tests run on a fixed clock (Wednesday 7 October 2026) and `en-GB`. Seed history with `seedData` and `signInWith` from `e2e/helpers.ts`. A test-mode browser test fails on any console error or warning.
 - Never deploy a build made with `VITE_USE_EMULATORS=true`. `firebase deploy` rebuilds `dist/` first, so a normal deploy is safe.
+- The website loads Google Analytics with the real ID by default, so any test or script that opens a website page must block Google's tag and collection servers (as `e2e/site/site.spec.ts` does). Never open tiktym.com pages in automated checks without that.
 - Don't run `npm audit fix --force`; it downgrades Firebase. The `@grpc/grpc-js` warning is in Firebase's Node build, not the browser app.

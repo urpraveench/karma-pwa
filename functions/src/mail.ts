@@ -13,7 +13,8 @@ export const UNSUBSCRIBE_URL = 'https://app.tiktym.com/unsubscribe';
 /** How long after first-run Start the first-minute nudge is due. */
 export const NUDGE_AFTER_MS = 24 * 3600_000;
 
-export interface Practice { name: string; minutes: number }
+/** A practice as the emails show it; colour is the practice's colour in the app. */
+export interface Practice { name: string; minutes: number; color?: string }
 export interface Email { subject: string; html: string; text: string; headers: Record<string, string> }
 
 /** A friendly first name from the display name, or from the email's local part (as the app greets people). */
@@ -52,40 +53,70 @@ export const justStarted = (before: { seeded?: boolean } | undefined, after: { s
 export const easiest = (ps: Practice[]) => [...ps].sort((a, b) => a.minutes - b.minutes)[0];
 
 // --- the emails ---
+// In TikTym's look: the brand colours, the header with the mala, Bricolage Grotesque for headings where the email app
+// supports web fonts (Apple Mail; others fall back to a bold system font), practice colour dots and gold accents.
 
 const FONT = "-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+const DISPLAY = `'Bricolage Grotesque',${FONT}`;
+const INK = '#16302E', INK2 = '#55685F', LINE = '#CBD5CA', SURFACE = '#F8FAF6', BG = '#EDF0EA', GOLD = '#A0740A';
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const appLink = (campaign: string) => `${APP_URL}?utm_source=email&utm_medium=email&utm_campaign=${campaign}`;
+const safeColor = (c: string | undefined) => (c && /^#[0-9a-fA-F]{6}$/.test(c) ? c : INK);
 
-/** The shared frame: header image, content, button, sign-off, and a footer saying why this came and how to stop it. */
-function frame(o: { title: string; paragraphs: string[]; list?: string[]; button: { label: string; href: string }; after?: string[]; why: string; unsubscribe: string }): string {
-  const p = (t: string) => `<p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:#16302E;">${t}</p>`;
-  const list = o.list?.length ? `<ul style="margin:0 0 16px;padding-left:20px;font-size:16px;line-height:1.6;color:#16302E;">${o.list.map(i => `<li>${i}</li>`).join('')}</ul>` : '';
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#EDF0EA;padding:24px 0;">
+const para = (t: string) => `<p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:${INK};">${t}</p>`;
+
+/** The practices as the app shows them: colour dot, name, daily minutes; and the daily total in gold. */
+function practicesCard(ps: Practice[], per = 'a day'): string {
+  const total = ps.reduce((s, p) => s + p.minutes, 0);
+  const rows = ps.map(p => `<tr>
+          <td width="22" style="padding:10px 0 10px 16px;"><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:${safeColor(p.color)};"></span></td>
+          <td style="padding:10px 8px;font-size:16px;font-weight:700;color:${INK};">${esc(p.name)}</td>
+          <td align="right" style="padding:10px 16px 10px 8px;font-size:15px;color:${INK2};white-space:nowrap;">${p.minutes} min ${per}</td>
+        </tr>`).join(`\n        <tr><td colspan="3" style="border-top:1px solid ${LINE};font-size:0;line-height:0;">&nbsp;</td></tr>\n        `);
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 8px;background:${BG};border:1px solid ${LINE};border-radius:12px;font-family:${FONT};">
+        ${rows}
+      </table>
+      <p style="margin:0 0 22px;font-size:14px;color:${INK2};font-family:${FONT};"><strong style="color:${GOLD};">${total} points a day</strong> · one minute, one point</p>`;
+}
+
+/** Short tips with gold numbers, in TikTym's voice. */
+function tips(items: [string, string][]): string {
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 8px;font-family:${FONT};">
+        ${items.map(([lead, rest], n) => `<tr>
+          <td width="34" valign="top" style="padding:0 0 14px;"><span style="display:inline-block;width:24px;height:24px;line-height:24px;border-radius:12px;background:${GOLD};color:#FFFFFF;font-size:13px;font-weight:800;text-align:center;">${n + 1}</span></td>
+          <td valign="top" style="padding:2px 0 14px;font-size:16px;line-height:1.5;color:${INK};"><strong>${lead}</strong> ${rest}</td>
+        </tr>`).join('\n        ')}
+      </table>`;
+}
+
+const button = (label: string, href: string) => `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:6px 0 24px;"><tr><td align="center" bgcolor="${INK}" style="border-radius:12px;">
+          <a href="${esc(href)}" style="display:inline-block;padding:14px 28px;font-family:${FONT};font-size:16px;font-weight:700;color:${BG};text-decoration:none;border-radius:12px;">${label}</a>
+        </td></tr></table>`;
+
+/** The shared frame: a full document (so web-font-capable apps load the brand font), header, content, sign-off, footer. */
+function frame(o: { title: string; body: string[]; why: string; unsubscribe: string }): string {
+  return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap" rel="stylesheet">
+<title>${esc(o.title)}</title></head>
+<body style="margin:0;padding:0;background:${BG};">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${BG};padding:24px 0;">
   <tr><td align="center" style="padding:0 12px;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;background:#F8FAF6;border:1px solid #CBD5CA;border-radius:16px;overflow:hidden;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;background:${SURFACE};border:1px solid ${LINE};border-radius:16px;overflow:hidden;">
       <tr><td style="padding:0;"><img src="https://tiktym.com/email/header.png" width="600" alt="TikTym · One minute, one point" style="display:block;width:100%;max-width:600px;height:auto;border:0;"></td></tr>
-      <tr><td style="padding:28px 32px 8px;font-family:${FONT};color:#16302E;">
-        <h1 style="margin:0 0 14px;font-size:24px;line-height:1.25;font-weight:800;color:#16302E;">${o.title}</h1>
-        ${o.paragraphs.map(p).join('\n        ')}
-        ${list}
+      <tr><td style="padding:28px 32px 8px;font-family:${FONT};color:${INK};">
+        <h1 style="margin:0 0 16px;font-family:${DISPLAY};font-size:28px;line-height:1.15;font-weight:800;letter-spacing:-0.02em;color:${INK};">${o.title}</h1>
+        ${o.body.join('\n        ')}
+        <p style="margin:8px 0 24px;font-size:16px;line-height:1.5;color:${INK};">Praveen<br><span style="color:${INK2};font-size:14px;">Founder, TikTym</span></p>
       </td></tr>
-      <tr><td align="left" style="padding:0 32px 24px;">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" bgcolor="#16302E" style="border-radius:12px;">
-          <a href="${esc(o.button.href)}" style="display:inline-block;padding:14px 28px;font-family:${FONT};font-size:16px;font-weight:700;color:#EDF0EA;text-decoration:none;border-radius:12px;">${o.button.label}</a>
-        </td></tr></table>
-      </td></tr>
-      <tr><td style="padding:0 32px 24px;font-family:${FONT};">
-        ${(o.after || []).map(p).join('\n        ')}
-        <p style="margin:0;font-size:16px;line-height:1.55;color:#16302E;">Praveen<br><span style="color:#55685F;font-size:14px;">Founder, TikTym</span></p>
-      </td></tr>
-      <tr><td style="padding:18px 32px;border-top:1px solid #CBD5CA;font-family:${FONT};font-size:12px;line-height:1.55;color:#55685F;">
-        ${o.why} <a href="${esc(o.unsubscribe)}" style="color:#55685F;">Unsubscribe from these emails</a>, or change any email in Setup › Notifications and privacy.<br>
-        TikTym · <a href="https://tiktym.com/" style="color:#55685F;">tiktym.com</a> · Pramal IT Services Private Limited · Made in India
+      <tr><td style="padding:18px 32px;border-top:1px solid ${LINE};font-family:${FONT};font-size:12px;line-height:1.55;color:${INK2};">
+        ${o.why} <a href="${esc(o.unsubscribe)}" style="color:${INK2};">Unsubscribe from these emails</a>, or change any email in Setup › Notifications and privacy.<br>
+        TikTym · <a href="https://tiktym.com/" style="color:${INK2};">tiktym.com</a> · Pramal IT Services Private Limited · Made in India
       </td></tr>
     </table>
   </td></tr>
-</table>`;
+</table>
+</body></html>`;
 }
 
 /** Gmail and Yahoo show their own unsubscribe button from these; One-Click means a POST to the link turns it off. */
@@ -93,33 +124,36 @@ const unsubscribeHeaders = (url: string) => ({ 'List-Unsubscribe': `<${url}>`, '
 
 const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? '' : 's'}`;
 
+const WELCOME_TIPS: [string, string][] = [
+  ['Every minute is a point.', 'Ten minutes on a hectic day still counts.'],
+  ['Busy days carry forward.', 'Missed minutes move to the next day, up to two days of each practice (change it in Setup), so a bad week never becomes a mountain.'],
+  ['Tap ▶ for a focus timer.', 'It logs the minutes for you when you stop.'],
+];
+
 /** The welcome, sent once after first-run Start (NOTIF-03). */
 export function welcomeEmail(o: { name: string; practices: Practice[]; unsubscribe: string }): Email {
   const hi = o.name ? `Hi ${esc(o.name)},` : 'Hi,';
   const total = o.practices.reduce((s, p) => s + p.minutes, 0);
-  const list = o.practices.map(p => `<strong>${esc(p.name)}</strong>: ${p.minutes} min a day`);
   const html = frame({
-    title: 'Welcome to TikTym',
-    paragraphs: [
-      hi,
-      `Thanks for starting TikTym. You've set up ${plural(o.practices.length, 'practice')}, ${total} minutes a day in all:`,
-    ],
-    list,
-    button: { label: 'Open TikTym', href: appLink('welcome') },
-    after: [
-      '<strong>How it works:</strong> every minute you spend is one point. Miss a day and the minutes carry forward, but only up to a limit (two days of each practice, unless you change it in Setup), so a busy week never becomes a mountain. Tap ▶ on a practice for a focus timer that logs the minutes for you.',
-      '<strong>Add it to your home screen</strong> so it opens like an app: on iPhone, open it in Safari and tap Share › Add to Home Screen; on Android, tap Install app in Chrome.',
-      "I built TikTym because I couldn't find time to learn alongside a full-time job. If anything is confusing, or you'd like something added, just reply to this email. I read every one.",
+    title: o.name ? `Welcome to TikTym, ${esc(o.name)}` : 'Welcome to TikTym',
+    body: [
+      para(`Thanks for starting TikTym. Here's what you're making time for, ${plural(o.practices.length, 'practice')} in all:`),
+      practicesCard(o.practices),
+      tips(WELCOME_TIPS),
+      button('Open TikTym', appLink('welcome')),
+      para('<strong>Add it to your home screen</strong> so it opens like an app: on iPhone, open it in Safari and tap Share › Add to Home Screen; on Android, tap Install app in Chrome.'),
+      para("I built TikTym because I couldn't find time to learn alongside a full-time job. If anything is confusing, or you'd like something added, just reply to this email. I read every one."),
     ],
     why: "You're getting this because you created a TikTym account.",
     unsubscribe: o.unsubscribe,
   });
   const text = [
     hi.replace(/&amp;/g, '&'), '',
-    `Thanks for starting TikTym. You've set up ${plural(o.practices.length, 'practice')}, ${total} minutes a day in all:`,
-    ...o.practices.map(p => `- ${p.name}: ${p.minutes} min a day`), '',
+    `Thanks for starting TikTym. Here's what you're making time for, ${plural(o.practices.length, 'practice')} in all:`,
+    ...o.practices.map(p => `- ${p.name}: ${p.minutes} min a day`),
+    `${total} points a day: one minute, one point.`, '',
+    ...WELCOME_TIPS.map(([lead, rest], n) => `${n + 1}. ${lead} ${rest.replace('▶', 'the play button')}`), '',
     `Open TikTym: ${appLink('welcome')}`, '',
-    'How it works: every minute you spend is one point. Miss a day and the minutes carry forward, but only up to a limit (two days of each practice, unless you change it in Setup), so a busy week never becomes a mountain. Tap the play button on a practice for a focus timer that logs the minutes for you.', '',
     'Add it to your home screen so it opens like an app: on iPhone, open it in Safari and tap Share > Add to Home Screen; on Android, tap Install app in Chrome.', '',
     "I built TikTym because I couldn't find time to learn alongside a full-time job. If anything is confusing, or you'd like something added, just reply to this email. I read every one.", '',
     'Praveen', 'Founder, TikTym', '', '--',
@@ -134,13 +168,14 @@ export function nudgeEmail(o: { name: string; practice: Practice; unsubscribe: s
   const what = esc(o.practice.name);
   const html = frame({
     title: 'Your first five minutes',
-    paragraphs: [
-      hi,
-      `You set up TikTym yesterday, but nothing's logged yet. That's normal: the first entry is the hardest. Start small: <strong>5 minutes of ${what}</strong> today is enough to get going.`,
-      'Open TikTym, tap ▶ on the practice, and the timer logs the minutes for you.',
+    body: [
+      para(hi),
+      para(`You set up TikTym yesterday, but nothing's logged yet. That's normal: the first entry is the hardest. Start small: <strong>5 minutes of ${what}</strong> today is enough to get going.`),
+      practicesCard([{ ...o.practice, minutes: 5 }], 'today').replace(/<p style[^>]*>.*?<\/p>/s, ''),
+      para('Open TikTym, tap ▶ on the practice, and the timer logs the minutes for you.'),
+      button(`Start 5 minutes of ${what}`, appLink('first_minute')),
+      para('If something got in the way, reply and tell me. It helps me make TikTym easier.'),
     ],
-    button: { label: `Start 5 minutes of ${what}`, href: appLink('first_minute') },
-    after: ["If something got in the way, reply and tell me. It helps me make TikTym easier."],
     why: "You're getting this because you created a TikTym account and haven't logged anything yet.",
     unsubscribe: o.unsubscribe,
   });
@@ -156,6 +191,7 @@ export function nudgeEmail(o: { name: string; practice: Practice; unsubscribe: s
   return { subject: 'Your first five minutes on TikTym', html, text, headers: unsubscribeHeaders(o.unsubscribe) };
 }
 
+/** The pages shown by the unsubscribe link (NOTIF-05). */
 const KIND_NAME: Record<EmailKind, string> = { tips: 'welcome and first-week tips', recap: 'weekly recap', news: 'news' };
 
 function page(body: string): string {

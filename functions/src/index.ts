@@ -46,7 +46,7 @@ async function practices(uid: string): Promise<Practice[]> {
   return snap.docs.map(d => d.data())
     .filter(c => !c.archivedFrom)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-    .map(c => ({ name: String(c.name), minutes: Number(c.targets?.[c.targets.length - 1]?.minutes ?? 0) }));
+    .map(c => ({ name: String(c.name), minutes: Number(c.targets?.[c.targets.length - 1]?.minutes ?? 0), color: typeof c.color === 'string' ? c.color : undefined }));
 }
 
 async function recipient(uid: string): Promise<{ email: string; name: string } | null> {

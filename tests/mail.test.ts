@@ -49,10 +49,10 @@ describe('who gets what (NOTIF-03, NOTIF-04)', () => {
 describe('the emails (NOTIF-03, NOTIF-04)', () => {
   const unsubscribe = unsubscribeLink('uid123', 'tips', SECRET);
 
-  it('the welcome greets by name and lists the chosen practices and daily total', () => {
-    const e = welcomeEmail({ name: 'Asha', practices, unsubscribe });
+  it('the welcome greets by name and lists the chosen practices, in their colours, with the daily total', () => {
+    const e = welcomeEmail({ name: 'Asha', practices: practices.map((p, i) => ({ ...p, color: ['#1F8A70', '#3E5BA9', '#8A4FA3'][i] })), unsubscribe });
     expect(e.subject).toBe('Welcome to TikTym, Asha');
-    for (const s of ['Hi Asha,', '3 practices, 70 minutes a day', '<strong>Meditation</strong>: 10 min a day', 'Add it to your home screen', 'reply to this email', 'https://app.tiktym.com/?utm_source=email'])
+    for (const s of ['Welcome to TikTym, Asha', '3 practices in all:', '>Meditation</td>', '10 min a day', 'background:#8A4FA3', '70 points a day', 'Busy days carry forward.', 'Add it to your home screen', 'reply to this email', 'https://app.tiktym.com/?utm_source=email', "family=Bricolage+Grotesque"])
       expect(e.html).toContain(s);
     expect(e.text).toContain('- Exercise: 30 min a day');
     expect(e.text).toContain(`Unsubscribe: ${unsubscribe}`);
@@ -70,10 +70,13 @@ describe('the emails (NOTIF-03, NOTIF-04)', () => {
     expect(e.subject).toBe('Your first five minutes on TikTym');
     expect(e.html).toContain('<strong>5 minutes of Meditation</strong>');
     expect(e.html).toContain('Start 5 minutes of Meditation');
+    expect(e.html).toContain('5 min today'); // not "a day": the target itself doesn't change
+    expect(e.html).not.toContain('points a day');
   });
 
-  it('escapes names and practice names', () => {
-    const e = welcomeEmail({ name: '<b>', practices: [{ name: 'Guitar & <script>', minutes: 20 }], unsubscribe });
+  it('escapes names and practice names, and only uses real colours', () => {
+    const e = welcomeEmail({ name: '<b>', practices: [{ name: 'Guitar & <script>', minutes: 20, color: 'red;background:url(x)' }], unsubscribe });
+    expect(e.html).not.toContain('url(x)');
     expect(e.html).not.toContain('<script>');
     expect(e.html).toContain('Guitar &amp; &lt;script&gt;');
   });

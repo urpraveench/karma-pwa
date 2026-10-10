@@ -127,6 +127,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Email design in TikTym's brand: Bricolage Grotesque headline where supported, practices with their colour dots and the daily total in gold, three numbered tips, the nudge's "5 min today" card; previews in Downloads (NOTIF-03, NOTIF-04), 10 October 2026
 - [x] Cloud Functions (asia-south1): welcome after first-run Start, an hourly first-minute nudge for accounts a day in with nothing logged, and app.tiktym.com/unsubscribe (asks first; Gmail's one-click works); server-only mail/ records, out of apps' reach; the service worker leaves /unsubscribe to the network. Built and tested, not deployed (NOTIF-03 to NOTIF-05), 10 October 2026
 - [x] Email building blocks in functions/src/mail.ts: the welcome and first-minute emails (HTML and plain text, TikTym's style, from Praveen), signed one-tap unsubscribe links with Gmail's unsubscribe headers, and who gets what; unit-tested. Not sending yet (NOTIF-03 to NOTIF-05), 10 October 2026
 - [x] Website Analytics on by default with a notice (OK, Opt out); opting out stops it, removes the cookies and is remembered; the privacy promise says so. Website tests now block Google's servers, so they can't report to the real property (ANA-04, LEGAL-05). Not deployed yet, 10 October 2026

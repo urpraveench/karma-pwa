@@ -18,8 +18,8 @@ describe('password-reset email template (AUTH-29)', () => {
     expect(body).toContain('bgcolor="#16302E"'); // the button keeps its colour without CSS support
   });
 
-  it('names the company and a contact', () => {
-    expect(body).toContain('Pramal IT Services Private Limited');
+  it('gives a contact, and keeps the company name out of emails', () => {
+    expect(body).not.toContain('Pramal');
     expect(body).toContain('mailto:praveen.cherukuru@gmail.com');
   });
 });

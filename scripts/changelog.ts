@@ -107,7 +107,7 @@ ${releases.map(releaseHtml).join('\n')}
 
 <footer>
   <div class="wrap">
-    <span>© 2026 Pramal IT Services Private Limited · Made in India</span>
+    <span>© 2026 TikTym · Made in India</span>
     <nav aria-label="Legal and contact">
       <a href="/updates/">What's new</a>
       <a href="https://app.tiktym.com/terms/">Terms</a>

@@ -65,6 +65,15 @@ describe('the emails (NOTIF-03, NOTIF-04)', () => {
     }
   });
 
+  it('signs off as Praveen, helping people, with no title or company name', () => {
+    for (const e of [welcomeEmail({ name: 'Asha', practices, unsubscribe }), nudgeEmail({ name: 'Asha', practice: practices[2], unsubscribe })]) {
+      for (const part of [e.html, e.text]) {
+        expect(part).toContain('Helping busy people like you make time for what matters.');
+        expect(part).not.toMatch(/Founder|Pramal/);
+      }
+    }
+  });
+
   it('the nudge suggests five minutes of the shortest practice', () => {
     const e = nudgeEmail({ name: 'Ravi', practice: practices[2], unsubscribe });
     expect(e.subject).toBe('Your first five minutes on TikTym');

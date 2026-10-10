@@ -18,6 +18,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] From 11 October: run `firebase firestore:backups:list --project tiktym` and check a daily backup appears each day (SYNC-17)
 - [ ] Once, before real promotion: a restore drill. Restore the latest backup into a new database (README › Backups and restoring), check it in the console, then delete it (SYNC-17)
 - [ ] After the functions deploy: create a test account and check the welcome email arrives (inbox, not spam), shows the chosen practices, and its unsubscribe link and Gmail's unsubscribe button both turn the switch off in Setup; a day later, check the first-minute nudge (NOTIF-03 to NOTIF-05)
+- [ ] **You:** remove the last line of the LinkedIn page description ("TikTym is built by Pramal IT Services Private Limited.") in LinkedIn › Edit page
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] **You:** after the fix, run the 5-minute Meditation test again: the chime should play right as the timer reaches its target (TIMER-05).
@@ -127,6 +128,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Company name removed outside the legal sections (emails, password-reset template, website and What's new footers, structured data, llms.txt, Terms summary and footers); kept in Privacy section 1, Terms section 1 and the grievance contact. Emails sign off "Praveen · Helping busy people like you make time for what matters." with no title, 10 October 2026
 - [x] Email design in TikTym's brand: Bricolage Grotesque headline where supported, practices with their colour dots and the daily total in gold, three numbered tips, the nudge's "5 min today" card; previews in Downloads (NOTIF-03, NOTIF-04), 10 October 2026
 - [x] Cloud Functions (asia-south1): welcome after first-run Start, an hourly first-minute nudge for accounts a day in with nothing logged, and app.tiktym.com/unsubscribe (asks first; Gmail's one-click works); server-only mail/ records, out of apps' reach; the service worker leaves /unsubscribe to the network. Built and tested, not deployed (NOTIF-03 to NOTIF-05), 10 October 2026
 - [x] Email building blocks in functions/src/mail.ts: the welcome and first-minute emails (HTML and plain text, TikTym's style, from Praveen), signed one-tap unsubscribe links with Gmail's unsubscribe headers, and who gets what; unit-tested. Not sending yet (NOTIF-03 to NOTIF-05), 10 October 2026

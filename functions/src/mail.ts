@@ -8,6 +8,8 @@ export const EMAIL_KINDS: EmailKind[] = ['tips', 'recap', 'news'];
 
 export const FROM = 'Praveen from TikTym <hello@tiktym.com>';
 export const REPLY_TO = 'praveen.cherukuru@gmail.com';
+/** Under Praveen's name: about the reader, not a job title (no company name or "Founder" tag in emails). */
+export const SIGN_OFF = 'Helping busy people like you make time for what matters.';
 export const APP_URL = 'https://app.tiktym.com/';
 export const UNSUBSCRIBE_URL = 'https://app.tiktym.com/unsubscribe';
 /** How long after first-run Start the first-minute nudge is due. */
@@ -107,11 +109,11 @@ function frame(o: { title: string; body: string[]; why: string; unsubscribe: str
       <tr><td style="padding:28px 32px 8px;font-family:${FONT};color:${INK};">
         <h1 style="margin:0 0 16px;font-family:${DISPLAY};font-size:28px;line-height:1.15;font-weight:800;letter-spacing:-0.02em;color:${INK};">${o.title}</h1>
         ${o.body.join('\n        ')}
-        <p style="margin:8px 0 24px;font-size:16px;line-height:1.5;color:${INK};">Praveen<br><span style="color:${INK2};font-size:14px;">Founder, TikTym</span></p>
+        <p style="margin:8px 0 24px;font-size:16px;line-height:1.5;color:${INK};">Praveen<br><span style="color:${INK2};font-size:14px;font-style:italic;">${SIGN_OFF}</span></p>
       </td></tr>
       <tr><td style="padding:18px 32px;border-top:1px solid ${LINE};font-family:${FONT};font-size:12px;line-height:1.55;color:${INK2};">
         ${o.why} <a href="${esc(o.unsubscribe)}" style="color:${INK2};">Unsubscribe from these emails</a>, or change any email in Setup › Notifications and privacy.<br>
-        TikTym · <a href="https://tiktym.com/" style="color:${INK2};">tiktym.com</a> · Pramal IT Services Private Limited · Made in India
+        TikTym · <a href="https://tiktym.com/" style="color:${INK2};">tiktym.com</a> · Made in India
       </td></tr>
     </table>
   </td></tr>
@@ -156,7 +158,7 @@ export function welcomeEmail(o: { name: string; practices: Practice[]; unsubscri
     `Open TikTym: ${appLink('welcome')}`, '',
     'Add it to your home screen so it opens like an app: on iPhone, open it in Safari and tap Share > Add to Home Screen; on Android, tap Install app in Chrome.', '',
     "I built TikTym because I couldn't find time to learn alongside a full-time job. If anything is confusing, or you'd like something added, just reply to this email. I read every one.", '',
-    'Praveen', 'Founder, TikTym', '', '--',
+    'Praveen', SIGN_OFF, '', '--',
     `You're getting this because you created a TikTym account. Unsubscribe: ${o.unsubscribe}`,
   ].join('\n');
   return { subject: o.name ? `Welcome to TikTym, ${o.name}` : 'Welcome to TikTym', html, text, headers: unsubscribeHeaders(o.unsubscribe) };
@@ -185,7 +187,7 @@ export function nudgeEmail(o: { name: string; practice: Practice; unsubscribe: s
     'Open TikTym, tap the play button on the practice, and the timer logs the minutes for you.', '',
     `Open TikTym: ${appLink('first_minute')}`, '',
     'If something got in the way, reply and tell me. It helps me make TikTym easier.', '',
-    'Praveen', 'Founder, TikTym', '', '--',
+    'Praveen', SIGN_OFF, '', '--',
     `You're getting this because you created a TikTym account and haven't logged anything yet. Unsubscribe: ${o.unsubscribe}`,
   ].join('\n');
   return { subject: 'Your first five minutes on TikTym', html, text, headers: unsubscribeHeaders(o.unsubscribe) };

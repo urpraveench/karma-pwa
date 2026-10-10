@@ -123,6 +123,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
 - [ ] **You:** upgrade Resend to a paid plan at about 50 active users; the free plan's 100 emails a day runs out on Mondays at about 80 (NOTIFICATIONS.md › Scaling the emails).
 - [ ] **Claude:** before 2 November (the 100 Days challenge): move the weekly recap onto the queue the comeback already uses (one task per person, rate-limited, retried), querying `mail/{uid}.lastLogged` so only active people are looked at; batch sending if needed. Today's recap loop stops at about 500 people (NOTIFICATIONS.md › Scaling the emails).
+- [ ] **Claude:** "one tap away" email for people who sign in but never tap Start on the first-run screen. Today they get no email at all: the welcome and the first-minute nudge both start from Start (`seeded`), so an account that stops at the practice picker is never contacted. Seen 10 October 2026: account `mcgg…` signed in with Google at 13:29 and got no welcome. Send once, about a day after sign-up, only if still not started and Tips and reminders is on; it needs its own record (no `mail/{uid}` exists before Start) and a FEATURES row.
 - [ ] **Claude:** news broadcast: Praveen approves the text, it goes to everyone with News on; first use, announcing 100 Days, 100 Minutes in late October.
 - [ ] **Claude:** first-week tips emails on days 3 and 6, only while still active (Tips and reminders).
 - [ ] **Claude:** monthly progress email on the 1st (Weekly recap switch), first on 1 November.
@@ -139,6 +140,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** Android reminders show a white TikTym ring as their small icon, instead of Chrome's (`scripts/badge-icon.mjs`), 10 October 2026
 - [x] **Claude:** push reminders 5/5: Privacy Policy and Terms describe push reminders and the badge; changelog line. Not released yet, 10 October 2026
 - [x] **Claude:** push reminders 4/5: app badge, practices still due today on the home-screen icon (iPhone home screen and installed desktop apps; not Android), set while open, cleared when the day is clear, refreshed by each reminder; "Show count on app icon", on by default. NOTIFICATIONS.md › App badge (NOTIF-13). Not deployed yet, 10 October 2026
 - [x] **Claude:** push reminders 3/5: in the app: the service worker shows the reminder and opens TikTym on tap; a "Remind me tomorrow" card on Today after the first entry (never on first open); Setup › Daily reminder with a time; deleting the account removes its devices (NOTIF-12, NOTIF-14). Not deployed yet, 10 October 2026

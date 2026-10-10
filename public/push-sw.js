@@ -4,7 +4,7 @@ self.addEventListener('push', e => {
   let d = {};
   try { d = e.data ? e.data.json() : {}; } catch { /* not JSON: show a plain notification */ }
   const shown = self.registration.showNotification(d.title || 'TikTym', {
-    body: d.body || '', icon: '/icons/icon-192.png', tag: d.tag || 'tiktym', data: { url: d.url || '/' },
+    body: d.body || '', icon: '/icons/icon-192.png', badge: '/icons/badge-96.png', tag: d.tag || 'tiktym', data: { url: d.url || '/' },
   });
   const badge = typeof d.badge === 'number' && self.navigator.setAppBadge ? self.navigator.setAppBadge(d.badge).catch(() => {}) : null;
   e.waitUntil(Promise.all([shown, badge]));

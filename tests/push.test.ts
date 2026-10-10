@@ -1,3 +1,4 @@
+import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { deviceGone, reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from '../functions/src/push';
 import { badgeCount, nearestTime, REMINDER_TIMES, reminderOn, reminderText, reminderTime, slotAt, timeLabel, utcSlot } from '../src/lib/reminders';
@@ -72,6 +73,15 @@ describe('what the reminder says (NOTIF-09)', () => {
     const left = [{ name: 'Exercise' }, { name: 'Reading' }];
     expect(JSON.parse(reminderPayload(left, true))).toMatchObject({ title: '2 practices left today', badge: 2, url: '/', tag: 'daily-reminder' });
     expect(JSON.parse(reminderPayload(left, false)).badge).toBeNull();
+  });
+});
+
+describe('how the reminder looks (NOTIF-09)', () => {
+  it("shows TikTym's icon, and the white ring Android puts in the status bar; both files exist", () => {
+    const sw = readFileSync('public/push-sw.js', 'utf8');
+    expect(sw).toContain("icon: '/icons/icon-192.png'");
+    expect(sw).toContain("badge: '/icons/badge-96.png'");
+    for (const f of ['icon-192.png', 'badge-96.png']) expect(existsSync(`public/icons/${f}`), f).toBe(true);
   });
 });
 

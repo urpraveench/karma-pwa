@@ -62,7 +62,7 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 
 **Phase 0: Foundations**
 
-- [ ] **You:** stay on the free Spark plan for now (decided 8 October). Watch usage weekly in Firebase › Usage and billing; GTM.md › "Capacity on the free plan" lists the limits and what hits them first. Move to Blaze with a budget alert before any real promotion.
+- [ ] **You (decided 10 October 2026):** move to the Blaze plan. First create a budget of about ₹500 a month in Google Cloud Console › Billing › Budgets & alerts (alerts at 50%, 90% and 100%), then upgrade in Firebase › Usage and billing. Then tell Claude.
 
 **Phase 1: Website**
 
@@ -110,8 +110,9 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Planned 10 October 2026; nothing built yet. Decide the open questions in NOTIFICATIONS.md first.
 
-- [ ] **You:** decide when to move to Blaze for phase 2 (email and push), and the email provider (Resend or Brevo).
+- [ ] **You:** choose the email provider (Claude's pick: Resend), create the account, and add its DNS records (SPF, DKIM) for tiktym.com at GoDaddy.
 - [ ] **You:** send a personal welcome email to each new sign-up (phase 1).
+- [ ] **Claude (after Blaze, first):** daily automatic backups of Firestore, so a bad bug or deletion can be undone.
 - [ ] **Claude:** phase 1 in-app: install tip, first-week tips, milestone celebrations, progress-card reminder, What's new dot, feedback ask.
 - [ ] **Claude:** phase 2 (after Blaze): notification settings in Setup, Privacy Policy update, email (welcome, first-minute nudge, comeback, weekly recap), push (daily reminder, streak at risk).
 

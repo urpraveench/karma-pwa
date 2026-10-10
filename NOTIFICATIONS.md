@@ -61,6 +61,6 @@ WhatsApp reminders (opt-in), and native notifications through the Google Play ap
 
 ## Open questions for you
 
-1. Phase 2 needs Blaze. Move when the 100 Days challenge starts (2 November), or wait for more users?
+1. ~~Phase 2 needs Blaze.~~ Decided 10 October: moving to Blaze now. Aim to have welcome and first-minute emails running before the 100 Days challenge starts on 2 November.
 2. Email provider: Resend (simple, 3,000 free emails a month) or Brevo (300 free a day, Indian payment options). Claude's pick: Resend.
 3. Which phase 1 in-app items first? Claude's pick: install tip and first-week tips, since they help new users stay past day 3.

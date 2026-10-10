@@ -32,6 +32,7 @@ Anything sent while the app is closed needs Blaze. Everything else can start now
 | 12 | **Feedback ask** | After 7 active days | In-app card linking Send feedback | 1 |
 | 13 | **Challenge reminders** (100 Days, 100 Minutes) | Daily during the challenge, for those who joined | Push; weekly email check-in | 2 |
 | 14 | **Product news** (big features, challenges) | Occasionally, at most monthly | Email, opt-in only | 2 |
+| 15 | **App badge**: practices still due today, as a number on the home-screen icon | Set while the app is open; refreshed each morning by push | Badge (see "App badge" below) | 2, with push |
 
 ## Decision (10 October 2026): on by default, easy to switch off
 
@@ -61,6 +62,14 @@ Three switches in Setup › Notifications and privacy control them: **Tips and r
 
 **Build order** (after the 1.8.0 release): weekly recap → comeback → news broadcast (in time to announce the 100 Days challenge in late October) → first-week tips → monthly progress (before 1 November).
 
+## App badge (agreed 10 October 2026)
+
+The number on TikTym's home-screen icon shows **practices still due today**: 4 practices means 4, and the badge clears once the day is cleared. A practice logged only partly (15 of 30) still counts. It never counts minutes: a badge reading 40 or 100 feels like a debt, and 100 minutes is a starting point, never a requirement.
+
+- **Where it works:** iPhone and iPad with TikTym on the home screen (iOS 16.4+), only once notifications are allowed for TikTym; installed on a computer from Chrome or Edge. **Not on Android**: Android has no number badges for web apps, nor for the Google Play version, which wraps the same web app. On Android, push reminders do this job.
+- **Why it waits for push:** a web app can change its badge only while it runs. Set only while the app is open, the badge goes stale overnight (yesterday's "1" still shows in the morning, and a new day's "4" never appears). So it ships with push: the app sets it while open and clears it when the day is cleared; each morning's push (or a silent daily refresh) sets the new day's count.
+- **Setting:** "Show count on app icon" in Setup › Notifications and privacy, on by default like the others.
+
 ## Rules for all of them
 
 - **On by default, off with one tap, per type** (see the decision above). A Notifications and privacy section in Setup with a switch for each: welcome and first-week tips, weekly recap, product news, reminders (once push exists), and usage statistics. Account emails such as password reset can't be switched off.
@@ -81,7 +90,7 @@ Three switches in Setup › Notifications and privacy control them: **Tips and r
 
 1. Notification settings in Setup and the updated Privacy Policy.
 2. Email from noreply@tiktym.com: welcome (1), first-minute nudge (3), comeback (7), weekly recap (8).
-3. Push: daily reminder (5) and streak at risk (6), then milestones and challenge reminders.
+3. Push: daily reminder (5) and streak at risk (6), with the app badge (15), then milestones and challenge reminders.
 
 **Phase 3: later**
 

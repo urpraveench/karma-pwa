@@ -125,6 +125,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **Claude:** monthly progress email on the 1st (Weekly recap switch), first on 1 November.
 - [ ] **Claude:** the "at most one email a day, mornings IST" rule across all scheduled emails.
 - [ ] **Claude:** push reminders (daily reminder at a chosen time, streak at risk).
+- [ ] **Claude:** app badge, built with push reminders: practices still due today on the home-screen icon (iPhone home screen and installed desktop apps; not Android), set while open, cleared when the day is cleared, refreshed by each morning's push; a "Show count on app icon" switch, on by default. NOTIFICATIONS.md › App badge.
 - [ ] **Claude:** phase 1 in-app: install tip, first-week tips, milestone celebrations, progress-card reminder, What's new dot, feedback ask.
 
 ## 7. Housekeeping

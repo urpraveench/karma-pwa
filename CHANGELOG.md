@@ -13,7 +13,7 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
-## Coming next
+## 1.9.0 · 10 October 2026 · Daily reminders and your week by email
 
 - **A weekly recap by email, every Monday morning.** Last week's minutes, the days you showed up, your best day and how each practice went, with one small suggestion for the week ahead. Turn it off any time in Setup › Notifications and privacy.
 - **A short note if you've been away for a few days**, with one small way back in: 5 minutes of your shortest practice. Just one per break, and no making up for missed days.

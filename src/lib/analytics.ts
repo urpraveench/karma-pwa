@@ -6,7 +6,11 @@ import { BUILD } from '../version';
 // from the website to the app counts as one person.
 
 const ID = import.meta.env.VITE_GA_MEASUREMENT_ID?.trim() || '';
-const KEY = 'tiktym:analytics';
+// The device's choice. A new name from 1.8.0 (on by default): choices stored before it, mostly the old unticked
+// sign-up box, no longer count, so every account starts on; anyone who turns it off from 1.8.0 stays off.
+const KEY = 'tiktym:stats';
+const OLD_KEY = 'tiktym:analytics';
+try { localStorage.removeItem(OLD_KEY); } catch { /* storage blocked */ }
 const LINKED_DOMAINS = ['tiktym.com', 'www.tiktym.com', 'app.tiktym.com'];
 
 export type Consent = 'granted' | 'denied' | null;

@@ -32,7 +32,7 @@ test('on by default once signed in; the sign-in screen itself sends nothing (ANA
 test('a device that said no stays off (ANA-01)', async ({ page }) => {
   const requests = await stubGoogle(page);
   await open(page);
-  await page.evaluate(() => localStorage.setItem('tiktym:analytics', 'denied'));
+  await page.evaluate(() => localStorage.setItem('tiktym:stats', 'denied'));
   await page.fill('#em', DEMO.email); await page.fill('#pw', DEMO.password); await page.click('button[type=submit]');
   await startWithDefaults(page);
   await page.locator('.cat').nth(0).locator('.qbtn').click();
@@ -40,6 +40,19 @@ test('a device that said no stays off (ANA-01)', async ({ page }) => {
   await expect(statsRow(page)).toHaveAttribute('aria-pressed', 'false');
   expect(requests).toHaveLength(0);
   expect(await pushed(page)).toHaveLength(0);
+});
+
+test('a "no" stored before 1.8.0 (the old unticked sign-up box) no longer counts: it starts on (ANA-01)', async ({ page }) => {
+  const requests = await stubGoogle(page);
+  await open(page);
+  await page.evaluate(() => localStorage.setItem('tiktym:analytics', 'denied'));
+  await page.reload();
+  await page.fill('#em', DEMO.email); await page.fill('#pw', DEMO.password); await page.click('button[type=submit]');
+  await startWithDefaults(page);
+  await expect.poll(() => requests.length).toBeGreaterThan(0);
+  await tab(page, 'Setup').click();
+  await expect(statsRow(page)).toHaveAttribute('aria-pressed', 'true');
+  expect(await page.evaluate(() => localStorage.getItem('tiktym:analytics'))).toBeNull(); // the old choice is cleared
 });
 
 test('an account from before is on straight away; the notice only informs (ANA-01, NOTIF-02)', async ({ page }) => {

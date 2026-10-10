@@ -133,7 +133,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
-- [x] Existing accounts get emails and usage statistics on straight away; the one-time notice on Today only informs. A device that explicitly said no stays off (Praveen's decision, 10 October 2026; ANA-01, NOTIF-02)
+- [x] Existing accounts get emails and usage statistics on straight away; the one-time notice on Today only informs. The device's choice is stored under a new name from 1.8.0, so earlier stored "no"s (mostly the old unticked sign-up box) no longer count; turning it off from 1.8.0 on is respected (Praveen's decision, 10 October 2026; ANA-01, NOTIF-02)
 - [x] The first email switch is now "Tips and reminders" (welcome, first-week tips, the first-minute nudge and comeback); the email schedule and rules are in NOTIFICATIONS.md, and the Privacy Policy and Terms list every planned email, 10 October 2026
 - [x] Removed the unused branded password-reset template (`email/password-reset.html`, which Firebase never accepted) and its test; password resets use Firebase's default email. The header image stays for the welcome and first-minute emails, 10 October 2026
 - [x] Company name removed outside the legal sections (emails, password-reset template, website and What's new footers, structured data, llms.txt, Terms summary and footers); kept in Privacy section 1, Terms section 1 and the grievance contact. Emails sign off "Praveen · Helping busy people like you make time for what matters." with no title, 10 October 2026

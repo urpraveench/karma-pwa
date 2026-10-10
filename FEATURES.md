@@ -22,7 +22,7 @@ Summary of coverage at the time of writing:
 
 | Area | Scenarios | Tested | Gap | Manual |
 |---|---|---|---|---|
-| 1. Accounts and sign-in | 29 | 26 | 0 | 3 |
+| 1. Accounts and sign-in | 28 | 25 | 0 | 3 |
 | 2. First run | 12 | 11 | 0 | 1 |
 | 3. Backlog rules | 13 | 13 | 0 | 0 |
 | 4. Today screen | 16 | 16 | 0 | 0 |
@@ -38,7 +38,7 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 20 | 20 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 5 | 5 | 0 | 0 |
-| **Total** | **284** | **269** | **0** | **15** |
+| **Total** | **283** | **268** | **0** | **15** |
 
 ---
 
@@ -81,7 +81,6 @@ The app has two modes, set by `VITE_BACKEND`. **Test mode** (`local`) keeps data
 | AUTH-26 | Password after Google takes over an unverified account | In production, Firebase removes the password from an account whose email was never verified once Google signs in with that email; sign in with Google from then on, or use Forgot password to set a new one | Manual: checked on iPhone, 8 October 2026 |
 | AUTH-27 | Google sign-in in an app installed on an iPhone or iPad home screen | Uses a full-page redirect instead of a pop-up (a pop-up opens in Safari, whose storage the installed app can't see) and comes back signed in | E2E `firebase-google/google.spec.ts` (emulated iPhone home-screen app; a real iPhone is in to-do.md) |
 | AUTH-28 | Account emails reach the inbox | Password-reset and other account emails come from a TikTym-owned domain with SPF and DKIM, named "TikTym", and arrive in the inbox rather than spam | Manual: checked in Gmail on iPhone, 8 October 2026 |
-| AUTH-29 | Branded password-reset email (not live: Firebase won't save template changes for this project yet) | The reset email shows the TikTym header image, a short message, a "Reset password" button, the plain link as a fallback, and a company footer; readable in Gmail on a phone, in light and dark mode | Unit `email-template.test.ts`, E2E `site/site.spec.ts` (header image); how Gmail shows it: Manual |
 | AUTH-30 | Google first | Continue with Google is the main button, straight under the tagline; email and password sit below "or use your email", with a lighter Sign in button. Same order when creating an account | E2E `auth.spec.ts`, `firebase/account.spec.ts` |
 | AUTH-25 | First Google sign-in | Creates the account, seeds the default practices, greets by the Google first name | E2E `firebase-google/google.spec.ts` |
 
@@ -455,7 +454,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 | Emails: welcome, first-week tips, first-minute nudge, weekly recap, news | Cloud Functions + Resend; NOTIFICATIONS.md |
 | Push reminders and streak-at-risk alerts | Cloud Functions + Firebase Cloud Messaging |
 | Timer alert while the app is closed | Needs push notifications |
-| Custom password-reset email | Firebase template not customised yet; retry on Blaze, or send through Resend |
+| Branded password-reset email | Firebase's default is used; could be sent through Resend later |
 | Hours towards mastery; 100 Days challenge view | Ideas in to-do.md |
 
 ## What's left to test

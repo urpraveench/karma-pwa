@@ -1,4 +1,4 @@
-// Draws the header image for TikTym's account emails (site/email/header.png, 1200×240, shown at 600×120).
+// Draws the header image for TikTym's emails (welcome, first-minute nudge) (site/email/header.png, 1200×240, shown at 600×120).
 // Emails can't use SVG or web fonts reliably, so the mark and name are baked into a PNG.
 // Run with `npm run email:header`, then deploy the website (`firebase deploy --only hosting:site`).
 import { chromium } from '@playwright/test';

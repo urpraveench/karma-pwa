@@ -62,7 +62,7 @@ test.describe('website (GTM-04)', () => {
     await expect(page.locator('footer a', { hasText: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/company/tiktym/');
   });
 
-  test('serves the email header image (AUTH-29)', async ({ request }) => {
+  test('serves the header image the emails use (NOTIF-03)', async ({ request }) => {
     const r = await request.get('/email/header.png');
     expect(r.status()).toBe(200);
     expect(r.headers()['content-type']).toBe('image/png');

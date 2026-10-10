@@ -47,16 +47,16 @@ Three switches in Setup › Notifications and privacy control them: **Tips and r
 | Welcome | Right after first-run Start | Every new account | Tips and reminders | Built |
 | First-minute nudge | About 24 hours after Start | Only if nothing has been logged | Tips and reminders | Built |
 | First-week tips | Day 3 and day 6 after Start | Only while still using TikTym; one tip each (day 3: the focus timer; day 6: Insights and your best time of day) | Tips and reminders | Planned |
-| Comeback | After 3 days with nothing logged | Once per absence: "no catching up needed, just 5 minutes today" | Tips and reminders | Planned |
+| Comeback | 9 am IST, after 3 full days with nothing logged | Once per absence, for absences that began in the last 2 weeks: "you don't need to make up for the missed days", 5 minutes of the shortest practice | Tips and reminders | Built (on the queue) |
 | Weekly recap | Monday, 8 am IST | Anyone who logged something in the last 2 weeks: last week's minutes against the targets, days shown up, best day, each practice with a bar, the show-up streak, one gentle suggestion; after a quiet week, a short "5 minutes today" note instead | Weekly recap | Built |
 | Monthly progress | 1st of the month, 8 am IST | Active users: the month's progress card is ready to share | Weekly recap | Planned |
 | News | When there's something to announce, at most monthly | Everyone with News on (e.g. the 100 Days, 100 Minutes launch), text approved by Praveen | News about TikTym | Planned |
 
 **Email rules:**
 
-- At most one email a day per person; if two are due, the more useful one goes and the other waits.
+- At most one email a day per person; if two are due, the more useful one goes and the other waits. Built for the comeback: `mail/{uid}.lastEmailDay` records the India date of the last email, and the comeback waits a day if it's today.
 - Sent in the morning, India time (around 8 am), never at night. (The welcome goes straight away, since the person just started.)
-- After 3 comeback emails with no return, TikTym stops writing to that person, apart from occasional news.
+- One comeback per absence. Someone who doesn't come back after it hears nothing more about it; the weekly recap stops too once they've been away two weeks; only occasional news continues.
 - Each email respects its switch and carries its own unsubscribe link.
 - Signed by Praveen, "Helping busy people like you make time for what matters."; no company name or title.
 
@@ -72,7 +72,7 @@ The number on TikTym's home-screen icon shows **practices still due today**: 4 p
 
 ## Scaling the emails (worked out 10 October 2026)
 
-Check this whenever we plan for growth. The scheduled emails (weekly recap now; monthly progress, comeback and news later) are built for a small number of users.
+Check this whenever we plan for growth. **The comeback email is already on the scalable design** (a trigger keeps `mail/{uid}.lastLogged`; the 9 am job queries only people away 4 to 14 days and queues one task each, sent 2 a second with retries). **The weekly recap still uses the simple loop** below, and needs moving to the same design.
 
 **How the weekly recap works today:** one scheduled function goes through every account, one at a time: read the account (~0.2 s), send through Resend (~0.3 s), then wait 0.6 s to stay under Resend's free-plan rate (2 emails a second). About **1 second per person**. Working out the week itself takes under a millisecond per person; it's never the bottleneck.
 

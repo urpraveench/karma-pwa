@@ -1,4 +1,4 @@
-// TikTym's emails (NOTIF-03 to NOTIF-06): content, signed unsubscribe links, and who gets what.
+// TikTym's emails (NOTIF-03 to NOTIF-07): content, signed unsubscribe links, and who gets what.
 // Pure functions, so they're unit-tested (tests/mail.test.ts); index.ts does the reading, sending and writing.
 import { Buffer } from 'node:buffer';
 import { createHmac, timingSafeEqual } from 'node:crypto';
@@ -193,6 +193,35 @@ export function nudgeEmail(o: { name: string; practice: Practice; unsubscribe: s
     `You're getting this because you created a TikTym account and haven't logged anything yet. Unsubscribe: ${o.unsubscribe}`,
   ].join('\n');
   return { subject: 'Your first five minutes on TikTym', html, text, headers: unsubscribeHeaders(o.unsubscribe) };
+}
+
+/** The comeback, once per absence after 3 full days with nothing logged (NOTIF-07). */
+export function comebackEmail(o: { name: string; practice: Practice; days: number; unsubscribe: string }): Email {
+  const hi = o.name ? `Hi ${esc(o.name)},` : 'Hi,';
+  const what = esc(o.practice.name);
+  const html = frame({
+    title: 'Pick up where you left off',
+    body: [
+      para(hi),
+      para(`It's been ${o.days} days since your last entry in TikTym. That happens to everyone: work, travel, a busy week.`),
+      callout(`<strong>You don't need to make up for the missed days.</strong> Start with <strong>5 minutes of ${what} today</strong>, and you're back.`),
+      practicesCard([{ ...o.practice, minutes: 5 }], 'today').replace(/<p style[^>]*>.*?<\/p>/s, ''),
+      button(`Start 5 minutes of ${what}`, appLink('comeback')),
+      para("If something about TikTym got in the way, reply and tell me. I read every one."),
+    ],
+    why: "You're getting this because nothing has been logged in your TikTym account for a few days. It's sent once per break.",
+    unsubscribe: o.unsubscribe,
+  });
+  const text = [
+    hi.replace(/&amp;/g, '&'), '',
+    `It's been ${o.days} days since your last entry in TikTym. That happens to everyone: work, travel, a busy week.`, '',
+    `You don't need to make up for the missed days. Start with 5 minutes of ${o.practice.name} today, and you're back.`, '',
+    `Open TikTym: ${appLink('comeback')}`, '',
+    'If something about TikTym got in the way, reply and tell me. I read every one.', '',
+    'Praveen', SIGN_OFF, '', '--',
+    `You're getting this because nothing has been logged in your TikTym account for a few days. It's sent once per break. Unsubscribe: ${o.unsubscribe}`,
+  ].join('\n');
+  return { subject: `5 minutes of ${o.practice.name} today?`, html, text, headers: unsubscribeHeaders(o.unsubscribe) };
 }
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

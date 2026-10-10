@@ -18,6 +18,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] From 11 October: run `firebase firestore:backups:list --project tiktym` and check a daily backup appears each day (SYNC-17)
 - [ ] Once, before real promotion: a restore drill. Restore the latest backup into a new database (README › Backups and restoring), check it in the console, then delete it (SYNC-17)
 - [ ] A day after signing up with the spare test account (without logging anything), check the first-minute nudge arrives (NOTIF-04)
+- [ ] After the comeback email is deployed: the next morning, `firebase functions:log --only comebackDaily` shows how many were queued; for a test account left 3 full days without an entry, check the comeback arrives at about 9 am, only once (NOTIF-07)
 - [ ] The first Monday after the weekly recap is deployed: check it arrives at about 8 am for an account that logged last week, that the numbers match History for that week, and that the function's log says how many went (NOTIF-06)
 - [ ] **You:** remove the last line of the LinkedIn page description ("TikTym is built by Pramal IT Services Private Limited.") in LinkedIn › Edit page
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
@@ -119,8 +120,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
 - [ ] **You:** upgrade Resend to a paid plan at about 50 active users; the free plan's 100 emails a day runs out on Mondays at about 80 (NOTIFICATIONS.md › Scaling the emails).
-- [ ] **Claude:** before 2 November (the 100 Days challenge): move the scheduled emails to a queue (one task per person, rate-limited, retried), batch sending, and a `lastLoggedAt` date so only active people are looked at. Today's loop stops at about 500 people (NOTIFICATIONS.md › Scaling the emails).
-- [ ] **Claude:** comeback email after 3 days with nothing logged, once per absence, stopping after 3 with no return (Tips and reminders).
+- [ ] **Claude:** before 2 November (the 100 Days challenge): move the weekly recap onto the queue the comeback already uses (one task per person, rate-limited, retried), querying `mail/{uid}.lastLogged` so only active people are looked at; batch sending if needed. Today's recap loop stops at about 500 people (NOTIFICATIONS.md › Scaling the emails).
 - [ ] **Claude:** news broadcast: Praveen approves the text, it goes to everyone with News on; first use, announcing 100 Days, 100 Minutes in late October.
 - [ ] **Claude:** first-week tips emails on days 3 and 6, only while still active (Tips and reminders).
 - [ ] **Claude:** monthly progress email on the 1st (Weekly recap switch), first on 1 November.
@@ -138,6 +138,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** comeback email after 3 full days with nothing logged, once per absence (Tips and reminders), on the scalable design: a trigger keeps each account's last-logged date, a daily 9 am job queries only people away 4 to 14 days and queues one task each (rate-limited, retried); waits a day if another email went that day (NOTIF-07, NOTIF-08). Built and unit-tested; not yet deployed, 10 October 2026
 - [x] Deployed the weekly recap (function `weeklyRecap`, Mondays 8 am India time); the first goes out Monday 12 October for 5 to 11 October, 10 October 2026
 - [x] **Claude:** weekly recap email, Monday 8 am IST, for anyone active in the last 2 weeks (Weekly recap switch): last week's minutes against the targets, days shown up, best day, each practice with a bar, the show-up streak, one gentle suggestion; a quiet week gets a no-catching-up note instead (NOTIF-06). Built and unit-tested; sends from the first Monday after the functions deploy, 10 October 2026
 - [x] **You:** messaged Gopi, Charuthi and Kiran about emails and usage statistics now being on, 10 October 2026

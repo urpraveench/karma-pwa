@@ -1,17 +1,20 @@
-// TikTym's Cloud Functions (asia-south1, next to the database): the welcome, first-minute and weekly recap emails,
-// and the unsubscribe page. What each email says, and who gets it, lives in mail.ts (unit-tested); this file reads,
+// TikTym's Cloud Functions (asia-south1, next to the database): the welcome, first-minute, weekly recap and comeback
+// emails, and the unsubscribe page. What each email says, and who gets it, lives in mail.ts (unit-tested); this file reads,
 // sends and records. NOTIFICATIONS.md has the plan.
 import { initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { FieldValue, getFirestore, Timestamp } from 'firebase-admin/firestore';
+import { getFunctions } from 'firebase-admin/functions';
 import { logger } from 'firebase-functions';
 import { defineSecret } from 'firebase-functions/params';
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { onRequest } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { onTaskDispatched } from 'firebase-functions/v2/tasks';
+import { comebackDue, comebackRange, daysAway, indiaToday, latestLogDate, type MailState } from './comeback.js';
 import {
-  confirmUnsubscribePage, easiest, emailOn, FROM, firstName, justStarted, NUDGE_AFTER_MS, nudgeEmail, readUnsubscribe,
+  comebackEmail, confirmUnsubscribePage, easiest, emailOn, FROM, firstName, justStarted, NUDGE_AFTER_MS, nudgeEmail, readUnsubscribe,
   recapEmail, REPLY_TO, unsubscribedPage, unsubscribeLink, welcomeEmail, type Email, type Practice,
 } from './mail.js';
 import { addDays, lastWeekStart, weekRecap, type RecapCategory, type RecapLog } from './recap.js';
@@ -27,7 +30,8 @@ const UNSUBSCRIBE_SECRET = defineSecret('UNSUBSCRIBE_SECRET');
 
 /**
  * Server-only record per account, mail/{uid} (apps can't read or write it): when first-run Start happened, when the
- * welcome went, and when the first-minute nudge is due (removed once handled).
+ * welcome went, when the first-minute nudge is due (removed once handled), the newest entry's date (lastLogged), the
+ * week of the last recap, the absence the last comeback was for, and the India date of the last email (lastEmailDay).
  */
 const mailDoc = (uid: string) => db.doc(`mail/${uid}`);
 const settingsDoc = (uid: string) => db.doc(`users/${uid}/meta/settings`);
@@ -70,7 +74,7 @@ export const welcome = onDocumentWritten({ document: 'users/{uid}/meta/settings'
   if (!to) return;
   const email = welcomeEmail({ name: to.name, practices: await practices(uid), unsubscribe: unsubscribeLink(uid, 'tips', UNSUBSCRIBE_SECRET.value()) });
   await send(to.email, email, `welcome-${uid}`);
-  await mailDoc(uid).update({ welcomeAt: Timestamp.now() });
+  await mailDoc(uid).update({ welcomeAt: Timestamp.now(), lastEmailDay: indiaToday(new Date()) });
   logger.info('welcome sent', { uid });
 });
 
@@ -79,7 +83,7 @@ export const firstMinute = onSchedule({ schedule: 'every 60 minutes', timeZone: 
   const due = await db.collection('mail').where('nudgeDueAt', '<=', Timestamp.now()).limit(100).get();
   for (const doc of due.docs) {
     const uid = doc.id;
-    const handled = (outcome: string) => doc.ref.update({ nudgeDueAt: FieldValue.delete(), nudge: outcome, nudgeAt: Timestamp.now() });
+    const handled = (outcome: string) => doc.ref.update({ nudgeDueAt: FieldValue.delete(), nudge: outcome, nudgeAt: Timestamp.now(), ...(outcome === 'sent' ? { lastEmailDay: indiaToday(new Date()) } : {}) });
     try {
       const [settings, months, list] = await Promise.all([settingsDoc(uid).get(), db.collection(`users/${uid}/months`).get(), practices(uid)]);
       const logged = months.docs.some(m => Object.keys(m.data().entries || {}).length > 0);
@@ -124,10 +128,12 @@ export const weeklyRecap = onSchedule({ schedule: '0 8 * * 1', timeZone: 'Asia/K
         const logs = monthDocs.flatMap(m => Object.values((m.data()?.entries || {}) as Record<string, RecapLog>));
         const recap = weekRecap(categories, logs, week);
         if (!recap) continue;
+        const latest = latestLogDate(Object.fromEntries(logs.map((l, i) => [i, l])));
+        if (latest && !(mail.data()?.lastLogged >= latest)) await mailDoc(uid).set({ lastLogged: latest }, { merge: true }); // fills in accounts from before the trigger
         const current = categories.filter(c => !c.archivedFrom).map(c => ({ name: c.name, minutes: Number(c.targets?.[c.targets.length - 1]?.minutes ?? 0) }));
         const email = recapEmail({ name: firstName(u.displayName, u.email), recap, easiest: easiest(current)?.name, unsubscribe: unsubscribeLink(uid, 'recap', UNSUBSCRIBE_SECRET.value()) });
         await send(u.email, email, `recap-${uid}-${week}`);
-        await mailDoc(uid).set({ recapWeek: week, recapAt: Timestamp.now() }, { merge: true });
+        await mailDoc(uid).set({ recapWeek: week, recapAt: Timestamp.now(), lastEmailDay: indiaToday(new Date()) }, { merge: true });
         sent++;
         await pause(600);
       } catch (e) {
@@ -136,6 +142,49 @@ export const weeklyRecap = onSchedule({ schedule: '0 8 * * 1', timeZone: 'Asia/K
     }
   } while (pageToken);
   logger.info('weekly recaps sent', { week, sent });
+});
+
+/** Keeps mail/{uid}.lastLogged, the newest entry's date, as entries are saved, so the comeback job only looks at people who are away (NOTIF-07). */
+export const trackLastLogged = onDocumentWritten({ document: 'users/{uid}/months/{month}' }, async event => {
+  const latest = latestLogDate(event.data?.after.data()?.entries);
+  if (!latest) return;
+  const ref = mailDoc(event.params.uid);
+  const known = (await ref.get()).data()?.lastLogged;
+  if (!known || latest > known) await ref.set({ lastLogged: latest }, { merge: true });
+});
+
+/**
+ * Every morning at 9 am India time: queue a comeback for each account away 4 to 14 days (NOTIF-07). The query reads
+ * only those accounts; the queue sends at a steady rate and retries, so this scales past the 9-minute limit.
+ */
+export const comebackDaily = onSchedule({ schedule: '0 9 * * *', timeZone: 'Asia/Kolkata' }, async () => {
+  const today = indiaToday(new Date()), { from, to } = comebackRange(today);
+  const away = await db.collection('mail').where('lastLogged', '>=', from).where('lastLogged', '<=', to).get();
+  const due = away.docs.filter(d => comebackDue(d.data() as MailState, today));
+  const queue = getFunctions().taskQueue('locations/asia-south1/functions/comebackSend');
+  await Promise.all(due.map(d => queue.enqueue({ uid: d.id })));
+  logger.info('comebacks queued', { today, away: away.size, queued: due.length });
+});
+
+/** Sends one comeback, from the queue: at most 2 a second, retried on failure. Checks again before sending (NOTIF-07, NOTIF-08). */
+export const comebackSend = onTaskDispatched({
+  retryConfig: { maxAttempts: 3, minBackoffSeconds: 120 },
+  rateLimits: { maxDispatchesPerSecond: 2, maxConcurrentDispatches: 4 },
+  secrets: [RESEND_API_KEY, UNSUBSCRIBE_SECRET],
+}, async req => {
+  const uid = String((req.data as { uid?: unknown })?.uid ?? '');
+  if (!uid) return;
+  const today = indiaToday(new Date());
+  const [mail, settings] = await Promise.all([mailDoc(uid).get(), settingsDoc(uid).get()]);
+  const m = mail.data() as MailState | undefined;
+  if (!comebackDue(m, today) || !emailOn(settings.data(), 'tips')) return; // logged since, already sent, or switched off
+  const [to, list] = await Promise.all([recipient(uid), practices(uid)]);
+  const practice = easiest(list);
+  if (!to || !practice) return;
+  const email = comebackEmail({ name: to.name, practice, days: daysAway(m!.lastLogged!, today), unsubscribe: unsubscribeLink(uid, 'tips', UNSUBSCRIBE_SECRET.value()) });
+  await send(to.email, email, `comeback-${uid}-${m!.lastLogged}`);
+  await mailDoc(uid).set({ comebackFor: m!.lastLogged, comebackAt: Timestamp.now(), lastEmailDay: today }, { merge: true });
+  logger.info('comeback sent', { uid, away: daysAway(m!.lastLogged!, today) });
 });
 
 /**

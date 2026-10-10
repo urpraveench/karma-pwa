@@ -34,11 +34,11 @@ Summary of coverage at the time of writing:
 | 10. Practices (Setup) | 23 | 23 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 17 | 15 | 0 | 2 |
-| 13. App shell, PWA and platform | 35 | 30 | 0 | 5 |
-| 14. Marketing and sharing | 21 | 21 | 0 | 0 |
+| 13. App shell, PWA and platform | 35 | 29 | 1 | 5 |
+| 14. Marketing and sharing | 22 | 20 | 2 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 4 | 4 | 0 | 0 |
-| **Total** | **288** | **273** | **0** | **15** |
+| **Total** | **289** | **271** | **3** | **15** |
 
 ---
 
@@ -383,7 +383,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | APP-25 | Light mode colours | The same contrast check as APP-14, in light: login, Today, Insights, History, Setup, the sheets and the focus timer | E2E `colours.spec.ts` |
 | APP-26 | Fonts don't block the first paint | The page draws straight away in the system font and switches to TikTym's fonts when they arrive | E2E `loading.spec.ts` |
 | APP-27 | Install on Android | On Android Chrome, Samsung Internet or Edge, the install card's Install button opens the browser's own install dialog; once installed, the card goes away | E2E `install.spec.ts`, Unit `install.test.ts` |
-| APP-28 | Add to home screen on iPhone | On iPhone, the install card shows two steps with the real icons: tap Share (the square with an arrow, at the bottom of Safari), then Add to Home Screen; and, if there's no Share button, open the page in Safari first | E2E `install.spec.ts`, Unit `install.test.ts` |
+| APP-28 | Add to home screen on iPhone | In Safari, the install card shows two steps with the real icons: tap Share (at the bottom of Safari, or inside ⋯ on newer iPhones), then Add to Home Screen; and, if there's no Share button, open the page in Safari first. In Chrome (or Firefox or Edge) on iPhone: tap Share in the address bar, then Add to Home Screen | Gap |
 | APP-29 | Opened inside another app | In WhatsApp's, Instagram's, Facebook's or LinkedIn's built-in browser (where installing is impossible), the card says to open TikTym in the phone's browser first and how (⋯ › Open in browser) | E2E `install.spec.ts`, Unit `install.test.ts` |
 | APP-30 | When the install card shows | On Today, only after the first minutes are logged, never once TikTym is installed. Not now hides it for 3 days; a second Not now hides it for good on Today | E2E `install.spec.ts`, Unit `install.test.ts` |
 | APP-31 | Install from Setup | Setup › "Add TikTym to your home screen" opens the same guide at any time; the row is hidden once TikTym is installed | E2E `install.spec.ts` |
@@ -408,7 +408,8 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | GTM-16 | Structured data | The home page describes, in schema.org JSON-LD, the organisation (with its LinkedIn page), the website, TikTym as a free web app, and the FAQ, word for word as shown on the page | E2E `site/site.spec.ts` |
 | GTM-17 | Summary for AI tools | tiktym.com/llms.txt: a short plain-text summary of what TikTym is, who it's for, how it differs, and its links | E2E `site/site.spec.ts` |
 | GTM-18 | Search descriptions | Every page on tiktym.com and the app has a description of 25 to 160 characters (what search results show); the home page's matches its structured data | E2E `site/site.spec.ts`, `legal.spec.ts` |
-| GTM-19 | Install help on the website | The Install section shows the visitor's own phone first (iPhone or Android) and, inside WhatsApp, Instagram, Facebook or LinkedIn, says to open the page in the browser before installing | E2E `site/site.spec.ts` |
+| GTM-19 | Install help on the website | Step-by-step guides for iPhone Safari, iPhone Chrome, Android Chrome and Samsung Internet; the visitor's own phone and browser first, marked "Your phone"; inside WhatsApp, Instagram, Facebook or LinkedIn, a warning to open the page in the browser before installing | Gap |
+| GTM-20 | Install videos | A short screen recording next to each guide (iPhone Safari, iPhone Chrome, Android Chrome), loading only when scrolled to, playing muted and looping like the feature clips | Gap |
 | SHARE-01 | Progress card stats | This calendar month's minutes (as hours), current and best streak, days with entries this month, and the top three practices by time this month | Unit `share.test.ts` |
 | SHARE-02 | Progress card image | Insights › Share opens a preview of a 1080×1350 image: TikTym brand, the month's time, streak, active days, top practices with their colours, tiktym.com | E2E `share.spec.ts` |
 | SHARE-03 | Sharing the card | Share opens the phone's share sheet with the image (LinkedIn, Instagram, WhatsApp); where sharing images isn't supported, Download saves it as a PNG | E2E `share.spec.ts` (real share sheet checked on iPhone, 8 October 2026) |

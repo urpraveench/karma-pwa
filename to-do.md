@@ -98,6 +98,9 @@ From FEATURES.md › "What's left to test". None left: every scenario has a test
 
 Help people add TikTym to their home screen (friends didn't know how; most only know app stores). Part of 1.8.0.
 
+- [ ] **Claude:** install steps for each browser: iPhone Safari (Share, inside ⋯ on newer iOS), iPhone Chrome (Share in the address bar), Android Chrome, Samsung Internet; on the website (visitor's own phone and browser highlighted) and in the app's guide (APP-28, GTM-19).
+- [ ] **You:** record three short screen recordings (about 10–15 seconds each) of adding TikTym to the home screen: iPhone Safari, iPhone Chrome, Android Chrome. Then Claude trims and embeds them next to the steps (GTM-20).
+- [ ] **Claude:** embed the recordings on the website, each next to its steps, loading only when scrolled to (GTM-20).
 
 - [ ] **Deferred (10 October 2026, your call):** while a timer runs, Today's big number stays at saved points even though the beads already show the timer's minutes, so the two disagree (found by Praveen). Proposed: the number counts down live (capped at what the practice still needs), no extra line in the circle, and "20 of 30 · timing" on the practice's row.
 - [ ] **Deferred (10 October 2026, your call):** the weekend card's "291 short, about 146 a day" doesn't match Today's "195 left" (the card splits the week's shortfall evenly and counts every minute; Today asks for carried minutes per practice). Proposed: the card says "Clear today's 195, including 95 carried over, then tomorrow's 100, and the week is done", with stats done this week / weekly goal / left today (MOM-03).

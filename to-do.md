@@ -17,7 +17,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 
 - [ ] From 11 October: run `firebase firestore:backups:list --project tiktym` and check a daily backup appears each day (SYNC-17)
 - [ ] Once, before real promotion: a restore drill. Restore the latest backup into a new database (README › Backups and restoring), check it in the console, then delete it (SYNC-17)
-- [ ] After the functions deploy: create a test account and check the welcome email arrives (inbox, not spam), shows the chosen practices, and its unsubscribe link and Gmail's unsubscribe button both turn the switch off in Setup; a day later, check the first-minute nudge (NOTIF-03 to NOTIF-05)
+- [ ] A day after signing up with the spare test account (without logging anything), check the first-minute nudge arrives (NOTIF-04)
 - [ ] **You:** remove the last line of the LinkedIn page description ("TikTym is built by Pramal IT Services Private Limited.") in LinkedIn › Edit page
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
@@ -136,6 +136,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Checked live with a test account: the welcome email arrives in the inbox (not spam), and its unsubscribe link turns the switch off in Setup (NOTIF-03, NOTIF-05), 10 October 2026
 - [x] Website deployed with the install videos; all four files load on tiktym.com, 10 October 2026
 - [x] Install videos on the website: iPhone Safari (iOS simulator, driven by a UI test) and Android Chrome (emulator, driven over adb), recorded from the live 1.8.0 app with `npm run site:install-videos` and shown next to their guides; the Android guide now mentions Android's extra "Add to home screen" confirmation. Chrome on iPhone can't run in the simulator, so its guide has steps only (GTM-20), 10 October 2026
 - [x] Released 1.8.0: "100 minutes a day for your productive life"; Notifications and privacy settings with emails and usage statistics on by default; the welcome email, first-minute nudge and unsubscribe page (Cloud Functions in asia-south1, first deploy; the welcome function needed a retry while Google set up event permissions); install help for each phone and browser; updated Privacy Policy and Terms. Checked live: version.json 1.8.0 (build efa1dcc; the first upload was stamped -dirty and was redeployed clean), the website's new title and What's new 1.8.0, and a forged unsubscribe link rejected, 10 October 2026

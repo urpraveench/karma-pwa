@@ -70,6 +70,33 @@ The number on TikTym's home-screen icon shows **practices still due today**: 4 p
 - **Why it waits for push:** a web app can change its badge only while it runs. Set only while the app is open, the badge goes stale overnight (yesterday's "1" still shows in the morning, and a new day's "4" never appears). So it ships with push: the app sets it while open and clears it when the day is cleared; each morning's push (or a silent daily refresh) sets the new day's count.
 - **Setting:** "Show count on app icon" in Setup › Notifications and privacy, on by default like the others.
 
+## Scaling the emails (worked out 10 October 2026)
+
+Check this whenever we plan for growth. The scheduled emails (weekly recap now; monthly progress, comeback and news later) are built for a small number of users.
+
+**How the weekly recap works today:** one scheduled function goes through every account, one at a time: read the account (~0.2 s), send through Resend (~0.3 s), then wait 0.6 s to stay under Resend's free-plan rate (2 emails a second). About **1 second per person**. Working out the week itself takes under a millisecond per person; it's never the bottleneck.
+
+**Limits, in the order we'll hit them:**
+
+| Active users | What breaks | Fix |
+|---|---|---|
+| ~80 | **Resend's free plan: 100 emails a day, 3,000 a month.** Monday's recaps plus that day's welcomes pass 100; the rest fail (logged, not retried that week) | Upgrade Resend (about $20 a month for 50,000 emails; covers 10,000 weekly users) |
+| ~400 to 500 | **A scheduled function stops after 9 minutes**, so only the first ~500 people get a recap. Fails safely: no duplicates, no wrong emails, but the rest miss that week | The queue design below |
+| 10,000 | Both of the above; and going through every sign-up, most of them inactive, wastes reads | The queue design, plus "only look at active people" |
+
+Firestore cost isn't a concern: about 8 reads per person, so 80,000 reads a week at 10,000 users, a few rupees.
+
+**The scalable design (about half a day of work):**
+
+1. **Queue, not a loop.** At 8 am a small job lists who should get a recap and adds one task per person to a Cloud Tasks queue (Firebase task-queue functions). The queue runs them in parallel at a set rate and retries failures, so nothing hits the 9-minute limit and a failed send isn't lost. Keep `mail/{uid}.recapWeek` so a retry never sends twice.
+2. **Batch sending.** Resend's batch API takes up to 100 emails a request.
+3. **Only active people.** The app writes a `lastLoggedAt` date on the account's settings; the job queries "active in the last 14 days" instead of listing every sign-up.
+4. **Spread the send** across 8 to 9 am, so a big send doesn't look like spam to Gmail.
+
+The same design carries the monthly progress, comeback and news emails, so build it once and use it for all of them.
+
+**When:** keep today's version while users are few. Upgrade Resend at about 50 active users. Build the queue design **before the 100 Days, 100 Minutes challenge on 2 November**, when sign-ups could jump.
+
 ## Rules for all of them
 
 - **On by default, off with one tap, per type** (see the decision above). A Notifications and privacy section in Setup with a switch for each: welcome and first-week tips, weekly recap, product news, reminders (once push exists), and usage statistics. Account emails such as password reset can't be switched off.

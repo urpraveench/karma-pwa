@@ -90,7 +90,7 @@ Firebase already shows sign-ups. Any in-app counting (anonymous daily totals onl
 
 ## Capacity on the free plan
 
-Worked out on 8 October 2026 from Firebase's published Spark limits and TikTym's measured behaviour. Assumes an active user opens the app 3 times a day and logs 4 entries.
+Worked out on 8 October 2026 (emails added 10 October) from Firebase's published Spark limits and TikTym's measured behaviour. Assumes an active user opens the app 3 times a day and logs 4 entries.
 
 | Limit (Spark plan) | What uses it | Roughly how many users |
 |---|---|---|
@@ -101,6 +101,8 @@ Worked out on 8 October 2026 from Firebase's published Spark limits and TikTym's
 | Firestore storage: 1 GiB | about 19 KB per user per month | about 4,500 user-years |
 | Hosting transfer: 360 MB a day, shared by app and website | a new device's first app load: 360 KB; a returning open: a few KB; a website visit: 113 KB (bounce) to 712 KB (every clip) | about 1,000 new installs or website visits a day |
 | Authentication: 50,000 monthly active users | sign-ins | not a limit at this stage |
+| Resend (emails), free plan: 100 a day, 3,000 a month | welcome, first-minute nudge, weekly recap (Mondays), later monthly progress, comeback and news | **about 80 active users** (Monday's recaps pass 100 a day); upgrade before then |
+| Scheduled function: 9 minutes a run | the weekly recap sends one person at a time, about 1 second each | **about 400 to 500 active users**; then the queue design in NOTIFICATIONS.md › Scaling the emails |
 
 **What this means**
 
@@ -109,6 +111,8 @@ Worked out on 8 October 2026 from Firebase's published Spark limits and TikTym's
 - When a free limit runs out, that service stops until it resets: daily limits at midnight Pacific time (about 12:30–1:30 pm in India), monthly ones at the start of the month. Data isn't lost, but the app or site stops working until then.
 - Move to Blaze, with a budget alert, before any real promotion. At these volumes it costs little.
 - Before growing past about 1,000 long-term users, change the app to load only recent months on each open (in to-do.md).
+- Emails run out first among the paid-plan services: upgrade Resend at about 50 active users, and move the scheduled emails to a queue before the 100 Days challenge (2 November). Details: NOTIFICATIONS.md › Scaling the emails.
+- **Whenever we plan for growth** (a promotion, a challenge, a big post), go through this table and NOTIFICATIONS.md › Scaling the emails first.
 
 ## Running costs
 

@@ -118,6 +118,8 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **You:** create a Resend API key (Sending access, tiktym.com) and store it with `firebase functions:secrets:set RESEND_API_KEY --project tiktym`. Never paste it into chat or code.
 - [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
+- [ ] **You:** upgrade Resend to a paid plan at about 50 active users; the free plan's 100 emails a day runs out on Mondays at about 80 (NOTIFICATIONS.md › Scaling the emails).
+- [ ] **Claude:** before 2 November (the 100 Days challenge): move the scheduled emails to a queue (one task per person, rate-limited, retried), batch sending, and a `lastLoggedAt` date so only active people are looked at. Today's loop stops at about 500 people (NOTIFICATIONS.md › Scaling the emails).
 - [ ] **Claude:** comeback email after 3 days with nothing logged, once per absence, stopping after 3 with no return (Tips and reminders).
 - [ ] **Claude:** news broadcast: Praveen approves the text, it goes to everyone with News on; first use, announcing 100 Days, 100 Minutes in late October.
 - [ ] **Claude:** first-week tips emails on days 3 and 6, only while still active (Tips and reminders).

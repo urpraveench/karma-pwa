@@ -140,6 +140,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.9.0: daily push reminders at a chosen time, the app badge (practices left today), and the weekly recap and comeback emails in What's new; functions `reminderSettings`, `reminderDevices`, `remindersDue` (every 15 minutes) and `reminderSend` (queue) deployed with the `VAPID_PRIVATE_KEY` secret, 10 October 2026
 - [x] **Claude:** Android reminders show a white TikTym ring as their small icon, instead of Chrome's (`scripts/badge-icon.mjs`), 10 October 2026
 - [x] **Claude:** push reminders 5/5: Privacy Policy and Terms describe push reminders and the badge; changelog line. Not released yet, 10 October 2026
 - [x] **Claude:** push reminders 4/5: app badge, practices still due today on the home-screen icon (iPhone home screen and installed desktop apps; not Android), set while open, cleared when the day is clear, refreshed by each reminder; "Show count on app icon", on by default. NOTIFICATIONS.md › App badge (NOTIF-13). Not deployed yet, 10 October 2026

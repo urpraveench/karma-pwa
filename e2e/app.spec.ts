@@ -144,7 +144,7 @@ test('without a measurement ID, Analytics never asks or loads (ANA-05)', async (
   await expect(page.locator('.consent')).toHaveCount(0);
   await page.locator('.cat').nth(0).locator('.qbtn').click();
   await tab(page, 'Setup').click();
-  await expect(page.locator('.sect-h h2', { hasText: 'Privacy' })).toHaveCount(0);
+  await expect(page.locator('.li', { hasText: 'Usage statistics' })).toHaveCount(0); // the email switches stay; no statistics switch
   expect(requests).toHaveLength(0);
 });
 

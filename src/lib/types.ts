@@ -32,6 +32,10 @@ export interface Settings {
   schema?: number;
   /** Days of target a practice may carry into a new day. 0 = no limit. Default 2. */
   backlogCap?: number;
+  /** Email types this account has turned off; a missing or true value means on (NOTIF-01). */
+  emails?: Partial<Record<'tips' | 'recap' | 'news', boolean>>;
+  /** The version of the "emails and statistics are on" notice this account has seen (NOTIF-02). */
+  notice?: string;
 }
 
 export interface AppData {

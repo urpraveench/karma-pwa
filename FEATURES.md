@@ -37,7 +37,8 @@ Summary of coverage at the time of writing:
 | 13. App shell, PWA and platform | 30 | 25 | 0 | 5 |
 | 14. Marketing and sharing | 20 | 20 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
-| **Total** | **279** | **264** | **0** | **15** |
+| 16. Notifications | 2 | 2 | 0 | 0 |
+| **Total** | **281** | **266** | **0** | **15** |
 
 ---
 
@@ -418,11 +419,11 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
-| ANA-01 | Consent in the app | Asked once, as an unticked checkbox on Create account: "Share anonymous usage stats to help improve TikTym". Ticked: Analytics starts with the new account. Unticked, existing accounts and Google sign-ups: off until switched on in Setup › Privacy. No card on Today; nothing loads or is sent before consent | E2E `firebase/account.spec.ts` (checkbox), `analytics/analytics.spec.ts` (no card, nothing before consent) |
-| ANA-02 | What's measured in the app | After Allow: a page view per tab, and events for logging minutes (how), finishing a timer, adding a practice and signing in (method). No names, emails or practice names; advertising features off | E2E `analytics/analytics.spec.ts` (what reaches Google: checked in GA Realtime) |
-| ANA-03 | Change your mind | Setup › Privacy › "Share anonymous usage stats" switches it on or off at any time; off stops sending and removes Analytics cookies | E2E `analytics/analytics.spec.ts` |
+| ANA-01 | On by default, after notice | No checkbox at sign-up: the sign-in screen says an account includes usage statistics. Signed in, Analytics is on unless this device said no; an account from before 10 October 2026 gets it only once it has seen the notice (NOTIF-02). The sign-in screen itself is never measured | E2E `analytics/analytics.spec.ts`, `firebase/account.spec.ts` |
+| ANA-02 | What's measured in the app | Once on: a page view per tab, and events for logging minutes (how), finishing a timer, adding a practice and signing in (method). No names, emails or practice names; advertising features off | E2E `analytics/analytics.spec.ts` (what reaches Google: checked in GA Realtime) |
+| ANA-03 | Change your mind | Setup › Notifications and privacy › "Usage statistics" switches it off (or back on) at any time; off stops sending, removes Analytics cookies, and is remembered on the device | E2E `analytics/analytics.spec.ts` |
 | ANA-04 | Website analytics | A slim consent bar; Google Analytics loads only after Allow; clicks on "Open TikTym" are counted; visits link to the app across domains (same GA4 property) | E2E `site/site.spec.ts` (phone and desktop) |
-| ANA-05 | Off without a measurement ID | Builds without `VITE_GA_MEASUREMENT_ID` (test mode, the emulators) never ask and never load Analytics | E2E `app.spec.ts` |
+| ANA-05 | Off without a measurement ID | Builds without `VITE_GA_MEASUREMENT_ID` (test mode, the emulators) never load Analytics and show no Usage statistics switch | E2E `app.spec.ts` |
 | LEGAL-05 | Privacy wording matches | The Privacy Policy describes Google Analytics as on unless turned off: what's collected, why, how to turn it off in the app (Setup › Notifications and privacy) and on the website (Opt out) | E2E `legal.spec.ts` |
 | STAT-01 | Anonymous daily totals | For every Firebase-mode user, with no consent needed because nothing identifies anyone: `stats/{date}` counts active devices, sign-ups, entries (total and by method), minutes, timers started and reaching their target, practices added and progress cards shared. No user ID, device ID, names, notes or cookies are sent | Unit `stats.test.ts`, E2E `firebase/account.spec.ts` (emulator) |
 | STAT-02 | Batched writes | Counts collect in the app and are saved together (after about 15 seconds, and when the app is hidden or closed), so a typical user adds 2–3 writes a day; active devices count once per device per day using only a local date | Unit `stats.test.ts` |
@@ -430,6 +431,15 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | STAT-04 | Totals in Google Sheets | An Apps Script reads `stats/{date}` with the owner's Google login (app rules unchanged) into a Daily totals tab: one row per day with gaps as zeros, hours, entries per device and timer completion %, and a Notes column that survives refreshes; plus Weekly totals with week-on-week change, starter charts, a TikTym › Refresh menu and a daily refresh | Unit `sheets.test.ts` (data logic); fetching in Google: checked 8 October 2026; daily trigger set up 8 October 2026 |
 | LEGAL-06 | Totals disclosed | The Privacy Policy explains the anonymous daily totals and why they aren't personal data | E2E `legal.spec.ts` |
 | LEGAL-07 | On by default, disclosed | Before an account is created, the sign-in screen says it includes emails about your practice and usage statistics, each switchable off in Setup or from any email. The Privacy Policy lists the emails, phone reminders, Resend (USA) as the email processor, backups kept up to 8 weeks, and how to turn each off; the Terms say the same in Your account | E2E `legal.spec.ts` |
+
+## 16. Notifications
+
+See NOTIFICATIONS.md for the plan. Emails and usage statistics are on by default; each can be turned off.
+
+| ID | Scenario | Expected | Coverage |
+|---|---|---|---|
+| NOTIF-01 | Notifications and privacy settings | Setup has "Notifications and privacy": Welcome and first-week tips, Weekly recap, News about TikTym (emails) and Usage statistics, all on to start; one tap turns each off. Email choices are saved in the account, so the server respects them on any device | E2E `notifications.spec.ts`, Unit `notifications.test.ts` |
+| NOTIF-02 | Notice for accounts from before | Once, on Today: "Emails and usage statistics", what's now on and where to turn it off, with Review settings and OK. Statistics start only once it's seen. New accounts never see it: they were told at sign-up | E2E `notifications.spec.ts`, `analytics/analytics.spec.ts`, Unit `notifications.test.ts` |
 
 ---
 
@@ -439,14 +449,11 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 | Feature | Notes |
 |---|---|
-| Push reminders and streak-at-risk alerts | Needs Firebase Blaze: Cloud Functions + FCM |
-| Weekly recap notification | Same |
+| Emails: welcome, first-week tips, first-minute nudge, weekly recap, news | Cloud Functions + Resend; NOTIFICATIONS.md |
+| Push reminders and streak-at-risk alerts | Cloud Functions + Firebase Cloud Messaging |
 | Timer alert while the app is closed | Needs push notifications |
-| Reordering practices | `order` exists in the data, but there's no UI to change it |
-| Editing a logged entry | Delete and log again instead |
-| App Check | Required before a public launch |
-| Terms and Privacy pages | Links are configurable; the pages don't exist yet |
-| Custom password-reset email | Firebase template not customised yet |
+| Custom password-reset email | Firebase template not customised yet; retry on Blaze, or send through Resend |
+| Hours towards mastery; 100 Days challenge view | Ideas in to-do.md |
 
 ## What's left to test
 

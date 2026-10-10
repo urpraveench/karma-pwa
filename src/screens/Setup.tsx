@@ -7,7 +7,7 @@ import { useApp } from '../state/app';
 import { useTheme, type Theme } from '../state/theme';
 import { Icon } from '../ui/icons';
 import { BUILD } from '../version';
-import { AnalyticsSwitch } from '../components/AnalyticsConsent';
+import { NotificationsPrivacy } from '../components/NotificationsPrivacy';
 
 const SHORT_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const dayTxt = (d: number[]) => d.length === 7 ? 'every day' : d.length === 0 ? 'no days' : [1, 2, 3, 4, 5, 6, 0].filter(x => d.includes(x)).map(x => SHORT_DAYS[x]).join(', ');
@@ -72,7 +72,7 @@ export function Setup() {
       </div>
       {!FIREBASE_READY && <p className="devhint">Test mode keeps data in this browser only. Set <b>VITE_BACKEND=firebase</b> and your Firebase keys in .env.local to sync across devices.</p>}
 
-      <AnalyticsSwitch />
+      <NotificationsPrivacy />
 
       <div className="sect-h"><h2>About</h2></div>
       <div className="list">

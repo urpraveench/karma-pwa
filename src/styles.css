@@ -378,3 +378,9 @@ a.li{text-decoration:none;color:inherit}
 .fr-own{display:flex;gap:10px;align-items:center;margin:-8px 0 18px}
 .fr-own .chip{flex:none;padding:12px 18px}
 .fr-start{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+
+/* One-time notice on Today (NOTIF-02) */
+.notice{background:var(--surface);border:1.5px solid var(--line);border-radius:18px;padding:16px 16px 14px;margin:0 0 14px}
+.notice h2{font-size:18px;font-weight:800;margin:0 0 6px}
+.notice p{margin:0 0 14px;color:var(--ink-2);font-size:15px;line-height:1.45}
+.notice .btn{padding:12px;font-size:16px}

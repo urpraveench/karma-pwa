@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { analyticsAvailable, setConsent, track, trackScreen } from '../lib/analytics';
+import { track, trackScreen } from '../lib/analytics';
 import { appCheckSiteKey, config, FIREBASE_READY } from '../config';
 import { useApp } from '../state/app';
 import { useFeedback } from '../ui/feedback';
@@ -13,7 +13,6 @@ export function Login({ error: initialError = '' }: { error?: string }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(initialError);
-  const [shareStats, setShareStats] = useState(false); // unticked: consent needs a clear yes
   const testMode = !FIREBASE_READY, signup = !testMode && mode === 'signup';
   useEffect(() => { trackScreen('login'); }, []);
 
@@ -24,7 +23,6 @@ export function Login({ error: initialError = '' }: { error?: string }) {
     if (!auth) return;
     const err = signup ? await auth.signUp(em, password) : await auth.signIn(em, password);
     setError(err || '');
-    if (!err && signup && analyticsAvailable()) setConsent(shareStats ? 'granted' : 'denied');
     if (!err) track(signup ? 'sign_up' : 'login', { method: 'email' });
   }
 
@@ -56,12 +54,6 @@ export function Login({ error: initialError = '' }: { error?: string }) {
           <input className="in" id="em" type="email" autoComplete={signup ? 'email' : 'username'} inputMode="email" required value={email} onChange={e => setEmail(e.target.value)} /></div>
         <div className="field"><label htmlFor="pw">Password{signup ? ' (6+ characters)' : ''}</label>
           <input className="in" id="pw" type="password" autoComplete={signup ? 'new-password' : 'current-password'} required value={password} onChange={e => setPassword(e.target.value)} /></div>
-        {signup && analyticsAvailable() && (
-          <label className="check">
-            <input type="checkbox" checked={shareStats} onChange={e => setShareStats(e.target.checked)} />
-            <span>Share anonymous usage stats to help improve TikTym (Google Analytics; no names or emails). You can change this in Setup.</span>
-          </label>
-        )}
         <p className="err" role="alert">{error}</p>
         <button className="btn btn-2" type="submit">{signup ? 'Create account' : 'Sign in'}</button>
       </form>

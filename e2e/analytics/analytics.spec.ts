@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { expect, signIn, tab, test, toast } from '../helpers';
+import { DEMO, expect, open, seedData, signIn, signInWith, tab, test, toast } from '../helpers';
 import { startWithDefaults } from '../helpers';
 
 // A build with a test GA4 ID. Google's script is replaced by a stub, so nothing reaches real Analytics; the test
@@ -15,29 +15,47 @@ const pushed = (page: Page) => page.evaluate(() =>
   ((window as unknown as { dataLayer?: ArrayLike<unknown>[] }).dataLayer || []).map(a => Array.from(a)));
 const events = async (page: Page, name?: string) => (await pushed(page)).filter(a => a[0] === 'event' && (!name || a[1] === name));
 
-async function allowInSetup(page: Page) {
-  await tab(page, 'Setup').click();
-  await page.locator('.li', { hasText: 'Share anonymous usage stats' }).click();
-  await tab(page, 'Today').click();
-}
+const statsRow = (page: Page) => page.locator('.li', { hasText: 'Usage statistics' });
 
-test('no consent card on Today, and nothing loads without consent (ANA-01)', async ({ page }) => {
+test('on by default once signed in; the sign-in screen itself sends nothing (ANA-01)', async ({ page }) => {
   const requests = await stubGoogle(page);
-  await signIn(page);
-  await expect(page.locator('.consent')).toHaveCount(0);
-  await page.locator('.cat').nth(0).locator('.qbtn').click();
-  await tab(page, 'Insights').click();
+  await open(page);
+  expect(requests).toHaveLength(0);
+  expect(await pushed(page)).toHaveLength(0);
+  await page.fill('#em', DEMO.email); await page.fill('#pw', DEMO.password); await page.click('button[type=submit]');
+  await startWithDefaults(page);
+  await expect.poll(() => requests.length).toBeGreaterThan(0);
   await tab(page, 'Setup').click();
-  await expect(page.locator('.li', { hasText: 'Share anonymous usage stats' })).toHaveAttribute('aria-pressed', 'false');
+  await expect(statsRow(page)).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('a device that said no stays off (ANA-01)', async ({ page }) => {
+  const requests = await stubGoogle(page);
+  await open(page);
+  await page.evaluate(() => localStorage.setItem('tiktym:analytics', 'denied'));
+  await page.fill('#em', DEMO.email); await page.fill('#pw', DEMO.password); await page.click('button[type=submit]');
+  await startWithDefaults(page);
+  await page.locator('.cat').nth(0).locator('.qbtn').click();
+  await tab(page, 'Setup').click();
+  await expect(statsRow(page)).toHaveAttribute('aria-pressed', 'false');
   expect(requests).toHaveLength(0);
   expect(await pushed(page)).toHaveLength(0);
 });
 
-test.describe('What switching it on sends (ANA-02)', () => {
+test('an account from before stays off until it has seen the notice (ANA-01, NOTIF-02)', async ({ page }) => {
+  const requests = await stubGoogle(page);
+  await signInWith(page, seedData([{ id: 'r', name: 'Reading' }], [], { notice: undefined }));
+  await expect(page.locator('.notice')).toBeVisible();
+  await page.locator('.cat').nth(0).locator('.qbtn').click();
+  expect(requests).toHaveLength(0);
+  await page.locator('.notice button', { hasText: 'OK' }).click();
+  await expect.poll(() => requests.length).toBeGreaterThan(0);
+});
+
+test.describe('What it sends (ANA-02)', () => {
   test.beforeEach(async ({ page }) => {
     await stubGoogle(page);
     await signIn(page);
-    await allowInSetup(page);
   });
 
   test('loads Google Analytics with advertising features off', async ({ page }) => {
@@ -52,7 +70,7 @@ test.describe('What switching it on sends (ANA-02)', () => {
     await tab(page, 'Insights').click();
     await tab(page, 'Setup').click();
     const titles = (await events(page, 'page_view')).map(e => (e[2] as { page_title: string }).page_title);
-    expect(titles).toEqual(['today', 'insights', 'setup']); // from the moment it's switched on
+    expect(titles).toEqual(['today', 'insights', 'setup']); // from the moment the account is ready
   });
 
   test('logging, timers and practices are counted, with no personal details', async ({ page }) => {
@@ -75,13 +93,12 @@ test.describe('What switching it on sends (ANA-02)', () => {
   });
 });
 
-test('Setup › Privacy turns sharing off, stops events and removes the cookies (ANA-03)', async ({ page, context }) => {
+test('Setup › Notifications and privacy turns statistics off, stops events and removes the cookies (ANA-03)', async ({ page, context }) => {
   await stubGoogle(page);
   await signIn(page);
-  await allowInSetup(page);
   await context.addCookies([{ name: '_ga', value: 'GA1.1.123.456', url: 'http://localhost:4179' }]);
   await tab(page, 'Setup').click();
-  const row = page.locator('.li', { hasText: 'Share anonymous usage stats' });
+  const row = statsRow(page);
   await expect(row).toHaveAttribute('aria-pressed', 'true');
   await row.click();
   await expect(row).toHaveAttribute('aria-pressed', 'false');
@@ -93,5 +110,5 @@ test('Setup › Privacy turns sharing off, stops events and removes the cookies 
   await page.reload();
   await startWithDefaults(page);
   await tab(page, 'Setup').click();
-  await expect(page.locator('.li', { hasText: 'Share anonymous usage stats' })).toHaveAttribute('aria-pressed', 'false'); // remembered
+  await expect(statsRow(page)).toHaveAttribute('aria-pressed', 'false'); // remembered
 });

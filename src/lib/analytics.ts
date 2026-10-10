@@ -60,13 +60,26 @@ export function setConsent(c: 'granted' | 'denied') {
   clearCookies();
 }
 
-/** At start-up: resume Analytics for someone who already said yes. */
+/** At start-up, before anyone signs in: resume Analytics only for a device that explicitly said yes. */
 export function startAnalytics() {
   if (readConsent() === 'granted') load();
 }
 
+/**
+ * Signed in (ANA-01): on unless this device said no. An account from before on-by-default (10 October 2026) gets it
+ * only once it has seen the notice, as the Privacy Policy promises; new accounts were told at sign-up.
+ */
+export function startAccountAnalytics(noticeSeen: boolean) {
+  const c = readConsent();
+  if (c === 'denied') return;
+  if (c === 'granted' || noticeSeen) load();
+}
+
+/** What Setup shows: on unless this device said no. */
+export const analyticsChoice = () => readConsent() !== 'denied';
+
 export function track(name: string, params: Record<string, string | number | boolean> = {}) {
-  if (!loaded || readConsent() !== 'granted') return;
+  if (!loaded || readConsent() === 'denied') return;
   w().gtag?.('event', name, params);
 }
 

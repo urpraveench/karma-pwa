@@ -110,7 +110,6 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Planned 10 October 2026; nothing built yet. Decide the open questions in NOTIFICATIONS.md first.
 
-- [ ] **You:** choose the email provider (Claude's pick: Resend), create the account, and add its DNS records (SPF, DKIM) for tiktym.com at GoDaddy.
 - [ ] **You:** send a personal welcome email to each new sign-up (phase 1).
 - [ ] **Claude:** phase 1 in-app: install tip, first-week tips, milestone celebrations, progress-card reminder, What's new dot, feedback ask.
 - [ ] **Claude:** phase 2 (after Blaze): notification settings in Setup, Privacy Policy update, email (welcome, first-minute nudge, comeback, weekly recap), push (daily reminder, streak at risk).
@@ -124,6 +123,7 @@ Planned 10 October 2026; nothing built yet. Decide the open questions in NOTIFIC
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Resend account created and tiktym.com verified for sending (SPF and DKIM at GoDaddy), 10 October 2026
 - [x] Automatic Firestore backups: daily (kept 7 days) and weekly on Sunday (kept 8 weeks); restore steps in README (SYNC-17), 10 October 2026
 - [x] Monthly budget alert set on the billing account, and the project moved to the Blaze plan, 10 October 2026
 - [x] Home page description shortened from 194 to 140 characters, as Bing Webmaster Tools asked; every page's description is now checked to be 25 to 160 characters (GTM-18), 9 October 2026

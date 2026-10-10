@@ -108,11 +108,17 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 ## Notifications (see NOTIFICATIONS.md)
 
-Planned 10 October 2026; nothing built yet. Decide the open questions in NOTIFICATIONS.md first.
+Decided 10 October 2026: everything on by default, each switchable off in Setup or from any email. Emails come from "Praveen from TikTym" <hello@tiktym.com>, replies to the support Gmail; the welcome goes out after first-run Start.
 
-- [ ] **You:** send a personal welcome email to each new sign-up (phase 1).
+- [ ] **You:** create a Resend API key (Sending access, tiktym.com) and store it with `firebase functions:secrets:set RESEND_API_KEY --project tiktym`. Never paste it into chat or code.
+- [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.
+- [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
+- [ ] **Claude:** Privacy Policy and Terms updated for on-by-default emails, reminders and analytics, with Resend disclosed; the sign-up screen's notice says what comes with an account (LEGAL, ANA).
+- [ ] **Claude:** Setup › Notifications and privacy, every switch on to start; Google Analytics on for new accounts and anyone who never chose; anyone who said no keeps it.
+- [ ] **Claude:** the website's Analytics notice: on by default, with OK and Opt out.
+- [ ] **Claude:** Cloud Functions with Resend: welcome email after first-run Start, first-minute nudge after 24 hours with nothing logged, and one-tap unsubscribe.
+- [ ] **Claude:** weekly recap and product news emails, then push reminders (daily reminder, streak at risk).
 - [ ] **Claude:** phase 1 in-app: install tip, first-week tips, milestone celebrations, progress-card reminder, What's new dot, feedback ask.
-- [ ] **Claude:** phase 2 (after Blaze): notification settings in Setup, Privacy Policy update, email (welcome, first-minute nudge, comeback, weekly recap), push (daily reminder, streak at risk).
 
 ## 7. Housekeeping
 

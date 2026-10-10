@@ -33,12 +33,16 @@ Anything sent while the app is closed needs Blaze. Everything else can start now
 | 13 | **Challenge reminders** (100 Days, 100 Minutes) | Daily during the challenge, for those who joined | Push; weekly email check-in | 2 |
 | 14 | **Product news** (big features, challenges) | Occasionally, at most monthly | Email, opt-in only | 2 |
 
+## Decision (10 October 2026): on by default, easy to switch off
+
+To let an early-stage product reach people, every notification and the usage statistics are **on by default**, and each can be switched off at any time, in the app (Setup › Notifications and privacy) or from a one-tap link in any email. Legally this rests on clear notice at sign-up: the Create account screen says what comes with an account, and the Terms and Privacy Policy describe each item, what it's for, who processes it (Resend for email, Google for Analytics) and how to stop it. Anyone who has already switched something off keeps it off. The website shows a notice with an opt-out rather than asking first; that's the part to check with a lawyer.
+
 ## Rules for all of them
 
-- **Opt-in, per type.** A Notifications section in Setup with a switch for each: daily reminder (with its time), streak and comeback, weekly recap, product news. Off until switched on, except account emails such as password reset.
+- **On by default, off with one tap, per type** (see the decision above). A Notifications and privacy section in Setup with a switch for each: welcome and first-week tips, weekly recap, product news, reminders (once push exists), and usage statistics. Account emails such as password reset can't be switched off.
 - **Ask for push permission at the right moment**: after someone logs their first minutes and taps "Remind me tomorrow", never on first open. A browser blocks a site for good once the prompt is refused.
 - **Quiet and few.** At most one push a day, nothing between 10 pm and 7 am in the person's time zone, and no reminder once today is cleared.
-- **Every email has a one-tap unsubscribe** and says why it was sent.
+- **Every email has a one-tap unsubscribe** that works without signing in, switches that email type off in the account, and says why it was sent.
 - **Privacy:** update the Privacy Policy before phase 2 (what is sent, why, the email provider as a processor, how to stop), in line with India's DPDP Act. Reminder times and preferences are stored in the person's own account data.
 - **Measure:** count sends, opens and the logs that follow in the anonymous daily totals, so we can tell which ones help and drop the ones that don't.
 

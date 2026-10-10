@@ -14,8 +14,8 @@ test.beforeEach(async ({ page }) => {
 test.describe('website (GTM-04)', () => {
   test('pitch, sections and calls to action, which open app.tiktym.com (GTM-06)', async ({ page }) => {
     await page.goto('/');
-    await expect(page).toHaveTitle("TikTym: make time for what you're learning");
-    await expect(page.locator('h1')).toHaveText("Make time for what you're learning.");
+    await expect(page).toHaveTitle('TikTym: 100 minutes a day for your productive life');
+    await expect(page.locator('h1')).toHaveText('100 minutes a day for your productive life.');
     for (const id of ['how', 'features', 'professionals', 'install', 'privacy', 'faq'])
       await expect(page.locator(`section#${id} h2`)).toBeVisible();
     await expect(page.locator('.feature h3')).toHaveText(['Your day at a glance', 'A focus timer that logs for you', 'A backlog that forgives', 'Insights that coach you']);

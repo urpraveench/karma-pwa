@@ -81,7 +81,6 @@ Day-to-day outreach (tasks by date, messages, tracking links, share and feedback
 
 - [ ] **You:** Google Search Console (verified 9 October): submit `sitemap.xml` under Sitemaps, and use URL inspection › Request indexing for https://tiktym.com/ and https://tiktym.com/updates/.
 - [ ] **You:** Bing Webmaster Tools: Import from Google Search Console (Bing feeds ChatGPT search, Copilot and DuckDuckGo).
-- [ ] **Claude:** the new brand line on the website: title, hero, how it works, sections, closing, search description, llms.txt, structured data (GTM-04).
 - [ ] **Claude:** the new brand line in the emails: header image and tips (NOTIF-03).
 - [ ] **Claude:** new LinkedIn cover, post image and video, and OUTREACH.md messages with the new line.
 - [ ] **You:** post on the TikTym LinkedIn page 2 or 3 times a week (page set up 8 October) (building in public, "busy weeks carry forward", monthly progress with Insights screenshots).
@@ -137,6 +136,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] New brand line on the website: title and link preview, hero ("100 minutes a day for your productive life" with 30/30/30/10), how it works ("counts towards your 100"), the professionals section (wellbeing, not only learning; "Start your 100 minutes today"; 100 minutes as the suggested start), the closing, search description, llms.txt and structured data (GTM-04). Not deployed yet, 10 October 2026
 - [x] New brand line in the app: sign-in tagline, install description, link preview text and image ("100 minutes a day for your productive life", 30 to move · 30 to read · 30 to grow · 10 to breathe), share message, and the progress card ("for a productive life", "100 minutes a day") (AUTH-01, GTM-01, SHARE-02), 10 October 2026
 - [x] Removed the one-time notice on Today (Praveen tells existing users himself); the Privacy Policy now promises to announce significant changes "in the app or by email or message", 10 October 2026
 - [x] Existing accounts get emails and usage statistics on straight away; the one-time notice on Today only informs. The device's choice is stored under a new name from 1.8.0, so earlier stored "no"s (mostly the old unticked sign-up box) no longer count; turning it off from 1.8.0 on is respected (Praveen's decision, 10 October 2026; ANA-01, NOTIF-02)

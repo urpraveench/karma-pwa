@@ -394,3 +394,6 @@ a.li{text-decoration:none;color:inherit}
 .install-actions{display:flex;align-items:center;gap:12px;margin-top:4px;padding-right:6px}
 .install-actions .btn{flex:1}
 .install-actions .link{margin-left:auto}
+.time-pick{margin-left:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 8px;font-weight:600}
+.li:disabled{cursor:default}
+.li:disabled .switch{opacity:.4}

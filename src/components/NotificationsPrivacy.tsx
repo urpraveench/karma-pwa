@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { analyticsAvailable, analyticsChoice, setConsent } from '../lib/analytics';
 import { EMAIL_KINDS, emailOn } from '../lib/notifications';
 import { useApp } from '../state/app';
+import { ReminderRow } from './Reminders';
 
 function Toggle({ on, title, sub, onChange }: { on: boolean; title: string; sub: string; onChange: (on: boolean) => void }) {
   return (
@@ -13,7 +14,7 @@ function Toggle({ on, title, sub, onChange }: { on: boolean; title: string; sub:
 }
 
 /**
- * Setup › Notifications and privacy (NOTIF-01, ANA-03): every email type and usage statistics, all on to start,
+ * Setup › Notifications and privacy (NOTIF-01, NOTIF-12, ANA-03): the daily reminder, every email type and usage statistics, all on to start,
  * each off with one tap. Email choices live in the account, so the server respects them; statistics are per device.
  */
 export function NotificationsPrivacy() {
@@ -23,6 +24,7 @@ export function NotificationsPrivacy() {
     <>
       <div className="sect-h"><h2>Notifications and privacy</h2></div>
       <div className="list">
+        <ReminderRow />
         {EMAIL_KINDS.map(([kind, title, sub]) => (
           <Toggle key={kind} on={emailOn(data.settings, kind)} title={title} sub={`Email · ${sub}`} onChange={on => setEmailPref(kind, on)} />
         ))}

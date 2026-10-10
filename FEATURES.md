@@ -37,8 +37,8 @@ Summary of coverage at the time of writing:
 | 13. App shell, PWA and platform | 35 | 30 | 0 | 5 |
 | 14. Marketing and sharing | 22 | 22 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
-| 16. Notifications | 13 | 10 | 3 | 0 |
-| **Total** | **298** | **280** | **3** | **15** |
+| 16. Notifications | 13 | 12 | 1 | 0 |
+| **Total** | **298** | **282** | **1** | **15** |
 
 ---
 
@@ -454,9 +454,9 @@ See NOTIFICATIONS.md for the plan. Emails and usage statistics are on by default
 | NOTIF-09 | Daily push reminder | Once notifications are allowed, a reminder at the time chosen in Setup (15-minute steps, 7 am to 9:45 pm, in the person's own time zone) on every device that allowed them: which practices are still due today ("2 practices left today: Exercise and Reading. Even 5 minutes counts."). At most one a day. Tapping it opens TikTym | Unit `push.test.ts` (sending: Manual) |
 | NOTIF-10 | Reminder counts like Today | The server works out what's still due with the app's own backlog code (a generated copy, checked identical by a test), so carry-over and rest days count exactly as on Today. No reminder when today is clear or a rest day | Unit `shared.test.ts` |
 | NOTIF-11 | Expired devices | A device the push service reports gone (notifications turned off, app removed) is deleted from the account and never tried again; the other devices still get the reminder | Unit `push.test.ts` |
-| NOTIF-12 | Asking for notifications | Never on first open. Once something is logged today, Today offers "Remind me tomorrow at <this time>" where notifications can work and haven't been decided; Allow asks the browser and saves the device; "Not now" hides it for good. Setup › Notifications and privacy has Daily reminder (switch and time). On an iPhone outside the home-screen app it explains that reminders need TikTym on the home screen; if notifications are blocked, it says where to unblock them | Gap |
+| NOTIF-12 | Asking for notifications | Never on first open. Once something is logged today, Today offers "Remind me tomorrow at <this time>" where notifications can work and haven't been decided; Allow asks the browser and saves the device; "Not now" hides it for good. Setup › Notifications and privacy has Daily reminder (switch and time). On an iPhone outside the home-screen app it explains that reminders need TikTym on the home screen; if notifications are blocked, it says where to unblock them | E2E `reminders.spec.ts`, Emulator `tests-emulator/rules.test.ts` |
 | NOTIF-13 | App badge | The home-screen icon shows how many practices are still due today (a practice logged partly still counts; never minutes), set while the app is open, cleared when the day is clear, and refreshed by each reminder. "Show count on app icon" in Setup, on by default, shown only where the device supports badges (iPhone home screen, installed computer apps; not Android) | Gap |
-| NOTIF-14 | Devices go with the account | Deleting the account removes its saved notification devices along with everything else | Gap |
+| NOTIF-14 | Devices go with the account | Deleting the account removes its saved notification devices along with everything else | Emulator `tests-emulator/store.test.ts` |
 
 ---
 

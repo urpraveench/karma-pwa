@@ -11,6 +11,8 @@ import { moment as findMoment, type Moment } from '../lib/moments';
 import { startingCategories, type Choice } from '../lib/firstRun';
 import { defaultCategories, sampleData } from '../lib/sample';
 import { saveTimer } from '../lib/timer';
+import { timeLabel } from '../lib/reminders';
+import { enablePush, resavePush, type PushStatus } from './push';
 import { newId } from '../lib/util';
 import type { AppData, Category, DateStr, Log, User } from '../lib/types';
 import type { Store } from '../store/types';
@@ -216,6 +218,43 @@ function useAppState() {
     void persist(() => store.putSettings(settings));
   }, [store, setData, persist]);
 
+  /** The daily reminder's switch or time (NOTIF-09), saved with this device's time zone so it comes at local time. */
+  const setReminder = useCallback((patch: { on?: boolean; time?: string }) => {
+    if (!store) return;
+    const d0 = dataRef.current, tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const settings = { ...d0.settings, reminder: { ...d0.settings.reminder, ...patch, tz } };
+    setData({ ...d0, settings });
+    void persist(() => store.putSettings(settings));
+  }, [store, setData, persist]);
+
+  /** After a tap only: asks the browser for notifications, saves this device, and sets the reminder time (NOTIF-12). */
+  const enableReminders = useCallback(async (time: string): Promise<PushStatus> => {
+    if (!store) return 'unsupported';
+    let status: PushStatus;
+    try { status = await enablePush((id, d) => store.putDevice(id, d)); }
+    catch (e) { console.warn(e); toast('Could not turn on reminders. Try again later.'); return 'ask'; }
+    if (status === 'on') { setReminder({ on: true, time }); toast(`Reminder set for ${timeLabel(time)}, if anything's left`); track('reminders_on'); }
+    else if (status === 'blocked') toast('Notifications are blocked. Allow them for TikTym in your browser settings.', 5000);
+    return status;
+  }, [store, setReminder, toast]);
+
+  /** Practices left today on the app icon (NOTIF-13). */
+  const setBadge = useCallback((on: boolean) => {
+    if (!store) return;
+    const d0 = dataRef.current, settings = { ...d0.settings, badge: on };
+    setData({ ...d0, settings });
+    void persist(() => store.putSettings(settings));
+  }, [store, setData, persist]);
+
+  // A device that allowed notifications stays saved in the account if the browser renews its subscription, and the
+  // reminder follows the person's time zone when they travel.
+  useEffect(() => {
+    if (phase.kind !== 'ready' || !store) return;
+    void resavePush((id, d) => store.putDevice(id, d)).catch(e => console.warn(e));
+    const r = dataRef.current.settings.reminder, tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (r?.tz && r.tz !== tz) setReminder({});
+  }, [phase.kind, store, setReminder]);
+
   const setBacklogCap = useCallback((v: number) => {
     if (!store) return;
     const d0 = dataRef.current, settings = { ...d0.settings, backlogCap: v };
@@ -235,7 +274,7 @@ function useAppState() {
 
   const startOver = useCallback(() => {
     if (!confirm('Delete all logs and reset to the default practices?')) return;
-    replaceAll({ categories: defaultCategories(today()), logs: [], settings: { seeded: true, emails: dataRef.current.settings.emails } }, 'Started over');
+    replaceAll({ categories: defaultCategories(today()), logs: [], settings: { seeded: true, emails: dataRef.current.settings.emails, reminder: dataRef.current.settings.reminder, badge: dataRef.current.settings.badge } }, 'Started over');
   }, [replaceAll]);
 
   const importBackup = useCallback(async (file: File) => {
@@ -272,6 +311,7 @@ function useAppState() {
     view, setView, range, setRange, sheet, openSheet, closeSheet,
     hideMoment, tipHidden, hideTip,
     logEntry, deleteLog, updateLog, saveCategory, reorderCategory, toggleArchive, deleteCategory, setBacklogCap, setEmailPref,
+    setReminder, enableReminders, setBadge,
     loadSample, startOver, importBackup, exportBackup, signOut, deleteAccount,
   };
 }

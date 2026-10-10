@@ -1,4 +1,4 @@
-import type { AppData, Category, Log, Settings } from '../lib/types';
+import type { AppData, Category, Log, PushDevice, Settings } from '../lib/types';
 
 /** Persistence for one signed-in user. Both adapters hold the same data; only the backing store differs. */
 export interface Store {
@@ -14,6 +14,8 @@ export interface Store {
   putSettings(s: Settings): Promise<void>;
   /** Wipes everything and writes `d` in its place. */
   replaceAll(d: AppData): Promise<void>;
+  /** Saves a device that allowed notifications, so the server can send it reminders (NOTIF-12). */
+  putDevice(id: string, d: PushDevice): Promise<void>;
   /** Firebase only: removes all data, then the auth user. */
   deleteAccount?(): Promise<void>;
 }

@@ -57,6 +57,15 @@ describe('firestore.rules', () => {
     await assertFails(getDoc(doc(db, 'mail/alice')));
     await assertFails(setDoc(doc(db, 'mail/alice'), { nudgeDueAt: 0 }));
   });
+
+  it("an app saves its own notification devices, but never another's, and the server's reminder records are out of reach (NOTIF-12)", async () => {
+    const db = env.authenticatedContext('alice').firestore();
+    const device = { endpoint: 'https://push.example/a', keys: { p256dh: 'p', auth: 'a' }, createdAt: 1 };
+    await assertSucceeds(setDoc(doc(db, 'users/alice/devices/d1'), device));
+    await assertFails(setDoc(doc(db, 'users/bob/devices/d1'), device));
+    await assertFails(getDoc(doc(db, 'reminders/alice')));
+    await assertFails(setDoc(doc(db, 'reminders/alice'), { slot: '13:30' }));
+  });
 });
 
 // STAT-03: anonymous daily totals: only small increments to known counters, never readable from an app.

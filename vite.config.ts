@@ -54,6 +54,7 @@ export default defineConfig({
         // must reach the network; answering them with the app shell breaks sign-in.
         navigateFallbackDenylist: [/^\/__\//, /^\/unsubscribe/], // and the email unsubscribe page, served by a Cloud Function
         cleanupOutdatedCaches: true,
+        importScripts: ['push-sw.js'], // push reminders and the app badge (public/push-sw.js)
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.origin === self.location.origin && /\/assets\/(index\.esm|firebase).*\.js$/.test(url.pathname),

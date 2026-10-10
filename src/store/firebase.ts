@@ -9,6 +9,7 @@ import type { Store } from './types';
 // Firestore layout (schema 2): logs are bucketed into one doc per month, keyed by log id.
 // A year of history costs ~12 reads per app open instead of one read per log entry.
 //   users/{uid}/categories/{id}   users/{uid}/months/{YYYY-MM} { entries: { [logId]: log } }   users/{uid}/meta/settings
+//   users/{uid}/devices/{id}: devices that allowed push reminders
 
 type Op = (b: WriteBatch) => void;
 const BATCH_LIMIT = 400; // Firestore allows 500 writes per batch; leave headroom
@@ -19,6 +20,7 @@ export function FirebaseStore(db: Firestore, auth: Auth, uid: string): Store {
   const monthRef = (m: string) => doc(db, 'users', uid, 'months', m);
   const legacyLogs = () => collection(db, 'users', uid, 'logs');
   const settingsDoc = () => doc(db, 'users', uid, 'meta', 'settings');
+  const devices = () => collection(db, 'users', uid, 'devices');
   const mk = (d: string) => d.slice(0, 7);
   const group = (logs: Log[]) => { const g: Record<string, Record<string, Log>> = {}; for (const l of logs) (g[mk(l.date)] ||= {})[l.id] = l; return g; };
   const entriesOf = (d: QueryDocumentSnapshot<DocumentData>) => Object.values((d.data().entries || {}) as Record<string, Log>);
@@ -79,8 +81,11 @@ export function FirebaseStore(db: Firestore, auth: Auth, uid: string): Store {
         b => b.set(settingsDoc(), { ...(d.settings || {}), schema: 2 }),
       ]);
     },
+    putDevice: (id, d) => setDoc(doc(devices(), id), d),
     async deleteAccount() { // data first, then the auth user (may require a recent sign-in)
-      await wipe(); await deleteDoc(settingsDoc());
+      await wipe();
+      await commitChunks((await getDocs(devices())).docs.map((x): Op => b => b.delete(x.ref))); // no reminders after the account is gone (NOTIF-14)
+      await deleteDoc(settingsDoc());
       if (auth.currentUser) await deleteUser(auth.currentUser);
     },
   };

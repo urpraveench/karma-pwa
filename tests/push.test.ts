@@ -28,6 +28,7 @@ describe('when the daily reminder goes (NOTIF-09)', () => {
     expect(utcSlot('19:00', 'Europe/London', '2026-12-01')).toBe('19:00');
     expect(utcSlot('07:15', 'America/New_York', '2026-12-01')).toBe('12:15');
     expect(utcSlot('21:45', 'Asia/Kathmandu', '2026-10-07')).toBe('16:00');
+    expect(utcSlot('19:00', 'Asia/Calcutta', '2026-10-07')).toBe('13:30'); // the older name some browsers report
   });
 
   it("the server's job looks for the 15-minute slot it runs in", () => {

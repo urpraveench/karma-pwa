@@ -74,9 +74,15 @@ describe('FirebaseStore on the emulator', () => {
     expect(d.logs).toHaveLength(900);
   });
 
-  it('deleteAccount removes every document, then the user (SYNC-09)', async () => {
+  it('deleteAccount removes every document, notification devices included, then the user (SYNC-09, NOTIF-14)', async () => {
     const st = FirebaseStore(db, auth, uid);
+    await st.putDevice('d1', { endpoint: 'https://push.example/a', keys: { p256dh: 'p', auth: 'a' }, createdAt: 1 });
+    expect((await getDocs(collection(db, 'users', uid, 'devices'))).size).toBe(1);
     await st.deleteAccount!();
     expect(auth.currentUser).toBeNull();
+    // the user is gone, so look as the emulator's owner, past the rules
+    const left = await fetch(`http://127.0.0.1:8080/v1/projects/demo-tiktym/databases/(default)/documents/users/${uid}/devices`, { headers: { Authorization: 'Bearer owner' } });
+    expect(left.ok).toBe(true);
+    expect((await left.json()).documents ?? []).toEqual([]);
   });
 });

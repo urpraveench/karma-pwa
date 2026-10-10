@@ -16,7 +16,7 @@ function fakeStore(data: AppData) {
     kind: 'firebase',
     loadAll: async () => structuredClone(data),
     addLog: write('addLog'), deleteLog: write('deleteLog'), updateLog: write('updateLog'), putCategory: write('putCategory'), putSettings: write('putSettings'),
-    deleteCategory: async () => { calls.push('deleteCategory'); }, replaceAll: async () => { calls.push('replaceAll'); },
+    deleteCategory: async () => { calls.push('deleteCategory'); }, replaceAll: async () => { calls.push('replaceAll'); }, putDevice: async () => {},
   };
   return { store, calls, waiting };
 }

@@ -19,5 +19,7 @@ export function LocalStore(key: string, onSaveError: () => void = () => {}): Sto
     async updateLog(_prev, next) { data.logs = data.logs.map(x => x.id === next.id ? next : x); save(); },
     async putSettings(s) { data.settings = s; save(); },
     async replaceAll(d) { data = structuredClone(d); save(); },
+    // test mode has no server to send reminders; the device is kept beside the data so tests can see it
+    async putDevice(id, d) { try { localStorage.setItem('tiktym:devices:' + key, JSON.stringify({ [id]: d })); } catch { /* storage blocked */ } },
   };
 }

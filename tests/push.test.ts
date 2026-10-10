@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { deviceGone, reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from '../functions/src/push';
-import { nearestTime, REMINDER_TIMES, reminderOn, reminderText, reminderTime, slotAt, timeLabel, utcSlot } from '../src/lib/reminders';
+import { badgeCount, nearestTime, REMINDER_TIMES, reminderOn, reminderText, reminderTime, slotAt, timeLabel, utcSlot } from '../src/lib/reminders';
 
 describe('when the daily reminder goes (NOTIF-09)', () => {
   it('times run every 15 minutes from 7 am to 9:45 pm, never at night', () => {
@@ -60,6 +60,12 @@ describe('what the reminder says (NOTIF-09)', () => {
     expect(reminderText([{ name: 'Reading' }])).toEqual({ title: 'Reading is left today', body: 'Even 5 minutes counts.' });
     expect(reminderText([{ name: 'Exercise' }, { name: 'Reading' }])).toEqual({ title: '2 practices left today', body: 'Exercise and Reading. Even 5 minutes counts.' });
     expect(reminderText(['Exercise', 'Reading', 'Upskilling'].map(name => ({ name }))).body).toBe('Exercise, Reading and Upskilling. Even 5 minutes counts.');
+  });
+
+  it('the badge counts practices, never minutes, and is empty when off or clear (NOTIF-13)', () => {
+    expect(badgeCount({}, ['a', 'b'])).toBe(2);
+    expect(badgeCount({ badge: false }, ['a', 'b'])).toBe(0);
+    expect(badgeCount({}, [])).toBe(0);
   });
 
   it('carries the badge count, unless the badge is switched off (NOTIF-13)', () => {

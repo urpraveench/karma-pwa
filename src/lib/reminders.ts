@@ -17,6 +17,9 @@ export const reminderOn = (s: Settings | undefined) => s?.reminder?.on !== false
 export const reminderTime = (s: Settings | undefined) => (s?.reminder?.time && REMINDER_TIMES.includes(s.reminder.time) ? s.reminder.time : DEFAULT_REMINDER);
 export const badgeOn = (s: Settings | undefined) => s?.badge !== false;
 
+/** The number on the app icon: practices left today, or 0 (no badge) when the day is clear or the badge is off (NOTIF-13). */
+export const badgeCount = (s: Settings | undefined, left: unknown[]) => (badgeOn(s) ? left.length : 0);
+
 /** The reminder time nearest to `d`, kept inside 7 am to 9:45 pm ("Remind me tomorrow at this time"). */
 export function nearestTime(d: Date): string {
   const q = Math.round((d.getHours() * 60 + d.getMinutes()) / 15) * 15;

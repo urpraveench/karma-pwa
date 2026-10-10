@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { showInstallCard, type InstallNudge } from '../lib/install';
-import { nearestTime, REMINDER_TIMES, reminderOn, reminderTime, timeLabel } from '../lib/reminders';
+import { badgeOn, nearestTime, REMINDER_TIMES, reminderOn, reminderTime, timeLabel } from '../lib/reminders';
 import { useApp } from '../state/app';
 import { useInstall } from '../state/install';
 import { usePushStatus, type PushStatus } from '../state/push';
@@ -74,5 +74,18 @@ export function ReminderRow() {
         </label>
       )}
     </>
+  );
+}
+
+/** Setup › Show count on app icon (NOTIF-13), only where the device can show a number on TikTym's icon. */
+export function BadgeRow() {
+  const { data, setBadge } = useApp();
+  if (!('setAppBadge' in navigator)) return null;
+  const on = badgeOn(data.settings);
+  return (
+    <button className="li" type="button" aria-pressed={on} onClick={() => setBadge(!on)}>
+      <span className="t">Show count on app icon<small>How many practices are left today, on TikTym's icon. On iPhone, once notifications are allowed</small></span>
+      <span className={`switch${on ? ' on' : ''}`} aria-hidden="true"><i /></span>
+    </button>
   );
 }

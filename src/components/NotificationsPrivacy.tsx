@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { analyticsAvailable, analyticsChoice, setConsent } from '../lib/analytics';
 import { EMAIL_KINDS, emailOn } from '../lib/notifications';
 import { useApp } from '../state/app';
-import { ReminderRow } from './Reminders';
+import { BadgeRow, ReminderRow } from './Reminders';
 
 function Toggle({ on, title, sub, onChange }: { on: boolean; title: string; sub: string; onChange: (on: boolean) => void }) {
   return (
@@ -25,6 +25,7 @@ export function NotificationsPrivacy() {
       <div className="sect-h"><h2>Notifications and privacy</h2></div>
       <div className="list">
         <ReminderRow />
+        <BadgeRow />
         {EMAIL_KINDS.map(([kind, title, sub]) => (
           <Toggle key={kind} on={emailOn(data.settings, kind)} title={title} sub={`Email · ${sub}`} onChange={on => setEmailPref(kind, on)} />
         ))}

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { errCode, startAuth, type AuthApi } from '../auth';
-import { calc } from '../lib/backlog';
+import { calc, practicesLeft } from '../lib/backlog';
 import { editCategory, moveCategory, newCategory, nextOrder, type CategoryForm } from '../lib/categories';
 import { dayLabel, today, ymd } from '../lib/date';
 import { startAccountAnalytics, track } from '../lib/analytics';
@@ -11,7 +11,7 @@ import { moment as findMoment, type Moment } from '../lib/moments';
 import { startingCategories, type Choice } from '../lib/firstRun';
 import { defaultCategories, sampleData } from '../lib/sample';
 import { saveTimer } from '../lib/timer';
-import { timeLabel } from '../lib/reminders';
+import { badgeCount, timeLabel } from '../lib/reminders';
 import { enablePush, resavePush, type PushStatus } from './push';
 import { newId } from '../lib/util';
 import type { AppData, Category, DateStr, Log, User } from '../lib/types';
@@ -76,6 +76,15 @@ function useAppState() {
     const t = setTimeout(() => setIntro(false), 1500);
     return () => clearTimeout(t);
   }, [intro, phase.kind]);
+
+  // The app icon shows how many practices are left today, where the device supports it (NOTIF-13); a reminder push
+  // refreshes it while the app is closed. Cleared when the day is clear, the badge is off, or nobody is signed in.
+  const badge = phase.kind === 'ready' ? badgeCount(data.settings, practicesLeft(data, T, c)) : 0;
+  useEffect(() => {
+    const nav = navigator as Navigator & { setAppBadge?: (n?: number) => Promise<void>; clearAppBadge?: () => Promise<void> };
+    if (!nav.setAppBadge || !nav.clearAppBadge) return;
+    (badge ? nav.setAppBadge(badge) : nav.clearAppBadge()).catch(() => { /* iPhone: only once notifications are allowed */ });
+  }, [badge]);
 
   // --- auth + session ---
   const openSession = useCallback(async (u: User, s: Store) => {

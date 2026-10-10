@@ -1,4 +1,4 @@
-// TikTym's emails (NOTIF-03 to NOTIF-07): content, signed unsubscribe links, and who gets what.
+// TikTym's emails (NOTIF-03 to NOTIF-07, NOTIF-15): content, signed unsubscribe links, and who gets what.
 // Pure functions, so they're unit-tested (tests/mail.test.ts); index.ts does the reading, sending and writing.
 import { Buffer } from 'node:buffer';
 import { createHmac, timingSafeEqual } from 'node:crypto';
@@ -15,6 +15,8 @@ export const APP_URL = 'https://app.tiktym.com/';
 export const UNSUBSCRIBE_URL = 'https://app.tiktym.com/unsubscribe';
 /** How long after first-run Start the first-minute nudge is due. */
 export const NUDGE_AFTER_MS = 24 * 3600_000;
+/** How long after signing in the "one tap away" email is due, if first-run Start still hasn't happened. */
+export const START_AFTER_MS = 24 * 3600_000;
 
 /** A practice as the emails show it; colour is the practice's colour in the app. */
 export interface Practice { name: string; minutes: number; color?: string }
@@ -51,6 +53,16 @@ export const emailOn = (settings: { emails?: Partial<Record<EmailKind, boolean>>
 
 /** First-run Start just happened: the settings went from not seeded to seeded (NOTIF-03). */
 export const justStarted = (before: { seeded?: boolean } | undefined, after: { seeded?: boolean } | undefined) => !before?.seeded && !!after?.seeded;
+
+/**
+ * What the hourly job does with an account due a "one tap away" email (NOTIF-15): nothing if it has started since (the
+ * welcome takes over), nothing if tips are off or there's no address to send to; otherwise send.
+ */
+export function oneTapCheck(settings: { seeded?: boolean; emails?: Partial<Record<EmailKind, boolean>> } | undefined, hasEmail: boolean): 'send' | 'started' | 'off' | 'no-recipient' {
+  if (settings?.seeded) return 'started';
+  if (!emailOn(settings, 'tips')) return 'off';
+  return hasEmail ? 'send' : 'no-recipient';
+}
 
 /** The practice to suggest for a first log: the shortest daily target, so starting feels easy (NOTIF-04). */
 export const easiest = (ps: Practice[]) => [...ps].sort((a, b) => a.minutes - b.minutes)[0];
@@ -193,6 +205,39 @@ export function nudgeEmail(o: { name: string; practice: Practice; unsubscribe: s
     `You're getting this because you created a TikTym account and haven't logged anything yet. Unsubscribe: ${o.unsubscribe}`,
   ].join('\n');
   return { subject: 'Your first five minutes on TikTym', html, text, headers: unsubscribeHeaders(o.unsubscribe) };
+}
+
+/** "One tap away", once, about a day after signing in, if first-run Start never happened (NOTIF-15). */
+export function oneTapEmail(o: { name: string; unsubscribe: string }): Email {
+  const hi = o.name ? `Hi ${esc(o.name)},` : 'Hi,';
+  const html = frame({
+    title: 'One tap away',
+    body: [
+      para(hi),
+      para("You signed in to TikTym yesterday, but didn't get to pick your practices. It takes under a minute:"),
+      tips([
+        ['Pick what you want to make time for:', 'Exercise, Reading, Course study, Meditation, or add your own.'],
+        ['Set the minutes.', '100 minutes a day is the suggested start, not a rule. Pick fewer if your days are full.'],
+        ['Tap Start,', 'then log your first few minutes, or tap ▶ for a focus timer.'],
+      ]),
+      button('Pick my practices', appLink('one_tap')),
+      para('If something got in the way, reply and tell me. It helps me make TikTym easier.'),
+    ],
+    why: "You're getting this because you created a TikTym account and haven't finished setting it up. It's sent once.",
+    unsubscribe: o.unsubscribe,
+  });
+  const text = [
+    hi.replace(/&amp;/g, '&'), '',
+    "You signed in to TikTym yesterday, but didn't get to pick your practices. It takes under a minute:", '',
+    '1. Pick what you want to make time for: Exercise, Reading, Course study, Meditation, or add your own.',
+    '2. Set the minutes. 100 minutes a day is the suggested start, not a rule. Pick fewer if your days are full.',
+    '3. Tap Start, then log your first few minutes, or tap the play button for a focus timer.', '',
+    `Pick my practices: ${appLink('one_tap')}`, '',
+    'If something got in the way, reply and tell me. It helps me make TikTym easier.', '',
+    'Praveen', SIGN_OFF, '', '--',
+    `You're getting this because you created a TikTym account and haven't finished setting it up. It's sent once. Unsubscribe: ${o.unsubscribe}`,
+  ].join('\n');
+  return { subject: 'Your TikTym is one tap away', html, text, headers: unsubscribeHeaders(o.unsubscribe) };
 }
 
 /** The comeback, once per absence after 3 full days with nothing logged (NOTIF-07). */

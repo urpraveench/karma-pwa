@@ -45,6 +45,7 @@ Three switches in Setup › Notifications and privacy control them: **Tips and r
 | Email | When | Who gets it | Switch | Status |
 |---|---|---|---|---|
 | Welcome | Right after first-run Start | Every new account | Tips and reminders | Built |
+| One tap away | About 24 hours after signing in | Only if first-run Start never happened (signed in, stopped at the practice picker): picking takes under a minute, 100 minutes is only the suggested start. Added 10 October 2026, after an account signed in with Google and got no email at all | Tips and reminders | Built |
 | First-minute nudge | About 24 hours after Start | Only if nothing has been logged | Tips and reminders | Built |
 | First-week tips | Day 3 and day 6 after Start | Only while still using TikTym; one tip each (day 3: the focus timer; day 6: Insights and your best time of day) | Tips and reminders | Planned |
 | Comeback | 9 am IST, after 3 full days with nothing logged | Once per absence, for absences that began in the last 2 weeks: "you don't need to make up for the missed days", 5 minutes of the shortest practice | Tips and reminders | Built (on the queue) |

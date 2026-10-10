@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { confirmUnsubscribePage, easiest, emailOn, firstName, justStarted, nudgeEmail, readUnsubscribe, unsubscribedPage, unsubscribeLink, welcomeEmail } from '../functions/src/mail';
+import { readFileSync } from 'node:fs';
+import { confirmUnsubscribePage, easiest, emailOn, firstName, justStarted, nudgeEmail, oneTapCheck, oneTapEmail, readUnsubscribe, START_AFTER_MS, unsubscribedPage, unsubscribeLink, welcomeEmail } from '../functions/src/mail';
 
 const SECRET = 'test-secret';
 const practices = [{ name: 'Exercise', minutes: 30 }, { name: 'Reading', minutes: 30 }, { name: 'Meditation', minutes: 10 }];
@@ -99,5 +100,42 @@ describe('the emails (NOTIF-03, NOTIF-04)', () => {
   it('the unsubscribed page confirms, or says the link failed', () => {
     expect(unsubscribedPage('recap')).toContain("You won't get TikTym weekly and monthly recap emails any more");
     expect(unsubscribedPage(null)).toContain("That link didn't work");
+  });
+});
+
+describe('"one tap away" for accounts that never tapped Start (NOTIF-15)', () => {
+  const unsubscribe = unsubscribeLink('uid123', 'tips', SECRET);
+
+  it('goes about a day after signing in, only if still not started, tips are on and there is an address', () => {
+    expect(START_AFTER_MS).toBe(24 * 3600_000);
+    expect(oneTapCheck(undefined, true)).toBe('send'); // signed in, never got as far as saving any settings
+    expect(oneTapCheck({ seeded: false }, true)).toBe('send');
+    expect(oneTapCheck({ seeded: true }, true)).toBe('started'); // tapped Start since: the welcome took over
+    expect(oneTapCheck({ emails: { tips: false } }, true)).toBe('off');
+    expect(oneTapCheck({ emails: { recap: false } }, true)).toBe('send');
+    expect(oneTapCheck(undefined, false)).toBe('no-recipient');
+  });
+
+  it('says picking practices takes under a minute, 100 minutes only suggested, with a button to the app', () => {
+    const e = oneTapEmail({ name: 'Meera', unsubscribe });
+    expect(e.subject).toBe('Your TikTym is one tap away');
+    for (const s of ['Hi Meera,', 'One tap away', 'It takes under a minute', 'Exercise, Reading, Course study, Meditation, or add your own', '100 minutes a day is the suggested start, not a rule', 'Pick my practices', 'utm_campaign=one_tap', "haven't finished setting it up"])
+      expect(e.html).toContain(s);
+    expect(e.text).toContain('Pick my practices: https://app.tiktym.com/?utm_source=email&utm_medium=email&utm_campaign=one_tap');
+    expect(e.text).not.toContain('▶');
+    expect(e.headers['List-Unsubscribe']).toBe(`<${unsubscribe}>`);
+    for (const part of [e.html, e.text]) {
+      expect(part).toContain('Helping busy people like you make time for what matters.');
+      expect(part).not.toMatch(/Founder|Pramal/);
+    }
+    expect(oneTapEmail({ name: '', unsubscribe }).text.startsWith('Hi,\n')).toBe(true);
+  });
+
+  it("is set up for every new account, and the welcome no longer needs mail/{uid} to be new", () => {
+    const src = readFileSync('functions/src/index.ts', 'utf8');
+    expect(src).toMatch(/regionV1\('asia-south1'\)\.auth\.user\(\)\.onCreate/);
+    expect(src).toContain('startDueAt: Timestamp.fromMillis(now + START_AFTER_MS)');
+    expect(src).not.toContain('mailDoc(uid).create(');
+    expect(src).toContain("startDueAt: FieldValue.delete() }, { merge: true }"); // Start cancels it
   });
 });

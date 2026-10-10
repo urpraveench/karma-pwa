@@ -37,8 +37,8 @@ Summary of coverage at the time of writing:
 | 13. App shell, PWA and platform | 35 | 30 | 0 | 5 |
 | 14. Marketing and sharing | 22 | 22 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
-| 16. Notifications | 13 | 13 | 0 | 0 |
-| **Total** | **298** | **283** | **0** | **15** |
+| 16. Notifications | 14 | 14 | 0 | 0 |
+| **Total** | **299** | **284** | **0** | **15** |
 
 ---
 
@@ -447,6 +447,7 @@ See NOTIFICATIONS.md for the plan. Emails and usage statistics are on by default
 | NOTIF-01 | Notifications and privacy settings | Setup has "Notifications and privacy": Tips and reminders, Weekly recap, News about TikTym (emails) and Usage statistics, all on to start; one tap turns each off. Email choices are saved in the account, so the server respects them on any device | E2E `notifications.spec.ts`, Unit `notifications.test.ts` |
 | NOTIF-03 | Welcome email | Once, when a new account taps Start on first run, if "Tips and reminders" is on: from "Praveen from TikTym" <hello@tiktym.com>, replies to the support address; greets by first name, lists the chosen practices and minutes, explains carry-forward and adding TikTym to the home screen, with an Open TikTym button | Unit `mail.test.ts`, Emulator `tests-emulator/rules.test.ts` (sending: Manual, checked live 10 Oct) |
 | NOTIF-04 | First-minute nudge | Once, about 24 hours after first-run Start, only if nothing has been logged and tips are on: suggests 5 minutes of the shortest practice, with an Open TikTym button | Unit `mail.test.ts` (sending: Manual) |
+| NOTIF-15 | "One tap away" email | Once, about 24 hours after signing in for the first time, if the account never tapped Start on the first-run screen and "Tips and reminders" is on: says picking practices takes under a minute (100 minutes a day is only the suggested start), with a "Pick my practices" button. Not sent once Start is tapped; tapping Start later still brings the welcome | Unit `mail.test.ts` (sending: Manual) |
 | NOTIF-05 | One-tap unsubscribe | Every email has a signed unsubscribe link and the List-Unsubscribe headers. Opening the link shows an Unsubscribe button (so email scanners that open links can't unsubscribe anyone); the button, or Gmail's own one-click button (RFC 8058), turns that email type off in the account without signing in. A tampered link does nothing. The service worker never answers /unsubscribe | Unit `mail.test.ts`, E2E `pwa.spec.ts` (live page: Manual) |
 | NOTIF-06 | Weekly recap email | Mondays at 8 am India time, if "Weekly recap" is on and something was logged in the last two weeks: last week (Monday to Sunday) in minutes against the targets, days shown up, best day, each practice with a bar, the show-up streak, how it compares with the week before (never as a telling-off), and one gentle suggestion. A practice that started mid-week counts from its start. A week with nothing logged gets a short "no catching up needed, 5 minutes today" note instead. Once per account per week | Unit `recap.test.ts` (sending: Manual) |
 | NOTIF-07 | Comeback email | After 3 full days with nothing logged, the next morning (9 am India time), if "Tips and reminders" is on: "no need to make up for the missed days", with 5 minutes of the shortest practice and an Open TikTym button. Once per absence: no second one until the person logs again and goes quiet again. Only for absences that began in the last two weeks. The server keeps each account's last-logged date as entries are saved, so it looks only at people who are away | Unit `comeback.test.ts` (sending: Manual) |

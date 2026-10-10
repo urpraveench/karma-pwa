@@ -1,4 +1,4 @@
-// TikTym's Cloud Functions (asia-south1, next to the database): the welcome, first-minute, weekly recap and comeback
+// TikTym's Cloud Functions (asia-south1, next to the database): the welcome, one-tap-away, first-minute, weekly recap and comeback
 // emails, the unsubscribe page, and daily push reminders. What each email says, and who gets it, lives in mail.ts (unit-tested); this file reads,
 // sends and records. NOTIFICATIONS.md has the plan.
 import { initializeApp } from 'firebase-admin/app';
@@ -12,10 +12,11 @@ import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { onRequest } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { onTaskDispatched } from 'firebase-functions/v2/tasks';
+import { region as regionV1 } from 'firebase-functions/v1';
 import { comebackDue, comebackRange, daysAway, indiaToday, latestLogDate, type MailState } from './comeback.js';
 import {
-  comebackEmail, confirmUnsubscribePage, easiest, emailOn, FROM, firstName, justStarted, NUDGE_AFTER_MS, nudgeEmail, readUnsubscribe,
-  recapEmail, REPLY_TO, unsubscribedPage, unsubscribeLink, welcomeEmail, type Email, type Practice,
+  comebackEmail, confirmUnsubscribePage, easiest, emailOn, FROM, firstName, justStarted, NUDGE_AFTER_MS, nudgeEmail, oneTapCheck, oneTapEmail,
+  readUnsubscribe, recapEmail, REPLY_TO, START_AFTER_MS, unsubscribedPage, unsubscribeLink, welcomeEmail, type Email, type Practice,
 } from './mail.js';
 import { addDays, lastWeekStart, weekRecap, type RecapCategory, type RecapLog } from './recap.js';
 import webpush from 'web-push';
@@ -36,7 +37,8 @@ const UNSUBSCRIBE_SECRET = defineSecret('UNSUBSCRIBE_SECRET');
 const VAPID_PRIVATE_KEY = defineSecret('VAPID_PRIVATE_KEY');
 
 /**
- * Server-only record per account, mail/{uid} (apps can't read or write it): when first-run Start happened, when the
+ * Server-only record per account, mail/{uid} (apps can't read or write it): when the account signed in first and when
+ * the "one tap away" email is due (startDueAt, removed once handled), when first-run Start happened, when the
  * welcome went, when the first-minute nudge is due (removed once handled), the newest entry's date (lastLogged), the
  * week of the last recap, the absence the last comeback was for, and the India date of the last email (lastEmailDay).
  */
@@ -66,16 +68,27 @@ async function recipient(uid: string): Promise<{ email: string; name: string } |
   return u?.email ? { email: u.email, name: firstName(u.displayName, u.email) } : null;
 }
 
+/**
+ * A new account (any sign-in method): the "one tap away" email is due in about a day, unless first-run Start happens
+ * first (NOTIF-15). A first-generation trigger: the second generation has no "user created" event without Identity Platform.
+ */
+export const signedUp = regionV1('asia-south1').auth.user().onCreate(async user => {
+  const now = Date.now();
+  await mailDoc(user.uid).set({ signedUpAt: Timestamp.fromMillis(now), startDueAt: Timestamp.fromMillis(now + START_AFTER_MS) }, { merge: true });
+});
+
 /** First-run Start: send the welcome (if tips are on), and set the first-minute nudge for about a day later (NOTIF-03). */
 export const welcome = onDocumentWritten({ document: 'users/{uid}/meta/settings', secrets: [RESEND_API_KEY, UNSUBSCRIBE_SECRET] }, async event => {
   const uid = event.params.uid;
   if (!justStarted(event.data?.before.data(), event.data?.after.data())) return;
   const startedAt = Timestamp.now();
-  try {
-    await mailDoc(uid).create({ startedAt, nudgeDueAt: Timestamp.fromMillis(startedAt.toMillis() + NUDGE_AFTER_MS) });
-  } catch {
-    return; // already recorded: the welcome goes once per account, even if Start is somehow saved twice
-  }
+  const first = await db.runTransaction(async t => {
+    const ref = mailDoc(uid);
+    if ((await t.get(ref)).data()?.startedAt) return false; // already recorded: the welcome goes once per account, even if Start is somehow saved twice
+    t.set(ref, { startedAt, nudgeDueAt: Timestamp.fromMillis(startedAt.toMillis() + NUDGE_AFTER_MS), startDueAt: FieldValue.delete() }, { merge: true });
+    return true;
+  });
+  if (!first) return;
   if (!emailOn(event.data?.after.data(), 'tips')) return;
   const to = await recipient(uid);
   if (!to) return;
@@ -85,8 +98,26 @@ export const welcome = onDocumentWritten({ document: 'users/{uid}/meta/settings'
   logger.info('welcome sent', { uid });
 });
 
-/** Every hour: the first-minute nudge for accounts a day past Start with nothing logged (NOTIF-04). */
+/**
+ * Every hour: the "one tap away" email for accounts a day past signing in that never tapped Start (NOTIF-15), and the
+ * first-minute nudge for accounts a day past Start with nothing logged (NOTIF-04).
+ */
 export const firstMinute = onSchedule({ schedule: 'every 60 minutes', timeZone: 'Asia/Kolkata', secrets: [RESEND_API_KEY, UNSUBSCRIBE_SECRET] }, async () => {
+  const notStarted = await db.collection('mail').where('startDueAt', '<=', Timestamp.now()).limit(100).get();
+  for (const doc of notStarted.docs) {
+    const uid = doc.id;
+    const handled = (outcome: string) => doc.ref.update({ startDueAt: FieldValue.delete(), oneTap: outcome, oneTapAt: Timestamp.now(), ...(outcome === 'sent' ? { lastEmailDay: indiaToday(new Date()) } : {}) });
+    try {
+      const [settings, to] = await Promise.all([settingsDoc(uid).get(), recipient(uid)]);
+      const act = oneTapCheck(settings.data(), !!to);
+      if (act !== 'send') { await handled(act); continue; }
+      await send(to!.email, oneTapEmail({ name: to!.name, unsubscribe: unsubscribeLink(uid, 'tips', UNSUBSCRIBE_SECRET.value()) }), `one-tap-${uid}`);
+      await handled('sent');
+      logger.info('one-tap email sent', { uid });
+    } catch (e) {
+      logger.error('one-tap email failed; will retry next hour', { uid, error: String(e) });
+    }
+  }
   const due = await db.collection('mail').where('nudgeDueAt', '<=', Timestamp.now()).limit(100).get();
   for (const doc of due.docs) {
     const uid = doc.id;

@@ -21,6 +21,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] After the comeback email is deployed: the next morning, `firebase functions:log --only comebackDaily` shows how many were queued; for a test account left 3 full days without an entry, check the comeback arrives at about 9 am, only once (NOTIF-07)
 - [ ] The first Monday after the weekly recap is deployed: check it arrives at about 8 am for an account that logged last week, that the numbers match History for that week, and that the function's log says how many went (NOTIF-06)
 - [ ] After push reminders are deployed: on an iPhone with TikTym on the home screen and on Android Chrome, allow reminders, set a time 15 minutes ahead, and check the reminder arrives once, names what's left, and opens TikTym; `firebase functions:log --only reminderSend` shows it (NOTIF-09)
+- [ ] After the "one tap away" email is deployed: sign in with a spare Google account, stop at the practice picker, and check the email arrives about a day later, once; then tap Start and check the welcome still arrives (NOTIF-15, NOTIF-03)
 - [ ] After push reminders are deployed: on an iPhone with TikTym on the home screen and notifications allowed, the icon shows the number of practices left today, updates after the reminder, and clears when the day is clear (NOTIF-13)
 - [ ] **You:** remove the last line of the LinkedIn page description ("TikTym is built by Pramal IT Services Private Limited.") in LinkedIn › Edit page
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
@@ -123,7 +124,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
 - [ ] **You:** upgrade Resend to a paid plan at about 50 active users; the free plan's 100 emails a day runs out on Mondays at about 80 (NOTIFICATIONS.md › Scaling the emails).
 - [ ] **Claude:** before 2 November (the 100 Days challenge): move the weekly recap onto the queue the comeback already uses (one task per person, rate-limited, retried), querying `mail/{uid}.lastLogged` so only active people are looked at; batch sending if needed. Today's recap loop stops at about 500 people (NOTIFICATIONS.md › Scaling the emails).
-- [ ] **Claude:** "one tap away" email for people who sign in but never tap Start on the first-run screen. Today they get no email at all: the welcome and the first-minute nudge both start from Start (`seeded`), so an account that stops at the practice picker is never contacted. Seen 10 October 2026: account `mcgg…` signed in with Google at 13:29 and got no welcome. Send once, about a day after sign-up, only if still not started and Tips and reminders is on; it needs its own record (no `mail/{uid}` exists before Start) and a FEATURES row.
 - [ ] **Claude:** news broadcast: Praveen approves the text, it goes to everyone with News on; first use, announcing 100 Days, 100 Minutes in late October.
 - [ ] **Claude:** first-week tips emails on days 3 and 6, only while still active (Tips and reminders).
 - [ ] **Claude:** monthly progress email on the 1st (Weekly recap switch), first on 1 November.
@@ -140,6 +140,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] 10 October 2026: **Claude:** "one tap away" email for people who sign in but never tap Start on the first-run screen (NOTIF-15). Seen 10 October 2026: account `mcgg…` signed in with Google at 13:29 and got no welcome. Sign-up records `mail/{uid}.startDueAt` (an Auth trigger), the hourly job sends once about a day later if still not started and Tips and reminders is on; the welcome no longer assumes `mail/{uid}` doesn't exist yet.
 - [x] Released 1.9.0: daily push reminders at a chosen time, the app badge (practices left today), and the weekly recap and comeback emails in What's new; functions `reminderSettings`, `reminderDevices`, `remindersDue` (every 15 minutes) and `reminderSend` (queue) deployed with the `VAPID_PRIVATE_KEY` secret, 10 October 2026
 - [x] **Claude:** Android reminders show a white TikTym ring as their small icon, instead of Chrome's (`scripts/badge-icon.mjs`), 10 October 2026
 - [x] **Claude:** push reminders 5/5: Privacy Policy and Terms describe push reminders and the badge; changelog line. Not released yet, 10 October 2026

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { lastWeekStart, suggestion, weekRecap, type RecapCategory, type RecapLog } from '../functions/src/recap';
+import { readFileSync } from 'node:fs';
+import { lastWeekStart, recapCheck, recapFrom, suggestion, weekRecap, type RecapCategory, type RecapLog } from '../functions/src/recap';
 import { recapEmail, unsubscribeLink, weekLabel } from '../functions/src/mail';
 
 const ALL = [0, 1, 2, 3, 4, 5, 6];
@@ -105,5 +106,42 @@ describe('the recap email (NOTIF-06)', () => {
       expect(part).toContain('Helping busy people like you make time for what matters.');
       expect(part).not.toMatch(/Founder|Pramal/);
     }
+  });
+});
+
+describe('the weekly recap at any size (NOTIF-16)', () => {
+  const week = '2026-10-05', monday = '2026-10-12';
+
+  it('looks only at accounts with an entry in the week or the one before', () => {
+    expect(recapFrom(week)).toBe('2026-09-28');
+    expect(recapCheck({ lastLogged: '2026-09-28' }, week, monday)).toBe('send');
+    expect(recapCheck({ lastLogged: '2026-10-12' }, week, monday)).toBe('send'); // logged this morning too
+    expect(recapCheck({ lastLogged: '2026-09-27' }, week, monday)).toBe('inactive');
+    expect(recapCheck({}, week, monday)).toBe('inactive');
+    expect(recapCheck(undefined, week, monday)).toBe('inactive');
+  });
+
+  it('never twice for the same week, even if the job or a send runs again', () => {
+    expect(recapCheck({ lastLogged: '2026-10-10', recapWeek: week }, week, monday)).toBe('sent');
+    expect(recapCheck({ lastLogged: '2026-10-10', recapWeek: '2026-09-28' }, week, monday)).toBe('send');
+  });
+
+  it('skipped for the week if another TikTym email already went that day (NOTIF-08)', () => {
+    expect(recapCheck({ lastLogged: '2026-10-10', lastEmailDay: monday }, week, monday)).toBe('emailed-today');
+    expect(recapCheck({ lastLogged: '2026-10-10', lastEmailDay: '2026-10-11' }, week, monday)).toBe('send');
+  });
+
+  it('the Monday job queries and queues, one named task per account and week, sent 2 a second with retries', () => {
+    const src = readFileSync('functions/src/index.ts', 'utf8');
+    const job = src.slice(src.indexOf('export const weeklyRecap'), src.indexOf('export const recapSend'));
+    expect(job).not.toContain('listUsers'); // no longer goes through every sign-up
+    expect(job).toContain(".where('lastLogged', '>=', recapFrom(week))");
+    expect(job).toContain("taskQueue('locations/asia-south1/functions/recapSend')");
+    expect(job).toContain('{ id: `recap-${d.id}-${week}` }');
+    const sender = src.slice(src.indexOf('export const recapSend'), src.indexOf('/** Keeps mail/{uid}.lastLogged'));
+    expect(sender).toContain('maxDispatchesPerSecond: 2');
+    expect(sender).toContain('maxAttempts: 3');
+    expect(sender).toContain("emailOn(settings.data(), 'recap')");
+    expect(sender).toContain('`recap-${uid}-${week}`'); // Resend's idempotency key: a retry after a send can't email twice
   });
 });

@@ -18,7 +18,7 @@ import {
   comebackEmail, confirmUnsubscribePage, easiest, emailOn, FROM, firstName, justStarted, NUDGE_AFTER_MS, nudgeEmail, oneTapCheck, oneTapEmail,
   readUnsubscribe, recapEmail, REPLY_TO, START_AFTER_MS, unsubscribedPage, unsubscribeLink, welcomeEmail, type Email, type Practice,
 } from './mail.js';
-import { addDays, lastWeekStart, weekRecap, type RecapCategory, type RecapLog } from './recap.js';
+import { addDays, lastWeekStart, recapCheck, recapFrom, weekRecap, type RecapCategory, type RecapLog, type RecapMail } from './recap.js';
 import webpush from 'web-push';
 import { reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from './push.js';
 import { practicesLeft } from './shared/backlog.js';
@@ -138,48 +138,54 @@ export const firstMinute = onSchedule({ schedule: 'every 60 minutes', timeZone: 
   }
 });
 
-/** Resend's free plan takes 2 emails a second; a gap between sends keeps well under it. */
-const pause = (ms: number) => new Promise(r => setTimeout(r, ms));
-
 /**
- * Mondays at 8 am India time: last week's recap to everyone with Weekly recap on who logged something in the last two
- * weeks (NOTIF-06). mail/{uid}.recapWeek records the week sent, so a retry never sends twice.
+ * Mondays at 8 am India time: queue last week's recap for each account with an entry in the last two weeks (NOTIF-06,
+ * NOTIF-16). The query reads only those accounts (mail/{uid}.lastLogged, kept by trackLastLogged); the queue sends at a
+ * steady rate and retries, so this never runs into the 9-minute limit. The task id stops a rerun queueing anyone twice.
  */
-export const weeklyRecap = onSchedule({ schedule: '0 8 * * 1', timeZone: 'Asia/Kolkata', timeoutSeconds: 540, secrets: [RESEND_API_KEY, UNSUBSCRIBE_SECRET] }, async () => {
-  const week = lastWeekStart(new Date());
+export const weeklyRecap = onSchedule({ schedule: '0 8 * * 1', timeZone: 'Asia/Kolkata' }, async () => {
+  const week = lastWeekStart(new Date()), today = indiaToday(new Date());
+  const active = await db.collection('mail').where('lastLogged', '>=', recapFrom(week)).get();
+  const due = active.docs.filter(d => recapCheck(d.data() as RecapMail, week, today) === 'send');
+  const queue = getFunctions().taskQueue('locations/asia-south1/functions/recapSend');
+  const queued = await Promise.all(due.map(d => queue.enqueue({ uid: d.id, week }, { id: `recap-${d.id}-${week}` }).then(() => 1, (e: { code?: string }) => {
+    if (e?.code === 'functions/task-already-exists') return 0;
+    throw e;
+  })));
+  logger.info('weekly recaps queued', { week, active: active.size, queued: queued.reduce<number>((s, n) => s + n, 0) });
+});
+
+/** Sends one weekly recap, from the queue: at most 2 a second, retried on failure. Checks again before sending (NOTIF-06, NOTIF-16). */
+export const recapSend = onTaskDispatched({
+  retryConfig: { maxAttempts: 3, minBackoffSeconds: 120 },
+  rateLimits: { maxDispatchesPerSecond: 2, maxConcurrentDispatches: 4 },
+  secrets: [RESEND_API_KEY, UNSUBSCRIBE_SECRET],
+}, async req => {
+  const { uid, week } = (req.data ?? {}) as { uid?: unknown; week?: unknown };
+  if (typeof uid !== 'string' || !uid || typeof week !== 'string') return;
+  const today = indiaToday(new Date());
+  const [settings, mail] = await Promise.all([settingsDoc(uid).get(), mailDoc(uid).get()]);
+  const check = recapCheck(mail.data() as RecapMail | undefined, week, today);
+  if (check !== 'send' || !settings.exists || !emailOn(settings.data(), 'recap')) {
+    logger.info('weekly recap skipped', { uid, week, why: check === 'send' ? 'off' : check });
+    return;
+  }
   const months = [...new Set([addDays(week, -7), addDays(week, 6)].map(d => d.slice(0, 7)))];
-  let sent = 0, pageToken: string | undefined;
-  do {
-    const page = await getAuth().listUsers(1000, pageToken);
-    pageToken = page.pageToken;
-    for (const u of page.users) {
-      if (!u.email) continue;
-      const uid = u.uid;
-      try {
-        const [settings, mail] = await Promise.all([settingsDoc(uid).get(), mailDoc(uid).get()]);
-        if (!settings.exists || !emailOn(settings.data(), 'recap') || mail.data()?.recapWeek === week) continue;
-        const [cats, monthDocs] = await Promise.all([
-          db.collection(`users/${uid}/categories`).get(),
-          db.getAll(...months.map(m => db.doc(`users/${uid}/months/${m}`))),
-        ]);
-        const categories = cats.docs.map(d => d.data() as RecapCategory);
-        const logs = monthDocs.flatMap(m => Object.values((m.data()?.entries || {}) as Record<string, RecapLog>));
-        const recap = weekRecap(categories, logs, week);
-        if (!recap) continue;
-        const latest = latestLogDate(Object.fromEntries(logs.map((l, i) => [i, l])));
-        if (latest && !(mail.data()?.lastLogged >= latest)) await mailDoc(uid).set({ lastLogged: latest }, { merge: true }); // fills in accounts from before the trigger
-        const current = categories.filter(c => !c.archivedFrom).map(c => ({ name: c.name, minutes: Number(c.targets?.[c.targets.length - 1]?.minutes ?? 0) }));
-        const email = recapEmail({ name: firstName(u.displayName, u.email), recap, easiest: easiest(current)?.name, unsubscribe: unsubscribeLink(uid, 'recap', UNSUBSCRIBE_SECRET.value()) });
-        await send(u.email, email, `recap-${uid}-${week}`);
-        await mailDoc(uid).set({ recapWeek: week, recapAt: Timestamp.now(), lastEmailDay: indiaToday(new Date()) }, { merge: true });
-        sent++;
-        await pause(600);
-      } catch (e) {
-        logger.error('weekly recap failed', { uid, week, error: String(e) });
-      }
-    }
-  } while (pageToken);
-  logger.info('weekly recaps sent', { week, sent });
+  const [to, cats, monthDocs] = await Promise.all([
+    recipient(uid),
+    db.collection(`users/${uid}/categories`).get(),
+    db.getAll(...months.map(m => db.doc(`users/${uid}/months/${m}`))),
+  ]);
+  if (!to) return;
+  const categories = cats.docs.map(d => d.data() as RecapCategory);
+  const logs = monthDocs.flatMap(m => Object.values((m.data()?.entries || {}) as Record<string, RecapLog>));
+  const recap = weekRecap(categories, logs, week);
+  if (!recap) return;
+  const current = categories.filter(c => !c.archivedFrom).map(c => ({ name: c.name, minutes: Number(c.targets?.[c.targets.length - 1]?.minutes ?? 0) }));
+  const email = recapEmail({ name: to.name, recap, easiest: easiest(current)?.name, unsubscribe: unsubscribeLink(uid, 'recap', UNSUBSCRIBE_SECRET.value()) });
+  await send(to.email, email, `recap-${uid}-${week}`);
+  await mailDoc(uid).set({ recapWeek: week, recapAt: Timestamp.now(), lastEmailDay: today }, { merge: true });
+  logger.info('weekly recap sent', { uid, week });
 });
 
 /** Keeps mail/{uid}.lastLogged, the newest entry's date, as entries are saved, so the comeback job only looks at people who are away (NOTIF-07). */

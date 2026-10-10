@@ -19,6 +19,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] Once, before real promotion: a restore drill. Restore the latest backup into a new database (README › Backups and restoring), check it in the console, then delete it (SYNC-17)
 - [ ] A day after signing up with the spare test account (without logging anything), check the first-minute nudge arrives (NOTIF-04)
 - [ ] After the comeback email is deployed: the next morning, `firebase functions:log --only comebackDaily` shows how many were queued; for a test account left 3 full days without an entry, check the comeback arrives at about 9 am, only once (NOTIF-07)
+- [ ] **You:** deploy the queued weekly recap only after Monday 12 October's 8 am run: that last run of the old loop fills in the last-logged date for accounts that haven't logged since the trigger went live, which the new query depends on (NOTIF-16)
 - [ ] The first Monday after the weekly recap is deployed: check it arrives at about 8 am for an account that logged last week, that the numbers match History for that week, and that the function's log says how many went (NOTIF-06)
 - [ ] On Android Chrome: allow reminders, set a time 15 minutes ahead, and check the reminder arrives once, names what's left, shows the white ring in the status bar, and opens TikTym; `firebase functions:log --only reminderSend` shows it (NOTIF-09). iPhone checked 10 October
 - [ ] After the "one tap away" email is deployed: sign in with a spare Google account, stop at the practice picker, and check the email arrives about a day later, once; then tap Start and check the welcome still arrives (NOTIF-15, NOTIF-03)
@@ -123,7 +124,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
 - [ ] **You:** upgrade Resend to a paid plan at about 50 active users; the free plan's 100 emails a day runs out on Mondays at about 80 (NOTIFICATIONS.md › Scaling the emails).
-- [ ] **Claude:** before 2 November (the 100 Days challenge): move the weekly recap onto the queue the comeback already uses (one task per person, rate-limited, retried), querying `mail/{uid}.lastLogged` so only active people are looked at; batch sending if needed. Today's recap loop stops at about 500 people (NOTIFICATIONS.md › Scaling the emails).
 - [ ] **Claude:** news broadcast: Praveen approves the text, it goes to everyone with News on; first use, announcing 100 Days, 100 Minutes in late October.
 - [ ] **Claude:** first-week tips emails on days 3 and 6, only while still active (Tips and reminders).
 - [ ] **Claude:** monthly progress email on the 1st (Weekly recap switch), first on 1 November.
@@ -140,6 +140,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** weekly recap moved onto the queue (NOTIF-16): the Monday 8 am job queries only accounts with an entry in the last two weeks (`mail/{uid}.lastLogged`) and queues one named task each (`recap-<uid>-<week>`, so a rerun can't queue twice); `recapSend` sends 2 a second, retries 3 times, checks again before sending, and skips the week if another email went that day. No more 9-minute limit or listing every sign-up, 10 October 2026
 - [x] App badge checked live on iPhone: the icon showed 4, matching the practices left in the reminder (NOTIF-13), 10 October 2026
 - [x] Daily reminder checked live on iPhone (home-screen app): queued at the 8:30 pm IST slot and delivered 6 seconds later, naming the 4 practices left; the server's queue permission works (NOTIF-09), 10 October 2026
 - [x] 10 October 2026: **Claude:** "one tap away" email for people who sign in but never tap Start on the first-run screen (NOTIF-15). Seen 10 October 2026: account `mcgg…` signed in with Google at 13:29 and got no welcome. Sign-up records `mail/{uid}.startDueAt` (an Auth trigger), the hourly job sends once about a day later if still not started and Tips and reminders is on; the welcome no longer assumes `mail/{uid}` doesn't exist yet.

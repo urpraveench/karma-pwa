@@ -96,3 +96,22 @@ export function suggestion(r: Recap): Suggestion {
   const behind = r.practices.filter(p => p.target > 0 && p.done < p.target).sort((a, b) => a.done / a.target - b.done / b.target);
   return behind.length ? { kind: 'lowest', practice: behind[0] } : { kind: 'all-met' };
 }
+
+// --- who gets one, at any size (NOTIF-16) ---
+
+/** The oldest last-logged date that still gets the recap for the week starting `week`: an entry that week or the one before. */
+export const recapFrom = (week: string) => addDays(week, -7);
+
+/** What mail/{uid} says about one recap: lastLogged (newest entry), recapWeek (last week sent), lastEmailDay (India date). */
+export interface RecapMail { lastLogged?: string; recapWeek?: string; lastEmailDay?: string }
+
+/**
+ * Whether a queued recap still goes when its turn comes: not twice for the same week (a retried job or task), not to
+ * someone with no entry in the two weeks, and not on a day another TikTym email already went to them (NOTIF-08).
+ */
+export function recapCheck(m: RecapMail | undefined, week: string, today: string): 'send' | 'sent' | 'inactive' | 'emailed-today' {
+  if (m?.recapWeek === week) return 'sent';
+  if (!m?.lastLogged || m.lastLogged < recapFrom(week)) return 'inactive';
+  if (m.lastEmailDay === today) return 'emailed-today';
+  return 'send';
+}

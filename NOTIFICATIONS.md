@@ -82,25 +82,25 @@ The number on TikTym's home-screen icon shows **practices still due today**: 4 p
 
 ## Scaling the emails (worked out 10 October 2026)
 
-Check this whenever we plan for growth. **The comeback email is already on the scalable design** (a trigger keeps `mail/{uid}.lastLogged`; the 9 am job queries only people away 4 to 14 days and queues one task each, sent 2 a second with retries). **The weekly recap still uses the simple loop** below, and needs moving to the same design.
+Check this whenever we plan for growth. **The comeback email and the weekly recap are both on the scalable design** (a trigger keeps `mail/{uid}.lastLogged`; the comeback's 9 am job queries only people away 4 to 14 days, and the recap's Monday 8 am job only people with an entry in the last two weeks; each queues one task per person, sent 2 a second with retries). The recap moved to the queue on 10 October 2026 (NOTIF-16); the loop it replaced is described below for the record.
 
-**How the weekly recap works today:** one scheduled function goes through every account, one at a time: read the account (~0.2 s), send through Resend (~0.3 s), then wait 0.6 s to stay under Resend's free-plan rate (2 emails a second). About **1 second per person**. Working out the week itself takes under a millisecond per person; it's never the bottleneck.
+**How the weekly recap worked until 10 October 2026:** one scheduled function goes through every account, one at a time: read the account (~0.2 s), send through Resend (~0.3 s), then wait 0.6 s to stay under Resend's free-plan rate (2 emails a second). About **1 second per person**. Working out the week itself takes under a millisecond per person; it's never the bottleneck.
 
 **Limits, in the order we'll hit them:**
 
 | Active users | What breaks | Fix |
 |---|---|---|
 | ~80 | **Resend's free plan: 100 emails a day, 3,000 a month.** Monday's recaps plus that day's welcomes pass 100; the rest fail (logged, not retried that week) | Upgrade Resend (about $20 a month for 50,000 emails; covers 10,000 weekly users) |
-| ~400 to 500 | **A scheduled function stops after 9 minutes**, so only the first ~500 people get a recap. Fails safely: no duplicates, no wrong emails, but the rest miss that week | The queue design below |
-| 10,000 | Both of the above; and going through every sign-up, most of them inactive, wastes reads | The queue design, plus "only look at active people" |
+| ~400 to 500 | ~~**A scheduled function stops after 9 minutes**, so only the first ~500 people get a recap~~ | Done: the queue design below (10 October 2026) |
+| 10,000 | Resend's plan (about 70,000 emails a month with the planned monthly and news emails: the $90 Scale plan). At 2 a second, 10,000 recaps take about 85 minutes, from 8 to about 9:25 am | Raise the queue's rate if Resend's plan allows more than 2 a second; or batch sending (below) |
 
 Firestore cost isn't a concern: about 8 reads per person, so 80,000 reads a week at 10,000 users, a few rupees.
 
 **The scalable design (about half a day of work):**
 
-1. **Queue, not a loop.** At 8 am a small job lists who should get a recap and adds one task per person to a Cloud Tasks queue (Firebase task-queue functions). The queue runs them in parallel at a set rate and retries failures, so nothing hits the 9-minute limit and a failed send isn't lost. Keep `mail/{uid}.recapWeek` so a retry never sends twice.
+1. **Queue, not a loop.** (Built for the recap and the comeback.) At 8 am a small job lists who should get a recap and adds one task per person to a Cloud Tasks queue (Firebase task-queue functions). The queue runs them in parallel at a set rate and retries failures, so nothing hits the 9-minute limit and a failed send isn't lost. Keep `mail/{uid}.recapWeek` so a retry never sends twice.
 2. **Batch sending.** Resend's batch API takes up to 100 emails a request.
-3. **Only active people.** The app writes a `lastLoggedAt` date on the account's settings; the job queries "active in the last 14 days" instead of listing every sign-up.
+3. **Only active people.** (Built.) A trigger keeps `mail/{uid}.lastLogged` as entries are saved; the jobs query it instead of listing every sign-up.
 4. **Spread the send** across 8 to 9 am, so a big send doesn't look like spam to Gmail.
 
 The same design carries the monthly progress, comeback and news emails, so build it once and use it for all of them.

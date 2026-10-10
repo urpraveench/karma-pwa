@@ -27,7 +27,7 @@ test.describe('website (GTM-04)', () => {
   test('every clip and poster loads, and on-screen clips play', async ({ page, request }) => {
     await page.goto('/');
     const sources = await page.locator('video[data-clip]').evaluateAll(vs => vs.map(v => [(v as HTMLVideoElement).getAttribute('src')!, (v as HTMLVideoElement).poster]));
-    expect(sources.length).toBe(5);
+    expect(sources.length).toBe(7); // 5 feature clips and 2 install videos (GTM-20)
     for (const [src, poster] of sources) {
       expect((await request.get(src)).status(), src).toBe(200);
       expect((await request.get(poster)).status(), poster).toBe(200);
@@ -248,4 +248,15 @@ test.describe('install help on the website, for each phone and browser (GTM-19)'
       await expect(page.locator('.install-warn')).toContainText('Open in browser');
     });
   });
+});
+
+test('install videos sit next to the iPhone Safari and Android Chrome guides, loading only when needed (GTM-20)', async ({ page, request }) => {
+  await page.goto('/');
+  for (const [platform, browser, name] of [['ios', 'safari', 'iphone-safari'], ['android', 'chrome', 'android-chrome']]) {
+    const video = page.locator(`.install [data-platform="${platform}"][data-browser="${browser}"] video`);
+    await expect(video).toHaveAttribute('src', `/install/${name}.mp4`);
+    await expect(video).toHaveAttribute('preload', 'none');
+    for (const ext of ['mp4', 'jpg']) expect((await request.get(`/install/${name}.${ext}`)).ok()).toBe(true);
+  }
+  await expect(page.locator('.install [data-browser="chrome"][data-platform="ios"] video')).toHaveCount(0); // no simulator for Chrome on iPhone
 });

@@ -98,8 +98,6 @@ From FEATURES.md › "What's left to test". None left: every scenario has a test
 
 Help people add TikTym to their home screen (friends didn't know how; most only know app stores). Part of 1.8.0.
 
-- [ ] **You:** record three short screen recordings (about 10–15 seconds each) of adding TikTym to the home screen: iPhone Safari, iPhone Chrome, Android Chrome. Then Claude trims and embeds them next to the steps (GTM-20).
-- [ ] **Claude:** embed the recordings on the website, each next to its steps, loading only when scrolled to (GTM-20).
 
 - [ ] **Deferred (10 October 2026, your call):** while a timer runs, Today's big number stays at saved points even though the beads already show the timer's minutes, so the two disagree (found by Praveen). Proposed: the number counts down live (capped at what the practice still needs), no extra line in the circle, and "20 of 30 · timing" on the practice's row.
 - [ ] **Deferred (10 October 2026, your call):** the weekend card's "291 short, about 146 a day" doesn't match Today's "195 left" (the card splits the week's shortfall evenly and counts every minute; Today asks for carried minutes per practice). Proposed: the card says "Clear today's 195, including 95 carried over, then tomorrow's 100, and the week is done", with stats done this week / weekly goal / left today (MOM-03).
@@ -138,6 +136,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Install videos on the website: iPhone Safari (iOS simulator, driven by a UI test) and Android Chrome (emulator, driven over adb), recorded from the live 1.8.0 app with `npm run site:install-videos` and shown next to their guides; the Android guide now mentions Android's extra "Add to home screen" confirmation. Chrome on iPhone can't run in the simulator, so its guide has steps only (GTM-20), 10 October 2026
 - [x] Released 1.8.0: "100 minutes a day for your productive life"; Notifications and privacy settings with emails and usage statistics on by default; the welcome email, first-minute nudge and unsubscribe page (Cloud Functions in asia-south1, first deploy; the welcome function needed a retry while Google set up event permissions); install help for each phone and browser; updated Privacy Policy and Terms. Checked live: version.json 1.8.0 (build efa1dcc; the first upload was stamped -dirty and was redeployed clean), the website's new title and What's new 1.8.0, and a forged unsubscribe link rejected, 10 October 2026
 - [x] Install steps for each browser: the website has guides for iPhone Safari, iPhone Chrome, Android Chrome and Samsung Internet (the visitor's own first, marked "Your phone"); the app's guide has separate Chrome-on-iPhone steps, and Safari's mention ⋯ on newer iPhones (APP-28, GTM-19), 10 October 2026
 - [x] Website Install section: the visitor's own phone first ("Your phone"), and an open-in-browser warning inside WhatsApp, Instagram, Facebook or LinkedIn; WhatsApp messages in OUTREACH.md say to open in the browser first (GTM-19), 10 October 2026

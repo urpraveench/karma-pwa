@@ -42,14 +42,11 @@ test('a device that said no stays off (ANA-01)', async ({ page }) => {
   expect(await pushed(page)).toHaveLength(0);
 });
 
-test('an account from before stays off until it has seen the notice (ANA-01, NOTIF-02)', async ({ page }) => {
+test('an account from before is on straight away; the notice only informs (ANA-01, NOTIF-02)', async ({ page }) => {
   const requests = await stubGoogle(page);
   await signInWith(page, seedData([{ id: 'r', name: 'Reading' }], [], { notice: undefined }));
   await expect(page.locator('.notice')).toBeVisible();
-  await page.locator('.cat').nth(0).locator('.qbtn').click();
-  expect(requests).toHaveLength(0);
-  await page.locator('.notice button', { hasText: 'OK' }).click();
-  await expect.poll(() => requests.length).toBeGreaterThan(0);
+  await expect.poll(() => requests.length).toBeGreaterThan(0); // without waiting for OK
 });
 
 test.describe('What it sends (ANA-02)', () => {

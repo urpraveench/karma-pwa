@@ -3,7 +3,8 @@ import { useApp } from '../state/app';
 
 /**
  * Once, on Today, for accounts from before emails and statistics were on by default (NOTIF-02). The Privacy Policy
- * promises to tell people in the app before significant changes take effect; statistics start only once it's seen.
+ * promises to tell people in the app about significant changes. It's information only: emails and statistics are
+ * already on for every account (Praveen's decision, 10 October 2026).
  */
 export function PolicyNotice() {
   const { data, dismissNotice, setView } = useApp();

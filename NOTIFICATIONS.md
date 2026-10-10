@@ -35,7 +35,7 @@ Anything sent while the app is closed needs Blaze. Everything else can start now
 
 ## Decision (10 October 2026): on by default, easy to switch off
 
-To let an early-stage product reach people, every notification and the usage statistics are **on by default**, and each can be switched off at any time, in the app (Setup › Notifications and privacy) or from a one-tap link in any email. Legally this rests on clear notice at sign-up: the Create account screen says what comes with an account, and the Terms and Privacy Policy describe each item, what it's for, who processes it (Resend for email, Google for Analytics) and how to stop it. Anyone who has already switched something off keeps it off. The website shows a notice with an opt-out rather than asking first; that's the part to check with a lawyer.
+To let an early-stage product reach people, every notification and the usage statistics are **on by default**, and each can be switched off at any time, in the app (Setup › Notifications and privacy) or from a one-tap link in any email. Legally this rests on clear notice at sign-up: the Create account screen says what comes with an account, and the Terms and Privacy Policy describe each item, what it's for, who processes it (Resend for email, Google for Analytics) and how to stop it. Existing accounts (Praveen's friends at the time) are on straight away too, with a one-time notice on Today for information (Praveen's decision, 10 October 2026). Anyone who has already switched something off keeps it off. The website shows a notice with an opt-out rather than asking first; that's the part to check with a lawyer.
 
 ## Email schedule (agreed 10 October 2026)
 

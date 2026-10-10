@@ -65,14 +65,9 @@ export function startAnalytics() {
   if (readConsent() === 'granted') load();
 }
 
-/**
- * Signed in (ANA-01): on unless this device said no. An account from before on-by-default (10 October 2026) gets it
- * only once it has seen the notice, as the Privacy Policy promises; new accounts were told at sign-up.
- */
-export function startAccountAnalytics(noticeSeen: boolean) {
-  const c = readConsent();
-  if (c === 'denied') return;
-  if (c === 'granted' || noticeSeen) load();
+/** Signed in (ANA-01): on for every account, new or existing, unless this device explicitly said no. */
+export function startAccountAnalytics() {
+  if (readConsent() !== 'denied') load();
 }
 
 /** What Setup shows: on unless this device said no. */

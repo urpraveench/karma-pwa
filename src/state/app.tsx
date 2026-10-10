@@ -4,7 +4,7 @@ import { calc } from '../lib/backlog';
 import { editCategory, moveCategory, newCategory, nextOrder, type CategoryForm } from '../lib/categories';
 import { dayLabel, today, ymd } from '../lib/date';
 import { startAccountAnalytics, track } from '../lib/analytics';
-import { NOTICE, needsNotice, type EmailKind } from '../lib/notifications';
+import { NOTICE, type EmailKind } from '../lib/notifications';
 import { count, countActiveDevice, flushStats, type Counter } from '../lib/stats';
 import { haptic } from '../lib/feedback';
 import { moment as findMoment, type Moment } from '../lib/moments';
@@ -85,7 +85,7 @@ function useAppState() {
     countActiveDevice();
     // a brand-new account chooses its practices first; nothing is saved until it does (FIRST-12)
     if (!d.categories.length && !d.settings.seeded) { setPhase({ kind: 'choose' }); return; }
-    startAccountAnalytics(!needsNotice(d.settings));
+    startAccountAnalytics();
     setIntro(true); setPhase({ kind: 'ready' });
   }, [setData]);
 
@@ -120,7 +120,7 @@ function useAppState() {
     setData({ ...d0, categories, settings });
     void persist(() => Promise.all([...categories.map(c => store.putCategory(c)), store.putSettings(settings)]));
     count('signUps'); // a brand-new account, however it signed up
-    startAccountAnalytics(true); track('sign_up', { practices: picked.length });
+    startAccountAnalytics(); track('sign_up', { practices: picked.length });
     setIntro(true); setPhase({ kind: 'ready' });
   }, [store, setData, persist]);
 
@@ -217,13 +217,12 @@ function useAppState() {
     void persist(() => store.putSettings(settings));
   }, [store, setData, persist]);
 
-  /** The one-time notice for accounts from before on-by-default (NOTIF-02); statistics start once it's seen. */
+  /** The one-time notice for accounts from before on-by-default (NOTIF-02): information only; everything is already on. */
   const dismissNotice = useCallback(() => {
     if (!store) return;
     const d0 = dataRef.current, settings = { ...d0.settings, notice: NOTICE };
     setData({ ...d0, settings });
     void persist(() => store.putSettings(settings));
-    startAccountAnalytics(true);
   }, [store, setData, persist]);
 
   const setBacklogCap = useCallback((v: number) => {

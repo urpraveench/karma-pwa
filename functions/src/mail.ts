@@ -194,7 +194,7 @@ export function nudgeEmail(o: { name: string; practice: Practice; unsubscribe: s
 }
 
 /** The pages shown by the unsubscribe link (NOTIF-05). */
-const KIND_NAME: Record<EmailKind, string> = { tips: 'welcome and first-week tips', recap: 'weekly recap', news: 'news' };
+const KIND_NAME: Record<EmailKind, string> = { tips: 'tips and reminders', recap: 'weekly and monthly recap', news: 'news' };
 
 function page(body: string): string {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>TikTym emails</title>

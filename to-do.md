@@ -115,7 +115,13 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
 - [ ] **Claude:** deploy the functions with the app and website release, after the Resend key is stored; check with a test account (Manual).
-- [ ] **Claude:** weekly recap and product news emails, then push reminders (daily reminder, streak at risk).
+- [ ] **Claude:** weekly recap email, Monday 8 am IST, for anyone active in the last 2 weeks (Weekly recap switch).
+- [ ] **Claude:** comeback email after 3 days with nothing logged, once per absence, stopping after 3 with no return (Tips and reminders).
+- [ ] **Claude:** news broadcast: Praveen approves the text, it goes to everyone with News on; first use, announcing 100 Days, 100 Minutes in late October.
+- [ ] **Claude:** first-week tips emails on days 3 and 6, only while still active (Tips and reminders).
+- [ ] **Claude:** monthly progress email on the 1st (Weekly recap switch), first on 1 November.
+- [ ] **Claude:** the "at most one email a day, mornings IST" rule across all scheduled emails.
+- [ ] **Claude:** push reminders (daily reminder at a chosen time, streak at risk).
 - [ ] **Claude:** phase 1 in-app: install tip, first-week tips, milestone celebrations, progress-card reminder, What's new dot, feedback ask.
 
 ## 7. Housekeeping
@@ -127,6 +133,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] The first email switch is now "Tips and reminders" (welcome, first-week tips, the first-minute nudge and comeback); the email schedule and rules are in NOTIFICATIONS.md, and the Privacy Policy and Terms list every planned email, 10 October 2026
 - [x] Removed the unused branded password-reset template (`email/password-reset.html`, which Firebase never accepted) and its test; password resets use Firebase's default email. The header image stays for the welcome and first-minute emails, 10 October 2026
 - [x] Company name removed outside the legal sections (emails, password-reset template, website and What's new footers, structured data, llms.txt, Terms summary and footers); kept in Privacy section 1, Terms section 1 and the grievance contact. Emails sign off "Praveen · Helping busy people like you make time for what matters." with no title, 10 October 2026
 - [x] Email design in TikTym's brand: Bricolage Grotesque headline where supported, practices with their colour dots and the daily total in gold, three numbered tips, the nudge's "5 min today" card; previews in Downloads (NOTIF-03, NOTIF-04), 10 October 2026

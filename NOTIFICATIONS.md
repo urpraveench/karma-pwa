@@ -37,6 +37,30 @@ Anything sent while the app is closed needs Blaze. Everything else can start now
 
 To let an early-stage product reach people, every notification and the usage statistics are **on by default**, and each can be switched off at any time, in the app (Setup › Notifications and privacy) or from a one-tap link in any email. Legally this rests on clear notice at sign-up: the Create account screen says what comes with an account, and the Terms and Privacy Policy describe each item, what it's for, who processes it (Resend for email, Google for Analytics) and how to stop it. Anyone who has already switched something off keeps it off. The website shows a notice with an opt-out rather than asking first; that's the part to check with a lawyer.
 
+## Email schedule (agreed 10 October 2026)
+
+Three switches in Setup › Notifications and privacy control them: **Tips and reminders**, **Weekly recap** and **News about TikTym**.
+
+| Email | When | Who gets it | Switch | Status |
+|---|---|---|---|---|
+| Welcome | Right after first-run Start | Every new account | Tips and reminders | Built |
+| First-minute nudge | About 24 hours after Start | Only if nothing has been logged | Tips and reminders | Built |
+| First-week tips | Day 3 and day 6 after Start | Only while still using TikTym; one tip each (day 3: the focus timer; day 6: Insights and your best time of day) | Tips and reminders | Planned |
+| Comeback | After 3 days with nothing logged | Once per absence: "no catching up needed, just 5 minutes today" | Tips and reminders | Planned |
+| Weekly recap | Monday, 8 am IST | Anyone who logged something in the last 2 weeks: last week's points, best day, streak, one suggestion | Weekly recap | Planned |
+| Monthly progress | 1st of the month, 8 am IST | Active users: the month's progress card is ready to share | Weekly recap | Planned |
+| News | When there's something to announce, at most monthly | Everyone with News on (e.g. the 100 Days, 100 Minutes launch), text approved by Praveen | News about TikTym | Planned |
+
+**Email rules:**
+
+- At most one email a day per person; if two are due, the more useful one goes and the other waits.
+- Sent in the morning, India time (around 8 am), never at night. (The welcome goes straight away, since the person just started.)
+- After 3 comeback emails with no return, TikTym stops writing to that person, apart from occasional news.
+- Each email respects its switch and carries its own unsubscribe link.
+- Signed by Praveen, "Helping busy people like you make time for what matters."; no company name or title.
+
+**Build order** (after the 1.8.0 release): weekly recap → comeback → news broadcast (in time to announce the 100 Days challenge in late October) → first-week tips → monthly progress (before 1 November).
+
 ## Rules for all of them
 
 - **On by default, off with one tap, per type** (see the decision above). A Notifications and privacy section in Setup with a switch for each: welcome and first-week tips, weekly recap, product news, reminders (once push exists), and usage statistics. Account emails such as password reset can't be switched off.

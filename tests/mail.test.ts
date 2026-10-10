@@ -92,12 +92,12 @@ describe('the emails (NOTIF-03, NOTIF-04)', () => {
 
   it('opening the link asks first, with a button that posts, so email scanners can\'t unsubscribe anyone', () => {
     const html = confirmUnsubscribePage('tips', '/unsubscribe?u=a&k=tips&t=x');
-    expect(html).toContain("You'll stop getting TikTym welcome and first-week tips emails");
+    expect(html).toContain("You'll stop getting TikTym tips and reminders emails");
     expect(html).toContain('<form method="post" action="/unsubscribe?u=a&amp;k=tips&amp;t=x">');
   });
 
   it('the unsubscribed page confirms, or says the link failed', () => {
-    expect(unsubscribedPage('recap')).toContain("You won't get TikTym weekly recap emails any more");
+    expect(unsubscribedPage('recap')).toContain("You won't get TikTym weekly and monthly recap emails any more");
     expect(unsubscribedPage(null)).toContain("That link didn't work");
   });
 });

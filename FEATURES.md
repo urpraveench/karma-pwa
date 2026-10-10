@@ -437,9 +437,9 @@ See NOTIFICATIONS.md for the plan. Emails and usage statistics are on by default
 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
-| NOTIF-01 | Notifications and privacy settings | Setup has "Notifications and privacy": Welcome and first-week tips, Weekly recap, News about TikTym (emails) and Usage statistics, all on to start; one tap turns each off. Email choices are saved in the account, so the server respects them on any device | E2E `notifications.spec.ts`, Unit `notifications.test.ts` |
+| NOTIF-01 | Notifications and privacy settings | Setup has "Notifications and privacy": Tips and reminders, Weekly recap, News about TikTym (emails) and Usage statistics, all on to start; one tap turns each off. Email choices are saved in the account, so the server respects them on any device | E2E `notifications.spec.ts`, Unit `notifications.test.ts` |
 | NOTIF-02 | Notice for accounts from before | Once, on Today: "Emails and usage statistics", what's now on and where to turn it off, with Review settings and OK. Statistics start only once it's seen. New accounts never see it: they were told at sign-up | E2E `notifications.spec.ts`, `analytics/analytics.spec.ts`, Unit `notifications.test.ts` |
-| NOTIF-03 | Welcome email | Once, when a new account taps Start on first run, if "Welcome and first-week tips" is on: from "Praveen from TikTym" <hello@tiktym.com>, replies to the support address; greets by first name, lists the chosen practices and minutes, explains carry-forward and adding TikTym to the home screen, with an Open TikTym button | Unit `mail.test.ts`, Emulator `tests-emulator/rules.test.ts` (sending: Manual) |
+| NOTIF-03 | Welcome email | Once, when a new account taps Start on first run, if "Tips and reminders" is on: from "Praveen from TikTym" <hello@tiktym.com>, replies to the support address; greets by first name, lists the chosen practices and minutes, explains carry-forward and adding TikTym to the home screen, with an Open TikTym button | Unit `mail.test.ts`, Emulator `tests-emulator/rules.test.ts` (sending: Manual) |
 | NOTIF-04 | First-minute nudge | Once, about 24 hours after first-run Start, only if nothing has been logged and tips are on: suggests 5 minutes of the shortest practice, with an Open TikTym button | Unit `mail.test.ts` (sending: Manual) |
 | NOTIF-05 | One-tap unsubscribe | Every email has a signed unsubscribe link and the List-Unsubscribe headers. Opening the link shows an Unsubscribe button (so email scanners that open links can't unsubscribe anyone); the button, or Gmail's own one-click button (RFC 8058), turns that email type off in the account without signing in. A tampered link does nothing. The service worker never answers /unsubscribe | Unit `mail.test.ts`, E2E `pwa.spec.ts` (live page: Manual) |
 
@@ -451,7 +451,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 | Feature | Notes |
 |---|---|
-| Emails: welcome, first-week tips, first-minute nudge, weekly recap, news | Cloud Functions + Resend; NOTIFICATIONS.md |
+| Emails: first-week tips, comeback, weekly recap, monthly progress, news | Cloud Functions + Resend; schedule in NOTIFICATIONS.md |
 | Push reminders and streak-at-risk alerts | Cloud Functions + Firebase Cloud Messaging |
 | Timer alert while the app is closed | Needs push notifications |
 | Branded password-reset email | Firebase's default is used; could be sent through Resend later |

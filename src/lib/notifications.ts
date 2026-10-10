@@ -6,8 +6,8 @@ export type EmailKind = 'tips' | 'recap' | 'news';
 
 /** The email types someone can turn off, with their Setup labels, in display order. */
 export const EMAIL_KINDS: readonly (readonly [EmailKind, string, string])[] = [
-  ['tips', 'Welcome and first-week tips', 'A few emails while you get started'],
-  ['recap', 'Weekly recap', 'Your last week in one email, every Monday'],
+  ['tips', 'Tips and reminders', 'A welcome, a few tips in your first week, and a nudge if you go quiet'],
+  ['recap', 'Weekly recap', 'Your week every Monday, and your monthly progress card'],
   ['news', 'News about TikTym', 'New features and challenges, at most once a month'],
 ];
 

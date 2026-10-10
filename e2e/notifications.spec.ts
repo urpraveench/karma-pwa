@@ -11,7 +11,7 @@ test('Setup › Notifications and privacy: every email on to start, each off wit
   await signIn(page);
   await tab(page, 'Setup').click();
   await expect(page.locator('.sect-h h2', { hasText: 'Notifications and privacy' })).toBeVisible();
-  for (const name of ['Welcome and first-week tips', 'Weekly recap', 'News about TikTym'])
+  for (const name of ['Tips and reminders', 'Weekly recap', 'News about TikTym'])
     await expect(row(page, name)).toHaveAttribute('aria-pressed', 'true');
   await row(page, 'Weekly recap').click();
   await expect(row(page, 'Weekly recap')).toHaveAttribute('aria-pressed', 'false');

@@ -1,0 +1,20 @@
+name: InstallRecorder
+options: { bundleIdPrefix: com.tiktym.tools }
+targets:
+  Host:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources: [Host]
+    info: { path: Host/Info.plist, properties: { UILaunchScreen: {} } }
+    settings: { GENERATE_INFOPLIST_FILE: YES, CODE_SIGNING_ALLOWED: NO }
+  InstallUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies: [{ target: Host }]
+    settings: { GENERATE_INFOPLIST_FILE: YES, CODE_SIGNING_ALLOWED: NO, TEST_TARGET_NAME: Host }
+schemes:
+  Recorder:
+    build: { targets: { Host: all, InstallUITests: [test] } }
+    test: { targets: [InstallUITests] }

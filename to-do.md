@@ -143,6 +143,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.10.1: the recording wave follows the voice and keeps moving while recording, 11 October 2026
 - [x] **Claude:** the recording wave now moves: bars follow the voice's loudness instead of high-pitch bands that speech barely reaches, the wave travels gently even in silence, and with Reduce Motion it rises and falls in place (LOG-26), 11 October 2026
 - [x] Checked: voice logging works on app.tiktym.com through `understandVoice`; two calls passed sign-in and App Check with no AI errors in the log (LOG-30), 11 October 2026
 - [x] **Claude:** fixed voice failing with "Sign in again" on 1.10.0: `understandVoice` asked to consume App Check tokens, which its account had no permission for; it now only verifies them (LOG-30), 11 October 2026

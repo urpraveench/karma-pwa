@@ -27,7 +27,7 @@ Summary of coverage at the time of writing:
 | 3. Backlog rules | 13 | 13 | 0 | 0 |
 | 4. Today screen | 16 | 16 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
-| 6. Logging minutes | 25 | 22 | 3 | 0 |
+| 6. Logging minutes | 25 | 25 | 0 | 0 |
 | 7. Focus timer | 22 | 19 | 0 | 3 |
 | 8. History | 9 | 9 | 0 | 0 |
 | 9. Insights | 23 | 23 | 0 | 0 |
@@ -38,7 +38,7 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 22 | 22 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 15 | 15 | 0 | 0 |
-| **Total** | **305** | **287** | **3** | **15** |
+| **Total** | **305** | **290** | **0** | **15** |
 
 ---
 
@@ -200,10 +200,10 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
 | LOG-25 | Say or type a natural update | Understands one or more practice-and-minute pairs, including digits and number words: "walked 20, read fifteen" | Unit `voiceLog.test.ts` |
-| LOG-26 | Tap the microphone | Listens once, puts the transcript in the input and stops; TikTym does not store the audio or transcript | Gap |
-| LOG-27 | A phrase is unclear or has no matching practice | Shows exactly which part was not understood and saves nothing until it is fixed | Unit `voiceLog.test.ts` (the browser save gate is a Gap) |
-| LOG-28 | Review a voice log | Shows every matched practice and its minutes; the user can change or remove each one, then saves the batch with one confirmation and one Undo | Gap |
-| LOG-29 | Speech is unavailable, blocked or hears nothing | Explains the problem in plain words and keeps the same input available for typing | Gap |
+| LOG-26 | Tap the microphone | Listens once, puts the transcript in the input and stops; TikTym does not store the audio or transcript | E2E `voice-log.spec.ts` (real microphone: Manual) |
+| LOG-27 | A phrase is unclear or has no matching practice | Shows exactly which part was not understood and saves nothing until it is fixed | Unit `voiceLog.test.ts`, E2E `voice-log.spec.ts` |
+| LOG-28 | Review a voice log | Shows every matched practice and its minutes; the user can change or remove each one, then saves the batch with one confirmation and one Undo | E2E `voice-log.spec.ts` |
+| LOG-29 | Speech is unavailable, blocked or hears nothing | Explains the problem in plain words and keeps the same input available for typing | E2E `voice-log.spec.ts` (real microphone: Manual) |
 
 ## 7. Focus timer
 

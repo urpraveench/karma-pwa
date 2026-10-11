@@ -19,12 +19,13 @@ import type { Store } from '../store/types';
 import { useFeedback } from '../ui/feedback';
 
 export type View = 'today' | 'insights' | 'history' | 'setup';
-export type LogMethod = 'quick' | 'tile' | 'all_left' | 'custom' | 'timer' | 'other';
+export type LogMethod = 'quick' | 'tile' | 'all_left' | 'custom' | 'timer' | 'voice' | 'other';
+export interface LogDraft { catId: string; mins: number; date: DateStr; note?: string }
 export type Sheet = { kind: 'log'; catId?: string; custom?: boolean } | { kind: 'editCat'; id?: string } | { kind: 'share' } | { kind: 'editLog'; id: string } | { kind: 'install' } | null;
 type Phase = { kind: 'boot' } | { kind: 'login'; error?: string } | { kind: 'loading' } | { kind: 'choose' } | { kind: 'ready' };
 
 const EMPTY: AppData = { categories: [], logs: [], settings: {} };
-const METHOD_COUNTER: Record<LogMethod, Counter> = { quick: 'logQuick', tile: 'logTile', all_left: 'logAllLeft', custom: 'logCustom', timer: 'logTimer', other: 'logOther' };
+const METHOD_COUNTER: Record<LogMethod, Counter> = { quick: 'logQuick', tile: 'logTile', all_left: 'logAllLeft', custom: 'logCustom', timer: 'logTimer', voice: 'logOther', other: 'logOther' };
 const SAVE_FAILED = 'Could not save. Check your connection.';
 const momentKey = (T: DateStr) => 'tiktym:moment:' + T;
 const TIP_KEY = 'tiktym:tip-timer';
@@ -134,32 +135,47 @@ function useAppState() {
     setIntro(true); setPhase({ kind: 'ready' });
   }, [store, setData, persist]);
 
-  /** `method` says how the minutes were logged, for anonymous analytics (with consent). */
-  const logEntry = useCallback((catId: string, mins: number, date: DateStr, note = '', method: LogMethod = 'other') => {
-    if (!store) return;
-    if (!(mins > 0 && mins <= 1440)) { toast('Enter between 1 and 1440 minutes'); return; }
-    const T0 = today(); if (date > T0) date = T0;
-    const d0 = dataRef.current, before = calc(d0, T0), cat = d0.categories.find(x => x.id === catId);
-    if (!cat) return;
-    const l: Log = { id: newId(), catId, date, minutes: mins, note, createdAt: Date.now() };
-    const d1 = { ...d0, logs: [...d0.logs, l] };
+  /** Saves one reviewed batch and gives the whole batch one confirmation and one Undo (LOG-28). */
+  const logEntries = useCallback((drafts: LogDraft[], method: LogMethod = 'other') => {
+    if (!store || !drafts.length) return;
+    if (drafts.some(x => !(x.mins > 0 && x.mins <= 1440))) { toast('Enter between 1 and 1440 minutes'); return; }
+    const T0 = today(), d0 = dataRef.current, before = calc(d0, T0), now = Date.now();
+    const logs: Log[] = [];
+    for (const [i, draft] of drafts.entries()) {
+      if (!d0.categories.some(x => x.id === draft.catId)) return;
+      logs.push({ id: newId(), catId: draft.catId, date: draft.date > T0 ? T0 : draft.date, minutes: draft.mins, note: draft.note || '', createdAt: now + i });
+    }
+    const d1 = { ...d0, logs: [...d0.logs, ...logs] };
     setData(d1);
-    store.addLog(l).catch(() => toast(SAVE_FAILED));
+    Promise.all(logs.map(l => store.addLog(l))).catch(() => toast(SAVE_FAILED));
     const after = calc(d1, T0); haptic(12);
-    track('log_entry', { method, minutes: mins, backfill: date !== T0 });
-    count('logs'); count('minutes', mins); count(METHOD_COUNTER[method]);
+    for (const l of logs) {
+      track('log_entry', { method, minutes: l.minutes, backfill: l.date !== T0 });
+      count('logs'); count('minutes', l.minutes); count(METHOD_COUNTER[method]);
+    }
     const undo = () => {
-      const cur = dataRef.current; setData({ ...cur, logs: cur.logs.filter(x => x.id !== l.id) });
-      store.deleteLog(l).catch(() => toast(SAVE_FAILED)); toast('Undone');
+      const ids = new Set(logs.map(l => l.id)), cur = dataRef.current;
+      setData({ ...cur, logs: cur.logs.filter(x => !ids.has(x.id)) });
+      Promise.all(logs.map(l => store.deleteLog(l))).catch(() => toast(SAVE_FAILED)); toast('Undone');
     };
     if (before.totals.end > 0 && after.totals.end === 0) { celebrate(after.streak, undo); return; }
+    if (logs.length > 1) {
+      const minutes = logs.reduce((n, l) => n + l.minutes, 0);
+      toast(`Logged ${logs.length} entries · ${minutes} minutes`, 4500, undo); return;
+    }
+    const l = logs[0], cat = d0.categories.find(x => x.id === l.catId)!;
     const mm = momentRef.current;
     if (mm?.minMode && mm.minGoal && before.totals.done < mm.minGoal && after.totals.done >= mm.minGoal) {
       haptic([15, 50, 25]); toast('Today counts. Anything more is a bonus.', 4500, undo); return;
     }
-    const cleared = before.per[catId].today.end > 0 && after.per[catId].today.end === 0;
-    toast(cleared ? `${cat.name} done for today` : `+${mins} ${cat.name}${date !== T0 ? `, ${dayLabel(date, T0)}` : ''}`, 4500, undo);
+    const cleared = before.per[l.catId].today.end > 0 && after.per[l.catId].today.end === 0;
+    toast(cleared ? `${cat.name} done for today` : `+${l.minutes} ${cat.name}${l.date !== T0 ? `, ${dayLabel(l.date, T0)}` : ''}`, 4500, undo);
   }, [store, toast, celebrate, setData]);
+
+  /** `method` says how the minutes were logged, for anonymous analytics (with consent). */
+  const logEntry = useCallback((catId: string, mins: number, date: DateStr, note = '', method: LogMethod = 'other') => {
+    logEntries([{ catId, mins, date, note }], method);
+  }, [logEntries]);
 
   const deleteLog = useCallback((id: string) => {
     if (!store) return;
@@ -319,7 +335,7 @@ function useAppState() {
     getData,
     view, setView, range, setRange, sheet, openSheet, closeSheet,
     hideMoment, tipHidden, hideTip,
-    logEntry, deleteLog, updateLog, saveCategory, reorderCategory, toggleArchive, deleteCategory, setBacklogCap, setEmailPref,
+    logEntry, logEntries, deleteLog, updateLog, saveCategory, reorderCategory, toggleArchive, deleteCategory, setBacklogCap, setEmailPref,
     setReminder, enableReminders, setBadge,
     loadSample, startOver, importBackup, exportBackup, signOut, deleteAccount,
   };

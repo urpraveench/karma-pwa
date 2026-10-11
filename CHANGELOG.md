@@ -13,6 +13,10 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
+## Coming next
+
+- **Log minutes by voice.** Say something like “walked 20, read 15”, check the practices and minutes TikTym found, edit anything it got wrong, then save them together.
+
 ## 1.9.0 · 10 October 2026 · Daily reminders and your week by email
 
 - **A weekly recap by email, every Monday morning.** Last week's minutes, the days you showed up, your best day and how each practice went, with one small suggestion for the week ahead. Turn it off any time in Setup › Notifications and privacy.

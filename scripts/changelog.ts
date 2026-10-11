@@ -44,13 +44,13 @@ export function parseChangelog(md: string): Release[] {
 const mediaSrc = (src: string) => /^(https?:)?\//.test(src) ? src : '/updates/' + src.replace(/^\.\//, '');
 
 function releaseHtml(r: Release): string {
-  const meta = r.version ? `<p class="u-meta">Version ${esc(r.version)} · ${esc(r.date)}</p>` : '';
+  const coming = r.version ? '' : '\n      <p class="eyebrow">Coming soon</p>';
+  const meta = r.version ? `\n      <p class="u-meta">Version ${esc(r.version)} · ${esc(r.date)}</p>` : '';
   const img = r.image ? `\n      <figure class="u-shot"><img src="${esc(mediaSrc(r.image.src))}" alt="${esc(r.image.alt)}" loading="lazy" width="390" height="844"></figure>` : '';
   const paras = r.paragraphs.map(p => `\n      <p>${inline(p)}</p>`).join('');
   const items = r.items.length ? `\n      <ul>${r.items.map(i => `\n        <li>${inline(i)}</li>`).join('')}\n      </ul>` : '';
-  return `    <article class="u-release${r.version ? '' : ' u-next'}"${r.version ? ` id="v${esc(r.version)}"` : ''}>
-      ${r.version ? '' : '<p class="eyebrow">Coming soon</p>\n      '}<h2>${inline(r.title)}</h2>
-      ${meta}${img}${paras}${items}
+  return `    <article class="u-release${r.version ? '' : ' u-next'}"${r.version ? ` id="v${esc(r.version)}"` : ''}>${coming}
+      <h2>${inline(r.title)}</h2>${meta}${img}${paras}${items}
     </article>`;
 }
 

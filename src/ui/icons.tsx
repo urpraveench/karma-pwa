@@ -8,6 +8,7 @@ export const Icon = {
   history: () => <svg viewBox="0 0 24 24" {...stroke}><path d="M4 6h16M4 12h16M4 18h10" /></svg>,
   setup: () => <svg viewBox="0 0 24 24" {...stroke}><path d="M4 7h10M18 7h2M4 17h4M12 17h8" /><circle cx="16" cy="7" r="2" /><circle cx="10" cy="17" r="2" /></svg>,
   plus: () => <svg viewBox="0 0 24 24" {...stroke} strokeWidth={2.4}><path d="M12 5v14M5 12h14" /></svg>,
+  mic: () => <svg viewBox="0 0 24 24" {...stroke}><rect x="8" y="3" width="8" height="12" rx="4" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8" /></svg>,
   play: () => <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z" /></svg>,
   pause: () => <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4.5" width="4" height="15" rx="1.2" /><rect x="14" y="4.5" width="4" height="15" rx="1.2" /></svg>,
   up: () => <svg viewBox="0 0 24 24" {...stroke} strokeWidth={2.2} strokeLinejoin="round"><path d="M6 15l6-6 6 6" /></svg>,

@@ -214,6 +214,19 @@ body.has-timer .toast{bottom:calc(160px + env(safe-area-inset-bottom,0px))}
 .sheet-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
 .link{font-weight:600;font-size:15px;padding:12px 4px;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--line)}
 .sheet-sub{margin:-10px 0 16px;color:var(--ink-2);font-size:14px}
+.voice-open{width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;margin:0 0 12px;background:var(--bg)}
+.voice-open svg{width:24px;height:24px;flex:none;color:var(--ok)}
+.voice-open span{display:grid;gap:1px}.voice-open b{font-size:15px}.voice-open small{font-size:12.5px;color:var(--ink-2)}
+.voice-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
+.voice-head h2{margin:0}.voice-head p{margin:2px 0 0;color:var(--ink-2);font-size:14px}
+.voice-mic{width:52px;height:52px;flex:none;display:grid;place-items:center;border-radius:50%;background:var(--ink);color:var(--bg)}
+.voice-mic svg{width:24px;height:24px}.voice-mic.listening{background:var(--due);animation:pulse 1.2s infinite}.voice-mic:disabled{opacity:1}
+.voice-input{resize:none;line-height:1.45}.voice-privacy{font-size:12.5px;color:var(--ink-2);margin:7px 2px 12px;line-height:1.35}
+.voice-error,.voice-unmatched{font-size:14px;line-height:1.4;color:var(--due);background:var(--due-soft);border-radius:12px;padding:10px 12px;margin:0 0 12px}
+.voice-review{margin-top:4px}.voice-results{border-top:1px solid var(--line);margin-top:16px;padding-top:14px}
+.voice-row{display:grid;grid-template-columns:minmax(0,1fr) 86px 36px;gap:7px;align-items:center;margin-bottom:8px}
+.voice-row .in{padding:10px}.voice-row input{text-align:center;font-variant-numeric:tabular-nums}.voice-row .x{font-size:24px}
+.voice-empty{color:var(--ink-2);font-size:14px;margin:2px 0 10px}.voice-save{margin-top:12px}.voice-back{display:block;margin:7px auto -7px}
 .custom{margin-top:14px}
 input[type=date].in{-webkit-appearance:none;appearance:none;min-height:50px;display:block;text-align:left;margin-bottom:14px}
 input[type=date].in::-webkit-date-and-time-value{text-align:left}

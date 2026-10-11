@@ -47,6 +47,7 @@ describe('the What\'s new page (GTM-11, GTM-12)', () => {
     expect(html).toContain('id="v1.2.0"');
     expect(html).not.toContain('<script>\n'); // the item's "<script>" is text
     expect(html).toContain('&lt;script&gt;');
+    expect(html.split('\n').every(line => line === line.trimEnd())).toBe(true);
   });
 
   it('the published page matches CHANGELOG.md, so it is never out of date (run npm run site:updates)', () => {

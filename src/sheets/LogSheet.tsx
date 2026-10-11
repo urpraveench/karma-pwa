@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 'react';
 import { Sheet } from '../components/Sheet';
+import { VoiceLog } from '../components/VoiceLog';
 import { activeCats } from '../lib/backlog';
 import { addDays, dayLabel, parse } from '../lib/date';
 import { haptic } from '../lib/feedback';
@@ -22,6 +23,7 @@ export function LogSheet({ catId: initialCat, custom: initialCustom = false }: {
   const [note, setNote] = useState('');
   const [noteOpen, setNoteOpen] = useState(false);
   const [custom, setCustom] = useState(initialCustom);
+  const [voice, setVoice] = useState(false);
   const cat = cats.find(x => x.id === catId) || cats[0];
   const left = (cat && c.per[cat.id]?.byDate.get(date)?.end) ?? 0;
   const [mins, setMins] = useState(() => String(left > 0 ? Math.min(left, 25) : 25));
@@ -41,6 +43,7 @@ export function LogSheet({ catId: initialCat, custom: initialCustom = false }: {
 
   return (
     <Sheet onClose={closeSheet}>
+      {voice ? <VoiceLog categories={cats} date={date} today={T} onBack={() => setVoice(false)} /> : <>
       <div className="pick" role="group" aria-label="Practice">
         {cats.map(x => {
           const l = c.per[x.id].today.end;
@@ -56,6 +59,7 @@ export function LogSheet({ catId: initialCat, custom: initialCustom = false }: {
         <label className="sr" htmlFor="ld">Date</label>
         <input className="in" type="date" id="ld" value={date} max={T} onChange={e => setDate(e.target.value && e.target.value <= T ? e.target.value : T)} />
       </>}
+      <button type="button" className="voice-open" onClick={() => setVoice(true)}><Icon.mic /><span><b>Say or type your update</b><small>Try “walked 20, read 15”</small></span></button>
       <div style={{ '--c': cat.color } as CSSProperties}>
         {left > 0
           ? <button type="button" className="tile-all" onClick={() => log(left, 'all_left')}><span>All that's left</span><b>{left}</b></button>
@@ -82,6 +86,7 @@ export function LogSheet({ catId: initialCat, custom: initialCustom = false }: {
           : <span />}
         {!noteOpen && <button type="button" className="link" onClick={() => setNoteOpen(true)}>Add a note</button>}
       </div>
+      </>}
     </Sheet>
   );
 }

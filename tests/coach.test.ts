@@ -60,4 +60,11 @@ describe('coach lines', () => {
     const lines = coach('2026-09-28', [...range('2026-09-28', '2026-10-05')]);
     expect(lines).toContain("You're 67% behind last week");
   });
+
+  it('a practice that lifts you, from how sessions felt (INS-21)', () => {
+    const rated = (goods: number, total: number) => range('2026-10-01', '2026-10-06').map((l, i) => i < total ? { ...l, feel: (i < goods ? 3 : 2) as 3 | 2 } : l);
+    expect(coach('2026-10-01', rated(3, 5))).toContain('Reading lifts you.');
+    expect(coach('2026-10-01', rated(4, 4))).not.toContain('Reading lifts you.'); // too few rated
+    expect(coach('2026-10-01', rated(2, 5))).not.toContain('Reading lifts you.'); // under 60% good
+  });
 });

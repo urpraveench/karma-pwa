@@ -14,7 +14,7 @@ import { saveTimer } from '../lib/timer';
 import { badgeCount, timeLabel } from '../lib/reminders';
 import { enablePush, resavePush, type PushStatus } from './push';
 import { newId } from '../lib/util';
-import type { AppData, Category, DateStr, Log, User } from '../lib/types';
+import type { AppData, Category, DateStr, Feel, Log, User } from '../lib/types';
 import type { Store } from '../store/types';
 import { useFeedback } from '../ui/feedback';
 import type { VoiceCapture } from '../lib/voiceCapture';
@@ -137,6 +137,16 @@ function useAppState() {
   }, [store, setData, persist]);
 
   /** Saves one reviewed batch and gives the whole batch one confirmation and one Undo (LOG-28). */
+  /** Saves how an entry felt, from the toast's faces (LOG-31). */
+  const setFeel = useCallback((id: string, feel: Feel) => {
+    if (!store) return;
+    const cur = dataRef.current, prev = cur.logs.find(x => x.id === id); if (!prev) return;
+    const next = { ...prev, feel };
+    setData({ ...cur, logs: cur.logs.map(x => x.id === id ? next : x) });
+    store.updateLog(prev, next).catch(() => toast(SAVE_FAILED));
+    toast('Noted', 1600);
+  }, [store, toast, setData]);
+
   const logEntries = useCallback((drafts: LogDraft[], method: LogMethod = 'other') => {
     if (!store || !drafts.length) return;
     if (drafts.some(x => !(x.mins > 0 && x.mins <= 1440))) { toast('Enter between 1 and 1440 minutes'); return; }
@@ -170,8 +180,8 @@ function useAppState() {
       haptic([15, 50, 25]); toast('Today counts. Anything more is a bonus.', 4500, undo); return;
     }
     const cleared = before.per[l.catId].today.end > 0 && after.per[l.catId].today.end === 0;
-    toast(cleared ? `${cat.name} done for today` : `+${l.minutes} ${cat.name}${l.date !== T0 ? `, ${dayLabel(l.date, T0)}` : ''}`, 4500, undo);
-  }, [store, toast, celebrate, setData]);
+    toast(cleared ? `${cat.name} done for today` : `+${l.minutes} ${cat.name}${l.date !== T0 ? `, ${dayLabel(l.date, T0)}` : ''}`, 6000, undo, feel => setFeel(l.id, feel));
+  }, [store, toast, celebrate, setData, setFeel]);
 
   /** `method` says how the minutes were logged, for anonymous analytics (with consent). */
   const logEntry = useCallback((catId: string, mins: number, date: DateStr, note = '', method: LogMethod = 'other') => {

@@ -8,7 +8,8 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 ## In progress
 
-Nothing right now.
+- [ ] **Claude:** "Today's idea": one short line a day on Today, from a set written for TikTym (TODAY-19)
+- [ ] **Claude:** "Just 7 minutes" button on Today that starts a timer on the easiest practice still due (TODAY-18)
 
 ## Setup layout
 
@@ -143,6 +144,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** one-tap mood after logging: the toast offers 😞 😐 🙂, saved with the entry; Insights says which practice leaves you feeling good (LOG-31, INS-21), 11 October 2026
 - [x] **Claude:** streak shields come faster: three clear days in a row earn one, and up to three can be held; the 3-day celebration line gives way to the shield line (CALC-14, LOG-05), 11 October 2026
 - [x] **Claude:** streak shields: seven clear days in a row earn a shield (2 at most); a missed day spends one instead of breaking the streak. Shown on Today and in the celebration (CALC-14, TODAY-17, LOG-05), 11 October 2026
 - [x] Released 1.10.2: faster voice updates (no fresh reCAPTCHA check per call); the voice function logs its timing, 11 October 2026

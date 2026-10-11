@@ -416,3 +416,9 @@ a.li{text-decoration:none;color:inherit}
 .time-pick{margin-left:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 8px;font-weight:600}
 .li:disabled{cursor:default}
 .li:disabled .switch{opacity:.4}
+.toast.rated{flex-wrap:wrap;row-gap:4px;width:min(360px,90vw)}
+.toast.rated>span{flex:1}
+.feel{order:3;flex-basis:100%;display:flex;align-items:center;gap:4px}
+.feel small{font-size:13px;font-weight:500;opacity:.75;margin-right:auto}
+.feel button{font-size:22px;line-height:1;padding:4px 6px;border-radius:8px}
+.feel button:active{background:rgba(255,255,255,.15)}

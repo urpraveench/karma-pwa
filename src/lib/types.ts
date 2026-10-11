@@ -25,7 +25,12 @@ export interface Log {
   minutes: number;
   note: string;
   createdAt: number;
+  /** How the session felt, if the user said (LOG-31). */
+  feel?: Feel;
 }
+
+/** 1 low, 2 okay, 3 good. */
+export type Feel = 1 | 2 | 3;
 
 export interface Settings {
   seeded?: boolean;

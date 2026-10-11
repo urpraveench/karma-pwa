@@ -27,10 +27,10 @@ Summary of coverage at the time of writing:
 | 3. Backlog rules | 14 | 14 | 0 | 0 |
 | 4. Today screen | 17 | 17 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
-| 6. Logging minutes | 26 | 26 | 0 | 0 |
+| 6. Logging minutes | 27 | 27 | 0 | 0 |
 | 7. Focus timer | 22 | 19 | 0 | 3 |
 | 8. History | 9 | 9 | 0 | 0 |
-| 9. Insights | 23 | 23 | 0 | 0 |
+| 9. Insights | 24 | 24 | 0 | 0 |
 | 10. Practices (Setup) | 23 | 23 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 17 | 15 | 0 | 2 |
@@ -38,7 +38,7 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 22 | 22 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 15 | 15 | 0 | 0 |
-| **Total** | **308** | **293** | **0** | **15** |
+| **Total** | **310** | **295** | **0** | **15** |
 
 ---
 
@@ -176,6 +176,7 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 | LOG-03 | Undo from the toast | Removes the entry and restores the totals; toast "Undone" | E2E `today.spec.ts` |
 | LOG-04 | Clear the last pending practice | Full-screen "All clear" celebration with the streak; tap anywhere to close, or Undo last entry | E2E `today.spec.ts`, `today-states.spec.ts` |
 | LOG-05 | Streak milestones in the celebration | Extra line at 7, 21, 30, 50, 100 and 108 days; on a clear day that earns a shield, "You earned a shield: it keeps your streak if you miss a day." instead | E2E `today-states.spec.ts` |
+| LOG-31 | Say how it felt | After a single entry, the toast also offers 😞 😐 🙂 ("Felt low", "Felt okay", "Felt good"); a tap saves it on the entry (synced and in backups), and the toast says "Noted" | E2E `today.spec.ts` |
 
 ### Log sheet
 
@@ -275,6 +276,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | INS-18 | Ahead of last week | 10%+ ahead at the same point in the week | Unit `coach.test.ts` |
 | INS-19 | Behind last week | 15%+ behind | Unit `coach.test.ts` |
 | INS-20 | Always something | At least one line | Unit `insights.test.ts` |
+| INS-21 | A practice that lifts you | 5+ rated entries of one practice in the last 60 days, felt good on 60%+ of them (the best such practice): "Name lifts you. You felt good after G of N sessions in the last two months." | Unit `coach.test.ts` |
 
 ### Panels
 

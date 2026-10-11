@@ -98,6 +98,13 @@ export function buildInsights(data: AppData, c: Calc, T: DateStr, range: number)
     if (d >= 10) add(58, OK, `You're ${d}% ahead of last week`, ' at this point in the week.');
     if (d <= -15) add(66, DUE, `You're ${-d}% behind last week`, ` at this point. Today's ${c.totals.end} points would close most of the gap.`);
   }
+  // the practice that most often leaves you feeling good (LOG-31), from the last 60 days of rated entries
+  const since60 = addDays(T, -60);
+  const lift = data.categories.map(cat => {
+    const rated = data.logs.filter(l => l.catId === cat.id && l.feel && l.date >= since60 && l.date <= T);
+    return { cat, n: rated.length, good: rated.filter(l => l.feel === 3).length };
+  }).filter(x => x.n >= 5 && x.good / x.n >= 0.6).sort((a, b) => b.good / b.n - a.good / a.n)[0];
+  if (lift) add(70, OK, `${lift.cat.name} lifts you.`, ` You felt good after ${lift.good} of ${lift.n} sessions in the last two months.`);
   tips.sort((a, b) => b.score - a.score);
   // lead with one win, then up to two fixes: wins keep motivation up, fixes give direction
   const win = tips.find(t => t.tone !== DUE), fixes = tips.filter(t => t.tone === DUE);

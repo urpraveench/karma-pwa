@@ -25,7 +25,7 @@ Summary of coverage at the time of writing:
 | 1. Accounts and sign-in | 28 | 25 | 0 | 3 |
 | 2. First run | 12 | 11 | 0 | 1 |
 | 3. Backlog rules | 14 | 14 | 0 | 0 |
-| 4. Today screen | 18 | 18 | 0 | 0 |
+| 4. Today screen | 19 | 19 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
 | 6. Logging minutes | 27 | 27 | 0 | 0 |
 | 7. Focus timer | 22 | 19 | 0 | 3 |
@@ -38,7 +38,7 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 22 | 22 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 15 | 15 | 0 | 0 |
-| **Total** | **311** | **296** | **0** | **15** |
+| **Total** | **312** | **297** | **0** | **15** |
 
 ---
 
@@ -144,6 +144,7 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | TODAY-16 | Practice order | Rows follow the practice order set in Setup | E2E `today.spec.ts` |
 | TODAY-17 | Streak shields on Today | The streak badge shows shields held ("1 shield"); the day after a shield is spent: "A shield kept your N-day streak yesterday." in place of the evening nudge; with a shield held, the evening nudge adds "without using a shield" | E2E `today-states.spec.ts` |
 | TODAY-18 | "Just 7 minutes" | With nothing logged today, no timer running and no moment card: a button "Just N minutes of Name" for the practice due today with the smallest target (N is 7, or less if less is left). It starts a focus timer with that goal, shown as the selected target | E2E `today-states.spec.ts` |
+| TODAY-19 | Today's idea | A card at the foot of Today with one short line about practice and habits, written for TikTym: the same all day, the next in the list tomorrow, every line used in turn | Unit `ideas.test.ts`, E2E `today-states.spec.ts` |
 
 ## 5. Moments
 

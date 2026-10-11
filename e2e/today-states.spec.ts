@@ -1,3 +1,4 @@
+import { ideaFor } from '../src/lib/ideas';
 import { at, days, expect, test, seedData, signIn, signInWith, tab, toast } from './helpers';
 
 const reading = (start: string, o = {}) => ({ id: 'r', name: 'Reading', start, ...o });
@@ -134,6 +135,13 @@ test.describe('Today states', () => {
     await signInWith(page, seedData([reading('2026-10-05')], [['r', '2026-10-05', 30], ['r', '2026-10-06', 30]]));
     await page.locator('.cat .qbtn').click();
     await expect(page.locator('.celebrate p')).toHaveText('3-day streak. You earned a shield: it keeps your streak if you miss a day.');
+  });
+
+  test("today's idea, a new one each day (TODAY-19)", async ({ page }) => {
+    await signIn(page, at(23, 59));
+    await expect(page.locator('.idea p')).toHaveText(ideaFor('2026-10-07'));
+    await page.clock.fastForward('02:00');
+    await expect(page.locator('.idea p')).toHaveText(ideaFor('2026-10-08'));
   });
 
   test('the day rolls over at midnight (APP-09)', async ({ page }) => {

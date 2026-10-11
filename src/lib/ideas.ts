@@ -1,0 +1,73 @@
+import type { DateStr } from './types';
+
+// "Today's idea" on Today (TODAY-19): one short line a day, the same all day, in order through the list.
+// Written for TikTym; no quotes, so nothing is put in anyone's mouth. Keep each under 120 characters.
+
+export const IDEAS = [
+  'Missing a day is normal. Missing two in a row is how habits end. Make tomorrow small.',
+  'Start with less than you think you can do. Once you have started, more is easy.',
+  'The hardest minute is the first one. After that, you are just continuing.',
+  'Practise at the same time each day, and your day starts to make room for it.',
+  'A short session done beats a long session planned.',
+  'Put what you need where you will see it: the book on the pillow, the mat by the bed.',
+  'Motivation follows action more often than it leads it.',
+  'When a practice feels heavy, shrink it. Five minutes still counts.',
+  'Tie a new practice to something you already do: after tea, before your phone.',
+  'Progress is quiet. Look back a month, not a day.',
+  'Count the days you showed up, not the days you were perfect.',
+  'Decide the night before. Mornings are bad at decisions.',
+  'If you keep skipping something, the target may be too big. Lower it and keep going.',
+  'Rest days are part of the plan, not a break from it.',
+  'Ten minutes a day is more than sixty hours a year.',
+  'Notice how you feel after a session. That memory makes the next one easier to start.',
+  'Do the hardest practice first, while the day is still yours.',
+  'A timer turns "I should" into "I am".',
+  'Don\'t wait to feel ready. Ready usually shows up halfway through.',
+  'Make it easy to start and hard to skip.',
+  'One focused minute is worth five distracted ones.',
+  'Your phone is the biggest thief of practice time. Put it in another room.',
+  'Every session is a vote for the person you want to be.',
+  'You don\'t need a perfect week. You need one a little better than last.',
+  'Write down why you started. Read it on the days you don\'t feel like it.',
+  'Small and daily beats big and sometimes.',
+  'Behind? Don\'t repay it all at once. Add a little extra each day.',
+  'Learning sticks when you space it out. A little each day beats a weekend cram.',
+  'Before you start, decide what "done" looks like today.',
+  'Tired? Do the minimum and call it a win.',
+  'Celebrate finishing, not just finishing well.',
+  'Pair a practice you love with one you are still building.',
+  'A minute of slow breathing is a quick way to settle before you start.',
+  'A walk counts. Stretching counts. Anything that keeps the chain going counts.',
+  'Twenty pages a day is about two dozen books a year.',
+  'Practise where nobody will interrupt you, even if it is just the stairs.',
+  'If mornings keep failing, try evenings. The best time is the one you keep.',
+  'Sleep is practice too. Everything else goes better after it.',
+  'You remember more when you explain it. Tell someone what you learned today.',
+  'Pick up where you left off. You never start from zero.',
+  'Change the target before you change your mind about the habit.',
+  'Discipline is mostly removing friction, not adding willpower.',
+  'Your future self is built from today\'s small, ordinary sessions.',
+  'When it is hard to start, promise yourself only two minutes.',
+  'What you track, you notice. What you notice, you do more of.',
+  'Busy days need the smallest version of your practice, not none at all.',
+  'Consistency first. Intensity later.',
+  'Take a moment after you finish: what went well?',
+  'Meditation is practice in paying attention. Everything else gets easier with it.',
+  'Get tomorrow\'s session ready before you sleep.',
+  'Missed yesterday? Today is not for guilt. It is for starting again.',
+  'Keep the streak for motivation. Keep the habit for yourself.',
+  'Stuck? Ask what the smallest next step is, and take only that.',
+  'A little every day overtakes a lot every few weeks.',
+  'Hard sessions build you up. Easy ones keep you coming back. You need both.',
+  'Fifteen minutes before bed is enough to learn something new.',
+  'Your surroundings decide more than your willpower does.',
+  'Finishing is a skill. Practise it.',
+  'Look at how far you have come before looking at how far there is to go.',
+  'The goal for today is not to be great. It is to show up.',
+];
+
+/** The idea for day `d`: the same all day, the next one tomorrow. */
+export function ideaFor(d: DateStr): string {
+  const [y, m, day] = d.split('-').map(Number);
+  return IDEAS[Math.floor(Date.UTC(y, m - 1, day) / 864e5) % IDEAS.length];
+}

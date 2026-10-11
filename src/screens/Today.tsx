@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { Mala, malaFills } from '../components/Mala';
 import { InstallCard } from '../components/InstallGuide';
 import { MomentCard } from '../components/MomentCard';
+import { ideaFor } from '../lib/ideas';
 import { easiestPending } from '../lib/moments';
 import { ReminderCard } from '../components/Reminders';
 import { activeCats, showUpStreak } from '../lib/backlog';
@@ -91,6 +92,7 @@ export function Today() {
         );
       }) : <div className="empty">No practices yet. Add one in Setup.</div>}
       {cats.length > 0 && <p className="row-hint">▶ starts a timer. The coloured button logs everything left. Tap a name for other amounts.</p>}
+      <aside className="idea" aria-label="Today's idea"><small>Today's idea</small><p>{ideaFor(T)}</p></aside>
     </>
   );
 }

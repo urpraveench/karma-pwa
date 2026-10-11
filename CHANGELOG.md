@@ -13,9 +13,9 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
-## Coming next
+## 1.10.0 · 11 October 2026 · Log by voice
 
-- **Log minutes from the main microphone.** Tap once, speak naturally, and watch the sound bars move while TikTym listens. AI turns updates such as “I did an exercise for 5 minutes today” into editable practice-and-minute suggestions, and nothing is saved until you confirm. Retry the same recording, type with your phone keyboard, or use the familiar minute buttons if voice is unavailable.
+- **Log minutes from the main microphone.** Tap once, speak naturally, and watch the sound bars move while TikTym listens. AI turns updates such as “I did an exercise for 5 minutes today” into editable practice-and-minute suggestions, and nothing is saved until you confirm. Retry the same recording, type with your phone keyboard, or use the familiar minute buttons if voice is unavailable. You can use voice up to 50 times a day.
 
 ## 1.9.0 · 10 October 2026 · Daily reminders and your week by email
 

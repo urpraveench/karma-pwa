@@ -20,14 +20,14 @@ test.describe('Today states', () => {
       ...days('2026-10-04', '2026-10-06').map(d => ['r', d, 30] as const)];
     await signInWith(page, seedData([reading('2026-09-26')], logs.map(l => [...l])));
     await expect(page.locator('.streak b')).toHaveText('4');
-    await expect(page.locator('.streak span')).toHaveText('day streak');
+    await expect(page.locator('.streak > span')).toHaveText('day streak');
     await expect(page.locator('.streak small').first()).toHaveText('best 5');
   });
 
   test('"days showing up" when there is no streak (TODAY-04)', async ({ page }) => {
     await signInWith(page, seedData([reading('2026-10-01')], [['r', '2026-10-05', 10], ['r', '2026-10-06', 10]]));
     await expect(page.locator('.streak b')).toHaveText('2');
-    await expect(page.locator('.streak span')).toHaveText('days showing up');
+    await expect(page.locator('.streak > span')).toHaveText('days showing up');
   });
 
   test('carried-over pill and row meta (TODAY-07, TODAY-11)', async ({ page }) => {
@@ -127,6 +127,44 @@ test.describe('Today states', () => {
     await page.locator('.celebrate button', { hasText: 'Undo last entry' }).click();
     await expect(page.locator('.celebrate')).toHaveCount(0);
     await expect(page.locator('.mala-center .big')).toHaveText('10');
+  });
+
+  test("this week's days under the streak; tapping it opens the Streak sheet (TODAY-20)", async ({ page }) => {
+    // 30 Sep to 6 Oct clear: a 7-day streak and two shields; today (Wednesday 7 Oct) not cleared yet
+    await signInWith(page, seedData([reading('2026-09-30')], days('2026-09-30', '2026-10-06').map(d => ['r', d, 30])), at(19));
+    await expect(page.locator('.streak .week-dots i')).toHaveCount(7);
+    expect(await page.locator('.streak .week-dots i').evaluateAll(x => x.map(e => e.className))).toEqual(['clear', 'clear', 'today', 'future', 'future', 'future', 'future']);
+    await page.locator('button.streak').click();
+    const sheet = page.getByRole('dialog', { name: 'Streak' });
+    await expect(sheet.locator('.sk-head')).toHaveText('7day streak');
+    await expect(sheet.locator('.sk-shields .held')).toHaveCount(2);
+    await expect(sheet.locator('.sk-shields')).toHaveAttribute('aria-label', '2 of 3 shields');
+    await expect(sheet.locator('.sk-next')).toHaveText('2 more clear days in a row earn a shield.');
+    await expect(sheet.locator('.sk-month h3')).toHaveText('October 2026');
+    await expect(sheet.getByLabel('6 October: clear')).toBeVisible();
+    await expect(sheet.getByLabel('7 October: today, not clear yet')).toBeVisible();
+    await expect(sheet.getByLabel('Next month')).toBeDisabled();
+    // September holds the first day; nothing before it
+    await sheet.getByLabel('Previous month').click();
+    await expect(sheet.locator('.sk-month h3')).toHaveText('September 2026');
+    await expect(sheet.getByLabel('30 September: clear')).toBeVisible();
+    await expect(sheet.getByLabel('Previous month')).toBeDisabled();
+    await page.keyboard.press('Escape');
+    await expect(sheet).toHaveCount(0);
+  });
+
+  test('the Streak sheet marks the day a shield saved, and missed days (TODAY-20)', async ({ page }) => {
+    // 1–3 Oct clear earns a shield; 4 Oct missed spends it; 5 Oct pays it back; 6 Oct missed with no shield left
+    await signInWith(page, seedData([reading('2026-10-01')], [...days('2026-10-01', '2026-10-03').map(d => ['r', d, 30] as [string, string, number]), ['r', '2026-10-05', 60]]), at(10));
+    // no streak and no run of showing up, so no badge on Today: the way in is Insights › Consistency
+    await expect(page.locator('.streak')).toHaveCount(0);
+    await tab(page, 'Insights').click();
+    await page.getByRole('button', { name: 'best streak 4 ›' }).click();
+    const sheet = page.getByRole('dialog', { name: 'Streak' });
+    await expect(sheet.locator('.sk-head')).toHaveText('0day streak · best 4');
+    await expect(sheet.getByLabel('4 October: missed, a shield kept the streak').locator('svg')).toBeVisible();
+    await expect(sheet.getByLabel('6 October: missed')).toBeVisible();
+    await expect(sheet.locator('.sk-shields .held')).toHaveCount(0);
   });
 
   test('streak milestone in the celebration (LOG-05)', async ({ page }) => {

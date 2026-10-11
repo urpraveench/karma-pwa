@@ -43,6 +43,8 @@ export interface Calc {
   shields: number;
   /** Missed days a shield covered, oldest first. */
   shielded: DateStr[];
+  /** Clear days so far towards the next shield (0 to SHIELD_DAYS - 1). */
+  shieldDays: number;
   /** Minutes logged, by category then date. */
   done: Record<string, Record<DateStr, number>>;
 }
@@ -116,7 +118,7 @@ export function calc(data: AppData, asOf: DateStr = today()): Calc {
     else { streak = 0; week = 0; }
     best = Math.max(best, streak);
   }
-  return { per, totals, streak, best, shields, shielded, done };
+  return { per, totals, streak, best, shields, shielded, shieldDays: week, done };
 }
 
 /**

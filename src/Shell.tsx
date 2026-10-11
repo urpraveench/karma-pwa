@@ -10,6 +10,7 @@ import { EditLogSheet } from './sheets/EditLogSheet';
 import { LogSheet } from './sheets/LogSheet';
 import { InstallSheet } from './sheets/InstallSheet';
 import { ShareSheet } from './sheets/ShareSheet';
+import { StreakSheet } from './sheets/StreakSheet';
 import { useApp, type View } from './state/app';
 import { useTimer } from './state/timer';
 import { Focus } from './timer/Focus';
@@ -75,6 +76,7 @@ export function Shell() {
         onVoiceCaptureChange={capture => { voiceCapture.current = capture; }} />}
       {sheet?.kind === 'editCat' && <CategorySheet key={sheet.id ?? 'new'} id={sheet.id} />}
       {sheet?.kind === 'share' && <ShareSheet />}
+      {sheet?.kind === 'streak' && <StreakSheet />}
       {sheet?.kind === 'install' && <InstallSheet />}
       {sheet?.kind === 'editLog' && <EditLogSheet key={sheet.id} id={sheet.id} />}
       {focusOpen && <Focus />}

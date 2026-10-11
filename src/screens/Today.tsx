@@ -7,6 +7,7 @@ import { easiestPending } from '../lib/moments';
 import { ReminderCard } from '../components/Reminders';
 import { activeCats, showUpStreak } from '../lib/backlog';
 import { addDays, fmtLong } from '../lib/date';
+import { dayMark, weekStart } from '../lib/streak';
 import { greeting } from '../lib/user';
 import { useApp } from '../state/app';
 import { useTimer } from '../state/timer';
@@ -36,13 +37,17 @@ export function Today() {
     <>
       <header className="top">
         <div><p className="date">{fmtLong(T)}</p><h1 className="hello">{greeting(user, now.getHours())}</h1></div>
-        {c.streak ? (
-          <div className="streak" title={`Days in a row with nothing pending${c.shields ? '. A shield keeps the streak if you miss a day; three clear days in a row earn one' : ''}`}>
-            <b>{c.streak}</b><span>day streak</span>{c.best > c.streak && <small>best {c.best}</small>}
-            {c.shields > 0 && <small className="shields">{c.shields} shield{c.shields > 1 ? 's' : ''}</small>}
-          </div>
-        ) : su >= 2 ? (
-          <div className="streak" title="Days in a row with at least one entry"><b>{su}</b><span>days showing up</span></div>
+        {c.streak || su >= 2 ? (
+          <button type="button" className="streak" onClick={() => openSheet({ kind: 'streak' })}
+            title={c.streak ? `Days in a row with nothing pending${c.shields ? '. A shield keeps the streak if you miss a day; three clear days in a row earn one' : ''}` : 'Days in a row with at least one entry'}>
+            {c.streak
+              ? <><b>{c.streak}</b><span>day streak</span>{c.best > c.streak && <small>best {c.best}</small>}</>
+              : <><b>{su}</b><span>days showing up</span></>}
+            <small className="week-dots" aria-label="This week">
+              {Array.from({ length: 7 }, (_, i) => { const d = addDays(weekStart(T), i), k = dayMark(c, data.categories, d, T); return <i key={d} className={k} />; })}
+            </small>
+            {c.shields > 0 && <small className="shields"><Icon.shield />{c.shields} shield{c.shields > 1 ? 's' : ''}</small>}
+          </button>
         ) : null}
       </header>
       {m && <MomentCard m={m} timerOn={!!tm} onHide={() => hideMoment(m.key)} onGo={(cat, goal) => start(cat, goal || undefined)} />}

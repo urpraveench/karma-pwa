@@ -22,7 +22,7 @@ import type { VoiceCapture } from '../lib/voiceCapture';
 export type View = 'today' | 'insights' | 'history' | 'setup';
 export type LogMethod = 'quick' | 'tile' | 'all_left' | 'custom' | 'timer' | 'voice' | 'other';
 export interface LogDraft { catId: string; mins: number; date: DateStr; note?: string }
-export type Sheet = { kind: 'log'; catId?: string; custom?: boolean; voice?: boolean; voiceCapture?: VoiceCapture } | { kind: 'editCat'; id?: string } | { kind: 'share' } | { kind: 'editLog'; id: string } | { kind: 'install' } | null;
+export type Sheet = { kind: 'log'; catId?: string; custom?: boolean; voice?: boolean; voiceCapture?: VoiceCapture } | { kind: 'editCat'; id?: string } | { kind: 'share' } | { kind: 'streak' } | { kind: 'editLog'; id: string } | { kind: 'install' } | null;
 type Phase = { kind: 'boot' } | { kind: 'login'; error?: string } | { kind: 'loading' } | { kind: 'choose' } | { kind: 'ready' };
 
 const EMPTY: AppData = { categories: [], logs: [], settings: {} };

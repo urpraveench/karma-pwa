@@ -38,7 +38,7 @@ export function Insights() {
         <div><b>{week.clear.value}</b><span className="l">{`clear day${week.clear.value === 1 ? '' : 's'}`}</span>{week.showDelta && <Delta s={week.clear} />}</div>
       </div>
       <section className="panel">
-        <div className="panel-h"><h3>Consistency</h3><small>{c.streak ? `${c.streak}-day streak, best ${c.best}` : `best streak ${c.best}`}</small></div>
+        <div className="panel-h"><h3>Consistency</h3><button type="button" className="panel-link" onClick={() => openSheet({ kind: 'streak' })}>{c.streak ? `${c.streak}-day streak, best ${c.best}` : `best streak ${c.best}`} ›</button></div>
         <p className="sub">The last 16 weeks. Don't let the chain break.</p>
         <Heatmap ins={ins} T={T} />
         <div className="hkey">Missed <i style={{ background: 'var(--due-soft)' }} /><i style={{ background: 'var(--ok)', opacity: .2 }} /><i style={{ background: 'var(--ok)', opacity: .42 }} /><i style={{ background: 'var(--ok)', opacity: .7 }} /><i style={{ background: 'var(--ok)' }} /> Cleared</div>

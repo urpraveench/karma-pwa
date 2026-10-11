@@ -24,8 +24,8 @@ Summary of coverage at the time of writing:
 |---|---|---|---|---|
 | 1. Accounts and sign-in | 28 | 25 | 0 | 3 |
 | 2. First run | 12 | 11 | 0 | 1 |
-| 3. Backlog rules | 14 | 14 | 0 | 0 |
-| 4. Today screen | 19 | 19 | 0 | 0 |
+| 3. Backlog rules | 15 | 15 | 0 | 0 |
+| 4. Today screen | 20 | 20 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
 | 6. Logging minutes | 27 | 27 | 0 | 0 |
 | 7. Focus timer | 22 | 19 | 0 | 3 |
@@ -38,7 +38,7 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 22 | 22 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 15 | 15 | 0 | 0 |
-| **Total** | **312** | **297** | **0** | **15** |
+| **Total** | **314** | **299** | **0** | **15** |
 
 ---
 
@@ -121,6 +121,7 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | CALC-12 | "Days showing up" streak | Consecutive days with any entry; starts from yesterday if today has none yet | Unit `backlog.test.ts` |
 | CALC-13 | Carried over still to clear | Today's carried-in minutes not yet worked off | Unit `backlog.test.ts` |
 | CALC-14 | Streak shields | Three clear days in a row earn a shield (3 at most). A missed day spends a shield instead of breaking the streak; the missed minutes still carry over, and the shielded day doesn't count towards the streak or the next shield. Today never spends one. Worked out from history, so nothing extra is stored | Unit `backlog.test.ts`, E2E `today-states.spec.ts` |
+| CALC-15 | What each day did for the streak | From the same calc as the streak: clear (nothing left at day end), shield (missed, a shield kept the streak), missed, nothing due (no target and nothing carried), today (not clear yet), future, before the first practice. A day owing only carried-over minutes still has to be cleared. Next shield: "N more clear days in a row earn a shield", "Clear today/tomorrow to earn a shield", or "You hold 3 shields, the most you can" | Unit `streak.test.ts` |
 
 ## 4. Today screen
 
@@ -145,6 +146,7 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | TODAY-17 | Streak shields on Today | The streak badge shows shields held ("1 shield"); the day after a shield is spent: "A shield kept your N-day streak yesterday." in gold with a shield icon (good news, not the red warning style), in place of the evening nudge; with a shield held, the evening nudge adds "without using a shield" | E2E `today-states.spec.ts` |
 | TODAY-18 | "Just 7 minutes" | With nothing logged today, no timer running and no moment card: a button "Just N minutes of Name" for the practice due today with the smallest target (N is 7, or less if less is left). It starts a focus timer with that goal, shown as the selected target | E2E `today-states.spec.ts` |
 | TODAY-19 | Today's idea | A card at the foot of Today with one short line about practice and habits, written for TikTym: the same all day, the next in the list tomorrow, every line used in turn | Unit `ideas.test.ts`, E2E `today-states.spec.ts` |
+| TODAY-20 | Streak calendar | Under the streak badge, this week's days as dots (Monday to Sunday: clear, shield, missed, nothing due, today, to come). Tapping the badge, or Insights › Consistency's streak line (always there, even with no streak), opens the Streak sheet: the streak and best, 3 shield slots filled for those held, how far off the next shield is, a month calendar (Monday first) marking each day as in CALC-15, with a gold band joining clear days in a row and a shield on days a shield saved, back to the month of the first practice and no further than this month, a key, and how shields work | E2E `today-states.spec.ts` |
 
 ## 5. Moments
 

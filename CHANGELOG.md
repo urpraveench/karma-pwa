@@ -15,6 +15,7 @@ Format, newest first:
 
 ## Coming next
 
+- **See your streak.** Under your streak on Today, dots show how this week has gone. Tap it for a calendar of clear days, the days a shield saved, and how close your next shield is. It's also in Insights, next to Consistency.
 - **A saved streak looks like good news.** When a shield keeps your streak, Today says so in gold with a shield, not in warning red.
 
 ## 1.11.0 · 11 October 2026 · Streak shields, moods and a daily idea

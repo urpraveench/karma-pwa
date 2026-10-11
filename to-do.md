@@ -114,9 +114,6 @@ Help people add TikTym to their home screen (friends didn't know how; most only 
 No more blank screen on a slow connection (reported by a friend, 8 October 2026). Before anything showed, a phone downloaded Google's font stylesheet (which blocks the first paint), about 100 KB of app code and, in Firebase mode, about 190 KB of Firebase SDK, with nothing on screen. Branch `fix/slow-start`.
 
 
-Make streaks and shields visible (asked by Praveen, 11 October 2026: "I'm just seeing only the number"; apps like Miracle Mind show the streak on a calendar).
-
-- [ ] **Claude:** tap the streak on Today to open a Streak sheet: shields held as icons and days to the next one, a month calendar marking clear days, days a shield saved, missed days and rest days, and how shields work (TODAY-20, CALC-15).
 
 - [ ] **Claude (before scale):** load only recent months on app open, using the offline cache for older ones. Today every open downloads a user's full history: fine now, but after a year it is about 230 KB and 17 reads per open, which makes Firestore's free 10 GiB/month egress the first limit for long-time users.
 - [ ] **Idea (from content, 9 October 2026):** hours towards mastery: each practice's lifetime hours against 10,000 (e.g. "Course study: 42 of 10,000 hours"), for the 10,000-hour posts. Decide after first users' feedback.
@@ -147,6 +144,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** streak calendar (asked by Praveen: "I'm just seeing only the number"): this week's days as dots under the streak on Today; tapping it, or Insights › Consistency's streak line, opens a Streak sheet with the shields as icons, how far off the next one is, and a month calendar of clear days (joined by a gold band), days a shield saved, missed days and rest days (TODAY-20, CALC-15). Not released yet, 11 October 2026
 - [x] **Claude:** "A shield kept your N-day streak yesterday" shows in gold with a shield icon instead of the red warning style, since it's good news (TODAY-17). Not released yet, 11 October 2026
 - [x] Released 1.11.0: streak shields (3 clear days earn one, up to 3), one-tap mood after logging with an Insights line, "Just 7 minutes" on Today, Today's idea, centred toasts; website clips re-recorded, 11 October 2026
 - [x] **Claude:** toasts slide straight up into place instead of starting half their width to the right and jumping back to centre, 11 October 2026

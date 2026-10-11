@@ -38,6 +38,7 @@ for (const scheme of ['dark', 'light'] as const) {
       await sheet('the edit entry sheet', () => page.locator('.log-open').first().click());
       await tab(page, 'Insights').click();
       await sheet('the share sheet', () => page.locator('.share-btn').click());
+      await sheet('the streak sheet', () => page.locator('.panel-link').click());
       await tab(page, 'Today').click();
       await sheet('the voice log sheet', () => page.locator('.tab-log').click());
       await page.locator('.cat').nth(1).locator('.tbtn').click();

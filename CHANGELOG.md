@@ -13,6 +13,10 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
+## Coming next
+
+- **Faster voice updates.** TikTym skips a security check it was repeating on every voice update, so your entries come back sooner.
+
 ## 1.10.1 · 11 October 2026 · A voice wave that moves
 
 - **See TikTym listening.** While you record, the sound wave now flows the whole time and grows as you speak. With Reduce Motion on, it rises and falls in place.

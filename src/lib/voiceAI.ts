@@ -106,8 +106,9 @@ export async function understandVoice(blob: Blob, categories: Pick<Category, 'id
     ]);
     await auth.authStateReady();
     if (!auth.currentUser) throw new VoiceAIError('Sign in again, then retry your recording.');
-    // TikTym's understandVoice function (functions/src/index.ts) asks Gemini and enforces the per-account limit.
-    const call = httpsCallable(getFunctions(app, 'asia-south1'), 'understandVoice', { timeout: 40_000, limitedUseAppCheckTokens: true });
+    // TikTym's understandVoice function (functions/src/index.ts) asks Gemini and enforces the per-account limit. It reuses the
+    // app's cached App Check token: a limited-use token would run a fresh reCAPTCHA check (about a second) on every call.
+    const call = httpsCallable(getFunctions(app, 'asia-south1'), 'understandVoice', { timeout: 40_000 });
     const data = await blobBase64(blob);
     const mimeType = (blob.type || 'audio/webm').split(';', 1)[0];
     const practices = categories.map(({ id, name }) => ({ id, name }));

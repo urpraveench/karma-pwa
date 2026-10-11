@@ -1,10 +1,17 @@
 import { expect, test, signIn, toast } from './helpers';
 
+const typeInsteadOfSpeaking = async (page: import('@playwright/test').Page) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, 'SpeechRecognition', { configurable: true, value: undefined });
+    Object.defineProperty(window, 'webkitSpeechRecognition', { configurable: true, value: undefined });
+  });
+};
+
 test.describe('Voice log', () => {
   test('reviews, edits and removes matched entries before saving (LOG-28)', async ({ page }) => {
+    await typeInsteadOfSpeaking(page);
     await signIn(page);
     await page.click('.tab-log');
-    await page.click('.voice-open');
     await page.fill('.voice-input', 'walked 20, read fifteen');
     await page.click('.voice-review');
 
@@ -20,9 +27,9 @@ test.describe('Voice log', () => {
   });
 
   test('saves several entries with one confirmation and one Undo (LOG-28)', async ({ page }) => {
+    await typeInsteadOfSpeaking(page);
     await signIn(page);
     await page.click('.tab-log');
-    await page.click('.voice-open');
     await page.fill('.voice-input', 'exercise 20 reading 15');
     await page.click('.voice-review');
     await page.click('.voice-save');
@@ -35,9 +42,9 @@ test.describe('Voice log', () => {
   });
 
   test('shows unclear words and saves nothing until they are fixed (LOG-27)', async ({ page }) => {
+    await typeInsteadOfSpeaking(page);
     await signIn(page);
     await page.click('.tab-log');
-    await page.click('.voice-open');
     await page.fill('.voice-input', 'danced 20 read 15');
     await page.click('.voice-review');
 
@@ -49,7 +56,7 @@ test.describe('Voice log', () => {
     await expect(page.locator('.voice-save')).toBeVisible();
   });
 
-  test('puts the spoken transcript into the input without saving it (LOG-26)', async ({ page }) => {
+  test('the main microphone listens once and reviews the transcript automatically (LOG-10, LOG-26)', async ({ page }) => {
     await page.addInitScript(() => {
       class FakeSpeechRecognition {
         lang = ''; continuous = false; interimResults = false;
@@ -72,10 +79,19 @@ test.describe('Voice log', () => {
     });
     await signIn(page);
     await page.click('.tab-log');
-    await page.click('.voice-open');
-    await page.click('.voice-mic');
     await expect(page.locator('.voice-input')).toHaveValue('walked 20');
+    await expect(page.locator('.voice-row select option:checked')).toHaveText('Exercise');
+    await expect(page.locator('.voice-row input')).toHaveValue('20');
     await expect(page.locator('.mala-center .big')).toHaveText('100');
+  });
+
+  test('manual minute buttons are one link away from the microphone (LOG-10)', async ({ page }) => {
+    await typeInsteadOfSpeaking(page);
+    await signIn(page);
+    await page.click('.tab-log');
+    await page.getByRole('button', { name: 'Enter minutes manually' }).click();
+    await expect(page.locator('.pick .chip')).toHaveText(['Exercise30', 'Reading30', 'Course study30', 'Meditation10']);
+    await expect(page.locator('.tile', { hasText: /^10$/ })).toBeVisible();
   });
 
   test('keeps typed input available when microphone permission is blocked (LOG-29)', async ({ page }) => {
@@ -94,8 +110,6 @@ test.describe('Voice log', () => {
     });
     await signIn(page);
     await page.click('.tab-log');
-    await page.click('.voice-open');
-    await page.click('.voice-mic');
     await expect(page.locator('.voice-error')).toHaveText('Microphone permission was blocked. Type your update instead.');
     await page.fill('.voice-input', 'read 15');
     await page.click('.voice-review');

@@ -179,7 +179,7 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
-| LOG-10 | Open from the + tab button | Preselects the first practice with time left (or the first practice) | E2E `today.spec.ts` |
+| LOG-10 | Tap the centre microphone | Opens voice logging and starts listening in one tap; "Enter minutes manually" opens the old minute buttons, preselected to the first practice with time left | E2E `voice-log.spec.ts` |
 | LOG-11 | Open from a practice name | Preselects that practice | E2E `today.spec.ts` |
 | LOG-12 | + with no active practices | Toast "Add a practice in Setup first"; no sheet | E2E `log-sheet.spec.ts` |
 | LOG-13 | Practice chips | One per active practice, showing minutes left today | E2E `log-sheet.spec.ts` |
@@ -200,7 +200,7 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
 | LOG-25 | Say or type a natural update | Understands one or more practice-and-minute pairs, including digits and number words: "walked 20, read fifteen" | Unit `voiceLog.test.ts` |
-| LOG-26 | Tap the microphone | Listens once, puts the transcript in the input and stops; TikTym does not store the audio or transcript | E2E `voice-log.spec.ts` (real microphone: Manual) |
+| LOG-26 | Use the centre or sheet microphone | Starts listening, puts the transcript in the input and shows matched entries automatically; TikTym does not store the audio or transcript | E2E `voice-log.spec.ts` (real microphone: Manual) |
 | LOG-27 | A phrase is unclear or has no matching practice | Shows exactly which part was not understood and saves nothing until it is fixed | Unit `voiceLog.test.ts`, E2E `voice-log.spec.ts` |
 | LOG-28 | Review a voice log | Shows every matched practice and its minutes; the user can change or remove each one, then saves the batch with one confirmation and one Undo | E2E `voice-log.spec.ts` |
 | LOG-29 | Speech is unavailable, blocked or hears nothing | Explains the problem in plain words and keeps the same input available for typing | E2E `voice-log.spec.ts` (real microphone: Manual) |

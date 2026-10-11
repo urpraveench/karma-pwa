@@ -257,6 +257,7 @@ test.describe('Reordering practices', () => {
     await tab(page, 'Today').click();
     await expect(page.locator('.cat .cat-name')).toHaveText(['Guitar', 'Reading', 'Writing']);
     await page.locator('.tab-log').click();
+    await page.getByRole('button', { name: 'Enter minutes manually' }).click();
     await expect(page.locator('.sheet .pick .chip')).toHaveText([/^Guitar/, /^Reading/, /^Writing/]);
     await page.keyboard.press('Escape');
     await page.reload();

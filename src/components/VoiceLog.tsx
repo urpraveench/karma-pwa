@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { dayLabel } from '../lib/date';
 import type { Category, DateStr } from '../lib/types';
 import { parseVoiceLog, type VoiceLogEntry } from '../lib/voiceLog';
@@ -38,7 +38,7 @@ const speechError = (code: string) => {
 interface Draft extends VoiceLogEntry { key: number }
 
 /** Voice and typed natural-language logging. Nothing is saved until the reviewed batch is confirmed. */
-export function VoiceLog({ categories, date, today, onBack }: { categories: Category[]; date: DateStr; today: DateStr; onBack(): void }) {
+export function VoiceLog({ categories, date, today, autoListen = false, onBack }: { categories: Category[]; date: DateStr; today: DateStr; autoListen?: boolean; onBack(): void }) {
   const { logEntries, closeSheet } = useApp();
   const [text, setText] = useState('');
   const [drafts, setDrafts] = useState<Draft[]>([]);
@@ -47,13 +47,17 @@ export function VoiceLog({ categories, date, today, onBack }: { categories: Cate
   const [listening, setListening] = useState(false);
   const [error, setError] = useState('');
   const recognition = useRef<SpeechRecognitionLike | null>(null);
+  const autoStarted = useRef(false);
   const seq = useRef(0);
   const supported = !!speechConstructor();
 
-  useEffect(() => () => recognition.current?.abort(), []);
-
-  const resetReview = (next: string) => { setText(next); setDrafts([]); setUnmatched([]); setReviewed(false); setError(''); };
-  const listen = () => {
+  const resetReview = useCallback((next: string) => { setText(next); setDrafts([]); setUnmatched([]); setReviewed(false); setError(''); }, []);
+  const reviewText = useCallback((value: string) => {
+    const result = parseVoiceLog(value, categories);
+    setDrafts(result.entries.map(entry => ({ ...entry, key: ++seq.current })));
+    setUnmatched(result.unmatched); setReviewed(true); setError('');
+  }, [categories]);
+  const listen = useCallback(() => {
     const Speech = speechConstructor();
     if (!Speech) { setError('Voice input is not available in this browser. Type your update instead.'); return; }
     recognition.current?.abort();
@@ -61,19 +65,27 @@ export function VoiceLog({ categories, date, today, onBack }: { categories: Cate
     rec.lang = navigator.language || 'en-IN'; rec.continuous = false; rec.interimResults = true;
     rec.onstart = () => { setListening(true); setError(''); };
     rec.onresult = event => {
-      let transcript = '';
-      for (let i = 0; i < event.results.length; i++) transcript += `${event.results[i][0]?.transcript || ''} `;
-      resetReview(transcript.trim());
+      let transcript = '', final = false;
+      for (let i = 0; i < event.results.length; i++) {
+        transcript += `${event.results[i][0]?.transcript || ''} `;
+        if (event.results[i].isFinal) final = true;
+      }
+      const next = transcript.trim();
+      resetReview(next);
+      if (final && next) reviewText(next);
     };
     rec.onerror = event => { setListening(false); setError(speechError(event.error)); };
     rec.onend = () => setListening(false);
     try { rec.start(); } catch { setListening(false); setError('Voice input could not start. Type your update instead.'); }
-  };
-  const review = () => {
-    const result = parseVoiceLog(text, categories);
-    setDrafts(result.entries.map(entry => ({ ...entry, key: ++seq.current })));
-    setUnmatched(result.unmatched); setReviewed(true); setError('');
-  };
+  }, [resetReview, reviewText]);
+  useEffect(() => () => recognition.current?.abort(), []);
+  useEffect(() => {
+    if (!autoListen || autoStarted.current) return;
+    autoStarted.current = true;
+    listen();
+  }, [autoListen, listen]);
+
+  const review = () => reviewText(text);
   const save = () => {
     if (!drafts.length || unmatched.length || drafts.some(x => !(x.minutes > 0 && x.minutes <= 1440))) return;
     closeSheet();
@@ -83,13 +95,13 @@ export function VoiceLog({ categories, date, today, onBack }: { categories: Cate
   return (
     <div className="voice-log">
       <div className="voice-head">
-        <div><h2>Say what you did</h2><p>{dayLabel(date, today)}</p></div>
+        <div><h2>Tell TikTym what you did</h2><p>{dayLabel(date, today)}</p></div>
         <button type="button" className={`voice-mic${listening ? ' listening' : ''}`} onClick={listen} aria-label={listening ? 'Listening' : 'Use microphone'} aria-pressed={listening} disabled={listening}>
           <Icon.mic />
         </button>
       </div>
       <label className="flabel" htmlFor="voice-update">One or more practices</label>
-      <textarea id="voice-update" className="in voice-input" rows={3} value={text} onChange={e => resetReview(e.target.value)} placeholder="Walked 20, read 15" />
+      <textarea id="voice-update" className="in voice-input" rows={3} value={text} onChange={e => resetReview(e.target.value)} placeholder={listening ? 'Listening…' : 'Walked 20, read 15'} />
       <p className="voice-privacy">{supported ? (listening ? 'Listening… speak naturally.' : 'Your browser handles your voice. TikTym does not store the audio or transcript.') : 'Voice input is unavailable here. You can type the same words.'}</p>
       {error && <p className="voice-error" role="alert">{error}</p>}
       <button type="button" className="btn btn-2 voice-review" onClick={review} disabled={!text.trim()}>Review entries</button>
@@ -108,7 +120,7 @@ export function VoiceLog({ categories, date, today, onBack }: { categories: Cate
           Log {drafts.length} {drafts.length === 1 ? 'entry' : 'entries'}
         </button>}
       </div>}
-      <button type="button" className="link voice-back" onClick={onBack}>Back to minute buttons</button>
+      <button type="button" className="link voice-back" onClick={onBack}>Enter minutes manually</button>
     </div>
   );
 }

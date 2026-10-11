@@ -40,9 +40,9 @@ export function Shell() {
     return () => document.removeEventListener('keydown', onKey);
   }, [focusOpen, closeFocus, closeSheet]);
 
-  const openLog = () => {
+  const openVoiceLog = () => {
     if (!activeCats(data.categories, T).length) { toast('Add a practice in Setup first'); return; }
-    openSheet({ kind: 'log' });
+    openSheet({ kind: 'log', voice: true, autoListen: true });
   };
 
   return (
@@ -52,13 +52,13 @@ export function Shell() {
         <div className="tabbar-in">
           <Tab v="today" label="Today" />
           <Tab v="insights" label="Insights" />
-          <button className="tab-log" onClick={openLog} aria-label="Log minutes"><Icon.plus /></button>
+          <button className="tab-log" onClick={openVoiceLog} aria-label="Log by voice"><Icon.mic /></button>
           <Tab v="history" label="History" />
           <Tab v="setup" label="Setup" />
         </div>
       </nav>
       <MiniPlayer />
-      {sheet?.kind === 'log' && <LogSheet key={sheet.catId ?? ''} catId={sheet.catId} custom={sheet.custom} />}
+      {sheet?.kind === 'log' && <LogSheet key={`${sheet.catId ?? ''}:${sheet.voice ? 'voice' : 'manual'}`} catId={sheet.catId} custom={sheet.custom} voice={sheet.voice} autoListen={sheet.autoListen} />}
       {sheet?.kind === 'editCat' && <CategorySheet key={sheet.id ?? 'new'} id={sheet.id} />}
       {sheet?.kind === 'share' && <ShareSheet />}
       {sheet?.kind === 'install' && <InstallSheet />}

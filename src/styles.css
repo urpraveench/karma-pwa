@@ -214,9 +214,6 @@ body.has-timer .toast{bottom:calc(160px + env(safe-area-inset-bottom,0px))}
 .sheet-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
 .link{font-weight:600;font-size:15px;padding:12px 4px;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--line)}
 .sheet-sub{margin:-10px 0 16px;color:var(--ink-2);font-size:14px}
-.voice-open{width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;margin:0 0 12px;background:var(--bg)}
-.voice-open svg{width:24px;height:24px;flex:none;color:var(--ok)}
-.voice-open span{display:grid;gap:1px}.voice-open b{font-size:15px}.voice-open small{font-size:12.5px;color:var(--ink-2)}
 .voice-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
 .voice-head h2{margin:0}.voice-head p{margin:2px 0 0;color:var(--ink-2);font-size:14px}
 .voice-mic{width:52px;height:52px;flex:none;display:grid;place-items:center;border-radius:50%;background:var(--ink);color:var(--bg)}

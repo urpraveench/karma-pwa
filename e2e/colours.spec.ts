@@ -39,7 +39,7 @@ for (const scheme of ['dark', 'light'] as const) {
       await tab(page, 'Insights').click();
       await sheet('the share sheet', () => page.locator('.share-btn').click());
       await tab(page, 'Today').click();
-      await sheet('the log sheet', () => page.locator('.tab-log').click());
+      await sheet('the voice log sheet', () => page.locator('.tab-log').click());
       await page.locator('.cat').nth(1).locator('.tbtn').click();
       await expect(page.locator('.focus')).toBeVisible();
       await page.waitForTimeout(350);

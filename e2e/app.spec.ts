@@ -31,7 +31,7 @@ test('buttons that only show an icon or number have labels (APP-16)', async ({ p
   await signIn(page);
   await expect(page.locator('.cat').nth(1).locator('.qbtn')).toHaveAttribute('aria-label', 'Log 30 minutes of Reading');
   await expect(page.locator('.cat').nth(1).locator('.tbtn')).toHaveAttribute('aria-label', 'Start a Reading timer');
-  await expect(page.locator('.tab-log')).toHaveAttribute('aria-label', 'Log minutes');
+  await expect(page.locator('.tab-log')).toHaveAttribute('aria-label', 'Log by voice');
   await page.click('.tab-log');
   await expect(page.locator('.sheet')).toHaveAttribute('role', 'dialog');
 });

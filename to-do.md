@@ -4,7 +4,7 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 **Owner:** **You** means it needs your accounts, devices or a decision. **Claude** means it can be done in a coding session once anything it depends on is in place.
 
-**Last updated:** 8 October 2026
+**Last updated:** 11 October 2026
 
 
 ## Setup layout
@@ -28,7 +28,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] **You:** after the fix, run the 5-minute Meditation test again: the chime should play right as the timer reaches its target (TIMER-05).
-- [ ] **You:** on a real iPhone and Android phone, say "walked 20, read 15" in voice log; check the transcript appears, both practices match, and blocking microphone access leaves typing usable (LOG-26, LOG-29).
+- [ ] **You:** on a real iPhone and Android phone, tap the centre microphone and say "walked 20, read 15"; check the transcript and both matches appear automatically, then check that blocking microphone access leaves typing usable (LOG-26, LOG-29).
 - [ ] A Firestore failure on load returns to sign-in with a clear message (FIRST-04)
 - [ ] A Firebase SDK failure to load shows its message (AUTH-22)
 - [ ] Test mode never downloads the Firebase SDK: check the network tab (SYNC-14)
@@ -105,7 +105,6 @@ From FEATURES.md › "What's left to test". None left: every scenario has a test
 
 Help people add TikTym to their home screen (friends didn't know how; most only know app stores). Part of 1.8.0.
 
-
 - [ ] **Deferred (10 October 2026, your call):** while a timer runs, Today's big number stays at saved points even though the beads already show the timer's minutes, so the two disagree (found by Praveen). Proposed: the number counts down live (capped at what the practice still needs), no extra line in the circle, and "20 of 30 · timing" on the practice's row.
 - [ ] **Deferred (10 October 2026, your call):** the weekend card's "291 short, about 146 a day" doesn't match Today's "195 left" (the card splits the week's shortfall evenly and counts every minute; Today asks for carried minutes per practice). Proposed: the card says "Clear today's 195, including 95 carried over, then tomorrow's 100, and the week is done", with stats done this week / weekly goal / left today (MOM-03).
 
@@ -141,6 +140,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** voice-first logging: the centre action is now a microphone, starts listening in one tap, and automatically shows the transcript and matched entries; "Enter minutes manually" keeps the old minute buttons easy to reach (LOG-10, LOG-26), 11 October 2026
 - [x] **Claude:** voice logging 2/2: the log sheet now has microphone and typed input, editable review, safe handling for unclear speech and microphone errors, and a one-step batch save with one Undo; the Privacy Policy explains browser speech processing (LOG-26 to LOG-29), 11 October 2026
 - [x] **Claude:** voice logging 1/2: phrases such as "walked 20, read fifteen" become proposed practice-and-minute entries; digits, number words, custom practice names and unclear or ambiguous phrases are covered by unit tests (LOG-25, LOG-27), 11 October 2026
 - [x] **Claude:** logo set in `public/brand/` (`npm run brand:kit`): the ring, the wordmark, ring + name side by side and stacked, and both with the brand line, each in colour, colour on dark, black and white, as SVG (text outlined) and transparent PNG, plus the app icon; a README says which to use where. Kept out of the app's offline cache; online at app.tiktym.com/brand/ from the next app deploy, 11 October 2026

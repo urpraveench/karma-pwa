@@ -5,11 +5,13 @@ test.describe('Log sheet', () => {
 
   test('shows minutes left on each practice chip (LOG-13)', async ({ page }) => {
     await page.click('.tab-log');
+    await page.getByRole('button', { name: 'Enter minutes manually' }).click();
     await expect(page.locator('.pick .chip')).toHaveText(['Exercise30', 'Reading30', 'Course study30', 'Meditation10']);
   });
 
   test('day buttons, and Earlier opens a date picker capped at today (LOG-14, LOG-15)', async ({ page }) => {
     await page.click('.tab-log');
+    await page.getByRole('button', { name: 'Enter minutes manually' }).click();
     await expect(page.locator('.seg-full button')).toHaveText(['Today', 'Yesterday', 'Mon', 'Earlier']);
     await page.locator('.seg-full button', { hasText: 'Earlier' }).click();
     const picker = page.locator('#ld');
@@ -61,6 +63,7 @@ test.describe('Log sheet', () => {
 
   test('invalid amounts are refused (LOG-24)', async ({ page }) => {
     await page.click('.tab-log');
+    await page.getByRole('button', { name: 'Enter minutes manually' }).click();
     await page.click('.tile-ghost');
     await page.fill('.stepper input', '');
     await page.click('.custom button[type=submit]');

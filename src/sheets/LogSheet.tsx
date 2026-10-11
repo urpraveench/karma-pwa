@@ -12,7 +12,7 @@ import { Icon } from '../ui/icons';
 const TILES = [5, 10, 15, 20, 30, 45, 60];
 
 /** Big tiles, one tap logs, no typing. */
-export function LogSheet({ catId: initialCat, custom: initialCustom = false }: { catId?: string; custom?: boolean }) {
+export function LogSheet({ catId: initialCat, custom: initialCustom = false, voice: initialVoice = false, autoListen = false }: { catId?: string; custom?: boolean; voice?: boolean; autoListen?: boolean }) {
   const { data, c, T, logEntry, closeSheet } = useApp();
   const { start } = useTimer();
   const { toast } = useFeedback();
@@ -23,7 +23,7 @@ export function LogSheet({ catId: initialCat, custom: initialCustom = false }: {
   const [note, setNote] = useState('');
   const [noteOpen, setNoteOpen] = useState(false);
   const [custom, setCustom] = useState(initialCustom);
-  const [voice, setVoice] = useState(false);
+  const [voice, setVoice] = useState(initialVoice);
   const cat = cats.find(x => x.id === catId) || cats[0];
   const left = (cat && c.per[cat.id]?.byDate.get(date)?.end) ?? 0;
   const [mins, setMins] = useState(() => String(left > 0 ? Math.min(left, 25) : 25));
@@ -43,7 +43,7 @@ export function LogSheet({ catId: initialCat, custom: initialCustom = false }: {
 
   return (
     <Sheet onClose={closeSheet}>
-      {voice ? <VoiceLog categories={cats} date={date} today={T} onBack={() => setVoice(false)} /> : <>
+      {voice ? <VoiceLog categories={cats} date={date} today={T} autoListen={autoListen} onBack={() => setVoice(false)} /> : <>
       <div className="pick" role="group" aria-label="Practice">
         {cats.map(x => {
           const l = c.per[x.id].today.end;
@@ -59,7 +59,6 @@ export function LogSheet({ catId: initialCat, custom: initialCustom = false }: {
         <label className="sr" htmlFor="ld">Date</label>
         <input className="in" type="date" id="ld" value={date} max={T} onChange={e => setDate(e.target.value && e.target.value <= T ? e.target.value : T)} />
       </>}
-      <button type="button" className="voice-open" onClick={() => setVoice(true)}><Icon.mic /><span><b>Say or type your update</b><small>Try “walked 20, read 15”</small></span></button>
       <div style={{ '--c': cat.color } as CSSProperties}>
         {left > 0
           ? <button type="button" className="tile-all" onClick={() => log(left, 'all_left')}><span>All that's left</span><b>{left}</b></button>

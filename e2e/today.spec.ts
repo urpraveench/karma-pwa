@@ -37,6 +37,7 @@ test.describe('Today', () => {
   test('the log sheet logs a tile to the first practice with time left', async ({ page }) => {
     await page.click('.tab-log');
     await expect(page.locator('.sheet')).toBeVisible();
+    await page.getByRole('button', { name: 'Enter minutes manually' }).click();
     await page.locator('.tile', { hasText: /^10$/ }).click();
     await expect(page.locator('.sheet')).toHaveCount(0);
     await expect(toast(page)).toHaveText('+10 Exercise');
@@ -44,6 +45,7 @@ test.describe('Today', () => {
 
   test('backfilling yesterday says so', async ({ page }) => {
     await page.click('.tab-log');
+    await page.getByRole('button', { name: 'Enter minutes manually' }).click();
     await page.locator('.seg button', { hasText: 'Yesterday' }).click();
     await page.locator('.tile', { hasText: /^5$/ }).click();
     await expect(toast(page)).toHaveText('+5 Exercise, yesterday');

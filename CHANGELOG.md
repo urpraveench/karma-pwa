@@ -15,7 +15,7 @@ Format, newest first:
 
 ## Coming next
 
-- **Log minutes by voice.** Say something like “walked 20, read 15”, check the practices and minutes TikTym found, edit anything it got wrong, then save them together.
+- **Log minutes from the main microphone.** Tap it once, say something like “walked 20, read 15”, check what TikTym found, then save. The familiar minute buttons are still one link away.
 
 ## 1.9.0 · 10 October 2026 · Daily reminders and your week by email
 

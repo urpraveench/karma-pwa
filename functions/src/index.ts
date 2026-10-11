@@ -314,10 +314,11 @@ export const unsubscribe = onRequest({ secrets: [UNSUBSCRIBE_SECRET], cors: fals
 
 /**
  * Voice logging (LOG-26, LOG-30): a signed-in app sends one short recording and its practice names; Gemini on Vertex AI
- * turns it into a transcript and suggested entries. App Check with replay protection, and a per-account limit counted
+ * turns it into a transcript and suggested entries. App Check (without replay protection, which needs an extra IAM role),
+ * and a per-account limit counted
  * in voiceUsage/{uid} (server-only), keep the AI bill bounded. The recording and transcript are never stored or logged.
  */
-export const understandVoice = onCall({ enforceAppCheck: true, consumeAppCheckToken: true, timeoutSeconds: 40, memory: '512MiB' }, async req => {
+export const understandVoice = onCall({ enforceAppCheck: true, timeoutSeconds: 40, memory: '512MiB' }, async req => {
   const uid = req.auth?.uid;
   if (!uid) throw new HttpsError('unauthenticated', 'Sign in again, then retry your recording.');
   const voice = readVoiceRequest(req.data);

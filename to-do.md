@@ -144,6 +144,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** fixed voice failing with "Sign in again" on 1.10.0: `understandVoice` asked to consume App Check tokens, which its account had no permission for; it now only verifies them (LOG-30), 11 October 2026
 - [x] Released 1.10.0: voice logging from the centre microphone in a compact sheet, through TikTym's `understandVoice` function (5 a minute, 50 a day per account); `understandVoice` and `voiceUsageCleanup` deployed, weekly recap still held for Monday, 11 October 2026
 - [x] **You:** added a billing budget with email alerts and disabled the Firebase AI Logic API, so browsers can no longer call Gemini directly, 11 October 2026
 - [x] **Claude:** voice AI moved behind TikTym's own `understandVoice` Cloud Function: signed-in, App Check with replay protection, at most 5 voice updates a minute and 50 a day per account (server-only `voiceUsage/{uid}`, deleted with the account), Gemini on Vertex AI through the function's service account; the app no longer uses Firebase AI Logic. Privacy Policy updated (LOG-30), 11 October 2026

@@ -18,6 +18,8 @@ export const Icon = {
   /** iOS Add to Home Screen: a plus in a rounded square */
   addSquare: () => <svg viewBox="0 0 24 24" {...stroke}><rect x="4" y="4" width="16" height="16" rx="4" /><path d="M12 8.5v7M8.5 12h7" /></svg>,
   x: () => <svg viewBox="0 0 24 24" {...stroke}><path d="M6 6l12 12M18 6L6 18" /></svg>,
+  /** A streak shield (CALC-14); filled when held, via CSS `fill` */
+  shield: () => <svg viewBox="0 0 24 24" {...stroke} strokeLinejoin="round"><path d="M12 3l7 2.8v5.4c0 4.4-2.9 8.2-7 9.8-4.1-1.6-7-5.4-7-9.8V5.8L12 3z" /></svg>,
 };
 
 /** The app mark: a ring of 27 beads with the first `filled` coloured in. */

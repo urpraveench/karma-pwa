@@ -58,7 +58,7 @@ export function Today() {
         <span><i style={{ background: 'var(--line)' }} />Still due</span>
       </p>
       {easy && <button className="just7" style={{ '--c': easy.color } as CSSProperties} onClick={() => start(easy.id, easyGoal)}><Icon.play />Just {easyGoal} minutes of {easy.name}</button>}
-      {saved && <div className="nudge">A shield kept your {c.streak}-day streak yesterday.</div>}
+      {saved && <div className="nudge good"><Icon.shield />A shield kept your {c.streak}-day streak yesterday.</div>}
       {showNudge && <div className="nudge">Clear {t.end} more to keep your {c.streak}-day streak{c.shields ? ' without using a shield' : ''}</div>}
       {!tm && !m && cats.length > 0 && !tipHidden && (
         <div className="tip">

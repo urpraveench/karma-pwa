@@ -76,6 +76,10 @@ test.describe('Today states', () => {
     await expect(page.locator('.streak b')).toHaveText('3');
     await expect(page.locator('.streak .shields')).toHaveCount(0);
     await expect(page.locator('.nudge')).toHaveText('A shield kept your 3-day streak yesterday.');
+    // good news, so gold with a shield, not the red warning style
+    await expect(page.locator('.nudge')).toHaveClass(/good/);
+    await expect(page.locator('.nudge svg')).toBeVisible();
+    expect(await page.locator('.nudge').evaluate(e => getComputedStyle(e).color)).not.toBe(await page.locator('.carry').evaluate(e => getComputedStyle(e).color));
   });
 
   test('"Just 7 minutes" starts a short timer on the easiest practice, until something is logged (TODAY-18)', async ({ page }) => {

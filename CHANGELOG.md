@@ -13,6 +13,10 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
+## Coming next
+
+- **A saved streak looks like good news.** When a shield keeps your streak, Today says so in gold with a shield, not in warning red.
+
 ## 1.11.0 · 11 October 2026 · Streak shields, moods and a daily idea
 
 - **Streak shields.** Clear every practice three days in a row and you earn a shield (you can hold three). If you miss a day, a shield keeps your streak going. The minutes you missed still carry over.

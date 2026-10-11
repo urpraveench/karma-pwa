@@ -142,7 +142,7 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | TODAY-14 | Focus timer tip | Shown until dismissed or a timer is first started; hidden when a moment card or timer is showing | E2E `today-states.spec.ts` |
 | TODAY-15 | No active practices | "No practices yet. Add one in Setup." | E2E `log-sheet.spec.ts` |
 | TODAY-16 | Practice order | Rows follow the practice order set in Setup | E2E `today.spec.ts` |
-| TODAY-17 | Streak shields on Today | The streak badge shows shields held ("1 shield"); the day after a shield is spent: "A shield kept your N-day streak yesterday." in place of the evening nudge; with a shield held, the evening nudge adds "without using a shield" | E2E `today-states.spec.ts` |
+| TODAY-17 | Streak shields on Today | The streak badge shows shields held ("1 shield"); the day after a shield is spent: "A shield kept your N-day streak yesterday." in gold with a shield icon (good news, not the red warning style), in place of the evening nudge; with a shield held, the evening nudge adds "without using a shield" | E2E `today-states.spec.ts` |
 | TODAY-18 | "Just 7 minutes" | With nothing logged today, no timer running and no moment card: a button "Just N minutes of Name" for the practice due today with the smallest target (N is 7, or less if less is left). It starts a focus timer with that goal, shown as the selected target | E2E `today-states.spec.ts` |
 | TODAY-19 | Today's idea | A card at the foot of Today with one short line about practice and habits, written for TikTym: the same all day, the next in the list tomorrow, every line used in turn | Unit `ideas.test.ts`, E2E `today-states.spec.ts` |
 

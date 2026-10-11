@@ -17,6 +17,7 @@ Format, newest first:
 
 - **Streak shields.** Clear every practice three days in a row and you earn a shield (you can hold three). If you miss a day, a shield keeps your streak going. The minutes you missed still carry over.
 - **Say how it felt.** After you log, tap 😞 😐 🙂. Once you've rated a few sessions, Insights tells you which practice leaves you feeling good.
+- **Just 7 minutes.** On days you haven't started yet, one tap starts a 7-minute timer on your easiest practice.
 
 ## 1.10.2 · 11 October 2026 · Faster voice updates
 

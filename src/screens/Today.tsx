@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { Mala, malaFills } from '../components/Mala';
 import { InstallCard } from '../components/InstallGuide';
 import { MomentCard } from '../components/MomentCard';
+import { easiestPending } from '../lib/moments';
 import { ReminderCard } from '../components/Reminders';
 import { activeCats, showUpStreak } from '../lib/backlog';
 import { addDays, fmtLong } from '../lib/date';
@@ -25,6 +26,9 @@ export function Today() {
 
   const saved = c.streak > 0 && c.shielded.at(-1) === addDays(T, -1);
   const showNudge = !saved && !m && c.streak > 0 && t.end > 0 && now.getHours() >= 18;
+  // a small way in on days nothing is logged yet (TODAY-18); a moment card offers its own start
+  const easy = !tm && !m && t.done === 0 ? easiestPending(cats, c, T) : undefined;
+  const easyGoal = easy ? Math.min(7, c.per[easy.id].today.end) : 0;
   const live = tm && timerCat && cats.some(x => x.id === tm.catId) ? { color: timerCat.color, minutes: minute } : undefined;
 
   return (
@@ -52,6 +56,7 @@ export function Today() {
         <span><i style={{ background: 'var(--due)' }} />Carried over</span>
         <span><i style={{ background: 'var(--line)' }} />Still due</span>
       </p>
+      {easy && <button className="just7" style={{ '--c': easy.color } as CSSProperties} onClick={() => start(easy.id, easyGoal)}><Icon.play />Just {easyGoal} minutes of {easy.name}</button>}
       {saved && <div className="nudge">A shield kept your {c.streak}-day streak yesterday.</div>}
       {showNudge && <div className="nudge">Clear {t.end} more to keep your {c.streak}-day streak{c.shields ? ' without using a shield' : ''}</div>}
       {!tm && !m && cats.length > 0 && !tipHidden && (

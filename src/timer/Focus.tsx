@@ -40,7 +40,7 @@ export function Focus() {
   const left = c.per[cat.id]?.today.end ?? 0;
   const ms = elapsedMs(tm, now), goalMs = tm.goal * 60000, pts = Math.floor(ms / 60000);
   const B = Math.min(tm.goal, 60), filled = Math.min(B, Math.floor(ms / (goalMs / B)));
-  const goals = [...new Set([...STANDARD_GOALS, ...(left >= 5 && left <= 180 ? [left] : [])])].sort((a, b) => a - b);
+  const goals = [...new Set([...STANDARD_GOALS, ...(left >= 5 && left <= 180 ? [left] : []), tm.goal])].sort((a, b) => a - b); // tm.goal: a started goal such as Just 7 (TODAY-18)
   const sub = tm.pausedAt ? 'Paused' : ms < goalMs ? `${Math.ceil((goalMs - ms) / 60000)} min to target` : `Target reached, ${pts - tm.goal} min extra`;
 
   return (

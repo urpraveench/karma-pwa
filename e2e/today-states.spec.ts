@@ -77,6 +77,24 @@ test.describe('Today states', () => {
     await expect(page.locator('.nudge')).toHaveText('A shield kept your 3-day streak yesterday.');
   });
 
+  test('"Just 7 minutes" starts a short timer on the easiest practice, until something is logged (TODAY-18)', async ({ page }) => {
+    await signIn(page);
+    await expect(page.locator('.just7')).toHaveCount(0); // the "Start small" card offers its own start
+    await page.click('.m-x');
+    await expect(page.locator('.just7')).toHaveText('Just 7 minutes of Meditation');
+    await page.click('.just7');
+    await expect(page.locator('.focus .f-name')).toHaveText('Meditation');
+    await expect(page.locator('.f-goal .chip[aria-pressed=true]')).toHaveText('7');
+    await expect(page.locator('.just7')).toHaveCount(0);
+  });
+
+  test('"Just 7 minutes" is gone once something is logged today (TODAY-18)', async ({ page }) => {
+    await signIn(page);
+    await page.click('.m-x');
+    await page.locator('.cat').nth(0).locator('.qbtn').click();
+    await expect(page.locator('.just7')).toHaveCount(0);
+  });
+
   test('focus timer tip shows once the moment is hidden, and stays dismissed (TODAY-14)', async ({ page }) => {
     await signIn(page);
     await expect(page.locator('.tip')).toHaveCount(0); // the "Start small" card is showing

@@ -2,7 +2,7 @@ import { activeCats, dayAll, dueOn, targetMinutesOn, usualHour, type Calc } from
 import { addDays, fmtShort, hourLabel, monthName, parse, ymd } from './date';
 import { firstName } from './user';
 import { sum } from './util';
-import type { AppData, DateStr, User } from './types';
+import type { AppData, Category, DateStr, User } from './types';
 
 // One context-aware card per day on the Today screen. The highest-priority match wins.
 
@@ -33,6 +33,11 @@ export interface MomentContext {
   now?: Date;
 }
 
+/** The practice still due today with the smallest target: the easiest place to start (MOM-10, TODAY-18). */
+export function easiestPending(cats: Category[], c: Calc, T: DateStr): Category | undefined {
+  return cats.filter(x => c.per[x.id].today.end > 0).sort((a, b) => targetMinutesOn(a, T) - targetMinutesOn(b, T))[0];
+}
+
 const round5 = (v: number) => Math.max(5, Math.round(v / 5) * 5);
 
 export function moment(c: Calc, { data, user, hidden, now: clock = new Date() }: MomentContext): Moment | null {
@@ -41,7 +46,7 @@ export function moment(c: Calc, { data, user, hidden, now: clock = new Date() }:
   const earliest = cats.reduce((m, x) => x.startDate < m ? x.startDate : m, T);
   const histDays = Math.round((parse(T).getTime() - parse(earliest).getTime()) / 864e5);
   const pending = cats.filter(x => c.per[x.id].today.end > 0);
-  const easiest = [...pending].sort((a, b) => targetMinutesOn(a, T) - targetMinutesOn(b, T))[0];
+  const easiest = easiestPending(cats, c, T);
   const minGoal = easiest ? Math.min(15, round5(Math.min(targetMinutesOn(easiest, T), c.per[easiest.id].today.end))) : 10;
   const out: Moment[] = [];
   const add = (key: MomentKey, prio: number, o: Omit<Moment, 'key' | 'prio'>) => { if (hidden !== key) out.push({ key, prio, ...o }); };

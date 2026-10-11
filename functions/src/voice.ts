@@ -82,3 +82,15 @@ export function voiceAnswer(response: unknown): unknown {
   if (!text) return null;
   try { return JSON.parse(text); } catch { return null; }
 }
+
+/** What the log keeps about one call: token counts only, never the audio or words. */
+export function voiceUsageNumbers(response: unknown): { inputTokens: number; outputTokens: number; audioTokens: number } {
+  const u = (response as { usageMetadata?: Record<string, unknown> } | null)?.usageMetadata ?? {};
+  const details = Array.isArray(u.promptTokensDetails) ? u.promptTokensDetails as { modality?: unknown; tokenCount?: unknown }[] : [];
+  const n = (v: unknown) => typeof v === 'number' ? v : 0;
+  return {
+    inputTokens: n(u.promptTokenCount),
+    outputTokens: n(u.candidatesTokenCount),
+    audioTokens: n(details.find(d => d.modality === 'AUDIO')?.tokenCount),
+  };
+}

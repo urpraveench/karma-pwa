@@ -8,7 +8,7 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 ## In progress
 
-Nothing right now.
+- [ ] **Claude:** stop fetching a fresh App Check token for every voice call; reuse the app's token now that replay protection is off (LOG-30)
 
 ## Setup layout
 
@@ -143,6 +143,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** `understandVoice` now logs "voice understood" with Gemini's time (aiMs), the whole call (totalMs), recording size and token counts, never the audio or words (LOG-30), 11 October 2026
 - [x] Released 1.10.1: the recording wave follows the voice and keeps moving while recording, 11 October 2026
 - [x] **Claude:** the recording wave now moves: bars follow the voice's loudness instead of high-pitch bands that speech barely reaches, the wave travels gently even in silence, and with Reduce Motion it rises and falls in place (LOG-26), 11 October 2026
 - [x] Checked: voice logging works on app.tiktym.com through `understandVoice`; two calls passed sign-in and App Check with no AI errors in the log (LOG-30), 11 October 2026

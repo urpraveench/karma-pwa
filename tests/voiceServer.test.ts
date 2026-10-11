@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { quotaMessage, readVoiceRequest, voiceAnswer, voicePrompt, voiceQuota, VOICE_PER_DAY, VOICE_PER_MINUTE } from '../functions/src/voice';
+import { quotaMessage, readVoiceRequest, voiceAnswer, voicePrompt, voiceQuota, voiceUsageNumbers, VOICE_PER_DAY, VOICE_PER_MINUTE } from '../functions/src/voice';
 
 const practices = [{ id: 'ex', name: 'Exercise' }, { id: 'rd', name: 'Reading' }];
 const ok = { audio: 'cmVjb3JkZWQgdm9pY2U=', mimeType: 'audio/webm', practices };
@@ -51,5 +51,15 @@ describe('voice logging on the server (LOG-30)', () => {
     expect(voiceAnswer({ candidates: [{ content: { parts: [{ text: 'not json' }] } }] })).toBeNull();
     expect(voiceAnswer({})).toBeNull();
     expect(voiceAnswer(null)).toBeNull();
+  });
+
+  it('logs only token counts from a call, never its words', () => {
+    const response = {
+      candidates: [{ content: { parts: [{ text: '{"transcript":"secret words"}' }] } }],
+      usageMetadata: { promptTokenCount: 420, candidatesTokenCount: 38, promptTokensDetails: [{ modality: 'TEXT', tokenCount: 120 }, { modality: 'AUDIO', tokenCount: 300 }] },
+    };
+    expect(voiceUsageNumbers(response)).toEqual({ inputTokens: 420, outputTokens: 38, audioTokens: 300 });
+    expect(JSON.stringify(voiceUsageNumbers(response))).not.toContain('secret');
+    expect(voiceUsageNumbers({})).toEqual({ inputTokens: 0, outputTokens: 0, audioTokens: 0 });
   });
 });

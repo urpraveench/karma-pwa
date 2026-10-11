@@ -24,7 +24,7 @@ import { reminderCheck, reminderPayload, reminderTarget, sendToDevices, type Rem
 import { practicesLeft } from './shared/backlog.js';
 import { badgeOn, slotAt, VAPID_PUBLIC_KEY } from './shared/reminders.js';
 import type { AppData, Category, Log, PushDevice, Settings } from './shared/types.js';
-import { quotaMessage, readVoiceRequest, voiceAnswer, voicePrompt, voiceQuota, VOICE_MODEL, type VoiceUsage } from './voice.js';
+import { quotaMessage, readVoiceRequest, voiceAnswer, voicePrompt, voiceQuota, voiceUsageNumbers, VOICE_MODEL, type VoiceUsage } from './voice.js';
 
 setGlobalOptions({ region: 'asia-south1', maxInstances: 3 });
 initializeApp();
@@ -319,6 +319,7 @@ export const unsubscribe = onRequest({ secrets: [UNSUBSCRIBE_SECRET], cors: fals
  * in voiceUsage/{uid} (server-only), keep the AI bill bounded. The recording and transcript are never stored or logged.
  */
 export const understandVoice = onCall({ enforceAppCheck: true, timeoutSeconds: 40, memory: '512MiB' }, async req => {
+  const started = Date.now();
   const uid = req.auth?.uid;
   if (!uid) throw new HttpsError('unauthenticated', 'Sign in again, then retry your recording.');
   const voice = readVoiceRequest(req.data);
@@ -335,6 +336,7 @@ export const understandVoice = onCall({ enforceAppCheck: true, timeoutSeconds: 4
     throw new HttpsError('resource-exhausted', quotaMessage(quota.reason));
   }
 
+  const aiStarted = Date.now();
   const project = process.env.GCLOUD_PROJECT;
   const token = await getApp().options.credential!.getAccessToken();
   const res = await fetch(`https://aiplatform.googleapis.com/v1/projects/${project}/locations/global/publishers/google/models/${VOICE_MODEL}:generateContent`, {
@@ -347,7 +349,11 @@ export const understandVoice = onCall({ enforceAppCheck: true, timeoutSeconds: 4
     if (res) logger.warn('voice AI failed', { uid, status: res.status, body: (await res.text()).slice(0, 300) });
     throw new HttpsError('unavailable', 'Voice processing is busy right now. Try this recording again in a moment.');
   }
-  const answer = voiceAnswer(await res.json());
+  const response = await res.json();
+  const aiMs = Date.now() - aiStarted;
+  const answer = voiceAnswer(response);
+  // Where the time goes (LOG-30): Gemini's part vs the whole call. Token counts only, never the audio or words.
+  logger.info('voice understood', { uid, aiMs, totalMs: Date.now() - started, audioKB: Math.round(voice.audio.length * 0.75 / 1024), ok: Boolean(answer), ...voiceUsageNumbers(response) });
   if (!answer) throw new HttpsError('internal', 'I could not understand that recording. Try again or type your update.');
   return answer;
 });

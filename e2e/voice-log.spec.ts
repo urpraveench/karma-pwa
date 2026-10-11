@@ -165,6 +165,10 @@ test.describe('Voice log', () => {
     const viewport = page.viewportSize()!;
     expect((await page.getByRole('dialog').boundingBox())!.height).toBeLessThan(viewport.height * 0.45);
     await expect(page.locator('.voice-wave i')).toHaveCount(17);
+    // The wave travels while recording, even before any sound reaches it.
+    const heights = () => page.locator('.voice-wave i').evaluateAll(bars => bars.map(bar => (bar as HTMLElement).style.height).join());
+    const first = await heights();
+    await expect.poll(heights).not.toBe(first);
     await expect(page.getByRole('button', { name: 'Cancel recording' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Finish recording' })).toBeFocused();
     await expect.poll(() => page.evaluate(() => (window as unknown as { __voiceStats: { permissionRequests: number } }).__voiceStats.permissionRequests)).toBe(1);

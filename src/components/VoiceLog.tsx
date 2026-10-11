@@ -131,14 +131,12 @@ export function VoiceLog({
 
   useEffect(() => {
     if (phase !== 'capture' || captureState.kind !== 'recording') return;
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-      setLevels(Array.from({ length: BAR_COUNT }, (_, index) => 0.2 + (index % 4) * 0.1));
-      return;
-    }
+    // Reduce Motion: the bars still rise and fall with the voice, but the wave doesn't travel.
+    const still = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     let frame = 0;
     let last = 0;
     const draw = (time: number) => {
-      if (time - last > 70) { setLevels(capture.levels(BAR_COUNT)); last = time; }
+      if (time - last > 50) { setLevels(capture.levels(BAR_COUNT, still ? 0 : time)); last = time; }
       frame = requestAnimationFrame(draw);
     };
     frame = requestAnimationFrame(draw);

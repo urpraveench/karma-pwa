@@ -16,6 +16,19 @@ export function recordingMimeType(supported: (type: string) => boolean): string 
   return MIME_TYPES.find(supported);
 }
 
+/**
+ * Bar heights (0 to 1) for the recording wave: taller in the middle, travelling with `time` (ms; pass 0 to hold it
+ * still for Reduce Motion), and growing with `loudness` (0 to 1). Silence still shows a small moving wave.
+ */
+export function waveLevels(loudness: number, count: number, time: number): number[] {
+  const size = 0.3 + 0.7 * Math.min(1, Math.max(0, loudness));
+  return Array.from({ length: count }, (_, index) => {
+    const middle = Math.sin(Math.PI * (index + 0.5) / count);
+    const wave = 0.55 + 0.45 * Math.sin(index * 0.9 - time / 150);
+    return Math.max(0.08, Math.min(1, size * middle * wave));
+  });
+}
+
 function captureError(error: unknown): VoiceCaptureErrorCode {
   const name = error instanceof DOMException ? error.name : (error as { name?: string } | null)?.name;
   if (name === 'NotAllowedError' || name === 'SecurityError') return 'permission';
@@ -40,7 +53,8 @@ export class VoiceCapture {
   private chunks: Blob[] = [];
   private analyser: AnalyserNode | null = null;
   private audioContext: AudioContext | null = null;
-  private frequencyData: Uint8Array<ArrayBuffer> | null = null;
+  private samples: Uint8Array<ArrayBuffer> | null = null;
+  private loudness = 0;
   private waiters: BlobWaiter[] = [];
   private closed = false;
   private readonly onPageHide = () => this.cancel();
@@ -106,28 +120,30 @@ export class VoiceCapture {
     if (!context) return;
     try {
       const analyser = context.createAnalyser();
-      analyser.fftSize = 64;
-      analyser.smoothingTimeConstant = 0.72;
+      analyser.fftSize = 512;
       context.createMediaStreamSource(stream).connect(analyser);
       this.analyser = analyser;
-      this.frequencyData = new Uint8Array(analyser.frequencyBinCount);
+      this.samples = new Uint8Array(analyser.fftSize);
       void context.resume().catch(() => undefined);
     } catch {
       void context.close().catch(() => undefined);
       this.audioContext = null;
       this.analyser = null;
-      this.frequencyData = null;
+      this.samples = null;
     }
   }
 
-  /** Current levels for the visible waveform. The same stream is also being recorded. */
-  levels(count: number): number[] {
-    if (!this.analyser || !this.frequencyData) return Array.from({ length: count }, () => 0.12);
-    this.analyser.getByteFrequencyData(this.frequencyData);
-    return Array.from({ length: count }, (_, index) => {
-      const sourceIndex = Math.min(this.frequencyData!.length - 1, Math.floor(index * this.frequencyData!.length / count));
-      return Math.max(0.12, Math.min(1, this.frequencyData![sourceIndex] / 190));
-    });
+  /** Current bar heights for the recording wave (see waveLevels). The same stream is also being recorded. */
+  levels(count: number, time: number): number[] {
+    if (this.analyser && this.samples) {
+      // Loudness of the whole voice (RMS of the waveform): speech sits in a few low bands, so per-band bars barely move.
+      this.analyser.getByteTimeDomainData(this.samples);
+      let sum = 0;
+      for (const sample of this.samples) sum += ((sample - 128) / 128) ** 2;
+      const now = Math.min(1, Math.sqrt(sum / this.samples.length) * 5);
+      this.loudness = Math.max(now, this.loudness * 0.85); // rise at once, fall gently
+    }
+    return waveLevels(this.loudness, count, time);
   }
 
   finish(): Promise<Blob> {
@@ -205,7 +221,7 @@ export class VoiceCapture {
     this.stream = null;
     this.analyser?.disconnect();
     this.analyser = null;
-    this.frequencyData = null;
+    this.samples = null;
     if (this.audioContext) void this.audioContext.close().catch(() => undefined);
     this.audioContext = null;
     window.removeEventListener('pagehide', this.onPageHide);

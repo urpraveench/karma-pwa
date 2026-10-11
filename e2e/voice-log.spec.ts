@@ -67,7 +67,7 @@ test.describe('Voice log', () => {
         start() {
           this.onstart?.();
           setTimeout(() => {
-            const result = Object.assign([{ transcript: 'walked 20' }], { isFinal: true });
+            const result = Object.assign([{ transcript: 'I did an exercise for 5 minutes today' }], { isFinal: true });
             this.onresult?.({ resultIndex: 0, results: [result] });
             this.onend?.();
           }, 0);
@@ -79,10 +79,15 @@ test.describe('Voice log', () => {
     });
     await signIn(page);
     await page.click('.tab-log');
-    await expect(page.locator('.voice-input')).toHaveValue('walked 20');
+    await expect(page.locator('.voice-input')).toHaveValue('I did an exercise for 5 minutes today');
     await expect(page.locator('.voice-row select option:checked')).toHaveText('Exercise');
-    await expect(page.locator('.voice-row input')).toHaveValue('20');
+    await expect(page.locator('.voice-row input')).toHaveValue('5');
+    await expect(page.locator('.voice-unmatched')).toHaveCount(0);
+    await expect(page.locator('.voice-save')).toBeVisible();
     await expect(page.locator('.mala-center .big')).toHaveText('100');
+    await page.click('.voice-save');
+    await expect(toast(page)).toHaveText('+5 Exercise');
+    await expect(page.locator('.mala-center .big')).toHaveText('95');
   });
 
   test('manual minute buttons are one link away from the microphone (LOG-10)', async ({ page }) => {

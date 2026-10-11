@@ -199,7 +199,7 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
-| LOG-25 | Say or type a natural update | Understands one or more practice-and-minute pairs, including digits and number words: "walked 20, read fifteen" | Unit `voiceLog.test.ts` |
+| LOG-25 | Say or type a natural update | Understands conversational practice-and-duration sentences, including digits, number words, minutes before or after the practice, and harmless words such as "today": "I did an exercise for 5 minutes today" | Unit `voiceLog.test.ts`, E2E `voice-log.spec.ts` |
 | LOG-26 | Use the centre or sheet microphone | Starts listening, puts the transcript in the input and shows matched entries automatically; TikTym does not store the audio or transcript | E2E `voice-log.spec.ts` (real microphone: Manual) |
 | LOG-27 | A phrase is unclear or has no matching practice | Shows exactly which part was not understood and saves nothing until it is fixed | Unit `voiceLog.test.ts`, E2E `voice-log.spec.ts` |
 | LOG-28 | Review a voice log | Shows every matched practice and its minutes; the user can change or remove each one, then saves the batch with one confirmation and one Undo | E2E `voice-log.spec.ts` |

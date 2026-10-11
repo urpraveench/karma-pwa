@@ -140,6 +140,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** conversational voice phrases now understand "I did an exercise for 5 minutes today", durations before or after the practice, time words and hours, and ignore chapter/page numbers when an explicit duration is present (LOG-25, LOG-27), 11 October 2026
 - [x] **Claude:** voice-first logging: the centre action is now a microphone, starts listening in one tap, and automatically shows the transcript and matched entries; "Enter minutes manually" keeps the old minute buttons easy to reach (LOG-10, LOG-26), 11 October 2026
 - [x] **Claude:** voice logging 2/2: the log sheet now has microphone and typed input, editable review, safe handling for unclear speech and microphone errors, and a one-step batch save with one Undo; the Privacy Policy explains browser speech processing (LOG-26 to LOG-29), 11 October 2026
 - [x] **Claude:** voice logging 1/2: phrases such as "walked 20, read fifteen" become proposed practice-and-minute entries; digits, number words, custom practice names and unclear or ambiguous phrases are covered by unit tests (LOG-25, LOG-27), 11 October 2026

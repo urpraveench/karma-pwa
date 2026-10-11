@@ -23,11 +23,18 @@ const TENS: Record<string, number> = {
   twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90,
 };
 const NUMBER_WORDS = new Set([...Object.keys(ONES), ...Object.keys(TENS), 'hundred']);
-const FILLERS = new Set(['i', 'did', 'do', 'done', 'for', 'on', 'spent', 'spend', 'logged', 'log', 'minutes', 'minute', 'mins', 'min', 'and', 'then']);
+const FILLERS = new Set([
+  'i', 'did', 'do', 'done', 'have', 'was', 'went', 'for', 'of', 'on', 'in', 'at', 'a', 'an', 'the', 'my',
+  'spent', 'spend', 'logged', 'log', 'minutes', 'minute', 'mins', 'min', 'hours', 'hour', 'hrs', 'hr',
+  'and', 'then', 'just', 'about', 'around', 'today', 'yesterday', 'this', 'morning', 'afternoon', 'evening', 'tonight',
+]);
+const CONNECTORS = new Set(['and', 'then']);
+const MINUTE_UNITS = new Set(['minutes', 'minute', 'mins', 'min']);
+const HOUR_UNITS = new Set(['hours', 'hour', 'hrs', 'hr']);
 
 // Common practice words people say differently from how they name the practice.
 const GROUPS = [
-  new Set(['exercise', 'workout', 'gym', 'walk', 'run', 'yoga', 'cycle', 'cycling', 'move', 'movement']),
+  new Set(['exercise', 'workout', 'gym', 'walk', 'run', 'yoga', 'cycle', 'cycling', 'move', 'movement', 'cardio', 'lift', 'weights', 'pushup', 'swim']),
   new Set(['read', 'reading', 'book']),
   new Set(['study', 'course', 'learn', 'learning', 'lesson', 'class', 'upskill', 'upskilling']),
   new Set(['meditate', 'meditation', 'mindful', 'mindfulness', 'breathe', 'breathing']),
@@ -51,6 +58,9 @@ const canonical: Record<string, string> = {
   journaled: 'journal', journals: 'journal', journaling: 'journal',
   wrote: 'write', written: 'write', writes: 'write', writing: 'write',
   cycled: 'cycle', cycles: 'cycle', cycling: 'cycle',
+  lifted: 'lift', lifting: 'lift', weightlifting: 'lift',
+  swam: 'swim', swimming: 'swim',
+  'push-ups': 'pushup', pushups: 'pushup',
 };
 
 function words(text: string): Token[] {
@@ -106,14 +116,70 @@ function matchCategory(activity: Token[], categories: NamedCategory[]): NamedCat
   return scored[0].cat;
 }
 
-/**
- * Turns a short spoken update into proposed log entries. This never saves anything: callers must show the result
- * for review first. The matching stays on the device and deliberately rejects unclear practice names.
- */
-export function parseVoiceLog(text: string, categories: NamedCategory[]): VoiceLogResult {
-  const tokens = words(text);
-  if (!tokens.length) return { entries: [], unmatched: [] };
+type Duration = { start: number; numberEnd: number; end: number; minutes: number };
 
+function durationAt(tokens: Token[], start: number): Duration | null {
+  if (tokens[start]?.raw === 'half') {
+    const unit = tokens[start + 1]?.raw === 'a' || tokens[start + 1]?.raw === 'an' ? start + 2 : start + 1;
+    if (HOUR_UNITS.has(tokens[unit]?.raw)) return { start, numberEnd: unit, end: unit + 1, minutes: 30 };
+  }
+  if ((tokens[start]?.raw === 'a' || tokens[start]?.raw === 'an') && HOUR_UNITS.has(tokens[start + 1]?.raw)) {
+    return { start, numberEnd: start + 1, end: start + 2, minutes: 60 };
+  }
+  const number = numberAt(tokens, start);
+  if (!number) return null;
+  const unit = tokens[number.end]?.raw;
+  if (MINUTE_UNITS.has(unit)) return { start, numberEnd: number.end, end: number.end + 1, minutes: number.value };
+  if (HOUR_UNITS.has(unit)) return { start, numberEnd: number.end, end: number.end + 1, minutes: number.value * 60 };
+  return null;
+}
+
+function explicitDurations(tokens: Token[]): Duration[] {
+  const found: Duration[] = [];
+  for (let i = 0; i < tokens.length;) {
+    const duration = durationAt(tokens, i);
+    if (duration) { found.push(duration); i = duration.end; } else i++;
+  }
+  return found;
+}
+
+const afterLastConnector = (tokens: Token[]) => {
+  let at = -1;
+  tokens.forEach((token, index) => { if (CONNECTORS.has(token.raw)) at = index; });
+  return tokens.slice(at + 1);
+};
+const beforeFirstConnector = (tokens: Token[]) => {
+  const at = tokens.findIndex(token => CONNECTORS.has(token.raw));
+  return at < 0 ? tokens : tokens.slice(0, at);
+};
+
+function parseExplicit(tokens: Token[], categories: NamedCategory[]): VoiceLogResult {
+  const durations = explicitDurations(tokens);
+  const entries: VoiceLogEntry[] = [], unmatched: string[] = [];
+  const claimedGap = new Set<number>();
+  const source = tokens.map(token => token.raw).join(' ');
+
+  durations.forEach((duration, index) => {
+    const leftGap = tokens.slice(index ? durations[index - 1].end : 0, duration.start);
+    const rightGap = tokens.slice(duration.end, index + 1 < durations.length ? durations[index + 1].start : tokens.length);
+    const left = claimedGap.has(index - 1) ? [] : afterLastConnector(leftGap);
+    const right = beforeFirstConnector(rightGap);
+    const leftCat = matchCategory(activityTokens(left), categories);
+    const rightCat = matchCategory(activityTokens(right), categories);
+    let cat = leftCat || rightCat;
+    let usedRight = !leftCat && !!rightCat;
+    if (leftCat && rightCat && leftCat.id === rightCat.id) { cat = leftCat; usedRight = false; }
+    // When activities sit on both sides, spoken English usually attaches a duration to the activity before it.
+    if (leftCat && rightCat && leftCat.id !== rightCat.id) { cat = leftCat; usedRight = false; }
+    if (usedRight && !rightGap.some(token => CONNECTORS.has(token.raw))) claimedGap.add(index);
+
+    if (cat && duration.minutes >= 1 && duration.minutes <= 1440) entries.push({ catId: cat.id, minutes: duration.minutes, source });
+    else unmatched.push(source);
+  });
+  return { entries, unmatched };
+}
+
+function parseBare(tokens: Token[], categories: NamedCategory[]): VoiceLogResult {
   const entries: VoiceLogEntry[] = [], unmatched: string[] = [];
   let activityStart = 0, foundNumber = false;
   for (let i = 0; i < tokens.length;) {
@@ -128,9 +194,23 @@ export function parseVoiceLog(text: string, categories: NamedCategory[]): VoiceL
     activityStart = number.end;
     i = number.end;
   }
-
   const tail = activityTokens(tokens.slice(activityStart));
   if (tail.length) unmatched.push(tokens.slice(activityStart).map(t => t.raw).join(' '));
-  if (!foundNumber) unmatched.push(text.trim());
+  if (!foundNumber) unmatched.push(tokens.map(t => t.raw).join(' '));
+  return { entries, unmatched };
+}
+
+/**
+ * Turns a short spoken update into proposed log entries. This never saves anything: callers must show the result
+ * for review first. The matching stays on the device and deliberately rejects unclear practice names.
+ */
+export function parseVoiceLog(text: string, categories: NamedCategory[]): VoiceLogResult {
+  const entries: VoiceLogEntry[] = [], unmatched: string[] = [];
+  for (const clause of text.split(/[,.;!?\n]+/)) {
+    const tokens = words(clause);
+    if (!tokens.length) continue;
+    const result = explicitDurations(tokens).length ? parseExplicit(tokens, categories) : parseBare(tokens, categories);
+    entries.push(...result.entries); unmatched.push(...result.unmatched);
+  }
   return { entries, unmatched: [...new Set(unmatched.filter(Boolean))] };
 }

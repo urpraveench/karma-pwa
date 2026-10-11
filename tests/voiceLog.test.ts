@@ -19,11 +19,50 @@ describe('voice log phrase matching', () => {
     });
   });
 
+  it('accepts the exact conversational sentence reported from a phone (LOG-25)', () => {
+    expect(parseVoiceLog('I did an exercise for 5 minutes today', categories)).toEqual({
+      entries: [{ catId: 'exercise', minutes: 5, source: 'i did an exercise for 5 minutes today' }],
+      unmatched: [],
+    });
+  });
+
+  it('understands a duration before the practice and harmless time words (LOG-25)', () => {
+    expect(parseVoiceLog('Today I did five minutes of exercise', categories)).toMatchObject({
+      entries: [{ catId: 'exercise', minutes: 5 }], unmatched: [],
+    });
+    expect(parseVoiceLog('I exercised for ten minutes this morning', categories)).toMatchObject({
+      entries: [{ catId: 'exercise', minutes: 10 }], unmatched: [],
+    });
+  });
+
+  it('converts hours and understands common exercise words (LOG-25)', () => {
+    expect(parseVoiceLog('I did cardio for half an hour', categories)).toMatchObject({
+      entries: [{ catId: 'exercise', minutes: 30 }], unmatched: [],
+    });
+    expect(parseVoiceLog('I went swimming for 1 hour yesterday', categories)).toMatchObject({
+      entries: [{ catId: 'exercise', minutes: 60 }], unmatched: [],
+    });
+  });
+
+  it('uses explicit durations instead of chapter or page numbers (LOG-25, LOG-27)', () => {
+    expect(parseVoiceLog('I read chapter 5 for 20 minutes', categories)).toMatchObject({
+      entries: [{ catId: 'reading', minutes: 20 }], unmatched: [],
+    });
+    expect(parseVoiceLog('I read 15 pages for 20 minutes today', categories)).toMatchObject({
+      entries: [{ catId: 'reading', minutes: 20 }], unmatched: [],
+    });
+  });
+
+  it('handles two conversational entries ending with today (LOG-25)', () => {
+    expect(parseVoiceLog('I did 5 minutes of exercise and read for 10 minutes today', categories)).toMatchObject({
+      entries: [{ catId: 'exercise', minutes: 5 }, { catId: 'reading', minutes: 10 }], unmatched: [],
+    });
+  });
+
   it('finds several entries even when speech has no punctuation (LOG-25)', () => {
-    expect(parseVoiceLog('I exercised for thirty minutes then studied forty five minutes', categories).entries).toEqual([
-      { catId: 'exercise', minutes: 30, source: 'i exercised for thirty' },
-      { catId: 'study', minutes: 45, source: 'minutes then studied forty five' },
-    ]);
+    expect(parseVoiceLog('I exercised for thirty minutes then studied forty five minutes', categories)).toMatchObject({
+      entries: [{ catId: 'exercise', minutes: 30 }, { catId: 'study', minutes: 45 }], unmatched: [],
+    });
   });
 
   it('prefers an exact practice over a broad related practice (LOG-25)', () => {

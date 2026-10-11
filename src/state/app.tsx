@@ -159,7 +159,7 @@ function useAppState() {
       setData({ ...cur, logs: cur.logs.filter(x => !ids.has(x.id)) });
       Promise.all(logs.map(l => store.deleteLog(l))).catch(() => toast(SAVE_FAILED)); toast('Undone');
     };
-    if (before.totals.end > 0 && after.totals.end === 0) { celebrate(after.streak, undo); return; }
+    if (before.totals.end > 0 && after.totals.end === 0) { celebrate(after.streak, undo, after.shields > before.shields); return; }
     if (logs.length > 1) {
       const minutes = logs.reduce((n, l) => n + l.minutes, 0);
       toast(`Logged ${logs.length} entries · ${minutes} minutes`, 4500, undo); return;

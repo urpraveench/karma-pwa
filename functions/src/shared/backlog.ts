@@ -40,6 +40,10 @@ export interface Calc {
   /** Consecutive clear days (nothing pending at day end), counting today only if clear. */
   streak: number;
   best: number;
+  /** Streak shields held now (CALC-14). */
+  shields: number;
+  /** Missed days a shield covered, oldest first. */
+  shielded: DateStr[];
   /** Minutes logged, by category then date. */
   done: Record<string, Record<DateStr, number>>;
 }
@@ -64,6 +68,8 @@ export const capDays = (settings: Settings | undefined) => {
   const v = settings?.backlogCap;
   return v === undefined ? 2 : Number(v);
 };
+
+export const SHIELD_MAX = 2;
 
 export const byOrder = (a: Category, b: Category) => (a.order ?? 0) - (b.order ?? 0);
 
@@ -98,12 +104,19 @@ export function calc(data: AppData, asOf: DateStr = today()): Calc {
   const dayEnd = (d: DateStr) => sum(data.categories.map(c => per[c.id].byDate.get(d)?.end || 0));
   const dayDue = (d: DateStr) => sum(data.categories.map(c => per[c.id].byDate.get(d)?.owed || 0));
   const earliest = data.categories.reduce((m, c) => c.startDate < m ? c.startDate : m, asOf);
-  let streak = 0, d = dayEnd(asOf) === 0 && totals.owed > 0 ? asOf : addDays(asOf, -1);
-  while (d >= earliest && dayEnd(d) === 0) { if (dayDue(d) > 0) streak++; d = addDays(d, -1); }
-  let best = 0, run = 0;
-  for (let x = earliest; x < asOf; x = addDays(x, 1)) { if (dayEnd(x) === 0) { if (dayDue(x) > 0) run++; } else run = 0; best = Math.max(best, run); }
-  best = Math.max(best, streak);
-  return { per, totals, streak, best, done };
+  // One pass, oldest first. Seven clear days in a row earn a shield (SHIELD_MAX at most); a missed day spends one instead
+  // of breaking the streak, and counts towards neither. Today counts only once clear, and never spends one: it isn't over.
+  let streak = 0, best = 0, shields = 0, week = 0;
+  const shielded: DateStr[] = [];
+  for (let x = earliest; x <= asOf; x = addDays(x, 1)) {
+    if (dayEnd(x) === 0) {
+      if (dayDue(x) > 0) { streak++; if (++week === 7) { week = 0; shields = Math.min(SHIELD_MAX, shields + 1); } }
+    } else if (x === asOf) break;
+    else if (shields > 0) { shields--; week = 0; shielded.push(x); }
+    else { streak = 0; week = 0; }
+    best = Math.max(best, streak);
+  }
+  return { per, totals, streak, best, shields, shielded, done };
 }
 
 /**

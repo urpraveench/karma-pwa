@@ -4,7 +4,7 @@ import { InstallCard } from '../components/InstallGuide';
 import { MomentCard } from '../components/MomentCard';
 import { ReminderCard } from '../components/Reminders';
 import { activeCats, showUpStreak } from '../lib/backlog';
-import { fmtLong } from '../lib/date';
+import { addDays, fmtLong } from '../lib/date';
 import { greeting } from '../lib/user';
 import { useApp } from '../state/app';
 import { useTimer } from '../state/timer';
@@ -23,7 +23,8 @@ export function Today() {
   else if (t.end === 0) center = <><span className="clear-word">All clear</span><span className="lbl">{t.done} points logged today</span></>;
   else center = <><span className="big">{t.end}</span><span className="lbl">points left today</span>{t.carryLeft > 0 && <span className="carry">{t.carryLeft} carried over</span>}</>;
 
-  const showNudge = !m && c.streak > 0 && t.end > 0 && now.getHours() >= 18;
+  const saved = c.streak > 0 && c.shielded.at(-1) === addDays(T, -1);
+  const showNudge = !saved && !m && c.streak > 0 && t.end > 0 && now.getHours() >= 18;
   const live = tm && timerCat && cats.some(x => x.id === tm.catId) ? { color: timerCat.color, minutes: minute } : undefined;
 
   return (
@@ -31,7 +32,10 @@ export function Today() {
       <header className="top">
         <div><p className="date">{fmtLong(T)}</p><h1 className="hello">{greeting(user, now.getHours())}</h1></div>
         {c.streak ? (
-          <div className="streak" title="Days in a row with nothing pending"><b>{c.streak}</b><span>day streak</span>{c.best > c.streak && <small>best {c.best}</small>}</div>
+          <div className="streak" title={`Days in a row with nothing pending${c.shields ? '. A shield keeps the streak if you miss a day; seven clear days in a row earn one' : ''}`}>
+            <b>{c.streak}</b><span>day streak</span>{c.best > c.streak && <small>best {c.best}</small>}
+            {c.shields > 0 && <small className="shields">{c.shields} shield{c.shields > 1 ? 's' : ''}</small>}
+          </div>
         ) : su >= 2 ? (
           <div className="streak" title="Days in a row with at least one entry"><b>{su}</b><span>days showing up</span></div>
         ) : null}
@@ -48,7 +52,8 @@ export function Today() {
         <span><i style={{ background: 'var(--due)' }} />Carried over</span>
         <span><i style={{ background: 'var(--line)' }} />Still due</span>
       </p>
-      {showNudge && <div className="nudge">Clear {t.end} more to keep your {c.streak}-day streak</div>}
+      {saved && <div className="nudge">A shield kept your {c.streak}-day streak yesterday.</div>}
+      {showNudge && <div className="nudge">Clear {t.end} more to keep your {c.streak}-day streak{c.shields ? ' without using a shield' : ''}</div>}
       {!tm && !m && cats.length > 0 && !tipHidden && (
         <div className="tip">
           <span className="tip-play"><Icon.play /></span>

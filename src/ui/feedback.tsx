@@ -5,11 +5,12 @@ import { Mark } from './icons';
 // One toast at a time (a new one replaces the old), plus the full-screen "All clear" celebration.
 
 interface ToastState { id: number; msg: string; ms: number; undo?: () => void }
-interface CelebrateState { streak: number; undo: () => void }
+interface CelebrateState { streak: number; undo: () => void; shield: boolean }
 
 interface FeedbackApi {
   toast(msg: string, ms?: number, undo?: () => void): void;
-  celebrate(streak: number, undo: () => void): void;
+  /** `shield`: this clear day earned a streak shield (CALC-14). */
+  celebrate(streak: number, undo: () => void, shield?: boolean): void;
 }
 
 const Ctx = createContext<FeedbackApi | null>(null);
@@ -23,8 +24,8 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
   const seq = useRef(0);
 
   const toast = useCallback((msg: string, ms = 2600, undo?: () => void) => setToast({ id: ++seq.current, msg, ms, undo }), []);
-  const celebrate = useCallback((streak: number, undo: () => void) => {
-    haptic([15, 60, 15, 60, 40]); setToast(null); setCel({ streak, undo });
+  const celebrate = useCallback((streak: number, undo: () => void, shield = false) => {
+    haptic([15, 60, 15, 60, 40]); setToast(null); setCel({ streak, undo, shield });
   }, []);
 
   useEffect(() => {
@@ -54,7 +55,7 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
           <div>
             <Mark className="cel-mark" filled={27} color="var(--gold)" />
             <span className="clear-word">All clear</span>
-            <p>{cel.streak > 1 ? `${cel.streak}-day streak. ` : 'Nothing left today. '}{MILESTONES[cel.streak] || ''}</p>
+            <p>{cel.streak > 1 ? `${cel.streak}-day streak. ` : 'Nothing left today. '}{cel.shield ? 'You earned a shield: it keeps your streak if you miss a day.' : MILESTONES[cel.streak] || ''}</p>
             <button className="btn btn-2" type="button">Undo last entry</button>
           </div>
         </div>

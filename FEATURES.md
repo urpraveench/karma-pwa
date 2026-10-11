@@ -24,8 +24,8 @@ Summary of coverage at the time of writing:
 |---|---|---|---|---|
 | 1. Accounts and sign-in | 28 | 25 | 0 | 3 |
 | 2. First run | 12 | 11 | 0 | 1 |
-| 3. Backlog rules | 13 | 13 | 0 | 0 |
-| 4. Today screen | 16 | 16 | 0 | 0 |
+| 3. Backlog rules | 14 | 14 | 0 | 0 |
+| 4. Today screen | 17 | 17 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
 | 6. Logging minutes | 26 | 26 | 0 | 0 |
 | 7. Focus timer | 22 | 19 | 0 | 3 |
@@ -38,7 +38,7 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 22 | 22 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 15 | 15 | 0 | 0 |
-| **Total** | **306** | **291** | **0** | **15** |
+| **Total** | **308** | **293** | **0** | **15** |
 
 ---
 
@@ -116,10 +116,11 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | CALC-07 | Days before a practice's start date | Never owed | Unit `backlog.test.ts` |
 | CALC-08 | Archived practice | Backlog clears from the archive date; nothing accrues; excluded from today's totals | Unit `backlog.test.ts` |
 | CALC-09 | Backfill a past day | Every later day is recalculated | Unit `backlog.test.ts` |
-| CALC-10 | Streak | Consecutive days ending with nothing owed; today counts only once it is clear; days with nothing due don't break or extend it | Unit `backlog.test.ts` |
+| CALC-10 | Streak | Consecutive days ending with nothing owed; today counts only once it is clear; days with nothing due don't break or extend it; a shield can cover a missed day (CALC-14) | Unit `backlog.test.ts` |
 | CALC-11 | Best streak | Longest run on record, including the current one | Unit `backlog.test.ts` |
 | CALC-12 | "Days showing up" streak | Consecutive days with any entry; starts from yesterday if today has none yet | Unit `backlog.test.ts` |
 | CALC-13 | Carried over still to clear | Today's carried-in minutes not yet worked off | Unit `backlog.test.ts` |
+| CALC-14 | Streak shields | Seven clear days in a row earn a shield (2 at most). A missed day spends a shield instead of breaking the streak; the missed minutes still carry over, and the shielded day doesn't count towards the streak or the next shield. Today never spends one. Worked out from history, so nothing extra is stored | Unit `backlog.test.ts`, E2E `today-states.spec.ts` |
 
 ## 4. Today screen
 
@@ -141,6 +142,7 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | TODAY-14 | Focus timer tip | Shown until dismissed or a timer is first started; hidden when a moment card or timer is showing | E2E `today-states.spec.ts` |
 | TODAY-15 | No active practices | "No practices yet. Add one in Setup." | E2E `log-sheet.spec.ts` |
 | TODAY-16 | Practice order | Rows follow the practice order set in Setup | E2E `today.spec.ts` |
+| TODAY-17 | Streak shields on Today | The streak badge shows shields held ("1 shield"); the day after a shield is spent: "A shield kept your N-day streak yesterday." in place of the evening nudge; with a shield held, the evening nudge adds "without using a shield" | E2E `today-states.spec.ts` |
 
 ## 5. Moments
 
@@ -173,7 +175,7 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 | LOG-02 | Tap ✓ on a cleared practice | Opens the log sheet for that practice | E2E `log-sheet.spec.ts` |
 | LOG-03 | Undo from the toast | Removes the entry and restores the totals; toast "Undone" | E2E `today.spec.ts` |
 | LOG-04 | Clear the last pending practice | Full-screen "All clear" celebration with the streak; tap anywhere to close, or Undo last entry | E2E `today.spec.ts`, `today-states.spec.ts` |
-| LOG-05 | Streak milestones in the celebration | Extra line at 3, 7, 21, 30, 50, 100 and 108 days | E2E `today-states.spec.ts` |
+| LOG-05 | Streak milestones in the celebration | Extra line at 3, 7, 21, 30, 50, 100 and 108 days; on a clear day that earns a shield, "You earned a shield: it keeps your streak if you miss a day." instead | E2E `today-states.spec.ts` |
 
 ### Log sheet
 

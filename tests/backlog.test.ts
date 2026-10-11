@@ -72,6 +72,23 @@ describe('calc', () => {
     expect(c.totals).toMatchObject({ owed: 100, done: 100, end: 0 });
   });
 
+  it('a clear week earns a shield that covers one missed day (CALC-14)', () => {
+    const days = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, i) => log(`2026-10-${String(from + i).padStart(2, '0')}`, 100));
+    // 1–7 clear earns a shield; 8 missed; 9 pays it back with today's 100
+    const logs = [...days(1, 7), log('2026-10-09', 200)];
+    const c = calc(data([cat()], logs), '2026-10-09');
+    expect(c).toMatchObject({ streak: 8, best: 8, shields: 0, shielded: ['2026-10-08'] });
+    // today isn't over, so it never spends a shield
+    expect(calc(data([cat()], days(1, 7)), '2026-10-08')).toMatchObject({ streak: 7, shields: 1, shielded: [] });
+    // the shielded day restarts the count to the next shield: 9–14 isn't a week, 9–15 is
+    expect(calc(data([cat()], [...logs, ...days(10, 14)]), '2026-10-14').shields).toBe(0);
+    expect(calc(data([cat()], [...logs, ...days(10, 15)]), '2026-10-15').shields).toBe(1);
+    // two at most
+    expect(calc(data([cat()], days(1, 28)), '2026-10-28').shields).toBe(2);
+    // with no shield, a miss still breaks the streak
+    expect(calc(data([cat()], [...days(1, 6), log('2026-10-08', 200)]), '2026-10-08')).toMatchObject({ streak: 1, best: 6, shields: 0 });
+  });
+
   it('backfilling a past day recalculates every day after it', () => {
     const before = calc(data([cat()], [log('2026-10-02', 100), log('2026-10-03', 100)]), '2026-10-03').per.c;
     expect(before.byDate.get('2026-10-01')!.end).toBe(100);

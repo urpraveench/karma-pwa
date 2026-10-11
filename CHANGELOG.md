@@ -13,6 +13,10 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
+## Coming next
+
+- **Streak shields.** Clear every practice seven days in a row and you earn a shield (you can hold two). If you miss a day, a shield keeps your streak going. The minutes you missed still carry over.
+
 ## 1.10.2 · 11 October 2026 · Faster voice updates
 
 - **Faster voice updates.** TikTym skips a security check it was repeating on every voice update, so your entries come back sooner.

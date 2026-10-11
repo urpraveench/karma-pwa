@@ -60,6 +60,23 @@ test.describe('Today states', () => {
     await expect(page.locator('.nudge')).toHaveCount(0);
   });
 
+  test('a held shield shows on the badge and in the evening nudge (TODAY-17)', async ({ page }) => {
+    // 30 Sep to 6 Oct clear: a week, so one shield
+    await signInWith(page, seedData([reading('2026-09-30')], days('2026-09-30', '2026-10-06').map(d => ['r', d, 30])), at(19));
+    await expect(page.locator('.streak b')).toHaveText('7');
+    await expect(page.locator('.streak .shields')).toHaveText('1 shield');
+    await page.click('.m-x'); // the "On a roll" card
+    await expect(page.locator('.nudge')).toHaveText('Clear 30 more to keep your 7-day streak without using a shield');
+  });
+
+  test('the day after a shield is spent, Today says so (TODAY-17)', async ({ page }) => {
+    // 29 Sep to 5 Oct clear earns a shield; 6 Oct missed spends it
+    await signInWith(page, seedData([reading('2026-09-29')], days('2026-09-29', '2026-10-05').map(d => ['r', d, 30])), at(19));
+    await expect(page.locator('.streak b')).toHaveText('7');
+    await expect(page.locator('.streak .shields')).toHaveCount(0);
+    await expect(page.locator('.nudge')).toHaveText('A shield kept your 7-day streak yesterday.');
+  });
+
   test('focus timer tip shows once the moment is hidden, and stays dismissed (TODAY-14)', async ({ page }) => {
     await signIn(page);
     await expect(page.locator('.tip')).toHaveCount(0); // the "Start small" card is showing
@@ -93,6 +110,12 @@ test.describe('Today states', () => {
     await signInWith(page, seedData([reading('2026-10-05')], [['r', '2026-10-05', 30], ['r', '2026-10-06', 30]]));
     await page.locator('.cat .qbtn').click();
     await expect(page.locator('.celebrate p')).toHaveText('3-day streak. Three days running.');
+  });
+
+  test('a perfect week earns a shield in the celebration (LOG-05, CALC-14)', async ({ page }) => {
+    await signInWith(page, seedData([reading('2026-10-01')], days('2026-10-01', '2026-10-06').map(d => ['r', d, 30])));
+    await page.locator('.cat .qbtn').click();
+    await expect(page.locator('.celebrate p')).toHaveText('7-day streak. You earned a shield: it keeps your streak if you miss a day.');
   });
 
   test('the day rolls over at midnight (APP-09)', async ({ page }) => {

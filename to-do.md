@@ -104,6 +104,7 @@ From FEATURES.md › "What's left to test". None left: every scenario has a test
 
 Help people add TikTym to their home screen (friends didn't know how; most only know app stores). Part of 1.8.0.
 
+- [ ] **Claude:** voice logging 2/2: add the microphone, typed fallback, editable review and one-step batch save to the log sheet; cover browser errors and document how speech is handled (LOG-26, LOG-28, LOG-29).
 
 - [ ] **Deferred (10 October 2026, your call):** while a timer runs, Today's big number stays at saved points even though the beads already show the timer's minutes, so the two disagree (found by Praveen). Proposed: the number counts down live (capped at what the practice still needs), no extra line in the circle, and "20 of 30 · timing" on the practice's row.
 - [ ] **Deferred (10 October 2026, your call):** the weekend card's "291 short, about 146 a day" doesn't match Today's "195 left" (the card splits the week's shortfall evenly and counts every minute; Today asks for carried minutes per practice). Proposed: the card says "Clear today's 195, including 95 carried over, then tomorrow's 100, and the week is done", with stats done this week / weekly goal / left today (MOM-03).
@@ -140,6 +141,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** voice logging 1/2: phrases such as "walked 20, read fifteen" become proposed practice-and-minute entries; digits, number words, custom practice names and unclear or ambiguous phrases are covered by unit tests (LOG-25, LOG-27), 11 October 2026
 - [x] **Claude:** logo set in `public/brand/` (`npm run brand:kit`): the ring, the wordmark, ring + name side by side and stacked, and both with the brand line, each in colour, colour on dark, black and white, as SVG (text outlined) and transparent PNG, plus the app icon; a README says which to use where. Kept out of the app's offline cache; online at app.tiktym.com/brand/ from the next app deploy, 11 October 2026
 - [x] **Claude:** weekly recap moved onto the queue (NOTIF-16): the Monday 8 am job queries only accounts with an entry in the last two weeks (`mail/{uid}.lastLogged`) and queues one named task each (`recap-<uid>-<week>`, so a rerun can't queue twice); `recapSend` sends 2 a second, retries 3 times, checks again before sending, and skips the week if another email went that day. No more 9-minute limit or listing every sign-up, 10 October 2026
 - [x] App badge checked live on iPhone: the icon showed 4, matching the practices left in the reminder (NOTIF-13), 10 October 2026

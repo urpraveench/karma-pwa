@@ -379,7 +379,8 @@ a.li{text-decoration:none;color:inherit}
 .moved-bar a{flex:none;background:var(--bg);color:var(--ink);border-radius:10px;padding:6px 14px;font-weight:700;font-size:14px;text-decoration:none}
 
 .toast{display:flex;align-items:center;gap:16px;position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;
-  background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;font-weight:600;font-size:15px;max-width:90vw;animation:up .25s}
+  background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;font-weight:600;font-size:15px;max-width:90vw;animation:toast-up .25s}
+@keyframes toast-up{from{transform:translate(-50%,100%)}to{transform:translate(-50%,0)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 

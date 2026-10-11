@@ -143,6 +143,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** toasts slide straight up into place instead of starting half their width to the right and jumping back to centre, 11 October 2026
 - [x] **Claude:** "Today's idea": one short line a day on Today, from a set written for TikTym (TODAY-19), 11 October 2026
 - [x] **Claude:** "Just 7 minutes" button on Today that starts a timer on the easiest practice still due (TODAY-18), 11 October 2026
 - [x] **Claude:** one-tap mood after logging: the toast offers 😞 😐 🙂, saved with the entry; Insights says which practice leaves you feeling good (LOG-31, INS-21), 11 October 2026

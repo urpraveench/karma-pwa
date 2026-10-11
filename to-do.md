@@ -32,7 +32,6 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] **You:** after the fix, run the 5-minute Meditation test again: the chime should play right as the timer reaches its target (TIMER-05).
 - [ ] **You:** on a real iPhone and Android phone, tap the centre microphone and say "walked 20, read 15"; check the sound bars move, "Understanding…" appears, both entries reach the review screen without being saved, and blocking microphone access leaves typing usable (LOG-26, LOG-29). The full flow was checked in Chrome on a Mac on 11 October.
-- [ ] After `understandVoice` is deployed: on app.tiktym.com, log "I did an exercise for 5 minutes today" by voice and check it reaches review; `firebase functions:log --only understandVoice` shows no errors (LOG-30)
 - [ ] A Firestore failure on load returns to sign-in with a clear message (FIRST-04)
 - [ ] A Firebase SDK failure to load shows its message (AUTH-22)
 - [ ] Test mode never downloads the Firebase SDK: check the network tab (SYNC-14)
@@ -144,6 +143,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Checked: voice logging works on app.tiktym.com through `understandVoice`; two calls passed sign-in and App Check with no AI errors in the log (LOG-30), 11 October 2026
 - [x] **Claude:** fixed voice failing with "Sign in again" on 1.10.0: `understandVoice` asked to consume App Check tokens, which its account had no permission for; it now only verifies them (LOG-30), 11 October 2026
 - [x] Released 1.10.0: voice logging from the centre microphone in a compact sheet, through TikTym's `understandVoice` function (5 a minute, 50 a day per account); `understandVoice` and `voiceUsageCleanup` deployed, weekly recap still held for Monday, 11 October 2026
 - [x] **You:** added a billing budget with email alerts and disabled the Firebase AI Logic API, so browsers can no longer call Gemini directly, 11 October 2026

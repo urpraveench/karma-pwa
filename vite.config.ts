@@ -48,7 +48,7 @@ export default defineConfig({
         // The app shell (hashed JS/CSS + index.html) is precached, so the app opens offline.
         // Firebase chunks are only fetched in firebase mode; cache them when used rather than up front.
         globPatterns: ['**/*.{js,css,html,svg,png}'],
-        globIgnores: ['**/index.esm-*.js', '**/firebase*.js', '**/og.png'], // og.png is only for link previews
+        globIgnores: ['**/index.esm-*.js', '**/firebase*.js', '**/og.png', 'brand/**'], // og.png is only for link previews; brand/ is the logo set
         navigateFallback: 'index.html',
         // Firebase Hosting's reserved addresses, such as the Google sign-in relay page /__/auth/handler,
         // must reach the network; answering them with the app shell breaks sign-in.

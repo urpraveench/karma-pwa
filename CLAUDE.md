@@ -50,6 +50,7 @@ Every deploy gets a new version, so the app's version label and update bar mean 
 | `npm run site:install-videos` | Re-record the website's install videos (iOS simulator and Android emulator, from the live app) |
 | `npm run site:updates` | Rebuild the website's What's new page (`site/updates/`) from CHANGELOG.md |
 | `npm run og:image` | Redraw the link-preview image (app and website) |
+| `npm run brand:kit` | Redraw the logo set in `public/brand/` (every lockup and colour, SVG and PNG) |
 
 ## Conventions
 

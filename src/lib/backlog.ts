@@ -68,7 +68,8 @@ export const capDays = (settings: Settings | undefined) => {
   return v === undefined ? 2 : Number(v);
 };
 
-export const SHIELD_MAX = 2;
+/** Clear days in a row that earn a streak shield, and the most shields held (CALC-14). */
+export const SHIELD_DAYS = 3, SHIELD_MAX = 3;
 
 export const byOrder = (a: Category, b: Category) => (a.order ?? 0) - (b.order ?? 0);
 
@@ -103,13 +104,13 @@ export function calc(data: AppData, asOf: DateStr = today()): Calc {
   const dayEnd = (d: DateStr) => sum(data.categories.map(c => per[c.id].byDate.get(d)?.end || 0));
   const dayDue = (d: DateStr) => sum(data.categories.map(c => per[c.id].byDate.get(d)?.owed || 0));
   const earliest = data.categories.reduce((m, c) => c.startDate < m ? c.startDate : m, asOf);
-  // One pass, oldest first. Seven clear days in a row earn a shield (SHIELD_MAX at most); a missed day spends one instead
+  // One pass, oldest first. SHIELD_DAYS clear days in a row earn a shield (SHIELD_MAX at most); a missed day spends one instead
   // of breaking the streak, and counts towards neither. Today counts only once clear, and never spends one: it isn't over.
   let streak = 0, best = 0, shields = 0, week = 0;
   const shielded: DateStr[] = [];
   for (let x = earliest; x <= asOf; x = addDays(x, 1)) {
     if (dayEnd(x) === 0) {
-      if (dayDue(x) > 0) { streak++; if (++week === 7) { week = 0; shields = Math.min(SHIELD_MAX, shields + 1); } }
+      if (dayDue(x) > 0) { streak++; if (++week === SHIELD_DAYS) { week = 0; shields = Math.min(SHIELD_MAX, shields + 1); } }
     } else if (x === asOf) break;
     else if (shields > 0) { shields--; week = 0; shielded.push(x); }
     else { streak = 0; week = 0; }

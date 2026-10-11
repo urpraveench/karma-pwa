@@ -16,7 +16,7 @@ interface FeedbackApi {
 const Ctx = createContext<FeedbackApi | null>(null);
 export const useFeedback = () => useContext(Ctx)!;
 
-const MILESTONES: Record<number, string> = { 3: 'Three days running.', 7: 'A full week.', 21: '21 days. This is a habit now.', 30: 'A month without a gap.', 50: 'Fifty days.', 100: 'A hundred days.', 108: '108 days. A full mala.' };
+const MILESTONES: Record<number, string> = { 7: 'A full week.', 21: '21 days. This is a habit now.', 30: 'A month without a gap.', 50: 'Fifty days.', 100: 'A hundred days.', 108: '108 days. A full mala.' };
 
 export function FeedbackProvider({ children }: { children: ReactNode }) {
   const [toastState, setToast] = useState<ToastState | null>(null);

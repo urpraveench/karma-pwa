@@ -14,13 +14,13 @@ test.describe('Today states', () => {
   });
 
   test('streak badge, with best when it is higher (TODAY-03)', async ({ page }) => {
-    // best run of 5 (26–30 Sep), a miss on 1 Oct paid back on 2–3 Oct, then 4 clear days
-    const logs = [...days('2026-09-26', '2026-09-30').map(d => ['r', d, 30] as const), ['r', '2026-10-02', 30] as const, ['r', '2026-10-03', 60] as const,
+    // best run of 5 (26–30 Sep, earning a shield), misses on 1 Oct (shielded) and 2 Oct (breaks it) paid back on 3 Oct, then 3 clear days
+    const logs = [...days('2026-09-26', '2026-09-30').map(d => ['r', d, 30] as const), ['r', '2026-10-03', 90] as const,
       ...days('2026-10-04', '2026-10-06').map(d => ['r', d, 30] as const)];
     await signInWith(page, seedData([reading('2026-09-26')], logs.map(l => [...l])));
     await expect(page.locator('.streak b')).toHaveText('4');
     await expect(page.locator('.streak span')).toHaveText('day streak');
-    await expect(page.locator('.streak small')).toHaveText('best 5');
+    await expect(page.locator('.streak small').first()).toHaveText('best 5');
   });
 
   test('"days showing up" when there is no streak (TODAY-04)', async ({ page }) => {
@@ -61,20 +61,20 @@ test.describe('Today states', () => {
   });
 
   test('a held shield shows on the badge and in the evening nudge (TODAY-17)', async ({ page }) => {
-    // 30 Sep to 6 Oct clear: a week, so one shield
+    // 30 Sep to 6 Oct clear: seven days, so two shields
     await signInWith(page, seedData([reading('2026-09-30')], days('2026-09-30', '2026-10-06').map(d => ['r', d, 30])), at(19));
     await expect(page.locator('.streak b')).toHaveText('7');
-    await expect(page.locator('.streak .shields')).toHaveText('1 shield');
+    await expect(page.locator('.streak .shields')).toHaveText('2 shields');
     await page.click('.m-x'); // the "On a roll" card
     await expect(page.locator('.nudge')).toHaveText('Clear 30 more to keep your 7-day streak without using a shield');
   });
 
   test('the day after a shield is spent, Today says so (TODAY-17)', async ({ page }) => {
-    // 29 Sep to 5 Oct clear earns a shield; 6 Oct missed spends it
-    await signInWith(page, seedData([reading('2026-09-29')], days('2026-09-29', '2026-10-05').map(d => ['r', d, 30])), at(19));
-    await expect(page.locator('.streak b')).toHaveText('7');
+    // 3 to 5 Oct clear earns a shield; 6 Oct missed spends it
+    await signInWith(page, seedData([reading('2026-10-03')], days('2026-10-03', '2026-10-05').map(d => ['r', d, 30])), at(19));
+    await expect(page.locator('.streak b')).toHaveText('3');
     await expect(page.locator('.streak .shields')).toHaveCount(0);
-    await expect(page.locator('.nudge')).toHaveText('A shield kept your 7-day streak yesterday.');
+    await expect(page.locator('.nudge')).toHaveText('A shield kept your 3-day streak yesterday.');
   });
 
   test('focus timer tip shows once the moment is hidden, and stays dismissed (TODAY-14)', async ({ page }) => {
@@ -107,15 +107,15 @@ test.describe('Today states', () => {
   });
 
   test('streak milestone in the celebration (LOG-05)', async ({ page }) => {
-    await signInWith(page, seedData([reading('2026-10-05')], [['r', '2026-10-05', 30], ['r', '2026-10-06', 30]]));
-    await page.locator('.cat .qbtn').click();
-    await expect(page.locator('.celebrate p')).toHaveText('3-day streak. Three days running.');
-  });
-
-  test('a perfect week earns a shield in the celebration (LOG-05, CALC-14)', async ({ page }) => {
     await signInWith(page, seedData([reading('2026-10-01')], days('2026-10-01', '2026-10-06').map(d => ['r', d, 30])));
     await page.locator('.cat .qbtn').click();
-    await expect(page.locator('.celebrate p')).toHaveText('7-day streak. You earned a shield: it keeps your streak if you miss a day.');
+    await expect(page.locator('.celebrate p')).toHaveText('7-day streak. A full week.');
+  });
+
+  test('three clear days earn a shield in the celebration (LOG-05, CALC-14)', async ({ page }) => {
+    await signInWith(page, seedData([reading('2026-10-05')], [['r', '2026-10-05', 30], ['r', '2026-10-06', 30]]));
+    await page.locator('.cat .qbtn').click();
+    await expect(page.locator('.celebrate p')).toHaveText('3-day streak. You earned a shield: it keeps your streak if you miss a day.');
   });
 
   test('the day rolls over at midnight (APP-09)', async ({ page }) => {

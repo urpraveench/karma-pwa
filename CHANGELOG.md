@@ -15,7 +15,7 @@ Format, newest first:
 
 ## Coming next
 
-- **Streak shields.** Clear every practice seven days in a row and you earn a shield (you can hold two). If you miss a day, a shield keeps your streak going. The minutes you missed still carry over.
+- **Streak shields.** Clear every practice three days in a row and you earn a shield (you can hold three). If you miss a day, a shield keeps your streak going. The minutes you missed still carry over.
 
 ## 1.10.2 · 11 October 2026 · Faster voice updates
 

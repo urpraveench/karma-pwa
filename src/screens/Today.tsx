@@ -32,7 +32,7 @@ export function Today() {
       <header className="top">
         <div><p className="date">{fmtLong(T)}</p><h1 className="hello">{greeting(user, now.getHours())}</h1></div>
         {c.streak ? (
-          <div className="streak" title={`Days in a row with nothing pending${c.shields ? '. A shield keeps the streak if you miss a day; seven clear days in a row earn one' : ''}`}>
+          <div className="streak" title={`Days in a row with nothing pending${c.shields ? '. A shield keeps the streak if you miss a day; three clear days in a row earn one' : ''}`}>
             <b>{c.streak}</b><span>day streak</span>{c.best > c.streak && <small>best {c.best}</small>}
             {c.shields > 0 && <small className="shields">{c.shields} shield{c.shields > 1 ? 's' : ''}</small>}
           </div>

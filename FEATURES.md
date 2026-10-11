@@ -120,7 +120,7 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | CALC-11 | Best streak | Longest run on record, including the current one | Unit `backlog.test.ts` |
 | CALC-12 | "Days showing up" streak | Consecutive days with any entry; starts from yesterday if today has none yet | Unit `backlog.test.ts` |
 | CALC-13 | Carried over still to clear | Today's carried-in minutes not yet worked off | Unit `backlog.test.ts` |
-| CALC-14 | Streak shields | Seven clear days in a row earn a shield (2 at most). A missed day spends a shield instead of breaking the streak; the missed minutes still carry over, and the shielded day doesn't count towards the streak or the next shield. Today never spends one. Worked out from history, so nothing extra is stored | Unit `backlog.test.ts`, E2E `today-states.spec.ts` |
+| CALC-14 | Streak shields | Three clear days in a row earn a shield (3 at most). A missed day spends a shield instead of breaking the streak; the missed minutes still carry over, and the shielded day doesn't count towards the streak or the next shield. Today never spends one. Worked out from history, so nothing extra is stored | Unit `backlog.test.ts`, E2E `today-states.spec.ts` |
 
 ## 4. Today screen
 
@@ -175,7 +175,7 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 | LOG-02 | Tap ✓ on a cleared practice | Opens the log sheet for that practice | E2E `log-sheet.spec.ts` |
 | LOG-03 | Undo from the toast | Removes the entry and restores the totals; toast "Undone" | E2E `today.spec.ts` |
 | LOG-04 | Clear the last pending practice | Full-screen "All clear" celebration with the streak; tap anywhere to close, or Undo last entry | E2E `today.spec.ts`, `today-states.spec.ts` |
-| LOG-05 | Streak milestones in the celebration | Extra line at 3, 7, 21, 30, 50, 100 and 108 days; on a clear day that earns a shield, "You earned a shield: it keeps your streak if you miss a day." instead | E2E `today-states.spec.ts` |
+| LOG-05 | Streak milestones in the celebration | Extra line at 7, 21, 30, 50, 100 and 108 days; on a clear day that earns a shield, "You earned a shield: it keeps your streak if you miss a day." instead | E2E `today-states.spec.ts` |
 
 ### Log sheet
 

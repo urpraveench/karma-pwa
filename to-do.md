@@ -144,6 +144,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.12.0: streak calendar (week dots on Today, Streak sheet with shields and a month of clear, shielded and missed days; also from Insights) and the gold "shield kept your streak" message; the logo set is live at app.tiktym.com/brand/, 11 October 2026
 - [x] **Claude:** streak calendar (asked by Praveen: "I'm just seeing only the number"): this week's days as dots under the streak on Today; tapping it, or Insights › Consistency's streak line, opens a Streak sheet with the shields as icons, how far off the next one is, and a month calendar of clear days (joined by a gold band), days a shield saved, missed days and rest days (TODAY-20, CALC-15). Not released yet, 11 October 2026
 - [x] **Claude:** "A shield kept your N-day streak yesterday" shows in gold with a shield icon instead of the red warning style, since it's good news (TODAY-17). Not released yet, 11 October 2026
 - [x] Released 1.11.0: streak shields (3 clear days earn one, up to 3), one-tap mood after logging with an Insights line, "Just 7 minutes" on Today, Today's idea, centred toasts; website clips re-recorded, 11 October 2026

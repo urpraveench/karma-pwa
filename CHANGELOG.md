@@ -13,7 +13,7 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
-## Coming next
+## 1.11.0 · 11 October 2026 · Streak shields, moods and a daily idea
 
 - **Streak shields.** Clear every practice three days in a row and you earn a shield (you can hold three). If you miss a day, a shield keeps your streak going. The minutes you missed still carry over.
 - **Say how it felt.** After you log, tap 😞 😐 🙂. Once you've rated a few sessions, Insights tells you which practice leaves you feeling good.

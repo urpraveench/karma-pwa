@@ -32,7 +32,6 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] **You:** after the fix, run the 5-minute Meditation test again: the chime should play right as the timer reaches its target (TIMER-05).
 - [ ] **You:** on a real iPhone and Android phone, tap the centre microphone and say "walked 20, read 15"; check the sound bars move, "Understanding…" appears, both entries reach the review screen without being saved, and blocking microphone access leaves typing usable (LOG-26, LOG-29). The full flow was checked in Chrome on a Mac on 11 October.
-- [ ] **You:** before releasing AI voice logging, in Google Cloud Console › Billing › Budgets & alerts, add a monthly budget with email alerts (Google can't hard-stop spending, so the alert is the warning); then in Firebase Console › AI Logic, turn AI Logic off (or remove its API) so browsers can no longer call Gemini directly. Voice now goes through TikTym's `understandVoice` function, limited to 5 updates a minute and 50 a day per account.
 - [ ] After `understandVoice` is deployed: on app.tiktym.com, log "I did an exercise for 5 minutes today" by voice and check it reaches review; `firebase functions:log --only understandVoice` shows no errors (LOG-30)
 - [ ] A Firestore failure on load returns to sign-in with a clear message (FIRST-04)
 - [ ] A Firebase SDK failure to load shows its message (AUTH-22)
@@ -145,6 +144,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **You:** added a billing budget with email alerts and disabled the Firebase AI Logic API, so browsers can no longer call Gemini directly, 11 October 2026
 - [x] **Claude:** voice AI moved behind TikTym's own `understandVoice` Cloud Function: signed-in, App Check with replay protection, at most 5 voice updates a minute and 50 a day per account (server-only `voiceUsage/{uid}`, deleted with the account), Gemini on Vertex AI through the function's service account; the app no longer uses Firebase AI Logic. Privacy Policy updated (LOG-30), 11 October 2026
 - [x] **Claude:** compact voice sheet: timer inside the recorder, no separate Listening/help lines, links on one row, shorter privacy note, transcript as one quoted line in review; the recording sheet now uses under half the screen (LOG-26), 11 October 2026
 - [x] **Claude:** replaced unreliable browser dictation with one-tap recorded-audio voice logging: a moving waveform with cancel and finish controls, Firebase AI transcription and practice matching, editable review before saving, retry with the same recording, and typed/manual fallbacks. Recordings and transcripts are not stored by TikTym. App Check and signed-in-user protection are enforced; the exact phrase "I did an exercise for 5 minutes today" reached Exercise · 5 minutes through a real Chrome microphone and Firebase AI without saving it (LOG-10, LOG-26, LOG-29), 11 October 2026

@@ -145,6 +145,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** compact voice sheet: timer inside the recorder, no separate Listening/help lines, links on one row, shorter privacy note, transcript as one quoted line in review; the recording sheet now uses under half the screen (LOG-26), 11 October 2026
 - [x] **Claude:** replaced unreliable browser dictation with one-tap recorded-audio voice logging: a moving waveform with cancel and finish controls, Firebase AI transcription and practice matching, editable review before saving, retry with the same recording, and typed/manual fallbacks. Recordings and transcripts are not stored by TikTym. App Check and signed-in-user protection are enforced; the exact phrase "I did an exercise for 5 minutes today" reached Exercise · 5 minutes through a real Chrome microphone and Firebase AI without saving it (LOG-10, LOG-26, LOG-29), 11 October 2026
 - [x] **Claude:** conversational voice phrases now understand "I did an exercise for 5 minutes today", durations before or after the practice, time words and hours, and ignore chapter/page numbers when an explicit duration is present (LOG-25, LOG-27), 11 October 2026
 - [x] **Claude:** voice-first logging: the centre action is now a microphone, starts listening in one tap, and automatically shows the transcript and matched entries; "Enter minutes manually" keeps the old minute buttons easy to reach (LOG-10, LOG-26), 11 October 2026

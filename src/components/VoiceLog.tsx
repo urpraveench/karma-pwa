@@ -229,29 +229,23 @@ export function VoiceLog({
         <div className="voice-title"><h2 id="voice-title">Log with your voice</h2><p>Say what you did and for how long.</p></div>
         <div className="voice-stage" aria-live="polite">
           {captureState.kind === 'requesting' && <div className="voice-wait" aria-busy="true"><span className="voice-spinner" aria-hidden="true" />Starting microphone…</div>}
-          {(captureState.kind === 'recording' || captureState.kind === 'finishing') && <>
-            <strong className="voice-status">Listening…</strong>
-            <span className="voice-time">{clock(elapsed)} / 0:30</span>
-            <div className="voice-recorder">
-              <button type="button" className="voice-control voice-cancel" onClick={cancelAndClose} aria-label="Cancel recording">×</button>
-              <div className="voice-wave" aria-hidden="true">
-                {levels.map((level, index) => <i key={index} style={{ height: `${Math.round(7 + level * 27)}px` }} />)}
-              </div>
-              <button ref={finishButton} type="button" className="voice-control voice-finish" onClick={() => void finishRecording()} aria-label="Finish recording" disabled={captureState.kind !== 'recording'}>✓</button>
+          {(captureState.kind === 'recording' || captureState.kind === 'finishing') && <div className="voice-recorder">
+            <button type="button" className="voice-control voice-cancel" onClick={cancelAndClose} aria-label="Cancel recording">×</button>
+            <div className="voice-wave" aria-hidden="true">
+              {levels.map((level, index) => <i key={index} style={{ height: `${Math.round(6 + level * 22)}px` }} />)}
             </div>
-            <span className="voice-help">Tap ✓ when you’re done.</span>
-          </>}
+            <span className="voice-time"><span className="sr">Listening… </span>{clock(elapsed)}</span>
+            <button ref={finishButton} type="button" className="voice-control voice-finish" onClick={() => void finishRecording()} aria-label="Finish recording" disabled={captureState.kind !== 'recording'}>✓</button>
+          </div>}
           {captureError && <div className="voice-problem" role="alert"><strong>{captureError}</strong><button type="button" className="btn btn-2" onClick={startAgain}>Try microphone again</button></div>}
         </div>
-        <button type="button" className="link voice-type" onClick={typeInstead}>Type instead</button>
       </>}
 
       {phase === 'processing' && <>
-        <div className="voice-title"><h2 ref={processingTitle} tabIndex={-1} id="voice-title">Understanding your update…</h2><p>This usually takes a few seconds.</p></div>
-        <div className="voice-stage voice-processing" aria-live="polite" aria-busy="true">
-          <div className="voice-processing-pill" aria-hidden="true"><span className="voice-spinner" /></div>
+        <div className="voice-title"><h2 ref={processingTitle} tabIndex={-1} id="voice-title">Understanding your update…</h2></div>
+        <div className="voice-stage" aria-live="polite" aria-busy="true">
+          <div className="voice-recorder voice-processing" aria-hidden="true"><span className="voice-spinner" /></div>
         </div>
-        <button type="button" className="link voice-type" onClick={cancelAndClose}>Cancel</button>
       </>}
 
       {phase === 'processing-error' && <>
@@ -260,7 +254,6 @@ export function VoiceLog({
           {audio && <button type="button" className="btn btn-2" onClick={() => void processAudio(audio)}>Try this recording again</button>}
           <button type="button" className="btn btn-2" onClick={startAgain}>Record again</button>
         </div>
-        <button type="button" className="link voice-type" onClick={typeInstead}>Type instead</button>
       </>}
 
       {phase === 'typed' && <>
@@ -268,12 +261,11 @@ export function VoiceLog({
         <label className="flabel" htmlFor="voice-update">One or more practices</label>
         <textarea id="voice-update" className="in voice-input" rows={3} autoFocus value={text} onChange={event => setText(event.target.value)} placeholder="I exercised for 5 minutes today" />
         <button type="button" className="btn btn-2 voice-review" onClick={reviewTypedText} disabled={!text.trim()}>Review entries</button>
-        <button type="button" className="link voice-type" onClick={startAgain}>Record instead</button>
       </>}
 
       {phase === 'review' && <>
-        <div className="voice-title"><h2 ref={reviewTitle} tabIndex={-1} id="voice-title">Here’s what I found</h2><p>{day}</p></div>
-        {text && <details className="voice-transcript"><summary>What I heard</summary><p>{text}</p></details>}
+        <div className="voice-title"><h2 ref={reviewTitle} tabIndex={-1} id="voice-title">Here’s what I found{date !== today && ` ${day}`}</h2>
+          {text && <p className="voice-transcript">“{text}”</p>}</div>
         <div className="voice-results">
           {drafts.map((draft, index) => <div className="voice-row" key={draft.key}>
             <select className="in" aria-label={`Practice for entry ${index + 1}`} value={draft.catId} onChange={event => setDrafts(items => items.map(item => item.key === draft.key ? { ...item, catId: event.target.value } : item))}>
@@ -291,10 +283,15 @@ export function VoiceLog({
         </div>
       </>}
 
+      <div className="voice-links">
+        {phase === 'processing' && <button type="button" className="link" onClick={cancelAndClose}>Cancel</button>}
+        {(phase === 'capture' || phase === 'processing-error') && <button type="button" className="link" onClick={typeInstead}>Type instead</button>}
+        {phase === 'typed' && <button type="button" className="link" onClick={startAgain}>Record instead</button>}
+        <button type="button" className="link" onClick={enterManually}>Enter minutes manually</button>
+      </div>
       <p className="voice-privacy">{recordingPrivacy
-        ? 'Your recording and active practice names are sent to Google only to understand this update. TikTym does not save the recording or transcript.'
-        : 'Typed updates stay on this device. TikTym saves only the practice and minutes you confirm.'}</p>
-      <button type="button" className="link voice-back" onClick={enterManually}>Enter minutes manually</button>
+        ? 'Audio is sent to Google only to read it. TikTym doesn’t keep it.'
+        : 'Typed updates stay on this device.'}</p>
     </div>
   );
 }

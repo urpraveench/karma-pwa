@@ -151,15 +151,19 @@ test.describe('Voice log', () => {
     await expect(page.locator('.voice-save')).toBeVisible();
   });
 
-  test('records in one tap, shows the recorder, understands the audio and saves it (LOG-10, LOG-26)', async ({ page }) => {
+  test('records in one tap in a compact sheet, understands the audio and saves it (LOG-10, LOG-26)', async ({ page }) => {
     await fakeRecording(page);
     await signIn(page);
     await page.click('.tab-log');
 
     await expect(page.getByRole('heading', { name: 'Log with your voice' })).toBeVisible();
     await expect(page.getByRole('dialog')).toHaveAccessibleName('Log with your voice');
-    await expect(page.getByText('Listening…')).toBeVisible();
+    await expect(page.getByText('Listening…')).toBeAttached();
+    await expect(page.locator('.voice-recorder .voice-time')).toHaveText(/0:0\d/);
     await expect(page.locator('.voice-privacy')).toContainText('sent to Google');
+    // Compact: the recording sheet stays in the lower part of the screen.
+    const viewport = page.viewportSize()!;
+    expect((await page.getByRole('dialog').boundingBox())!.height).toBeLessThan(viewport.height * 0.45);
     await expect(page.locator('.voice-wave i')).toHaveCount(17);
     await expect(page.getByRole('button', { name: 'Cancel recording' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Finish recording' })).toBeFocused();

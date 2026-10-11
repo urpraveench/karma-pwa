@@ -200,7 +200,7 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
 | LOG-25 | Say or type a natural update | Understands conversational practice-and-duration sentences, including digits, number words, minutes before or after the practice, and harmless words such as "today": "I did an exercise for 5 minutes today" | Unit `voiceLog.test.ts`, E2E `voice-log.spec.ts` |
-| LOG-26 | Use the centre microphone | Records the voice with live sound bars, then AI turns it into a transcript and matched entries for review; TikTym does not store the audio or transcript | E2E `voice-log.spec.ts`; checked with a real Chrome microphone and Firebase AI, 11 October 2026 |
+| LOG-26 | Use the centre microphone | Records the voice in a compact sheet (one prompt line, a recorder with live sound bars and the elapsed time, links on one row, a one-line privacy note), then AI turns it into a transcript and matched entries for review; TikTym does not store the audio or transcript | E2E `voice-log.spec.ts`; checked with a real Chrome microphone and Firebase AI, 11 October 2026 |
 | LOG-27 | A phrase is unclear or has no matching practice | Shows exactly which part was not understood and saves nothing until it is fixed | Unit `voiceLog.test.ts`, E2E `voice-log.spec.ts` |
 | LOG-28 | Review a voice log | Shows every matched practice and its minutes; the user can change or remove each one, then saves the batch with one confirmation and one Undo | E2E `voice-log.spec.ts` |
 | LOG-29 | Recording or AI processing is unavailable, blocked or fails | Explains the problem in plain words, keeps a retry when possible, and offers typing and manual-minute entry | E2E `voice-log.spec.ts` |

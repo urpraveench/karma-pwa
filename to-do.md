@@ -143,6 +143,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.10.2: faster voice updates (no fresh reCAPTCHA check per call); the voice function logs its timing, 11 October 2026
 - [x] **Claude:** voice calls reuse the app's App Check token instead of running a fresh reCAPTCHA check each time, saving up to about a second per voice update (LOG-30), 11 October 2026
 - [x] **Claude:** `understandVoice` now logs "voice understood" with Gemini's time (aiMs), the whole call (totalMs), recording size and token counts, never the audio or words (LOG-30), 11 October 2026
 - [x] Released 1.10.1: the recording wave follows the voice and keeps moving while recording, 11 October 2026

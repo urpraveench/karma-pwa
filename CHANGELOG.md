@@ -13,7 +13,7 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
-## Coming next
+## 1.10.2 · 11 October 2026 · Faster voice updates
 
 - **Faster voice updates.** TikTym skips a security check it was repeating on every voice update, so your entries come back sooner.
 

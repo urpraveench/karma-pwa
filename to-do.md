@@ -143,6 +143,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.11.0: streak shields (3 clear days earn one, up to 3), one-tap mood after logging with an Insights line, "Just 7 minutes" on Today, Today's idea, centred toasts; website clips re-recorded, 11 October 2026
 - [x] **Claude:** toasts slide straight up into place instead of starting half their width to the right and jumping back to centre, 11 October 2026
 - [x] **Claude:** "Today's idea": one short line a day on Today, from a set written for TikTym (TODAY-19), 11 October 2026
 - [x] **Claude:** "Just 7 minutes" button on Today that starts a timer on the easiest practice still due (TODAY-18), 11 October 2026

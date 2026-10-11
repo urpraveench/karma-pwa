@@ -72,7 +72,7 @@ test.describe('Privacy Policy (LEGAL-02)', () => {
     await expect(body).toContainText('daily backups are kept for 7 days and weekly ones for 8 weeks');
     await expect(body).toContainText('the unsubscribe link in any email');
     await expect(body).toContainText("your own browser's push service (Google, Apple or Mozilla");
-    await expect(body).toContainText('settings, notification addresses and your sign-in account are deleted');
+    await expect(body).toContainText('settings, notification addresses, voice update count and your sign-in account are deleted');
     await expect(body).not.toContainText('Firebase Cloud Messaging');
     await page.goto('/terms/');
     await expect(page.locator('main')).toContainText('Each is on from the start, and you can turn each off at any time');

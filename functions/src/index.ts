@@ -1,7 +1,7 @@
 // TikTym's Cloud Functions (asia-south1, next to the database): the welcome, one-tap-away, first-minute, weekly recap and comeback
-// emails, the unsubscribe page, and daily push reminders. What each email says, and who gets it, lives in mail.ts (unit-tested); this file reads,
+// emails, the unsubscribe page, daily push reminders, and voice logging's AI call. What each email says, and who gets it, lives in mail.ts (unit-tested); this file reads,
 // sends and records. NOTIFICATIONS.md has the plan.
-import { initializeApp } from 'firebase-admin/app';
+import { getApp, initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { FieldValue, getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { getFunctions } from 'firebase-admin/functions';
@@ -9,7 +9,7 @@ import { logger } from 'firebase-functions';
 import { defineSecret } from 'firebase-functions/params';
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { onDocumentWritten } from 'firebase-functions/v2/firestore';
-import { onRequest } from 'firebase-functions/v2/https';
+import { HttpsError, onCall, onRequest } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { onTaskDispatched } from 'firebase-functions/v2/tasks';
 import { region as regionV1 } from 'firebase-functions/v1';
@@ -24,6 +24,7 @@ import { reminderCheck, reminderPayload, reminderTarget, sendToDevices, type Rem
 import { practicesLeft } from './shared/backlog.js';
 import { badgeOn, slotAt, VAPID_PUBLIC_KEY } from './shared/reminders.js';
 import type { AppData, Category, Log, PushDevice, Settings } from './shared/types.js';
+import { quotaMessage, readVoiceRequest, voiceAnswer, voicePrompt, voiceQuota, VOICE_MODEL, type VoiceUsage } from './voice.js';
 
 setGlobalOptions({ region: 'asia-south1', maxInstances: 3 });
 initializeApp();
@@ -309,4 +310,48 @@ export const unsubscribe = onRequest({ secrets: [UNSUBSCRIBE_SECRET], cors: fals
   const oneClick = String((req.body as Record<string, unknown> | undefined)?.['List-Unsubscribe'] ?? '') === 'One-Click';
   if (oneClick) res.status(200).send('Unsubscribed');
   else res.type('html').send(unsubscribedPage(found.kind));
+});
+
+/**
+ * Voice logging (LOG-26, LOG-30): a signed-in app sends one short recording and its practice names; Gemini on Vertex AI
+ * turns it into a transcript and suggested entries. App Check with replay protection, and a per-account limit counted
+ * in voiceUsage/{uid} (server-only), keep the AI bill bounded. The recording and transcript are never stored or logged.
+ */
+export const understandVoice = onCall({ enforceAppCheck: true, consumeAppCheckToken: true, timeoutSeconds: 40, memory: '512MiB' }, async req => {
+  const uid = req.auth?.uid;
+  if (!uid) throw new HttpsError('unauthenticated', 'Sign in again, then retry your recording.');
+  const voice = readVoiceRequest(req.data);
+  if (!voice) throw new HttpsError('invalid-argument', 'I could not read that recording. Try again or type your update.');
+
+  const quota = await db.runTransaction(async tx => {
+    const ref = db.doc(`voiceUsage/${uid}`);
+    const check = voiceQuota((await tx.get(ref)).data() as Partial<VoiceUsage> | undefined, new Date());
+    if (check.ok) tx.set(ref, check.next);
+    return check;
+  });
+  if (!quota.ok) {
+    logger.info('voice limit reached', { uid, reason: quota.reason });
+    throw new HttpsError('resource-exhausted', quotaMessage(quota.reason));
+  }
+
+  const project = process.env.GCLOUD_PROJECT;
+  const token = await getApp().options.credential!.getAccessToken();
+  const res = await fetch(`https://aiplatform.googleapis.com/v1/projects/${project}/locations/global/publishers/google/models/${VOICE_MODEL}:generateContent`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token.access_token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(voicePrompt(voice)),
+    signal: AbortSignal.timeout(30_000),
+  }).catch(error => { logger.warn('voice AI unreachable', { uid, error: String(error) }); return null; });
+  if (!res?.ok) {
+    if (res) logger.warn('voice AI failed', { uid, status: res.status, body: (await res.text()).slice(0, 300) });
+    throw new HttpsError('unavailable', 'Voice processing is busy right now. Try this recording again in a moment.');
+  }
+  const answer = voiceAnswer(await res.json());
+  if (!answer) throw new HttpsError('internal', 'I could not understand that recording. Try again or type your update.');
+  return answer;
+});
+
+/** Deleting an account also deletes its voice usage count (voiceUsage/{uid}), which the app itself can't reach. */
+export const voiceUsageCleanup = regionV1('asia-south1').auth.user().onDelete(async user => {
+  await db.doc(`voiceUsage/${user.uid}`).delete();
 });

@@ -27,7 +27,7 @@ Summary of coverage at the time of writing:
 | 3. Backlog rules | 13 | 13 | 0 | 0 |
 | 4. Today screen | 16 | 16 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
-| 6. Logging minutes | 25 | 25 | 0 | 0 |
+| 6. Logging minutes | 26 | 26 | 0 | 0 |
 | 7. Focus timer | 22 | 19 | 0 | 3 |
 | 8. History | 9 | 9 | 0 | 0 |
 | 9. Insights | 23 | 23 | 0 | 0 |
@@ -38,7 +38,7 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 22 | 22 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 15 | 15 | 0 | 0 |
-| **Total** | **305** | **290** | **0** | **15** |
+| **Total** | **306** | **291** | **0** | **15** |
 
 ---
 
@@ -204,6 +204,7 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 | LOG-27 | A phrase is unclear or has no matching practice | Shows exactly which part was not understood and saves nothing until it is fixed | Unit `voiceLog.test.ts`, E2E `voice-log.spec.ts` |
 | LOG-28 | Review a voice log | Shows every matched practice and its minutes; the user can change or remove each one, then saves the batch with one confirmation and one Undo | E2E `voice-log.spec.ts` |
 | LOG-29 | Recording or AI processing is unavailable, blocked or fails | Explains the problem in plain words, keeps a retry when possible, and offers typing and manual-minute entry | E2E `voice-log.spec.ts` |
+| LOG-30 | Voice is used a lot | The AI call runs on TikTym's server only for a signed-in app that passes App Check; each account gets at most 5 voice updates a minute and 50 a day, then a plain message says when it can try again, and typing and manual minutes still work | Unit `voiceServer.test.ts`, E2E `voice-log.spec.ts` |
 
 ## 7. Focus timer
 

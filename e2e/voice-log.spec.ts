@@ -234,6 +234,21 @@ test.describe('Voice log', () => {
     await expect(page.getByRole('heading', { name: 'That did not work' })).toHaveCount(0);
   });
 
+  test('explains the voice limit in plain words and keeps typing available (LOG-30)', async ({ page }) => {
+    await fakeRecording(page);
+    await page.addInitScript(() => {
+      window.__TIKTYM_VOICE_AI__ = async () => {
+        throw Object.assign(new Error('You have used voice logging 50 times today. Type your update, or try voice again tomorrow.'), { code: 'functions/resource-exhausted' });
+      };
+    });
+    await signIn(page);
+    await page.click('.tab-log');
+    await page.getByRole('button', { name: 'Finish recording' }).click();
+    await expect(page.locator('.voice-problem')).toContainText('used voice logging 50 times today');
+    await expect(page.locator('.mala-center .big')).toHaveText('100');
+    await expect(page.getByRole('button', { name: 'Type instead' })).toBeVisible();
+  });
+
   test('keeps the recorder error visible when the browser stops after an error (LOG-29)', async ({ page }) => {
     await crashingRecorder(page);
     await signIn(page);

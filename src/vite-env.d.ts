@@ -30,4 +30,6 @@ interface ImportMeta {
 interface Window {
   /** Set as soon as the app's code runs; read by the start screen in index.html. */
   tiktymStarted?: boolean;
+  /** Browser-test seam for AI voice understanding; production Firebase builds ignore it. */
+  __TIKTYM_VOICE_AI__?: (input: { blob: Blob; categories: Array<{ id: string; name: string }>; signal?: AbortSignal }) => Promise<unknown>;
 }

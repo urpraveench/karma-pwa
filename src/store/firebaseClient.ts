@@ -6,7 +6,7 @@ import { appCheckSiteKey, firebaseConfig } from '../config';
 
 // Import this module dynamically, only in firebase mode, so test mode never downloads the SDK.
 
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 
 // App Check: proves requests come from this app on app.tiktym.com, so Firestore and Auth can refuse anything else
 // once enforcement is on in the Firebase console. Must start before Auth and Firestore are used.

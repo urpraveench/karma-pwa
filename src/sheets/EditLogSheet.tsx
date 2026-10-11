@@ -27,7 +27,7 @@ export function EditLogSheet({ id }: { id: string }) {
   }
 
   return (
-    <Sheet onClose={closeSheet}>
+    <Sheet onClose={closeSheet} label="Edit entry">
       <h2>Edit entry</h2>
       <form onSubmit={submit}>
         {cats.length > 0 && (

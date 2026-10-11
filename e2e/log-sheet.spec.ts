@@ -6,6 +6,7 @@ test.describe('Log sheet', () => {
   test('shows minutes left on each practice chip (LOG-13)', async ({ page }) => {
     await page.click('.tab-log');
     await page.getByRole('button', { name: 'Enter minutes manually' }).click();
+    await expect(page.getByRole('dialog')).toHaveAccessibleName('Log minutes');
     await expect(page.locator('.pick .chip')).toHaveText(['Exercise30', 'Reading30', 'Course study30', 'Meditation10']);
   });
 
@@ -59,6 +60,17 @@ test.describe('Log sheet', () => {
     await expect(input).toHaveValue('11');
     for (let i = 0; i < 12; i++) await page.click('.stepper button[aria-label="1 fewer"]');
     await expect(input).toHaveValue('1');
+  });
+
+  test('manual entry keeps focus while typing several digits (LOG-20)', async ({ page }) => {
+    await page.locator('.cat').nth(3).locator('.cat-open').click();
+    await page.click('.tile-ghost');
+    const input = page.locator('.stepper input');
+    await input.click();
+    await page.keyboard.press('ControlOrMeta+A');
+    await input.pressSequentially('123');
+    await expect(input).toHaveValue('123');
+    await expect(input).toBeFocused();
   });
 
   test('invalid amounts are refused (LOG-24)', async ({ page }) => {

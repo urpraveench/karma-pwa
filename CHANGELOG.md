@@ -15,7 +15,7 @@ Format, newest first:
 
 ## Coming next
 
-- **Log minutes from the main microphone.** Speak naturally — “I did an exercise for 5 minutes today” now becomes Exercise · 5 minutes without treating “today” or chapter/page numbers as another entry. The familiar minute buttons are still one link away.
+- **Log minutes from the main microphone.** Tap once, speak naturally, and watch the sound bars move while TikTym listens. AI turns updates such as “I did an exercise for 5 minutes today” into editable practice-and-minute suggestions, and nothing is saved until you confirm. Retry the same recording, type with your phone keyboard, or use the familiar minute buttons if voice is unavailable.
 
 ## 1.9.0 · 10 October 2026 · Daily reminders and your week by email
 

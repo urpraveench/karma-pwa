@@ -49,7 +49,7 @@ export function ShareSheet() {
   }
 
   return (
-    <Sheet onClose={closeSheet}>
+    <Sheet onClose={closeSheet} label="Share your progress">
       <h2>Share your progress</h2>
       <div className="card-preview">
         {url ? <img src={url} alt={summary} width={CARD.width} height={CARD.height} /> : <div className="card-wait">Drawing your card…</div>}

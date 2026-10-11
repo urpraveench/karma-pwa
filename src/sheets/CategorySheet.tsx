@@ -36,7 +36,7 @@ export function CategorySheet({ id }: { id?: string }) {
 
   const starts: [string, string][] = [[T, 'Today'], [addDays(T, -1), 'Yesterday'], [addDays(T, -7), 'Last week']];
   return (
-    <Sheet onClose={closeSheet}>
+    <Sheet onClose={closeSheet} label={ex ? 'Edit practice' : 'Add practice'}>
       <h2>{ex ? 'Edit practice' : 'Add practice'}</h2>
       <form onSubmit={submit}>
         <div className="field"><label htmlFor="cn">Name</label>

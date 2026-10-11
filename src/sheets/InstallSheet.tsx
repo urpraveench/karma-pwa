@@ -4,5 +4,5 @@ import { useApp } from '../state/app';
 
 export function InstallSheet() {
   const { closeSheet } = useApp();
-  return <Sheet onClose={closeSheet}><InstallSheetBody /></Sheet>;
+  return <Sheet onClose={closeSheet} label="Install TikTym"><InstallSheetBody /></Sheet>;
 }

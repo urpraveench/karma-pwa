@@ -6,6 +6,9 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 **Last updated:** 11 October 2026
 
+## In progress
+
+Nothing right now.
 
 ## Setup layout
 
@@ -28,7 +31,9 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] **You:** after the fix, run the 5-minute Meditation test again: the chime should play right as the timer reaches its target (TIMER-05).
-- [ ] **You:** on a real iPhone and Android phone, tap the centre microphone and say "walked 20, read 15"; check the transcript and both matches appear automatically, then check that blocking microphone access leaves typing usable (LOG-26, LOG-29).
+- [ ] **You:** on a real iPhone and Android phone, tap the centre microphone and say "walked 20, read 15"; check the sound bars move, "Understanding…" appears, both entries reach the review screen without being saved, and blocking microphone access leaves typing usable (LOG-26, LOG-29). The full flow was checked in Chrome on a Mac on 11 October.
+- [ ] **You:** before releasing AI voice logging, choose a Firebase AI Logic spending cap and a low request limit (5 voice updates per minute is the suggested start) so unexpected use cannot run up the bill. Typing and manual logging will still work.
+- [ ] **Claude:** before releasing AI voice logging, move the AI call behind a server-owned Firebase function with per-user limits. Recheck Firebase prompt templates as an alternative after Google moves them out of Public Preview; the direct browser prompt is only for this private GrowthX test.
 - [ ] A Firestore failure on load returns to sign-in with a clear message (FIRST-04)
 - [ ] A Firebase SDK failure to load shows its message (AUTH-22)
 - [ ] Test mode never downloads the Firebase SDK: check the network tab (SYNC-14)
@@ -140,6 +145,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** replaced unreliable browser dictation with one-tap recorded-audio voice logging: a moving waveform with cancel and finish controls, Firebase AI transcription and practice matching, editable review before saving, retry with the same recording, and typed/manual fallbacks. Recordings and transcripts are not stored by TikTym. App Check and signed-in-user protection are enforced; the exact phrase "I did an exercise for 5 minutes today" reached Exercise · 5 minutes through a real Chrome microphone and Firebase AI without saving it (LOG-10, LOG-26, LOG-29), 11 October 2026
 - [x] **Claude:** conversational voice phrases now understand "I did an exercise for 5 minutes today", durations before or after the practice, time words and hours, and ignore chapter/page numbers when an explicit duration is present (LOG-25, LOG-27), 11 October 2026
 - [x] **Claude:** voice-first logging: the centre action is now a microphone, starts listening in one tap, and automatically shows the transcript and matched entries; "Enter minutes manually" keeps the old minute buttons easy to reach (LOG-10, LOG-26), 11 October 2026
 - [x] **Claude:** voice logging 2/2: the log sheet now has microphone and typed input, editable review, safe handling for unclear speech and microphone errors, and a one-step batch save with one Undo; the Privacy Policy explains browser speech processing (LOG-26 to LOG-29), 11 October 2026

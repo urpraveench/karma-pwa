@@ -8,11 +8,12 @@ import { useApp, type LogMethod } from '../state/app';
 import { useTimer } from '../state/timer';
 import { useFeedback } from '../ui/feedback';
 import { Icon } from '../ui/icons';
+import type { VoiceCapture } from '../lib/voiceCapture';
 
 const TILES = [5, 10, 15, 20, 30, 45, 60];
 
 /** Big tiles, one tap logs, no typing. */
-export function LogSheet({ catId: initialCat, custom: initialCustom = false, voice: initialVoice = false, autoListen = false }: { catId?: string; custom?: boolean; voice?: boolean; autoListen?: boolean }) {
+export function LogSheet({ catId: initialCat, custom: initialCustom = false, voice: initialVoice = false, voiceCapture, onVoiceCaptureChange }: { catId?: string; custom?: boolean; voice?: boolean; voiceCapture?: VoiceCapture; onVoiceCaptureChange?(capture: VoiceCapture | null): void }) {
   const { data, c, T, logEntry, closeSheet } = useApp();
   const { start } = useTimer();
   const { toast } = useFeedback();
@@ -28,9 +29,13 @@ export function LogSheet({ catId: initialCat, custom: initialCustom = false, voi
   const left = (cat && c.per[cat.id]?.byDate.get(date)?.end) ?? 0;
   const [mins, setMins] = useState(() => String(left > 0 ? Math.min(left, 25) : 25));
   const minsRef = useRef<HTMLInputElement>(null);
+  const activeCapture = useRef(voiceCapture ?? null);
 
   useEffect(() => { if (custom) { minsRef.current?.focus(); minsRef.current?.select(); } }, [custom]);
   if (!cat) return null;
+
+  const dismiss = () => { activeCapture.current?.cancel(); closeSheet(); };
+  const openManual = () => { activeCapture.current?.cancel(); activeCapture.current = null; onVoiceCaptureChange?.(null); setVoice(false); };
 
   const log = (v: number, method: LogMethod) => { closeSheet(); logEntry(cat.id, v, date, note.trim(), method); };
   const submitCustom = (e: FormEvent) => {
@@ -42,8 +47,9 @@ export function LogSheet({ catId: initialCat, custom: initialCustom = false, voi
   const days: [string, string][] = [[T, 'Today'], [addDays(T, -1), 'Yesterday'], [addDays(T, -2), parse(addDays(T, -2)).toLocaleDateString(undefined, { weekday: 'short' })]];
 
   return (
-    <Sheet onClose={closeSheet}>
-      {voice ? <VoiceLog categories={cats} date={date} today={T} autoListen={autoListen} onBack={() => setVoice(false)} /> : <>
+    <Sheet onClose={dismiss} label="Log minutes" labelledBy={voice ? 'voice-title' : undefined}>
+      {voice && voiceCapture ? <VoiceLog categories={cats} date={date} today={T} initialCapture={voiceCapture}
+        onCaptureChange={capture => { activeCapture.current = capture; onVoiceCaptureChange?.(capture); }} onCancel={dismiss} onBack={openManual} /> : <>
       <div className="pick" role="group" aria-label="Practice">
         {cats.map(x => {
           const l = c.per[x.id].today.end;

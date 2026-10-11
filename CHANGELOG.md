@@ -13,6 +13,10 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
+## 1.10.1 · 11 October 2026 · A voice wave that moves
+
+- **See TikTym listening.** While you record, the sound wave now flows the whole time and grows as you speak. With Reduce Motion on, it rises and falls in place.
+
 ## 1.10.0 · 11 October 2026 · Log by voice
 
 - **Log minutes from the main microphone.** Tap once, speak naturally, and watch the sound bars move while TikTym listens. AI turns updates such as “I did an exercise for 5 minutes today” into editable practice-and-minute suggestions, and nothing is saved until you confirm. Retry the same recording, type with your phone keyboard, or use the familiar minute buttons if voice is unavailable. You can use voice up to 50 times a day.

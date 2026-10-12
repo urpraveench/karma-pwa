@@ -162,7 +162,7 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 | MOM-04 | Minimum day (85) | Last 7 days under 60% of target (history of 5+ days). Minimum mode | Unit `moments-more.test.ts` |
 | MOM-05 | Best month in reach (80) | Last 2 days of the month: points needed to beat the best month, or "already your best month" | Unit `moments-more.test.ts` |
 | MOM-06 | Fresh week (60) | Monday: last week's percentage and clear days | Unit `moments-more.test.ts` |
-| MOM-07 | Usual time (55) | Within an hour of the median time a pending practice is logged (last 30 days, 5+ entries) | Unit `moments.test.ts` |
+| MOM-07 | Usual time (55) | Within an hour of the median time a pending practice is logged (last 30 days, 5+ entries): "You usually get Exercise done around 7 am. 45 left today." | Unit `moments.test.ts` |
 | MOM-08 | On a roll (40) | Streak of 3+ with points left; "A new record is one day away" when one more day beats the best | Unit `moments-more.test.ts` |
 | MOM-09 | Start small (30) | New user (under 3 days of history) with nothing logged today | Unit `moments.test.ts`, E2E `today.spec.ts` |
 | MOM-10 | Minimum goal | 5 to 15 minutes, rounded to 5, from the easiest pending practice | Unit `moments.test.ts` |

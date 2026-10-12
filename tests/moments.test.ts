@@ -49,6 +49,7 @@ describe('moment', () => {
     const data = sampleData({}, T); // sample Exercise entries are saved around 7am
     const at = (h: number) => moment(calc(data, T), { data, user: null, hidden: null, now: new Date(2026, 9, 7, h, 30) });
     expect(at(7)).toMatchObject({ key: 'habit', title: "It's your usual Exercise time." });
+    expect(at(7)?.body).toMatch(/^You usually get Exercise done around 7 am\. \d+ left today\.$/); // not "07." (MOM-07)
     expect(at(13)?.key).not.toBe('habit');
   });
 });

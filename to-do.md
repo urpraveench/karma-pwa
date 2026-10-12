@@ -149,6 +149,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** the usual-time card said "around 07. 45 left today" (the browser's British hour format); now "around 7 am" (MOM-07). Found while recording the 1.13 walkthrough, 12 October 2026
 - [x] **Claude:** reminders on by default for every user, no asking screens (Praveen's call, 12 October 2026): the 7 pm reminder and 8 pm log check are on in every account and Setup shows them on; the Today "Remind me" card and any sign-up prompt are gone; the phone's own Allow popup, which no app can skip, is triggered by the first tap anywhere in the app, once per open (NOTIF-12, FIRST-13). Not released yet, 12 October 2026
 - [x] **Claude:** 8 pm evening log check, "Did you log what you did today? Tap the mic and just say it.", for every account with notifications allowed, on by default with a Setup switch: only if nothing is logged that day and something was due, not after a daily reminder set between 7 and 8 pm (the 7 pm default and the 8 pm check both go) (asked by Praveen) (NOTIF-18). Privacy Policy updated. Not deployed yet, 12 October 2026
 - [x] **Claude:** today's idea as a full-screen card on the first open of each day, then Today; closes with "Start my day", a tap, or after 7 seconds; not on the account's first day (asked by Praveen) (TODAY-21). Not released yet, 12 October 2026

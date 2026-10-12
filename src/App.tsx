@@ -16,7 +16,7 @@ function Root() {
   useEffect(() => { if (phase.kind !== 'boot' && phase.kind !== 'loading') startScreen()?.remove(); }, [phase.kind]);
   switch (phase.kind) {
     case 'boot': return null;
-    case 'login': return <Login key={phase.error ?? ''} error={phase.error} />;
+    case 'login': return <Login key={phase.error ?? ''} error={phase.error} retry={phase.retry} />;
     case 'loading': return startScreen() ? null : <div className="login"><p className="lead">Loading TikTym…</p></div>;
     case 'choose': return <FirstRun />;
     case 'ready': return <TimerProvider><Shell /></TimerProvider>;

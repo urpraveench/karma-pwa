@@ -4,15 +4,18 @@ import { appCheckSiteKey, config, FIREBASE_READY } from '../config';
 import { useApp } from '../state/app';
 import { useFeedback } from '../ui/feedback';
 import { GoogleLogo, Mark } from '../ui/icons';
+import { reloadToLatest } from '../state/update';
 import { buildLabel } from '../version';
 
-export function Login({ error: initialError = '' }: { error?: string }) {
+/** `retry`: TikTym couldn't start or load the account (AUTH-22, FIRST-04), so the error comes with a Reload button. */
+export function Login({ error: initialError = '', retry = false }: { error?: string; retry?: boolean }) {
   const { auth } = useApp();
   const { toast } = useFeedback();
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(initialError);
+  const [error, setError] = useState(retry ? '' : initialError);
+  const [reloading, setReloading] = useState(false);
   const testMode = !FIREBASE_READY, signup = !testMode && mode === 'signup';
   useEffect(() => { trackScreen('login'); }, []);
 
@@ -46,25 +49,36 @@ export function Login({ error: initialError = '' }: { error?: string }) {
       <Mark className="mark" />
       <h1>TikTym</h1>
       <p className="lead">{signup ? 'Create your account. Pick your practices next, then log your first minute.' : '100 minutes a day for your productive life.'}</p>
-      {/* Google first: on most phones in India it's two taps and no typing (AUTH-30) */}
-      <button className="btn gbtn" onClick={google}><GoogleLogo /> Continue with Google</button>
-      <div className="or">or use your email</div>
-      <form onSubmit={submit} noValidate>
-        <div className="field"><label htmlFor="em">Email</label>
-          <input className="in" id="em" type="email" autoComplete={signup ? 'email' : 'username'} inputMode="email" required value={email} onChange={e => setEmail(e.target.value)} /></div>
-        <div className="field"><label htmlFor="pw">Password{signup ? ' (6+ characters)' : ''}</label>
-          <input className="in" id="pw" type="password" autoComplete={signup ? 'new-password' : 'current-password'} required value={password} onChange={e => setPassword(e.target.value)} /></div>
-        <p className="err" role="alert">{error}</p>
-        <button className="btn btn-2" type="submit">{signup ? 'Create account' : 'Sign in'}</button>
-      </form>
-      {!testMode && (
-        <div className="sheet-foot">
-          <button className="link" onClick={() => { setMode(signup ? 'signin' : 'signup'); setError(''); }}>{signup ? 'I already have an account' : 'Create an account'}</button>
-          {!signup && <button className="link" onClick={reset}>Forgot password?</button>}
+      {retry && (
+        <div className="start-err" role="alert">
+          <p>{initialError}</p>
+          <button className="btn" disabled={reloading} onClick={() => { setReloading(true); void reloadToLatest(); }}>{reloading ? 'Reloading…' : 'Reload'}</button>
         </div>
       )}
-      {testMode && config.showDevHint && (
-        <p className="devhint">Test mode: sign in with <b>{config.devCredentials.email}</b> and <b>{config.devCredentials.password}</b>. Data stays in this browser until Firebase is set up.</p>
+      {/* Signing in can't work until TikTym starts, so Reload is the only thing to tap (AUTH-22) */}
+      {!retry && (
+        <>
+          {/* Google first: on most phones in India it's two taps and no typing (AUTH-30) */}
+          <button className="btn gbtn" onClick={google}><GoogleLogo /> Continue with Google</button>
+          <div className="or">or use your email</div>
+          <form onSubmit={submit} noValidate>
+            <div className="field"><label htmlFor="em">Email</label>
+              <input className="in" id="em" type="email" autoComplete={signup ? 'email' : 'username'} inputMode="email" required value={email} onChange={e => setEmail(e.target.value)} /></div>
+            <div className="field"><label htmlFor="pw">Password{signup ? ' (6+ characters)' : ''}</label>
+              <input className="in" id="pw" type="password" autoComplete={signup ? 'new-password' : 'current-password'} required value={password} onChange={e => setPassword(e.target.value)} /></div>
+            <p className="err" role="alert">{error}</p>
+            <button className="btn btn-2" type="submit">{signup ? 'Create account' : 'Sign in'}</button>
+          </form>
+          {!testMode && (
+            <div className="sheet-foot">
+              <button className="link" onClick={() => { setMode(signup ? 'signin' : 'signup'); setError(''); }}>{signup ? 'I already have an account' : 'Create an account'}</button>
+              {!signup && <button className="link" onClick={reset}>Forgot password?</button>}
+            </div>
+          )}
+          {testMode && config.showDevHint && (
+            <p className="devhint">Test mode: sign in with <b>{config.devCredentials.email}</b> and <b>{config.devCredentials.password}</b>. Data stays in this browser until Firebase is set up.</p>
+          )}
+        </>
       )}
       {/* What an account includes, said before it's created (LEGAL-07): the basis for on-by-default emails and statistics */}
       <p className="hint legal">By continuing you agree to the <a href={config.legal.terms}>Terms</a> and <a href={config.legal.privacy}>Privacy Policy</a>, including emails about your practice and usage statistics. You can turn either off in Setup or from any email.</p>

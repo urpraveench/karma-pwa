@@ -13,6 +13,10 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
+## Coming next
+
+- **Clearer when something goes wrong.** If TikTym can't finish loading, or can't load your practices, it now says so in plain words with a Reload button, instead of a technical message.
+
 ## 1.13.0 · 12 October 2026 · Reminders on from day one
 
 - **Clearer times.** The "your usual time" card on Today now says "around 7 am" instead of "around 07".

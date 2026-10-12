@@ -22,8 +22,8 @@ Summary of coverage at the time of writing:
 
 | Area | Scenarios | Tested | Gap | Manual |
 |---|---|---|---|---|
-| 1. Accounts and sign-in | 28 | 25 | 0 | 3 |
-| 2. First run | 13 | 12 | 0 | 1 |
+| 1. Accounts and sign-in | 28 | 26 | 0 | 2 |
+| 2. First run | 13 | 13 | 0 | 0 |
 | 3. Backlog rules | 15 | 15 | 0 | 0 |
 | 4. Today screen | 21 | 21 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
@@ -34,11 +34,11 @@ Summary of coverage at the time of writing:
 | 10. Practices (Setup) | 23 | 23 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 17 | 15 | 0 | 2 |
-| 13. App shell, PWA and platform | 36 | 31 | 0 | 5 |
+| 13. App shell, PWA and platform | 37 | 31 | 1 | 5 |
 | 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 17 | 17 | 0 | 0 |
-| **Total** | **321** | **306** | **0** | **15** |
+| **Total** | **322** | **308** | **1** | **13** |
 
 ---
 
@@ -75,7 +75,7 @@ The app has two modes, set by `VITE_BACKEND`. **Test mode** (`local`) keeps data
 | AUTH-19 | Google sign-in when enabled | Popup sign-in; falls back to a redirect if the popup is blocked; opens Today; signing in again on another device returns to the same data | E2E `firebase-google/google.spec.ts` (emulator; a real phone is in to-do.md) |
 | AUTH-20 | Google sign-in when `VITE_ENABLE_GOOGLE` is off | Toast explaining it isn't set up | E2E `firebase/account.spec.ts` |
 | AUTH-21 | Legal links | "By continuing you agree to the Terms and Privacy Policy" on the login screen, and Terms and Privacy links in Setup › About; both open the pages | E2E `legal.spec.ts` |
-| AUTH-22 | Firebase SDK fails to load | Login screen with "Could not load Firebase. Check your connection and .env.local." | Manual |
+| AUTH-22 | TikTym can't start (the sign-in code fails to load) | Login screen with "TikTym couldn't finish loading. Check your connection, then tap Reload." and a Reload button that loads the newest version; the sign-in buttons are hidden until it starts, so Reload is the only thing to tap. Offline, "You're offline. Connect to the internet, then tap Reload." No developer hints | E2E `firebase/start-fails.spec.ts`, Unit `startError.test.ts` |
 | AUTH-23 | Sign out | Returns to login | E2E `firebase/account.spec.ts` |
 | AUTH-24 | Google with an email that already has a password account | Opens that same account with its data (Firebase's default: one account per email) | E2E `firebase-google/google.spec.ts` |
 | AUTH-26 | Password after Google takes over an unverified account | In production, Firebase removes the password from an account whose email was never verified once Google signs in with that email; sign in with Google from then on, or use Forgot password to set a new one | Manual: checked on iPhone, 8 October 2026 |
@@ -100,7 +100,7 @@ The app has two modes, set by `VITE_BACKEND`. **Test mode** (`local`) keeps data
 | FIRST-11 | Nothing ticked | The Start button says "Pick at least one" and does nothing | E2E `first-run.spec.ts` |
 | FIRST-12 | Leaving before Start | Nothing is saved, so the next open (on any device) asks again; once started, it never asks again, even if every practice is later deleted (FIRST-02) | E2E `first-run.spec.ts` |
 | FIRST-13 | Reminders asked from the first tap | On a new account, the first tap on the first-run screen asks the phone for notifications (NOTIF-12), so the 7 pm reminder works from day one | E2E `reminders.spec.ts` |
-| FIRST-04 | Data fails to load | Back to login with "Could not load your data. Check Firestore rules and your connection." | Manual |
+| FIRST-04 | Data fails to load | Back to login with "Couldn't load your practices. Check your connection, then tap Reload." and a Reload button; offline, the offline line from AUTH-22 | E2E `firebase/save-fails.spec.ts`, Unit `startError.test.ts` |
 
 ## 3. Backlog rules
 
@@ -400,6 +400,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | APP-20 | Firebase's reserved addresses (`/__/…`, e.g. the Google sign-in relay page) | Always loaded from the network, never answered by the service worker with the app | E2E `pwa.spec.ts` |
 | APP-21 | Version shown | Login page and Setup › About show the version, commit and build date, e.g. "TikTym 1.0.0 · 63836b6 · 8 Oct 2026" | E2E `app.spec.ts` |
 | APP-22 | Newer version live | A bar at the top of every screen, including login: "New version ready (1.0.1)" with Reload; Reload loads the new version. No bar when up to date, offline, or in the dev server | E2E `app.spec.ts` (the offline case isn't tested) |
+| APP-33 | Old copy left open after an update | A copy of the app from before a deploy, whose code files the server no longer has, reloads itself once into the new version instead of failing to start; if that reload fails too (within a minute), or the device is offline, it shows AUTH-22's message instead of reloading again | Gap |
 | APP-23 | Version file | Each build publishes `version.json` (version, commit, build date); the service worker never caches it | Unit `version.test.ts`, E2E `pwa.spec.ts` |
 | APP-24 | App Check | With `VITE_RECAPTCHA_SITE_KEY` set, the app attaches a reCAPTCHA Enterprise (Google Cloud Fraud Defense) App Check token to Firebase requests; without it, and in test mode or with the emulators, App Check is off | Unit `app-check.test.ts` (the on/off switch; live tokens are checked in the Firebase console, see to-do.md) |
 | APP-25 | Light mode colours | The same contrast check as APP-14, in light: login, Today, Insights, History, Setup, the sheets and the focus timer | E2E `colours.spec.ts` |

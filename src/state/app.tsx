@@ -14,6 +14,7 @@ import { saveTimer } from '../lib/timer';
 import { badgeCount, reminderOn, reminderTime, timeLabel } from '../lib/reminders';
 import { canPush, enablePush, resavePush, type PushStatus } from './push';
 import { newId } from '../lib/util';
+import { startErrorMessage } from '../lib/startError';
 import type { AppData, Category, DateStr, Feel, Log, User } from '../lib/types';
 import type { Store } from '../store/types';
 import { useFeedback } from '../ui/feedback';
@@ -23,7 +24,7 @@ export type View = 'today' | 'insights' | 'history' | 'setup';
 export type LogMethod = 'quick' | 'tile' | 'all_left' | 'custom' | 'timer' | 'voice' | 'other';
 export interface LogDraft { catId: string; mins: number; date: DateStr; note?: string }
 export type Sheet = { kind: 'log'; catId?: string; custom?: boolean; voice?: boolean; voiceCapture?: VoiceCapture } | { kind: 'editCat'; id?: string } | { kind: 'share' } | { kind: 'streak' } | { kind: 'editLog'; id: string } | { kind: 'install' } | null;
-type Phase = { kind: 'boot' } | { kind: 'login'; error?: string } | { kind: 'loading' } | { kind: 'choose' } | { kind: 'ready' };
+type Phase = { kind: 'boot' } | { kind: 'login'; error?: string; retry?: boolean } | { kind: 'loading' } | { kind: 'choose' } | { kind: 'ready' };
 
 const EMPTY: AppData = { categories: [], logs: [], settings: {} };
 const METHOD_COUNTER: Record<LogMethod, Counter> = { quick: 'logQuick', tile: 'logTile', all_left: 'logAllLeft', custom: 'logCustom', timer: 'logTimer', voice: 'logOther', other: 'logOther' };
@@ -92,7 +93,7 @@ function useAppState() {
   const openSession = useCallback(async (u: User, s: Store) => {
     setSession({ user: u, store: s }); setPhase({ kind: 'loading' });
     let d: AppData;
-    try { d = await s.loadAll(); } catch (e) { console.error(e); setPhase({ kind: 'login', error: 'Could not load your data. Check Firestore rules and your connection.' }); return; }
+    try { d = await s.loadAll(); } catch (e) { console.error(e); setPhase({ kind: 'login', error: startErrorMessage('data', navigator.onLine), retry: true }); return; }
     d = { ...d, settings: d.settings || {} };
     setData(d);
     countActiveDevice();
@@ -110,7 +111,7 @@ function useAppState() {
       signedIn: (u, s) => void openSession(u, s),
       signedOut: () => { setSession(null); setSheet(null); setData(EMPTY); setPhase({ kind: 'login' }); },
       onSaveError: () => toast('Could not save on this device'),
-    }).then(setAuth).catch(e => { console.error(e); setPhase({ kind: 'login', error: 'Could not load Firebase. Check your connection and .env.local.' }); });
+    }).then(setAuth).catch(e => { console.error(e); setPhase({ kind: 'login', error: startErrorMessage('start', navigator.onLine), retry: true }); });
   }, [openSession, setData, toast]);
 
   // --- UI state ---

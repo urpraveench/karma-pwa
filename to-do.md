@@ -8,7 +8,7 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 ## In progress
 
-Nothing right now.
+- [ ] **Claude:** a copy of the app left open from before an update reloads itself once into the new version, instead of failing to start because the old version's files are gone from the server (APP-33)
 
 ## Setup layout
 
@@ -162,6 +162,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] 12 Oct 2026: when TikTym can't start or can't load the account's data, the login screen says so in plain words with a Reload button that loads the newest version, instead of "Check your connection and .env.local" or "Check Firestore rules"; offline says offline (AUTH-22, FIRST-04) (Claude)
 - [x] 12 Oct 2026: price isn't the pitch (GTM-22): "free" removed from the website hero, facts, closing line and descriptions, the app's link preview, the Terms summary, the preview image and the outreach templates; only the FAQ, llms.txt and the Terms' price section answer it. Needs a website and app deploy (Claude)
 
 - [x] 12 Oct 2026: Instagram account @tiktym.app created, name "TikTym Productivity Coach" (You)

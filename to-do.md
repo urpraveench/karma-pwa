@@ -158,7 +158,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Decided 13 October 2026: a separate admin app in this repo and Firebase project, for Praveen only. Access is an `admin` custom claim that only a server script can set; every action runs in a Cloud Function that checks it, so `firestore.rules` stay closed to apps. Every send is recorded in `adminLog/`. FEATURES.md › 17. Admin console.
 
-- [ ] **Claude:** send history page from `adminLog/` (ADMIN-12)
 - [ ] **Claude:** costs and limits: this month's Google Cloud spend by service from the billing export, and how close each free or paid limit is (Resend, App Check, Firestore reads, Hosting), with links to each console (ADMIN-13)
 - [ ] **Claude:** function health: last 24 hours of runs and errors per function, from Cloud Monitoring (ADMIN-14)
 - [ ] **You:** create the admin hosting site (`firebase hosting:sites:create tiktym-admin`; `.firebaserc` already maps the `admin` target to it), connect admin.tiktym.com in the Firebase console with the DNS records in GoDaddy, add admin.tiktym.com to Authentication › Settings › Authorized domains, and to the reCAPTCHA Enterprise key's domains (App Check)
@@ -178,6 +177,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** send history: History page with the newest 50 sends and tests and their progress, from the new `adminHistory` function (ADMIN-12). Not deployed yet, 13 October 2026
 - [x] **Claude:** push composer: Push page (audience, title, text, link in the app, notification mock), test on my devices, count then send with a second tap; `adminPushCount`, `adminPushTest`, `adminPushSend` and the `broadcastPushSend` queue (held until 10 am where it's night, once per person) (ADMIN-10, ADMIN-11). Not deployed yet, 13 October 2026
 - [x] **Claude:** email composer: Email page (audience, subject, heading, text, optional button), preview in the TikTym template with "up to N people", send a test to me, send with a second tap; `adminEmailPreview`, `adminEmailTest`, `adminEmailSend` and the `broadcastSend` queue (News on only, once per person, not on a day already emailed; outcomes counted in `adminLog/`) (ADMIN-07, ADMIN-08, ADMIN-09). Not deployed yet, 13 October 2026
 - [x] **Claude:** metrics page, the console's first page: six tiles with the change from a week before, 30-day charts of sign-ups, active loggers, entries and minutes with tooltips and a table, from the new `adminMetrics` function (admins only, 60 reads an open) (ADMIN-06). Not deployed yet, 13 October 2026

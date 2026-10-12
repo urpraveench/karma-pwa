@@ -3,11 +3,12 @@ import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from
 import { adminView, type AdminView } from './access';
 import { auth } from './firebase';
 import { EmailPage } from './EmailPage';
+import { HistoryPage } from './HistoryPage';
 import { MetricsPage } from './MetricsPage';
 import { PushPage } from './PushPage';
 
 /** The console's pages, by the address's #fragment, so a reload stays put. */
-const PAGES = [{ id: 'metrics', label: 'Metrics' }, { id: 'email', label: 'Email' }, { id: 'push', label: 'Push' }] as const;
+const PAGES = [{ id: 'metrics', label: 'Metrics' }, { id: 'email', label: 'Email' }, { id: 'push', label: 'Push' }, { id: 'history', label: 'History' }] as const;
 type PageId = typeof PAGES[number]['id'];
 const pageFromHash = (): PageId => PAGES.find(p => `#${p.id}` === location.hash)?.id ?? 'metrics';
 
@@ -69,6 +70,7 @@ export function App() {
         {page === 'metrics' && <MetricsPage />}
         {page === 'email' && <EmailPage />}
         {page === 'push' && <PushPage />}
+        {page === 'history' && <HistoryPage />}
       </main>
     </div>
   );

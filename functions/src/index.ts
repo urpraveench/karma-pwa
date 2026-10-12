@@ -14,6 +14,7 @@ import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { onTaskDispatched } from 'firebase-functions/v2/tasks';
 import { region as regionV1 } from 'firebase-functions/v1';
 import { adminCheck, type AdminCaller } from './admin.js';
+import { historyEntry, type HistoryEntry } from './adminLog.js';
 import { broadcastPushPayload, pushActiveFrom, pushDelaySeconds, readPushDraft, type PushAudience, type PushDraft } from './pushBroadcast.js';
 import { audienceRange, broadcastCheck, broadcastEmail, readDraft, type Audience, type Draft, type Recipient } from './broadcast.js';
 import { accountTotals, activeSince, cohortFrom, indiaDayRange, metricsDays, metricsFrom, statsDay, type Account, type EmailKind } from './adminStats.js';
@@ -675,4 +676,11 @@ export const broadcastPushSend = onTaskDispatched({
   if (!sent) { await log.update({ skipped: FieldValue.increment(1), 'skippedWhy.no-device': FieldValue.increment(1) }); return; }
   await reminderDoc(uid).set({ broadcasts: FieldValue.arrayUnion(id) }, { merge: true });
   await log.update({ sent: FieldValue.increment(1) });
+});
+
+/** The send history (ADMIN-12): the newest 50 broadcasts and tests, with how far each has got. */
+export const adminHistory = onCall(async req => {
+  requireAdmin(req.auth);
+  const snap = await db.collection('adminLog').orderBy('createdAt', 'desc').limit(50).get();
+  return { entries: snap.docs.map(d => historyEntry(d.id, d.data())).filter((e): e is HistoryEntry => !!e) };
 });

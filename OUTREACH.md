@@ -210,6 +210,8 @@ One row per share. "Replies" is anyone who answered; "Tried it" is anyone who sa
 | 8 Oct | WhatsApp one-to-one | Anand | direct | Liked the message | Not yet | |
 | 9 Oct | WhatsApp one-to-one | Charuthi | direct | Yes | Yes: registered (9 Oct) | "Good, but there are so many apps, right?" (see Feedback log) |
 | 10 Oct | WhatsApp Status | Image, then video | status | | | Image first for slow networks; full caption with the link on the image |
+| 11 Oct | WhatsApp one-to-one | The 7 who had signed up | direct | | | "Thanks for trying it, how's it going?" |
+| 12 Oct | WhatsApp Status, and one-to-one to those who asked about voice | Voice logging video (Downloads › TikTym voice post) | status, `utm_content=voice` | | | 16-second clip from the real app |
 
 ## Feedback log
 
@@ -233,6 +235,8 @@ Copy the numbers into the Weekly numbers table, then answer the three questions.
 
 | Week of | Sign-ups | Active devices (avg a day) | Entries | Site visits | LinkedIn followers | Best channel |
 |---|---|---|---|---|---|---|
-| 5 Oct | | | | | | |
+| 5 Oct | 11 accounts in all by 12 Oct (3 are Praveen's) | | | | | WhatsApp one-to-one |
+
+**12 October review:** LinkedIn comments got no replies in the first week. Next week: comment within the first hour of a post (that's when creators reply), end with a short question, and pick smaller creators (2k to 20k followers) who answer their comments. One-to-one WhatsApp is still the channel that works, so keep the 5 new messages a week.
 
 **Questions:** Which channel brought people who actually logged minutes? What did people find confusing? What one thing should change in the app or the message next week?

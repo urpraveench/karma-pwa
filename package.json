@@ -20,7 +20,8 @@
     "site:updates": "node scripts/site-updates.mjs",
     "site:install-videos": "scripts/install-videos/record.sh",
     "email:header": "node scripts/email-header.mjs",
-    "functions:shared": "node scripts/functions-shared.mjs"
+    "functions:shared": "node scripts/functions-shared.mjs",
+    "admin:grant": "node scripts/admin-grant.mjs"
   },
   "dependencies": {
     "firebase": "^12.19.0",

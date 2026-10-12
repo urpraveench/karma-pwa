@@ -38,8 +38,8 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 19 | 19 | 0 | 0 |
-| 17. Admin console | 14 | 0 | 14 | 0 |
-| **Total** | **339** | **312** | **14** | **13** |
+| 17. Admin console | 14 | 3 | 11 | 0 |
+| **Total** | **339** | **315** | **11** | **13** |
 
 ---
 
@@ -497,9 +497,9 @@ A separate app at admin.tiktym.com for Praveen only. Every action runs in a Clou
 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
-| ADMIN-01 | Granting admin | `npm run admin:grant -- <email>` (Admin SDK, the owner's Google login) sets the `admin` custom claim on that account and prints who now has it; `--revoke` removes it. No app or function can set it | Gap |
-| ADMIN-02 | Admin functions refuse others | Every admin function answers "permission-denied" to a caller who is signed out or has no `admin` claim, and does nothing | Gap |
-| ADMIN-03 | Admin data is server-only | No app, signed in or not, can read or write `adminStats/` or `adminLog/` | Gap |
+| ADMIN-01 | Granting admin | `npm run admin:grant -- <email>` (Admin SDK, the owner's Google login) sets the `admin` custom claim on that account and prints who now has it; `--revoke` removes it. No app or function can set it | Unit `admin.test.ts` (on the real project: Manual, in to-do.md) |
+| ADMIN-02 | Admin functions refuse others | Every admin function answers "permission-denied" to a caller who is signed out or has no `admin` claim, and does nothing | Unit `admin.test.ts` |
+| ADMIN-03 | Admin data is server-only | No app, signed in or not, can read or write `adminStats/` or `adminLog/` | Emulator `tests-emulator/rules.test.ts` |
 | ADMIN-04 | Nightly account totals | At 00:30 India time, `adminStats/{yesterday}` holds: all accounts, sign-ups that day, accounts that tapped Start, active loggers in the last 1, 7 and 28 days (from the server's last-logged date), activation (sign-ups of the last 7 days that logged anything), 7-day retention (sign-ups 7 to 13 days ago who logged in the last 7 days), emails sent that day by type, and accounts with a push device. Running twice gives the same document | Gap |
 | ADMIN-05 | Admin sign-in | admin.tiktym.com shows only "Sign in with Google". An account with the claim sees the console; any other account sees "This account isn't an admin" and a Sign out button, and no data | Gap |
 | ADMIN-06 | Metrics page | Tiles for accounts, active loggers (1, 7, 28 days), activation and retention with the change from a week before; 30-day charts of sign-ups, active loggers, entries and minutes (from the anonymous totals); empty days show as zero | Gap |
@@ -528,7 +528,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 ## What's left to test
 
-**Gaps** (testable, no test yet): ADMIN-01 to ADMIN-14, the admin console being built (to-do.md › Admin console).
+**Gaps** (testable, no test yet): ADMIN-04 to ADMIN-14, the admin console being built (to-do.md › Admin console).
 
 **Manual** (check by hand before a release, on a real phone and the real Firebase project):
 

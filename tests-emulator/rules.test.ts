@@ -66,6 +66,21 @@ describe('firestore.rules', () => {
     await assertFails(getDoc(doc(db, 'reminders/alice')));
     await assertFails(setDoc(doc(db, 'reminders/alice'), { slot: '13:30' }));
   });
+
+  it("the admin console's data is out of every app's reach, even an admin's: the console reads it through functions (ADMIN-03)", async () => {
+    await env.withSecurityRulesDisabled(async c => {
+      await setDoc(doc(c.firestore(), 'adminStats/2026-10-12'), { accounts: 1 });
+      await setDoc(doc(c.firestore(), 'adminLog/b1'), { kind: 'email' });
+    });
+    for (const db of [env.unauthenticatedContext().firestore(), env.authenticatedContext('alice').firestore(), env.authenticatedContext('praveen', { admin: true }).firestore()]) {
+      for (const path of ['adminStats/2026-10-12', 'adminLog/b1']) {
+        await assertFails(getDoc(doc(db, path)));
+        await assertFails(setDoc(doc(db, path), { x: 1 }));
+        await assertFails(deleteDoc(doc(db, path)));
+      }
+      await assertFails(getDocs(collection(db, 'adminLog')));
+    }
+  });
 });
 
 // STAT-03: anonymous daily totals: only small increments to known counters, never readable from an app.

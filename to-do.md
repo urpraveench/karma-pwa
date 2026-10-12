@@ -155,7 +155,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Decided 13 October 2026: a separate admin app in this repo and Firebase project, for Praveen only. Access is an `admin` custom claim that only a server script can set; every action runs in a Cloud Function that checks it, so `firestore.rules` stay closed to apps. Every send is recorded in `adminLog/`. FEATURES.md › 17. Admin console.
 
-- [ ] **Claude:** admin access: `npm run admin:grant -- <email>` sets the claim; `requireAdmin` in functions refuses anyone without it; `adminStats/` and `adminLog/` closed to apps (ADMIN-01, ADMIN-02, ADMIN-03)
 - [ ] **Claude:** nightly account totals in `adminStats/{date}`: accounts, sign-ups, started, active loggers (1, 7, 28 days), activation, 7-day retention, emails sent, devices with push (ADMIN-04)
 - [ ] **Claude:** the admin app: its own Vite page and hosting target, Google sign-in, "not an admin" screen for anyone else (ADMIN-05)
 - [ ] **Claude:** metrics page: today's numbers and 30-day charts from `adminStats/` and the anonymous totals in `stats/` (ADMIN-06)
@@ -165,7 +164,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 - [ ] **Claude:** costs and limits: this month's Google Cloud spend by service from the billing export, and how close each free or paid limit is (Resend, App Check, Firestore reads, Hosting), with links to each console (ADMIN-13)
 - [ ] **Claude:** function health: last 24 hours of runs and errors per function, from Cloud Monitoring (ADMIN-14)
 - [ ] **You:** create the admin hosting site (`firebase hosting:sites:create tiktym-admin`), connect admin.tiktym.com in the Firebase console with the DNS records in GoDaddy, and add admin.tiktym.com to Authentication › Settings › Authorized domains
-- [ ] **You:** once access is built, run `npm run admin:grant -- <your Google email>` (signed in with `gcloud auth application-default login`)
+- [ ] **You:** run `npm run admin:grant -- <your Google email>` (signed in with `gcloud auth application-default login`)
 - [ ] **You:** turn on Cloud Billing export to BigQuery (Billing › Billing export › Standard usage cost, dataset `billing_export` in project tiktym), before the costs page
 - [ ] **You:** upgrade Resend before the first broadcast to everyone (the free plan's 100 a day would block that day's welcome emails)
 
@@ -181,6 +180,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** admin access: `npm run admin:grant -- <email>` sets or removes the `admin` claim and lists who has it; `adminCheck` in functions lets in only that claim (wired into each admin function as it's built); `adminStats/` and `adminLog/` closed to every app, admins included (ADMIN-01, ADMIN-02, ADMIN-03), 13 October 2026
 - [x] Released 1.14.0: a reminder for each practice ("Remind me" on the practice sheet; NOTIF-19, NOTIF-20, PRAC-24), the start-date box hidden until Change (PRAC-12), plain-words load errors with Reload (AUTH-22, FIRST-04), an old open copy reloads into the new version (APP-33); functions deployed with the new `reminderPractices` trigger; app.tiktym.com/version.json shows 1.14.0 and tiktym.com/updates/ shows the release, 13 October 2026
 - [x] **Claude:** editing a practice shows the start-date box before Change is tapped: a `display:block` rule beats the `hidden` attribute. Hide it until Change (PRAC-12). Not released yet, 13 October 2026
 - [x] **Claude:** practice reminders 2/2: "Remind me" on the practice sheet (off, or a time from 7 am to 9:45 pm), the time shown in Setup's practice list, changelog line (PRAC-24). Not released yet, 12 October 2026

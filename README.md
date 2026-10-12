@@ -176,6 +176,17 @@ tests/         Vitest unit tests
 
 The app counts anonymous daily totals (Firestore `stats/{date}`; see the Privacy Policy). To chart them, set up the Google Sheet in [tools/sheets/README.md](tools/sheets/README.md).
 
+## Admin console
+
+admin.tiktym.com (being built; to-do.md › Admin console) is for accounts with the `admin` custom claim. Give or remove it with your Google login:
+
+```sh
+gcloud auth application-default login
+npm run admin:grant -- you@example.com            # --revoke to remove, --project to pick another project
+```
+
+The console reads and sends only through Cloud Functions that check the claim (`functions/src/admin.ts`); `adminStats/` and `adminLog/` are closed to every app.
+
 ## Pending work
 
 Everything still to do, including the public launch checklist, is tracked in [to-do.md](to-do.md). The go-to-market plan is in [GTM.md](GTM.md).

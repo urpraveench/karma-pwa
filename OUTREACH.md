@@ -123,7 +123,7 @@ Teach first; mention TikTym only in the last line ("I built TikTym around this i
 
 | Field | Text |
 |---|---|
-| Name (searchable, so use keywords) | `TikTym · Habit & time tracker` |
+| Name (searchable, so use keywords) | `TikTym Productivity Coach` (set 12 Oct) |
 | Category | App page |
 | Bio (141 of 150 characters) | `100 minutes a day for your productive life` / `30 move · 30 read · 30 grow · 10 breathe` / `Missed a day? Minutes carry forward` / `Free · log by voice 👇` |
 | Link (Edit profile › Links) | `https://tiktym.com/?utm_source=instagram&utm_medium=bio` titled "Start free" |

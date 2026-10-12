@@ -138,6 +138,9 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 ## 7. Housekeeping
 
+- [ ] **You (email avatar, free):** let hello@tiktym.com receive mail (it has no MX records, so mail to it bounces): ImprovMX (free) forwarding hello@ to your Gmail, with its two MX records in GoDaddy DNS; then create a Google account for hello@tiktym.com ("Use your existing email") and set its photo to `public/brand/png/tiktym-app-icon.png`, so Gmail shows the TikTym logo instead of a blank avatar. Not guaranteed for automated mail, but works for most Gmail readers.
+- [ ] **You:** add a DMARC record in GoDaddy DNS: TXT `_dmarc` = `v=DMARC1; p=none; rua=mailto:praveen.cherukuru@gmail.com` (monitor only; helps the emails stay out of spam, and is the first step to BIMI).
+- [ ] **Later (BIMI, when worth ₹40,000+ a year):** the verified logo in Gmail needs DMARC at quarantine or reject, the logo as SVG Tiny PS, and a VMC (registered trademark) or CMC (logo in public use 12 months, so late 2027 at the earliest).
 - [ ] **You (optional):** rename the GitHub repo from `karma-pwa` to `tiktym` (Settings › Repository name), then run `git remote set-url origin https://github.com/urpraveench/tiktym.git`.
 - [ ] **Claude:** watch for a Firebase release that drops the flagged `@grpc/grpc-js` version from `npm audit`. It only affects Firebase's Node build, never the app in the browser. Don't run `npm audit fix --force`; it downgrades Firebase.
 

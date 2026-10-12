@@ -84,7 +84,7 @@ Teach first; mention TikTym only in the last line ("I built TikTym around this i
 - [ ] Fri 9 to Sun 11 Oct: send the one-to-one WhatsApp message to 10 to 15 friends who are working and want to learn or get fit. Log each one. **6 sent: 5 on 8 Oct (evening), 1 on 9 Oct. 3 signed up (Gopi, Charuthi, Kiran).**
 - [x] Sat 10 Oct: post the WhatsApp Status with the video or the post image. **Done 10 Oct: a still image first (loads fast on slow networks) with the link, then the tall video.**
 - [ ] Sun 11 Oct: follow up with anyone who tried it: "What was confusing?" Note answers in the Feedback log.
-- [x] Tue 13 Oct: post 2, "busy weeks carry forward", with the post image (scheduled)
+- [ ] Tue 13 Oct: post 2, "100 minutes a day" PDF carousel (the "busy weeks" version was deleted 12 Oct as off-brand; text and PDF in Downloads › TikTym LinkedIn posts › POSTS.txt)
 - [ ] Wed 14 Oct: first WhatsApp group: college batch. Write it fresh, don't forward, and stay to answer replies.
 - [ ] **Deferred (9 Oct, your call):** get `tiktym.com` and `app.tiktym.com` categorised as "Education" (or "Information Technology") by the main web filters, so college and office firewalls stop blocking them: Fortinet https://www.fortiguard.com/webfilter, Palo Alto https://urlfiltering.paloaltonetworks.com, Cisco Talos https://talosintelligence.com/reputation_center, Zscaler https://sitereview.zscaler.com, Broadcom/Symantec https://sitereview.bluecoat.com, and Sophos (search "Sophos website categorization request"). Note each submission in the Share log's Notes or here.
 - [x] LinkedIn page, new brand line (**done 10 Oct**): tagline "100 minutes a day for your productive life: 30 to move, 30 to read, 30 to grow, 10 to breathe."; description's first line "TikTym helps busy professionals spend 100 minutes a day on themselves."; upload the new cover (Downloads › tiktym-linkedin-cover.png). Use the new post image and video for future posts.
@@ -95,7 +95,7 @@ Teach first; mention TikTym only in the last line ("I built TikTym around this i
 ## Week 2 tasks (15 to 21 October 2026)
 
 - [ ] Every day: 2 or 3 LinkedIn comments (15 minutes)
-- [ ] Thu 15 Oct: post 3, the maths of mastery (ask Claude for the graphic)
+- [ ] Thu 15 Oct: post 3, the maths of mastery PDF carousel (ready: Downloads › TikTym LinkedIn posts › POSTS.txt)
 - [ ] By Sun 18 Oct: 5 new one-to-one WhatsApp messages (template above), each logged in the Share log
 - [ ] Sat 17 Oct: ask Gopi, Kiran and Charuthi how their first week went: "What felt confusing or annoying?" Note it in the Feedback log
 - [ ] Sun 18 Oct: one more educational post on the TikTym page (pick from **Educational posts**)
@@ -261,12 +261,12 @@ Ideas for posts and challenges, with the plan for each. Add new ones here as the
 | # | Date | Topic | Media | Status |
 |---|---|---|---|---|
 | 1 | Thu 8 Oct | Why I built TikTym: office, home, sleep, repeat | 16-second app video | Posted |
-| 2 | Tue 13 Oct | Busy weeks carry forward, never pile up (30 minutes a day, 4 days missed: 90, not 150) | Post image | Scheduled |
-| 3 | Thu 15 Oct | The maths of mastery: 10,000 hours (see Content ideas) | Graphic of the maths (ask Claude) | Idea |
+| 2 | Tue 13 Oct | 100 minutes a day: what it adds up to in a year (replaces "busy weeks carry forward", deleted 12 Oct as off-brand) | PDF carousel, 8 slides (Downloads › TikTym LinkedIn posts) | Scheduled 8:30 am |
+| 3 | Thu 15 Oct | The maths of mastery: 10,000 hours vs 10,000 minutes (see Content ideas) | PDF carousel, 7 slides (Downloads › TikTym LinkedIn posts) | Ready to schedule, 8:30 am |
 | 4 | Week 3 | 30-second walkthrough: timer, backlog limit, Insights | New video (ask Claude) | Idea |
 | 5 | Week 3, once 20+ users | 100 Days, 100 Minutes (30 Exercise, 30 Reading, 30 Upskilling, 10 Meditation) announcement, starting Mon 2 Nov | Mala graphic or video (ask Claude) | Idea |
 
-Media files (in Downloads): `tiktym-linkedin-video.mp4`, `tiktym-linkedin-post.png`, `tiktym-linkedin-logo.png`, `tiktym-linkedin-cover.png`; for WhatsApp Status (tall, 1080 × 1920): `tiktym-whatsapp-status-image.jpg` (post first, with the link) and `tiktym-whatsapp-status.mp4`. Ask Claude to redo any of them after the app changes.
+PDF carousels (document posts) do better on LinkedIn than single images; each Instagram carousel gets a LinkedIn version with tiktym.com instead of "link in bio". Media files (in Downloads): `tiktym-linkedin-video.mp4`, `tiktym-linkedin-post.png`, `tiktym-linkedin-logo.png`, `tiktym-linkedin-cover.png`; for WhatsApp Status (tall, 1080 × 1920): `tiktym-whatsapp-status-image.jpg` (post first, with the link) and `tiktym-whatsapp-status.mp4`. Ask Claude to redo any of them after the app changes.
 
 ## Share log
 

@@ -293,6 +293,7 @@ Everything people say about the app: confusion, bugs, requests, praise. Bring an
 
 | Date | From | What they said | Bug, idea or praise | Done? |
 |---|---|---|---|---|
+| 12 Oct | A user (via Send feedback, 1.12.1) | "If you could add a reminder functionality will be really helpful. Such as: should finish the work before 4 pm, should remind draft the mail at 10 am." | Idea | Built as a reminder per practice ("Remind me" on the practice sheet, NOTIF-19, PRAC-24); goes out with the next release. One-off task reminders stay out of scope. Reply once it's live |
 | 9 Oct | Charuthi | "Good. But there are so many apps, right?" | Positioning question | Reply with what makes TikTym different (carry-forward with a limit, one balanced daily target, made for busy professionals). Consider a website FAQ: "How is TikTym different from other habit apps?" |
 | 9 Oct | Gopi | "At first glance 1′ confused me. I don't use timing apps, so I wasn't sure ′ means minutes." | Idea (wording) | Fixed in 1.7.2 (live 9 Oct): the running timer shows "1 min". Credited on tiktym.com/updates/ with a link to his LinkedIn |
 | 9 Oct | Gopi | "Logged in just now and started. Simple interface, easy navigation." Will send more. | Praise | Ask him tomorrow how the first day went |

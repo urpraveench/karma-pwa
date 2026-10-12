@@ -71,6 +71,8 @@ Teach first; mention TikTym only in the last line ("I built TikTym around this i
 
 ## Decisions
 
+- **Don't sell "free" (12 Oct):** TikTym may add paid features later, so posts, captions, videos and the website talk about what TikTym does, not its price. "Free" appears only where someone asks about price: the website FAQ "Is TikTym free?", llms.txt and the Terms.
+
 - **Personal LinkedIn profile (9 Oct):** TikTym isn't listed as experience on your profile until it reaches about 10,000 users. You reshare one TikTym post a month from your profile; other weeks, the page grows through its own posts, comments as the page, links from the website and app, and asking happy users to follow.
 
 - **Brand line (10 Oct):** "100 minutes a day for your productive life", explained as 30 to move, 30 to read, 30 to grow, 10 to breathe. "One minute, one point" is retired as a tagline; points and minutes still work the same in the app. 100 minutes is the recommended start, never a requirement.
@@ -125,8 +127,8 @@ Teach first; mention TikTym only in the last line ("I built TikTym around this i
 |---|---|
 | Name (searchable, so use keywords) | `TikTym Productivity Coach` (set 12 Oct) |
 | Category | App page |
-| Bio (141 of 150 characters) | `100 minutes a day for your productive life` / `30 move · 30 read · 30 grow · 10 breathe` / `Missed a day? Minutes carry forward` / `Free · log by voice 👇` |
-| Link (Edit profile › Links) | `https://tiktym.com/?utm_source=instagram&utm_medium=bio` titled "Start free" |
+| Bio (146 of 150 characters) | `100 minutes a day for your productive life` / `30 move · 30 read · 30 grow · 10 breathe` / `Missed a day? Minutes carry forward` / `Just say it, it's logged 👇` |
+| Link (Edit profile › Links) | `https://tiktym.com/?utm_source=instagram&utm_medium=bio` titled "Start your 100 minutes" |
 | Contact button | Email: hello@tiktym.com |
 
 ### What to post
@@ -191,11 +193,11 @@ Each channel gets its own link, so Google Analytics (Reports › Acquisition ›
 
 **LinkedIn profile reshare** (add above the reshared post, in your own words):
 
-> I built this for myself after years of office → home → sleep. Now it's live and free. If you've been meaning to find time for yourself, try 100 minutes a day for a week and tell me what you think.
+> I built this for myself after years of office → home → sleep. Now it's live. If you've been meaning to find time for yourself, try 100 minutes a day for a week and tell me what you think.
 
 **WhatsApp one-to-one:**
 
-> Hi [name]! I've been building something on the side and launched it this week: TikTym, a free app that helps busy working people spend 100 minutes a day on themselves: 30 to move, 30 to read, 30 to grow and 10 to breathe.
+> Hi [name]! I've been building something on the side and launched it this week: TikTym, an app that helps busy working people spend 100 minutes a day on themselves: 30 to move, 30 to read, 30 to grow and 10 to breathe.
 >
 > Could you try it for a few days and tell me honestly what's confusing or annoying? Your feedback would really help.
 >
@@ -219,13 +221,13 @@ Each channel gets its own link, so Google Analytics (Reports › Acquisition ›
 
 **WhatsApp Status** (with the video or the post image):
 
-> Launched something I built 🚀 TikTym: 100 minutes a day for your productive life. For anyone who keeps saying "I'll start next week". Free → tiktym.com
+> Launched something I built 🚀 TikTym: 100 minutes a day for your productive life. For anyone who keeps saying "I'll start next week" → tiktym.com
 
 **WhatsApp group:**
 
 > Hi all 👋 Hope everyone's doing well! I built a small app for people like us whose days go office → home → sleep: TikTym. It's built around 100 minutes a day for yourself: 30 to move, 30 to read, 30 to grow and 10 to breathe, and it keeps you going. Miss a busy day and it carries forward without piling up.
 >
-> It's free and works on any phone: https://tiktym.com/?utm_source=whatsapp&utm_medium=group&utm_campaign=college
+> It works on any phone: https://tiktym.com/?utm_source=whatsapp&utm_medium=group&utm_campaign=college
 >
 > Tip: if it opens inside WhatsApp, tap ⋮ › Open in browser, and TikTym will show you how to add it to your home screen.
 >

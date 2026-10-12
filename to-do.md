@@ -162,6 +162,8 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] 12 Oct 2026: price isn't the pitch (GTM-22): "free" removed from the website hero, facts, closing line and descriptions, the app's link preview, the Terms summary, the preview image and the outreach templates; only the FAQ, llms.txt and the Terms' price section answer it. Needs a website and app deploy (Claude)
+
 - [x] 12 Oct 2026: Instagram account @tiktym.app created, name "TikTym Productivity Coach" (You)
 - [x] 12 Oct 2026: Instagram launch set in Downloads › TikTym Instagram: profile picture, 5 highlight covers, 5 reels with covers (recorded from the app at full resolution), 4 carousels (28 slides), CAPTIONS.txt with order, captions, hashtags and alt text (Claude)
 

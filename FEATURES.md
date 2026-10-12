@@ -35,10 +35,10 @@ Summary of coverage at the time of writing:
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 17 | 15 | 0 | 2 |
 | 13. App shell, PWA and platform | 36 | 31 | 0 | 5 |
-| 14. Marketing and sharing | 23 | 23 | 0 | 0 |
+| 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 17 | 17 | 0 | 0 |
-| **Total** | **320** | **305** | **0** | **15** |
+| **Total** | **321** | **306** | **0** | **15** |
 
 ---
 
@@ -433,6 +433,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | GTM-19 | Install help on the website | Step-by-step guides for iPhone Safari, iPhone Chrome, Android Chrome and Samsung Internet; the visitor's own phone and browser first, marked "Your phone"; inside WhatsApp, Instagram, Facebook or LinkedIn, a warning to open the page in the browser before installing | E2E `site/site.spec.ts` |
 | GTM-20 | Install videos | A short screen recording next to the iPhone Safari and Android Chrome guides, recorded from the live app on the iOS simulator and Android emulator (`npm run site:install-videos`; Chrome on iPhone can't run in the simulator, so it has steps only), loading only when scrolled to, playing muted and looping like the feature clips; on a computer the two guides with a video come first, side by side, and the two without show as plain cards below them, with no empty space | E2E `site/site.spec.ts` |
 | GTM-21 | AI on the website | The brand line stays the headline; the AI is named only for what it does, logging by voice: the hero line ("Just say what you did, and TikTym's AI logs it for you") and a "Log by voice with AI" fact, How it works step 2 ("Say it, time it, or tap it"), the first feature card with a voice clip, a privacy line (Gemini, recording never stored), an FAQ "Does TikTym use AI?" (optional; only confirmed minutes saved), the link-preview and search descriptions, and llms.txt, which says the coaching is not AI. Nothing calls the coaching or insights AI. "Stored in India" replaces "Your data stays in India", since voice may be processed outside India | E2E `site/site.spec.ts` |
+| GTM-22 | Price isn't the pitch | The website sells what TikTym does, not that it's free: the hero button says "Start your 100 minutes", the facts and closing line say "No ads" without "Free", and the search and link-preview descriptions (website and app) and the Terms summary don't say free. "Free" appears only where someone asks: the FAQ "Is TikTym free?" (free today; paid features would be announced before any charge), llms.txt and the Terms | E2E `site/site.spec.ts`, unit `no-free.test.ts` |
 | SHARE-01 | Progress card stats | This calendar month's minutes (as hours), current and best streak, days with entries this month, and the top three practices by time this month | Unit `share.test.ts` |
 | SHARE-02 | Progress card image | Insights › Share opens a preview of a 1080×1350 image: TikTym brand, the month's time, streak, active days, top practices with their colours, tiktym.com | E2E `share.spec.ts` |
 | SHARE-03 | Sharing the card | Share opens the phone's share sheet with the image (LinkedIn, Instagram, WhatsApp); where sharing images isn't supported, Download saves it as a PNG | E2E `share.spec.ts` (real share sheet checked on iPhone, 8 October 2026) |

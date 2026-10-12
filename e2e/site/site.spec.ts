@@ -223,6 +223,19 @@ test('the AI is voice logging, said plainly: hero, how it works, a feature, priv
   await expect(page.locator('meta[property="og:description"]')).toHaveAttribute('content', /Say what you did and AI logs it/);
 });
 
+test('the page sells what TikTym does, not that it is free; only the FAQ answers the price (GTM-22)', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.hero .btn').first()).toHaveText('Start your 100 minutes');
+  await expect(page.locator('.hero .facts li').first()).toHaveText('No ads');
+  const faq = page.locator('#faq details', { hasText: 'Is TikTym free?' });
+  await faq.locator('summary').click();
+  await expect(faq.locator('p')).toContainText("we'll say so clearly before anything is charged");
+  await faq.evaluate(e => e.remove()); // the one place that answers the price
+  expect(await page.locator('body').innerText()).not.toMatch(/\bfree\b/i);
+  for (const m of ['meta[name="description"]', 'meta[property="og:description"]'])
+    await expect(page.locator(m)).not.toHaveAttribute('content', /\bfree\b/i);
+});
+
 test('every page has a search description of 25 to 160 characters (GTM-18)', async ({ page }) => {
   for (const path of ['/', '/updates/']) {
     await page.goto(path);

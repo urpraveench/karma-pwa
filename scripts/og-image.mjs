@@ -33,7 +33,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8">
   <div><h1>TikTym</h1>
     <p><em>100 minutes</em> a day<br>for your productive life.</p>
     <p class="mix">30 to move · 30 to read · 30 to grow · 10 to breathe</p>
-    <div class="tag">Free · Works offline · Made in India</div></div>
+    <div class="tag">Log by voice · Works offline · Made in India</div></div>
 </body></html>`;
 
 const browser = await chromium.launch({ channel: 'chrome' });

@@ -23,7 +23,7 @@ Summary of coverage at the time of writing:
 | Area | Scenarios | Tested | Gap | Manual |
 |---|---|---|---|---|
 | 1. Accounts and sign-in | 28 | 25 | 0 | 3 |
-| 2. First run | 12 | 11 | 0 | 1 |
+| 2. First run | 13 | 12 | 0 | 1 |
 | 3. Backlog rules | 15 | 15 | 0 | 0 |
 | 4. Today screen | 21 | 21 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
@@ -38,7 +38,7 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 23 | 23 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 17 | 17 | 0 | 0 |
-| **Total** | **319** | **304** | **0** | **15** |
+| **Total** | **320** | **305** | **0** | **15** |
 
 ---
 
@@ -99,6 +99,7 @@ The app has two modes, set by `VITE_BACKEND`. **Test mode** (`local`) keeps data
 | FIRST-10 | Adding your own | "Add your own" adds a ticked practice of 20 minutes; a name already on the list ticks that one instead | E2E `first-run.spec.ts`, Unit `firstRun.test.ts` |
 | FIRST-11 | Nothing ticked | The Start button says "Pick at least one" and does nothing | E2E `first-run.spec.ts` |
 | FIRST-12 | Leaving before Start | Nothing is saved, so the next open (on any device) asks again; once started, it never asks again, even if every practice is later deleted (FIRST-02) | E2E `first-run.spec.ts` |
+| FIRST-13 | Start turns on the 7 pm reminder | Where the phone can get notifications and hasn't been asked: a line above Start, "We'll remind you at 7 pm on days something's left. Tap Allow when your phone asks.", and the Start tap also asks the phone; Allow saves the device with the 7 pm reminder on. Any other answer still starts, and Today offers the reminder (NOTIF-12) | E2E `reminders.spec.ts` |
 | FIRST-04 | Data fails to load | Back to login with "Could not load your data. Check Firestore rules and your connection." | Manual |
 
 ## 3. Backlog rules

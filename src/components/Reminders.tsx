@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { showInstallCard, type InstallNudge } from '../lib/install';
-import { badgeOn, LOG_NUDGE_TIME, logNudgeOn, nearestTime, REMINDER_TIMES, reminderOn, reminderTime, timeLabel } from '../lib/reminders';
+import { badgeOn, LOG_NUDGE_TIME, logNudgeOn, offerReminder, REMINDER_TIMES, reminderOn, reminderTime, timeLabel } from '../lib/reminders';
 import { useApp } from '../state/app';
 import { useInstall } from '../state/install';
 import { usePushStatus, type PushStatus } from '../state/push';
@@ -14,27 +14,26 @@ const write = (k: string, v: string) => { try { localStorage.setItem(k, v); } ca
 const installNudge = (): InstallNudge => { try { return JSON.parse(localStorage.getItem('tiktym:install-nudge') || '') as InstallNudge; } catch { return { dismissals: 0 }; } };
 
 /**
- * On Today, once something is logged today: "Remind me tomorrow at <this time>". Never on first open, never while the
- * install card is showing, and gone for good after "Not now" or a decision in the browser's prompt.
+ * On Today, until this device allows notifications: "Want a reminder at 7 pm?" (NOTIF-12). Not while the install card is
+ * showing; after "Not now", back in three days.
  */
 export function ReminderCard() {
-  const { data, T, now, enableReminders } = useApp();
+  const { data, T, enableReminders } = useApp();
   const { env } = useInstall();
   const status = usePushStatus();
-  const [hidden, setHidden] = useState(() => read(CARD_KEY) === 'no');
-  const loggedToday = data.logs.some(l => l.date === T && l.minutes > 0);
+  const [dismissed, setDismissed] = useState(() => read(CARD_KEY));
   const installing = showInstallCard({ env, hasLogged: data.logs.length > 0, nudge: installNudge(), today: T });
-  if (status !== 'ask' || hidden || !loggedToday || installing) return null;
-  const time = nearestTime(now);
-  const notNow = () => { write(CARD_KEY, 'no'); setHidden(true); };
+  if (status !== 'ask' || !offerReminder(dismissed, T) || installing) return null;
+  const time = reminderTime(data.settings);
+  const notNow = () => { write(CARD_KEY, T); setDismissed(T); };
   const allow = async () => { const s = await enableReminders(time); if (s !== 'ask') notNow(); };
   return (
     <section className="install-card" aria-label="Daily reminder">
       <div className="install-head">
-        <h2>Want a nudge tomorrow?</h2>
+        <h2>Want a reminder at {timeLabel(time)}?</h2>
         <button className="x" type="button" aria-label="Not now" onClick={notNow}><Icon.x /></button>
       </div>
-      <p className="install-p">A notification at {timeLabel(time)}, only if something's still left that day. You can change the time in Setup.</p>
+      <p className="install-p">A notification at {timeLabel(time)}, only if something's still left that day. Tap Allow when your phone asks. You can change the time in Setup.</p>
       <div className="install-actions">
         <button className="btn" type="button" onClick={() => void allow()}>Remind me at {timeLabel(time)}</button>
         <button className="link" type="button" onClick={notNow}>Not now</button>
@@ -62,7 +61,7 @@ export function ReminderRow() {
   return (
     <>
       <button className="li" type="button" aria-pressed={on} disabled={!!why || !status} onClick={toggle}>
-        <span className="t">Daily reminder<small>{why ?? `Push · at ${timeLabel(time)}, only if something's left that day`}</small></span>
+        <span className="t">Daily reminder<small>{why ?? (status === 'ask' ? `Tap to allow notifications on this phone · at ${timeLabel(time)}` : `Push · at ${timeLabel(time)}, only if something's left that day`)}</small></span>
         <span className={`switch${on ? ' on' : ''}`} aria-hidden="true"><i /></span>
       </button>
       {on && (
@@ -89,7 +88,7 @@ export function LogNudgeRow() {
   };
   return (
     <button className="li" type="button" aria-pressed={on} disabled={!!why || !status} onClick={toggle}>
-      <span className="t">Evening log check<small>{why ?? `Push · at ${timeLabel(LOG_NUDGE_TIME)}, only if nothing's logged that day`}</small></span>
+      <span className="t">Evening log check<small>{why ?? (status === 'ask' ? `Tap to allow notifications on this phone · at ${timeLabel(LOG_NUDGE_TIME)}` : `Push · at ${timeLabel(LOG_NUDGE_TIME)}, only if nothing's logged that day`)}</small></span>
       <span className={`switch${on ? ' on' : ''}`} aria-hidden="true"><i /></span>
     </button>
   );

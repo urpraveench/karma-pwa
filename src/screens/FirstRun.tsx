@@ -1,12 +1,15 @@
 import { useState, type FormEvent } from 'react';
 import { addOwn, firstChoices, STEP, stepMinutes } from '../lib/firstRun';
 import { haptic } from '../lib/feedback';
+import { DEFAULT_REMINDER, timeLabel } from '../lib/reminders';
 import { useApp } from '../state/app';
+import { usePushStatus } from '../state/push';
 import { useFeedback } from '../ui/feedback';
 
 /** "What do you want to make time for?": a new account picks its practices before day one (FIRST-01, FIRST-08 to FIRST-11). */
 export function FirstRun() {
-  const { choosePractices } = useApp();
+  const { choosePractices, enableReminders } = useApp();
+  const push = usePushStatus();
   const { toast } = useFeedback();
   const [items, setItems] = useState(firstChoices);
   const [own, setOwn] = useState('');
@@ -18,6 +21,8 @@ export function FirstRun() {
   const start = () => {
     if (!picked.length) { toast('Pick at least one practice'); return; }
     choosePractices(picked);
+    // the same tap asks the phone for notifications, so the 7 pm reminder (on by default) can reach them (FIRST-13)
+    if (push === 'ask') void enableReminders(DEFAULT_REMINDER);
   };
 
   return (
@@ -47,6 +52,7 @@ export function FirstRun() {
         <button className="chip" type="submit">Add</button>
       </form>
       <div className="fr-start">
+        {push === 'ask' && <p className="fr-remind">We'll remind you at {timeLabel(DEFAULT_REMINDER)} on days something's left. Tap Allow when your phone asks.</p>}
         <button className="btn" type="button" onClick={start}>
           {picked.length ? `Start with ${picked.length} practice${picked.length === 1 ? '' : 's'}` : 'Pick at least one'}
         </button>

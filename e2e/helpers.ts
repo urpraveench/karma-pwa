@@ -18,7 +18,11 @@ export const test = base.extend<{ consoleErrors: string[]; installCard: boolean;
   /** Likewise the "Remind me tomorrow" card (NOTIF-12), which appears once something is logged today. */
   reminderCard: [false, { option: true }],
   hideReminderCard: [async ({ page, reminderCard }, use) => {
-    if (!reminderCard) await page.addInitScript(() => localStorage.setItem('tiktym:remind-card', 'no'));
+    if (!reminderCard) await page.addInitScript(() => {
+      localStorage.setItem('tiktym:remind-card', '9999-12-31');
+      // Start on the first-run screen also asks for notifications (FIRST-13): answer as if the question was closed
+      Notification.requestPermission = async () => 'default';
+    });
     await use();
   }, { auto: true }],
   /** And the once-a-day splash with today's idea (TODAY-21), which would cover Today on every test's first open. */

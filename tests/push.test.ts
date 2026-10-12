@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { deviceGone, NUDGE_GAP_MS, nudgeCheck, nudgePayload, nudgeSlotFor, reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from '../functions/src/push';
-import { badgeCount, nearestTime, REMINDER_TIMES, reminderOn, reminderText, reminderTime, slotAt, timeLabel, utcSlot } from '../src/lib/reminders';
+import { badgeCount, nearestTime, offerReminder, REMINDER_TIMES, reminderOn, reminderText, reminderTime, slotAt, timeLabel, utcSlot } from '../src/lib/reminders';
 
 describe('when the daily reminder goes (NOTIF-09)', () => {
   it('times run every 15 minutes from 7 am to 9:45 pm, never at night', () => {
@@ -144,5 +144,16 @@ describe('the 8 pm evening log check (NOTIF-18)', () => {
     expect(src).toContain("queue.enqueue({ uid: d.id, kind: 'nudge' })");
     expect(src).toContain('if (doc.nudgeSlot === undefined) fix.nudgeSlot');
     expect(src).toContain('lastSentAt: now.getTime()');
+  });
+});
+
+describe('Today offers the 7 pm reminder until it is allowed (NOTIF-12)', () => {
+  it('from the first open; after "Not now", again three days later', () => {
+    expect(offerReminder(null, '2026-10-07')).toBe(true);
+    expect(offerReminder('no', '2026-10-07')).toBe(true); // the old "never again" answer asks once more
+    expect(offerReminder('2026-10-07', '2026-10-07')).toBe(false);
+    expect(offerReminder('2026-10-07', '2026-10-09')).toBe(false);
+    expect(offerReminder('2026-10-07', '2026-10-10')).toBe(true);
+    expect(offerReminder('9999-12-31', '2026-10-10')).toBe(false); // a date ahead keeps it away
   });
 });

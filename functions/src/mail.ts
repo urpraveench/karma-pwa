@@ -104,9 +104,16 @@ function tips(items: [string, string][]): string {
       </table>`;
 }
 
-const button = (label: string, href: string) => `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:6px 0 24px;"><tr><td align="center" bgcolor="${INK}" style="border-radius:12px;">
+/**
+ * A link can't open a home-screen web app (on iPhone never; on Android only outside Gmail's own browser), and on iPhone
+ * the browser doesn't share the app's sign-in. So, under each button, point people who installed TikTym to its icon.
+ */
+export const HOME_HINT = 'Added TikTym to your home screen? Open it from there, so you stay signed in.';
+
+const button = (label: string, href: string, hint = true) => `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:6px 0 ${hint ? 8 : 24}px;"><tr><td align="center" bgcolor="${INK}" style="border-radius:12px;">
           <a href="${esc(href)}" style="display:inline-block;padding:14px 28px;font-family:${FONT};font-size:16px;font-weight:700;color:${BG};text-decoration:none;border-radius:12px;">${label}</a>
-        </td></tr></table>`;
+        </td></tr></table>${hint ? `
+        <p style="margin:0 0 24px;font-family:${FONT};font-size:13px;line-height:1.5;color:${INK2};">${HOME_HINT}</p>` : ''}`;
 
 /** The shared frame: a full document (so web-font-capable apps load the brand font), header, content, sign-off, footer. */
 function frame(o: { title: string; body: string[]; why: string; unsubscribe: string }): string {
@@ -156,7 +163,7 @@ export function welcomeEmail(o: { name: string; practices: Practice[]; unsubscri
       para(`Thanks for starting TikTym. Here's what you're making time for, ${plural(o.practices.length, 'practice')} in all:`),
       practicesCard(o.practices),
       tips(welcomeTips(total)),
-      button('Open TikTym', appLink('welcome')),
+      button('Open TikTym', appLink('welcome'), false),
       para('<strong>Add it to your home screen</strong> so it opens like an app: on iPhone, open it in Safari and tap Share › Add to Home Screen; on Android, tap Install app in Chrome.'),
       para("I built TikTym because I couldn't find time to learn alongside a full-time job. If anything is confusing, or you'd like something added, just reply to this email. I read every one."),
     ],
@@ -199,7 +206,7 @@ export function nudgeEmail(o: { name: string; practice: Practice; unsubscribe: s
     hi.replace(/&amp;/g, '&'), '',
     `You set up TikTym yesterday, but nothing's logged yet. That's normal: the first entry is the hardest. Start small: 5 minutes of ${o.practice.name} today is enough to get going.`, '',
     'Open TikTym, tap the play button on the practice, and the timer logs the minutes for you.', '',
-    `Open TikTym: ${appLink('first_minute')}`, '',
+    `Open TikTym: ${appLink('first_minute')}`, HOME_HINT, '',
     'If something got in the way, reply and tell me. It helps me make TikTym easier.', '',
     'Praveen', SIGN_OFF, '', '--',
     `You're getting this because you created a TikTym account and haven't logged anything yet. Unsubscribe: ${o.unsubscribe}`,
@@ -232,7 +239,7 @@ export function oneTapEmail(o: { name: string; unsubscribe: string }): Email {
     '1. Pick what you want to make time for: Exercise, Reading, Course study, Meditation, or add your own.',
     '2. Set the minutes. 100 minutes a day is the suggested start, not a rule. Pick fewer if your days are full.',
     '3. Tap Start, then log your first few minutes, or tap the play button for a focus timer.', '',
-    `Pick my practices: ${appLink('one_tap')}`, '',
+    `Pick my practices: ${appLink('one_tap')}`, HOME_HINT, '',
     'If something got in the way, reply and tell me. It helps me make TikTym easier.', '',
     'Praveen', SIGN_OFF, '', '--',
     `You're getting this because you created a TikTym account and haven't finished setting it up. It's sent once. Unsubscribe: ${o.unsubscribe}`,
@@ -261,7 +268,7 @@ export function comebackEmail(o: { name: string; practice: Practice; days: numbe
     hi.replace(/&amp;/g, '&'), '',
     `It's been ${o.days} days since your last entry in TikTym. That happens to everyone: work, travel, a busy week.`, '',
     `You don't need to make up for the missed days. Start with 5 minutes of ${o.practice.name} today, and you're back.`, '',
-    `Open TikTym: ${appLink('comeback')}`, '',
+    `Open TikTym: ${appLink('comeback')}`, HOME_HINT, '',
     'If something about TikTym got in the way, reply and tell me. I read every one.', '',
     'Praveen', SIGN_OFF, '', '--',
     `You're getting this because nothing has been logged in your TikTym account for a few days. It's sent once per break. Unsubscribe: ${o.unsubscribe}`,
@@ -384,7 +391,7 @@ export function recapEmail(o: { name: string; recap: Recap; easiest?: string; un
       ...(vs || streak ? [[vs, streak].filter(Boolean).join(' '), ''] : []),
       plain(tip),
     ]), '',
-    `Open TikTym: ${appLink('weekly_recap')}`, '',
+    `Open TikTym: ${appLink('weekly_recap')}`, HOME_HINT, '',
     'Praveen', SIGN_OFF, '', '--',
     `You're getting this because Weekly recap is on in your TikTym account. Unsubscribe: ${o.unsubscribe}`,
   ].join('\n');

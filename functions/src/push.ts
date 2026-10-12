@@ -6,14 +6,12 @@ import type { Category, Settings } from './shared/types.js';
 
 export interface ReminderDoc {
   slot: string | null; time: string; tz: string; devices: number; lastSent?: string;
-  /** When the daily reminder last reached a device (ms), so the 8 pm check never follows it within the hour. */
-  lastSentAt?: number;
   /** The UTC slot of 8 pm local for the evening log check (NOTIF-18), and the local date it last went. */
   nudgeSlot?: string | null; nudgeSent?: string;
 }
 
 /** reminders/{uid} as the settings and devices say it should be: no slot while off, or with no device to send to. */
-export function reminderTarget(settings: Settings | undefined, devices: number, now: Date): Omit<ReminderDoc, 'lastSent' | 'lastSentAt' | 'nudgeSent'> {
+export function reminderTarget(settings: Settings | undefined, devices: number, now: Date): Omit<ReminderDoc, 'lastSent' | 'nudgeSent'> {
   const time = reminderTime(settings), tz = settings?.reminder?.tz || 'Asia/Kolkata', date = localParts(now, tz).date;
   const on = reminderOn(settings) && devices > 0;
   return { slot: on ? utcSlot(time, tz, date) : null, time, tz, devices, nudgeSlot: nudgeSlotFor(settings, devices, tz, date) };
@@ -23,12 +21,13 @@ export function reminderTarget(settings: Settings | undefined, devices: number, 
 export const nudgeSlotFor = (settings: Settings | undefined, devices: number, tz: string, date: string) =>
   logNudgeOn(settings) && devices > 0 ? utcSlot(LOG_NUDGE_TIME, tz, date) : null;
 
-/** The hour the 8 pm check keeps clear after the daily reminder. */
-export const NUDGE_GAP_MS = 3600_000;
+/** A daily reminder set after this time and up to 8 pm already came within the hour, so the 8 pm check skips that day. */
+export const NUDGE_QUIET_AFTER = '19:00';
 
 /**
  * The evening log check, when the job finds this account at 8 pm (NOTIF-18): send only if nothing is logged today and
- * something was due, never twice a day, never within the hour after the daily reminder, never after 10 pm; or wait
+ * something was due, never twice a day, not on a day the daily reminder (set after 7 pm, up to 8 pm) already came, never
+ * after 10 pm; or wait
  * while daylight saving has moved the slot early (the record gets the new slot).
  */
 export function nudgeCheck(doc: ReminderDoc, now: Date, day: { logged: boolean; due: boolean }):
@@ -40,7 +39,7 @@ export function nudgeCheck(doc: ReminderDoc, now: Date, day: { logged: boolean; 
   if (time >= '22:00') return r('too-late');
   if (day.logged) return r('logged');
   if (!day.due) return r('nothing-due');
-  if (doc.lastSent === date && doc.lastSentAt && now.getTime() - doc.lastSentAt < NUDGE_GAP_MS) return r('just-reminded');
+  if (doc.lastSent === date && doc.time > NUDGE_QUIET_AFTER && doc.time <= LOG_NUDGE_TIME) return r('just-reminded');
   return r('send');
 }
 

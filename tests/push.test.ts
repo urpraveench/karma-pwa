@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { deviceGone, NUDGE_GAP_MS, nudgeCheck, nudgePayload, nudgeSlotFor, reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from '../functions/src/push';
+import { deviceGone, nudgeCheck, nudgePayload, nudgeSlotFor, reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from '../functions/src/push';
 import { badgeCount, nearestTime, REMINDER_TIMES, reminderOn, reminderText, reminderTime, slotAt, timeLabel, utcSlot } from '../src/lib/reminders';
 
 describe('when the daily reminder goes (NOTIF-09)', () => {
@@ -122,12 +122,13 @@ describe('the 8 pm evening log check (NOTIF-18)', () => {
     expect(nudgeCheck(doc, at, { logged: false, due: false }).act).toBe('nothing-due');
   });
 
-  it('once a day, never within the hour after the daily reminder, never after 10 pm', () => {
+  it('once a day; after a reminder set between 7 and 8 pm, not that day; the 7 pm default and the 8 pm check both go; never after 10 pm', () => {
     expect(nudgeCheck({ ...doc, nudgeSent: '2026-10-07' }, at, quiet).act).toBe('sent-today');
-    const reminded = { ...doc, lastSent: '2026-10-07' };
-    expect(nudgeCheck({ ...reminded, lastSentAt: at.getTime() - 30 * 60_000 }, at, quiet).act).toBe('just-reminded');
-    expect(nudgeCheck({ ...reminded, lastSentAt: at.getTime() - NUDGE_GAP_MS - 1 }, at, quiet).act).toBe('send');
-    expect(nudgeCheck({ ...doc, lastSent: '2026-10-06', lastSentAt: at.getTime() - 60_000 }, at, quiet).act).toBe('send'); // yesterday's
+    expect(nudgeCheck({ ...doc, time: '19:00', lastSent: '2026-10-07' }, at, quiet).act).toBe('send'); // the default: an hour apart
+    expect(nudgeCheck({ ...doc, time: '19:30', lastSent: '2026-10-07' }, at, quiet).act).toBe('just-reminded');
+    expect(nudgeCheck({ ...doc, time: '20:00', lastSent: '2026-10-07' }, at, quiet).act).toBe('just-reminded');
+    expect(nudgeCheck({ ...doc, time: '19:30', lastSent: '2026-10-06' }, at, quiet).act).toBe('send'); // yesterday's
+    expect(nudgeCheck({ ...doc, time: '21:00', lastSent: '2026-10-07' }, at, quiet).act).toBe('send'); // a later reminder comes after
     expect(nudgeCheck(doc, new Date('2026-10-07T16:45:00Z'), quiet).act).toBe('too-late');
     const london: ReminderDoc = { ...doc, tz: 'Europe/London', nudgeSlot: '20:00' }; // set in winter, now summer
     expect(nudgeCheck(london, new Date('2026-07-01T18:00:00Z'), quiet)).toMatchObject({ act: 'later', slot: '19:00' });
@@ -143,7 +144,6 @@ describe('the 8 pm evening log check (NOTIF-18)', () => {
     expect(src).toContain("where('nudgeSlot', '==', slot)");
     expect(src).toContain("queue.enqueue({ uid: d.id, kind: 'nudge' })");
     expect(src).toContain('if (doc.nudgeSlot === undefined) fix.nudgeSlot');
-    expect(src).toContain('lastSentAt: now.getTime()');
   });
 });
 

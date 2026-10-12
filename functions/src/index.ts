@@ -331,7 +331,7 @@ export const reminderSend = onTaskDispatched({
   const left = practicesLeft(data, check.date);
   if (!left.length) return; // today is clear, or a rest day
   const sent = await pushToAccount(uid, reminderPayload(left, badgeOn(data.settings)), 'daily-reminder');
-  if (sent) await reminderDoc(uid).update({ lastSent: check.date, lastSentAt: now.getTime() });
+  if (sent) await reminderDoc(uid).update({ lastSent: check.date });
   logger.info('reminder sent', { uid, devices: sent, left: left.length });
 });
 

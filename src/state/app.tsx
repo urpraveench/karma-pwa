@@ -11,8 +11,8 @@ import { moment as findMoment, type Moment } from '../lib/moments';
 import { startingCategories, type Choice } from '../lib/firstRun';
 import { defaultCategories, sampleData } from '../lib/sample';
 import { saveTimer } from '../lib/timer';
-import { badgeCount, timeLabel } from '../lib/reminders';
-import { enablePush, resavePush, type PushStatus } from './push';
+import { badgeCount, reminderOn, reminderTime, timeLabel } from '../lib/reminders';
+import { canPush, enablePush, resavePush, type PushStatus } from './push';
 import { newId } from '../lib/util';
 import type { AppData, Category, DateStr, Feel, Log, User } from '../lib/types';
 import type { Store } from '../store/types';
@@ -298,6 +298,21 @@ function useAppState() {
     const r = dataRef.current.settings.reminder, tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if (r?.tz && r.tz !== tz) setReminder({});
   }, [phase.kind, store, setReminder]);
+
+  // The reminder is on by default in every account (NOTIF-12), but a phone shows nothing until it allows notifications,
+  // and browsers only let a page ask from a tap. So the first tap anywhere asks, once per open, with no screen of our own.
+  useEffect(() => {
+    if ((phase.kind !== 'ready' && phase.kind !== 'choose') || !store) return;
+    if (!canPush() || Notification.permission !== 'default' || !reminderOn(dataRef.current.settings)) return;
+    const ask = () => {
+      document.removeEventListener('pointerup', ask, true);
+      document.removeEventListener('keydown', ask, true);
+      if (Notification.permission === 'default') void enableReminders(reminderTime(dataRef.current.settings));
+    };
+    document.addEventListener('pointerup', ask, true);
+    document.addEventListener('keydown', ask, true);
+    return () => { document.removeEventListener('pointerup', ask, true); document.removeEventListener('keydown', ask, true); };
+  }, [phase.kind, store, enableReminders]);
 
   const setBacklogCap = useCallback((v: number) => {
     if (!store) return;

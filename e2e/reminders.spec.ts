@@ -28,22 +28,18 @@ const saved = (page: Page) => page.evaluate(() => {
   const dev = Object.keys(localStorage).find(k => k.startsWith('tiktym:devices:'));
   return { settings: JSON.parse(localStorage.getItem(key)!).settings, devices: dev ? JSON.parse(localStorage.getItem(dev)!) : null };
 });
-const card = (page: Page) => page.locator('.install-card[aria-label="Daily reminder"]');
 const reminderRow = (page: Page) => page.locator('.li', { hasText: 'Daily reminder' });
 const DATA = seedData([{ id: 'ex', name: 'Exercise' }, { id: 'rd', name: 'Reading' }]);
-const logExercise = (page: Page) => page.getByRole('button', { name: 'Log 30 minutes of Exercise' }).click();
+const asked = (page: Page) => page.evaluate(() => (window as unknown as { __push: { asked: number } }).__push.asked);
 
-test('Today offers the 7 pm reminder from the first open; "Remind me" asks, saves this device and the time (NOTIF-12)', async ({ page }) => {
+test('on by default: the first tap anywhere asks the phone, and the 7 pm reminder is set, with no screen of our own (NOTIF-12)', async ({ page }) => {
   await fakePush(page);
   await signInWith(page, DATA);
-  await expect(card(page)).toContainText('Want a reminder at 7 pm?');
-  await expect(card(page)).toContainText("A notification at 7 pm, only if something's still left that day. Tap Allow when your phone asks.");
-  expect(await page.evaluate(() => (window as unknown as { __push: { asked: number } }).__push.asked)).toBe(0); // only after a tap
-  await card(page).getByRole('button', { name: 'Remind me at 7 pm' }).click();
+  await expect(page.locator('.install-card[aria-label="Daily reminder"]')).toHaveCount(0); // no card
+  expect(await asked(page)).toBe(0); // browsers only allow asking from a tap
+  await tab(page, 'Insights').click();
   await expect(toast(page)).toHaveText("Reminder set for 7 pm, if anything's left");
-  await expect(card(page)).toHaveCount(0);
   expect(await page.evaluate(() => (window as unknown as { __push: { asked: number; key: number } }).__push)).toEqual({ asked: 1, key: 65 }); // TikTym's public key, 65 bytes
-
   const s = await saved(page);
   expect(s.settings.reminder).toEqual({ on: true, time: '19:00', tz: expect.stringMatching(/^Asia\/(Kolkata|Calcutta)$/) }); // Chrome may use the older name
   expect(Object.values(s.devices)).toEqual([expect.objectContaining({ endpoint: 'https://push.example/device-1', keys: { p256dh: 'p256', auth: 'auth' } })]);
@@ -57,81 +53,56 @@ test('Today offers the 7 pm reminder from the first open; "Remind me" asks, save
   await expect(reminderRow(page)).toHaveAttribute('aria-pressed', 'false');
   await expect(page.getByLabel('Reminder time')).toHaveCount(0);
   expect((await saved(page)).settings.reminder.on).toBe(false);
+  await page.reload(); // allowed already: never asks again
+  await tab(page, 'Insights').click();
+  expect(await asked(page)).toBe(0);
 });
 
-test('"Not now" puts the card away for three days, then it asks again (NOTIF-12)', async ({ page }) => {
-  await fakePush(page);
-  await signInWith(page, DATA);
-  await card(page).getByRole('button', { name: 'Not now' }).last().click();
-  await expect(card(page)).toHaveCount(0);
-  await page.reload();
-  await expect(page.locator('.cat').first()).toBeVisible();
-  await expect(card(page)).toHaveCount(0);
-  await page.clock.setSystemTime(new Date(2026, 9, 9, 10, 0)); // two days on: still away
-  await page.reload();
-  await expect(page.locator('.cat').first()).toBeVisible();
-  await expect(card(page)).toHaveCount(0);
-  await page.clock.setSystemTime(new Date(2026, 9, 10, 10, 0)); // three days on
-  await page.reload();
-  await expect(card(page)).toBeVisible();
-});
-
-test('Start on the first-run screen also asks for notifications, so the 7 pm reminder is on from day one (FIRST-13)', async ({ page }) => {
+test('a new account: the first tap on the first-run screen asks (NOTIF-12, FIRST-13)', async ({ page }) => {
   await fakePush(page);
   await open(page);
   await page.fill('#em', DEMO.email); await page.fill('#pw', DEMO.password); await page.click('button[type=submit]');
-  await expect(page.locator('.fr-remind')).toHaveText("We'll remind you at 7 pm on days something's left. Tap Allow when your phone asks.");
+  await expect(page.locator('.first-run')).toBeVisible();
   await page.locator('.fr-start .btn').click();
   await expect(page.locator('.hello')).toBeVisible();
   await expect(toast(page)).toHaveText("Reminder set for 7 pm, if anything's left");
-  expect(await page.evaluate(() => (window as unknown as { __push: { asked: number } }).__push.asked)).toBe(1);
-  expect((await saved(page)).settings.reminder).toMatchObject({ on: true, time: '19:00' });
-  await expect(card(page)).toHaveCount(0); // allowed: nothing more to offer
+  expect(await asked(page)).toBe(1);
 });
 
-test('a phone that answers "not now" at Start still starts, and Today offers the reminder (FIRST-13)', async ({ page }) => {
+test('Setup shows both on by default, before the phone has answered (NOTIF-12, NOTIF-18)', async ({ page }) => {
   await fakePush(page, 'default');
-  await open(page);
-  await page.fill('#em', DEMO.email); await page.fill('#pw', DEMO.password); await page.click('button[type=submit]');
-  await page.locator('.fr-start .btn').click();
-  await expect(page.locator('.hello')).toBeVisible();
-  await expect(card(page)).toBeVisible();
+  await signInWith(page, DATA);
+  await tab(page, 'Setup').click();
+  await expect(reminderRow(page)).toHaveAttribute('aria-pressed', 'true');
+  await expect(reminderRow(page)).toContainText("Push · at 7 pm, only if something's left that day");
+  await expect(page.locator('.li', { hasText: 'Evening log check' })).toHaveAttribute('aria-pressed', 'true');
 });
 
-test('refused in the browser: says where to allow them, and Setup explains (NOTIF-12)', async ({ page }) => {
+test('switched off in Setup: a tap never asks (NOTIF-12)', async ({ page }) => {
+  await fakePush(page);
+  await signInWith(page, seedData([{ id: 'ex', name: 'Exercise' }], [], { reminder: { on: false } }));
+  await tab(page, 'Insights').click();
+  await tab(page, 'Today').click();
+  expect(await asked(page)).toBe(0);
+});
+
+test('refused on the phone: says where to allow them, and Setup explains (NOTIF-12)', async ({ page }) => {
   await fakePush(page, 'denied');
   await signInWith(page, DATA);
-  await logExercise(page);
-  await card(page).getByRole('button', { name: /Remind me at/ }).click();
+  await tab(page, 'Insights').click();
   await expect(toast(page)).toHaveText('Notifications are blocked. Allow them for TikTym in your browser settings.');
-  await expect(card(page)).toHaveCount(0);
   await tab(page, 'Setup').click();
   await expect(reminderRow(page)).toContainText('Notifications are blocked for TikTym');
   await expect(reminderRow(page)).toBeDisabled();
 });
 
-test('turned on from Setup, at 7 pm until a time is picked (NOTIF-12)', async ({ page }) => {
+test('the 8 pm evening log check: on by default, and switched off on its own (NOTIF-18)', async ({ page }) => {
   await fakePush(page);
   await signInWith(page, DATA);
-  await tab(page, 'Setup').click();
-  await expect(reminderRow(page)).toHaveAttribute('aria-pressed', 'false');
-  await expect(reminderRow(page)).toContainText('Tap to allow notifications on this phone · at 7 pm');
-  await reminderRow(page).click();
-  await expect(reminderRow(page)).toContainText("Push · at 7 pm, only if something's left that day");
-  await expect(reminderRow(page)).toHaveAttribute('aria-pressed', 'true');
-  expect((await saved(page)).settings.reminder).toMatchObject({ on: true, time: '19:00' });
-});
-
-test('the 8 pm evening log check: on by default once notifications are allowed, and can be switched off (NOTIF-18)', async ({ page }) => {
-  await fakePush(page, 'granted', { permission: 'default' });
-  await signInWith(page, DATA);
-  await tab(page, 'Setup').click();
+  await tab(page, 'Setup').click(); // the tap asks, and the phone allows
   const nudge = page.locator('.li', { hasText: 'Evening log check' });
-  await expect(nudge).toContainText('Tap to allow notifications on this phone · at 8 pm');
-  await expect(nudge).toHaveAttribute('aria-pressed', 'false'); // nothing allowed yet
-  await reminderRow(page).click(); // allowing notifications turns it on with them
-  await expect(nudge).toHaveAttribute('aria-pressed', 'true');
   await expect(nudge).toContainText("Push · at 8 pm, only if nothing's logged that day");
+  await expect(nudge).toHaveAttribute('aria-pressed', 'true');
   expect((await saved(page)).settings.logNudge).toBeUndefined(); // on by default, nothing stored
   await nudge.click();
   await expect(nudge).toHaveAttribute('aria-pressed', 'false');
@@ -145,8 +116,6 @@ test.describe('Safari on an iPhone, not from the home screen', () => {
     await fakePush(page, 'granted', { noPush: true });
     await page.addInitScript(() => localStorage.setItem('tiktym:install-nudge', '{"dismissals":2}'));
     await signInWith(page, DATA);
-    await logExercise(page);
-    await expect(card(page)).toHaveCount(0);
     await tab(page, 'Setup').click();
     await expect(reminderRow(page)).toContainText('reminders work once TikTym is on your home screen');
     await expect(reminderRow(page)).toBeDisabled();

@@ -15,14 +15,10 @@ export const test = base.extend<{ consoleErrors: string[]; installCard: boolean;
     if (!installCard) await page.addInitScript(() => localStorage.setItem('tiktym:install-nudge', '{"dismissals":2}'));
     await use();
   }, { auto: true }],
-  /** Likewise the "Remind me tomorrow" card (NOTIF-12), which appears once something is logged today. */
+  /** The first tap in the app asks the phone for notifications (NOTIF-12): answered as if closed, unless a test opts in. */
   reminderCard: [false, { option: true }],
   hideReminderCard: [async ({ page, reminderCard }, use) => {
-    if (!reminderCard) await page.addInitScript(() => {
-      localStorage.setItem('tiktym:remind-card', '9999-12-31');
-      // Start on the first-run screen also asks for notifications (FIRST-13): answer as if the question was closed
-      Notification.requestPermission = async () => 'default';
-    });
+    if (!reminderCard) await page.addInitScript(() => { Notification.requestPermission = async () => 'default'; });
     await use();
   }, { auto: true }],
   /** And the once-a-day splash with today's idea (TODAY-21), which would cover Today on every test's first open. */

@@ -16,7 +16,7 @@ const ENDPOINT_KEY = 'tiktym:push-endpoint';
 const read = (k: string) => { try { return localStorage.getItem(k); } catch { return null; } };
 const write = (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* storage blocked */ } };
 
-const canPush = () => typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+export const canPush = () => typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
 const apple = () => /iPhone|iPad|iPod/.test(navigator.userAgent);
 
 /** The service worker, or null if it isn't running (the dev server, or a browser that blocks it). */

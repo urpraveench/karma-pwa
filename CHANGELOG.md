@@ -15,7 +15,7 @@ Format, newest first:
 
 ## Coming next
 
-- **Your 7 pm reminder, from day one.** When you start, TikTym asks your phone to allow notifications, so the 7 pm reminder reaches you. Already using TikTym? Today offers it, and you can change the time in Setup.
+- **Reminders on from day one.** Your 7 pm reminder is on from the start. The first time you tap in TikTym, your phone asks to allow notifications; allow it and the reminders arrive. Switch them off any time in Setup.
 - **An 8 pm check-in.** If you allow notifications and haven't logged anything by 8 pm, TikTym asks: "Did you log what you did today?" Tap the mic and just say it. Switch it off in Setup.
 - **Start the day with an idea.** The first time you open TikTym each day, today's idea fills the screen for a moment before Today. Tap to go straight in.
 

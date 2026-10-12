@@ -37,7 +37,7 @@ await p0.locator('.fr-start .btn').click(); // first run: start with the ticked 
 await p0.locator('.tab', { hasText: 'Setup' }).click();
 await p0.locator('.li', { hasText: 'Load sample data' }).click();
 await p0.locator('.tab', { hasText: 'Today' }).click();
-await p0.evaluate(() => { localStorage.setItem('tiktym:tip-timer', '1'); localStorage.setItem('tiktym:remind-card', '9999-12-31'); localStorage.setItem('tiktym:idea-seen', '9999-12-31'); }); // no first-run tip, reminder offer or idea splash in the clips
+await p0.evaluate(() => { localStorage.setItem('tiktym:tip-timer', '1'); localStorage.setItem('tiktym:idea-seen', '9999-12-31'); }); // no first-run tip, reminder offer or idea splash in the clips
 const state = await prep.storageState();
 await prep.close();
 
@@ -49,6 +49,7 @@ async function record(name, scene, { at = NOW, seconds, init, posterAt = 2.5 } =
   const started = Date.now();
   await page.clock.install({ time: at });
   page.on('dialog', d => d.accept());
+  await page.addInitScript(() => { Notification.requestPermission = async () => 'default'; }); // no notification question in the clips
   if (init) await page.addInitScript(init);
   await page.goto(URL_);
   await page.locator('.hello').waitFor();

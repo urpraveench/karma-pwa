@@ -4,7 +4,6 @@ import { InstallCard } from '../components/InstallGuide';
 import { MomentCard } from '../components/MomentCard';
 import { ideaFor } from '../lib/ideas';
 import { easiestPending } from '../lib/moments';
-import { ReminderCard } from '../components/Reminders';
 import { activeCats, showUpStreak } from '../lib/backlog';
 import { addDays, fmtLong } from '../lib/date';
 import { dayMark, weekStart } from '../lib/streak';
@@ -52,7 +51,6 @@ export function Today() {
       </header>
       {m && <MomentCard m={m} timerOn={!!tm} onHide={() => hideMoment(m.key)} onGo={(cat, goal) => start(cat, goal || undefined)} />}
       <InstallCard />
-      <ReminderCard />
       <section className={`mala ${intro ? 'intro' : ''} ${m ? 'sm' : ''}`} aria-label={`Today: ${t.doneCap} of ${t.owed} points done`}>
         <Mala fills={malaFills(c, cats, live)} />
         <div className="mala-center">{center}</div>

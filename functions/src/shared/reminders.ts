@@ -1,5 +1,4 @@
 // Generated from src/lib/reminders.ts by `npm run functions:shared`. Don't edit: change src/lib/reminders.ts and run it again.
-import { addDays } from './date.js';
 import type { Category, Settings } from './types.js';
 
 // Daily push reminders and the app badge (NOTIF-09 to NOTIF-13; NOTIFICATIONS.md). Shared with the Cloud Functions
@@ -13,15 +12,6 @@ export const DEFAULT_REMINDER = '19:00';
 
 /** Times a reminder can be set for: every 15 minutes from 7 am to 9:45 pm, never at night. */
 export const REMINDER_TIMES: string[] = Array.from({ length: (22 - 7) * 4 }, (_, i) => `${String(7 + Math.floor(i / 4)).padStart(2, '0')}:${String((i % 4) * 15).padStart(2, '0')}`);
-
-/** After "Not now", Today offers the reminder again this many days later (NOTIF-12). */
-export const ASK_AGAIN_DAYS = 3;
-
-/** Whether Today offers the 7 pm reminder: until it's allowed, again ASK_AGAIN_DAYS after each "Not now" (NOTIF-12). */
-export function offerReminder(dismissed: string | null, T: string): boolean {
-  if (!dismissed || !/^\d{4}-\d{2}-\d{2}$/.test(dismissed)) return true; // never dismissed, or the old "for good" answer
-  return dismissed <= T && addDays(dismissed, ASK_AGAIN_DAYS) <= T; // a date ahead of today keeps it away
-}
 
 /** On unless switched off: it only does anything once a device has allowed notifications. */
 export const reminderOn = (s: Settings | undefined) => s?.reminder?.on !== false;

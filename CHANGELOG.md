@@ -13,6 +13,10 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
+## 1.12.1 · 12 October 2026 · Links open where you are
+
+- **Links open where you are.** On Android and computers, tapping a TikTym link opens it in the TikTym window you already have, not a second one. On iPhone, open TikTym from your home screen icon so you stay signed in; our emails now remind you.
+
 ## 1.12.0 · 11 October 2026 · See your streak
 
 - **See your streak.** Under your streak on Today, dots show how this week has gone. Tap it for a calendar of clear days, the days a shield saved, and how close your next shield is. It's also in Insights, next to Consistency.

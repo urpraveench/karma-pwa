@@ -71,3 +71,15 @@ export function ideaFor(d: DateStr): string {
   const [y, m, day] = d.split('-').map(Number);
   return IDEAS[Math.floor(Date.UTC(y, m - 1, day) / 864e5) % IDEAS.length];
 }
+
+/** How long the morning splash stays before it closes by itself (TODAY-21). */
+export const SPLASH_MS = 7000;
+
+/**
+ * The once-a-day splash with today's idea (TODAY-21): on the first open of the day on this device (`seen` is the last
+ * day it was shown), never on the day the account started, so it doesn't interrupt choosing practices.
+ */
+export function showIdeaSplash(seen: string | null, T: DateStr, categories: { startDate: DateStr }[]): boolean {
+  if (seen && seen >= T) return false;
+  return categories.some(c => c.startDate < T);
+}

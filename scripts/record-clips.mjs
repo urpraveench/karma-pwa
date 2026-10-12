@@ -37,7 +37,7 @@ await p0.locator('.fr-start .btn').click(); // first run: start with the ticked 
 await p0.locator('.tab', { hasText: 'Setup' }).click();
 await p0.locator('.li', { hasText: 'Load sample data' }).click();
 await p0.locator('.tab', { hasText: 'Today' }).click();
-await p0.evaluate(() => { localStorage.setItem('tiktym:tip-timer', '1'); localStorage.setItem('tiktym:remind-card', 'no'); }); // no first-run tip or reminder offer in the clips
+await p0.evaluate(() => { localStorage.setItem('tiktym:tip-timer', '1'); localStorage.setItem('tiktym:remind-card', 'no'); localStorage.setItem('tiktym:idea-seen', '9999-12-31'); }); // no first-run tip, reminder offer or idea splash in the clips
 const state = await prep.storageState();
 await prep.close();
 

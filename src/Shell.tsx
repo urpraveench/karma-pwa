@@ -14,6 +14,7 @@ import { StreakSheet } from './sheets/StreakSheet';
 import { useApp, type View } from './state/app';
 import { useTimer } from './state/timer';
 import { Focus } from './timer/Focus';
+import { IdeaSplash } from './components/IdeaSplash';
 import { MiniPlayer } from './timer/MiniPlayer';
 import { useFeedback } from './ui/feedback';
 import { Icon } from './ui/icons';
@@ -80,6 +81,7 @@ export function Shell() {
       {sheet?.kind === 'install' && <InstallSheet />}
       {sheet?.kind === 'editLog' && <EditLogSheet key={sheet.id} id={sheet.id} />}
       {focusOpen && <Focus />}
+      <IdeaSplash />
     </>
   );
 }

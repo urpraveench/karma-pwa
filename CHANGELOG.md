@@ -13,6 +13,10 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
+## Coming next
+
+- **Start the day with an idea.** The first time you open TikTym each day, today's idea fills the screen for a moment before Today. Tap to go straight in.
+
 ## 1.12.1 · 12 October 2026 · Links open where you are
 
 - **Links open where you are.** On Android and computers, tapping a TikTym link opens it in the TikTym window you already have, not a second one. On iPhone, open TikTym from your home screen icon so you stay signed in; our emails now remind you.

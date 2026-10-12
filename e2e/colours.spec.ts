@@ -47,6 +47,16 @@ for (const scheme of ['dark', 'light'] as const) {
       await noLowContrast(page, 'the focus timer', '.focus');
     });
 
+    test.describe('the morning splash', () => {
+      test.use({ ideaSplash: true });
+      test(`today's idea splash is readable (${id}, TODAY-21)`, async ({ page }) => {
+        await signInWith(page, seedData([{ id: 'r', name: 'Reading', start: '2026-10-01' }]));
+        await expect(page.locator('.splash')).toBeVisible();
+        await page.waitForTimeout(400);
+        await noLowContrast(page, 'the morning splash', '.splash');
+      });
+    });
+
     test(`the time-of-day bar is readable in every slot (${id})`, async ({ page }) => {
       const data = seedData([{ id: 'r', name: 'Reading' }], [['r', '2026-10-06', 30], ['r', '2026-10-06', 30], ['r', '2026-10-05', 30], ['r', '2026-10-05', 30]]);
       [8, 14, 19, 23].forEach((h, i) => { data.logs[i].createdAt = new Date(2026, 9, 5 + (i < 2 ? 1 : 0), h).getTime(); });

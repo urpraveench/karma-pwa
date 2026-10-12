@@ -227,3 +227,46 @@ test.describe('Moments in the app', () => {
     await expect(page.locator('.moment')).toHaveCount(0);
   });
 });
+
+test.describe('the morning splash (TODAY-21)', () => {
+  test.use({ ideaSplash: true });
+
+  test("today's idea on the first open of the day, then Today; not again that day; again tomorrow", async ({ page }) => {
+    const data = seedData([reading('2026-10-01')], [['r', '2026-10-06', 30]]);
+    await signInWith(page, data);
+    const splash = page.getByRole('dialog', { name: "Today's idea" });
+    await expect(splash).toBeVisible();
+    await expect(splash.locator('.splash-idea')).toHaveText(ideaFor('2026-10-07'));
+    await expect(splash.locator('.splash-date')).toHaveText('Wednesday 7 October');
+    await expect(splash.getByRole('button', { name: 'Start my day' })).toBeFocused();
+    await splash.getByRole('button', { name: 'Start my day' }).click();
+    await expect(splash).toHaveCount(0);
+    await expect(page.locator('.hello')).toBeVisible();
+    await page.reload();
+    await expect(page.locator('.hello')).toBeVisible();
+    await page.waitForTimeout(300);
+    await expect(splash).toHaveCount(0);
+    // the next morning
+    await page.clock.setSystemTime(new Date(2026, 9, 8, 8, 0));
+    await page.reload();
+    await expect(splash.locator('.splash-idea')).toHaveText(ideaFor('2026-10-08'));
+  });
+
+  test('closes by itself after a few seconds, or with a tap anywhere', async ({ page }) => {
+    await signInWith(page, seedData([reading('2026-10-01')]));
+    const splash = page.getByRole('dialog', { name: "Today's idea" });
+    await expect(splash).toBeVisible();
+    await page.clock.fastForward(7500);
+    await expect(splash).toHaveCount(0);
+    await page.evaluate(() => localStorage.removeItem('tiktym:idea-seen'));
+    await page.reload();
+    await splash.locator('.splash-idea').click();
+    await expect(splash).toHaveCount(0);
+  });
+
+  test('not on the day the account starts: choosing practices comes first', async ({ page }) => {
+    await signIn(page);
+    await page.waitForTimeout(300);
+    await expect(page.getByRole('dialog', { name: "Today's idea" })).toHaveCount(0);
+  });
+});

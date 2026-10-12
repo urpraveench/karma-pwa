@@ -18,7 +18,7 @@ test.describe('website (GTM-04)', () => {
     await expect(page.locator('h1')).toHaveText('100 minutes a day for your productive life.');
     for (const id of ['how', 'features', 'professionals', 'install', 'privacy', 'faq'])
       await expect(page.locator(`section#${id} h2`)).toBeVisible();
-    await expect(page.locator('.feature h3')).toHaveText(['Your day at a glance', 'A focus timer that logs for you', 'A backlog that forgives', 'Insights that coach you']);
+    await expect(page.locator('.feature h3')).toHaveText(['Log by voice, with AI', 'Your day at a glance', 'A focus timer that logs for you', 'A backlog that forgives', 'Insights that coach you']);
     const appLinks = page.locator('[data-app-link]');
     expect(await appLinks.count()).toBeGreaterThanOrEqual(5);
     for (const href of await appLinks.evaluateAll(as => as.map(a => (a as HTMLAnchorElement).href))) expect(href).toBe(APP);
@@ -27,7 +27,7 @@ test.describe('website (GTM-04)', () => {
   test('every clip and poster loads, and on-screen clips play', async ({ page, request }) => {
     await page.goto('/');
     const sources = await page.locator('video[data-clip]').evaluateAll(vs => vs.map(v => [(v as HTMLVideoElement).getAttribute('src')!, (v as HTMLVideoElement).poster]));
-    expect(sources.length).toBe(7); // 5 feature clips and 2 install videos (GTM-20)
+    expect(sources.length).toBe(8); // the hero, 5 feature clips and 2 install videos (GTM-20)
     for (const [src, poster] of sources) {
       expect((await request.get(src)).status(), src).toBe(200);
       expect((await request.get(poster)).status(), poster).toBe(200);
@@ -199,6 +199,28 @@ test('an llms.txt summary for AI tools (GTM-17)', async ({ request }) => {
   const text = await res.text();
   expect(text).toMatch(/^# TikTym/);
   for (const link of ['https://tiktym.com/', 'https://app.tiktym.com/', 'https://tiktym.com/updates/']) expect(text).toContain(link);
+  expect(text).toContain('Log by voice with AI'); // GTM-21
+  expect(text).toContain('not AI'); // the coaching is rules, and says so
+});
+
+test('the AI is voice logging, said plainly: hero, how it works, a feature, privacy and the FAQ (GTM-21)', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('h1')).toHaveText('100 minutes a day for your productive life.'); // the brand line stays first
+  await expect(page.locator('.hero .lead')).toContainText("Just say what you did, and TikTym's AI logs it for you.");
+  await expect(page.locator('.hero .facts li')).toContainText(['Log by voice with AI', 'Stored in India']);
+  await expect(page.locator('.hero .facts')).not.toContainText('stays in India'); // voice may be processed outside India
+  await expect(page.locator('#how .steps h3').nth(1)).toHaveText('Say it, time it, or tap it');
+  const voice = page.locator('.feature').first();
+  await expect(voice.locator('h3')).toHaveText('Log by voice, with AI');
+  await expect(voice.locator('video')).toHaveAttribute('src', '/clips/voice.mp4');
+  await expect(voice).toContainText('nothing saves without you');
+  await expect(page.locator('#privacy .promise')).toContainText("TikTym never stores your recording");
+  const ai = page.locator('#faq details', { hasText: 'Does TikTym use AI?' });
+  await ai.locator('summary').click();
+  await expect(ai.locator('p')).toContainText("It's optional");
+  // AI is claimed only for voice: never for the coaching or insights
+  expect(await page.locator('body').innerText()).not.toMatch(/AI[- ](coach|insight|powered)/i);
+  await expect(page.locator('meta[property="og:description"]')).toHaveAttribute('content', /Say what you did and AI logs it/);
 });
 
 test('every page has a search description of 25 to 160 characters (GTM-18)', async ({ page }) => {

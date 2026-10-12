@@ -35,10 +35,10 @@ Summary of coverage at the time of writing:
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 17 | 15 | 0 | 2 |
 | 13. App shell, PWA and platform | 35 | 30 | 0 | 5 |
-| 14. Marketing and sharing | 22 | 22 | 0 | 0 |
+| 14. Marketing and sharing | 23 | 23 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 15 | 15 | 0 | 0 |
-| **Total** | **314** | **299** | **0** | **15** |
+| **Total** | **315** | **300** | **0** | **15** |
 
 ---
 
@@ -425,10 +425,11 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | GTM-14 | How TikTym is different | The website's first FAQ question, "How is TikTym different from other habit apps?": every minute counts, busy days carry forward but never pile up, one balanced daily target, made for demanding jobs; free, no ads, offline, data in India | E2E `site/site.spec.ts` |
 | GTM-15 | Search engines can crawl | tiktym.com/robots.txt allows everything and names the sitemap; tiktym.com/sitemap.xml lists the home page and What's new (dated by the newest release); app.tiktym.com/robots.txt is a real robots file, not the app's page | Unit `changelog.test.ts`, E2E `site/site.spec.ts`, `app.spec.ts` |
 | GTM-16 | Structured data | The home page describes, in schema.org JSON-LD, the organisation (with its LinkedIn page), the website, TikTym as a free web app, and the FAQ, word for word as shown on the page | E2E `site/site.spec.ts` |
-| GTM-17 | Summary for AI tools | tiktym.com/llms.txt: a short plain-text summary of what TikTym is, who it's for, how it differs, and its links | E2E `site/site.spec.ts` |
+| GTM-17 | Summary for AI tools | tiktym.com/llms.txt: a short plain-text summary of what TikTym is, who it's for, how it differs (voice logging with AI, streak shields), and its links | E2E `site/site.spec.ts` |
 | GTM-18 | Search descriptions | Every page on tiktym.com and the app has a description of 25 to 160 characters (what search results show); the home page's matches its structured data | E2E `site/site.spec.ts`, `legal.spec.ts` |
 | GTM-19 | Install help on the website | Step-by-step guides for iPhone Safari, iPhone Chrome, Android Chrome and Samsung Internet; the visitor's own phone and browser first, marked "Your phone"; inside WhatsApp, Instagram, Facebook or LinkedIn, a warning to open the page in the browser before installing | E2E `site/site.spec.ts` |
 | GTM-20 | Install videos | A short screen recording next to the iPhone Safari and Android Chrome guides, recorded from the live app on the iOS simulator and Android emulator (`npm run site:install-videos`; Chrome on iPhone can't run in the simulator, so it has steps only), loading only when scrolled to, playing muted and looping like the feature clips; on a computer the two guides with a video come first, side by side, and the two without show as plain cards below them, with no empty space | E2E `site/site.spec.ts` |
+| GTM-21 | AI on the website | The brand line stays the headline; the AI is named only for what it does, logging by voice: the hero line ("Just say what you did, and TikTym's AI logs it for you") and a "Log by voice with AI" fact, How it works step 2 ("Say it, time it, or tap it"), the first feature card with a voice clip, a privacy line (Gemini, recording never stored), an FAQ "Does TikTym use AI?" (optional; only confirmed minutes saved), the link-preview and search descriptions, and llms.txt, which says the coaching is not AI. Nothing calls the coaching or insights AI. "Stored in India" replaces "Your data stays in India", since voice may be processed outside India | E2E `site/site.spec.ts` |
 | SHARE-01 | Progress card stats | This calendar month's minutes (as hours), current and best streak, days with entries this month, and the top three practices by time this month | Unit `share.test.ts` |
 | SHARE-02 | Progress card image | Insights › Share opens a preview of a 1080×1350 image: TikTym brand, the month's time, streak, active days, top practices with their colours, tiktym.com | E2E `share.spec.ts` |
 | SHARE-03 | Sharing the card | Share opens the phone's share sheet with the image (LinkedIn, Instagram, WhatsApp); where sharing images isn't supported, Download saves it as a PNG | E2E `share.spec.ts` (real share sheet checked on iPhone, 8 October 2026) |

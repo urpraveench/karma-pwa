@@ -42,7 +42,7 @@ const state = await prep.storageState();
 await prep.close();
 
 /** Records one scene; `scene` runs once the app is on screen. Returns the trimmed MP4's size. */
-async function record(name, scene, { at = NOW, seconds, init } = {}) {
+async function record(name, scene, { at = NOW, seconds, init, posterAt = 2.5 } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'tiktym-clip-'));
   const ctx = await browser.newContext({ ...PHONE, storageState: state, recordVideo: { dir, size: PHONE.viewport } });
   const page = await ctx.newPage();
@@ -61,7 +61,7 @@ async function record(name, scene, { at = NOW, seconds, init } = {}) {
   const trim = ['-ss', from.toFixed(2), ...(seconds ? ['-t', String(seconds)] : [])];
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...trim, '-i', raw, '-vf', 'scale=390:-2,fps=30', '-c:v', 'libx264', '-preset', 'slow', '-crf', '30',
     '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-an', mp4]);
-  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', '2.5', '-i', mp4, '-frames:v', '1', '-q:v', '4', jpg]);
+  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', String(posterAt), '-i', mp4, '-frames:v', '1', '-q:v', '4', jpg]);
   rmSync(dir, { recursive: true, force: true });
   return `${name}.mp4 ${(statSync(mp4).size / 1024).toFixed(0)} KB`;
 }
@@ -143,7 +143,7 @@ results.push(await record('voice', async page => {
   await pause(page, 2800); // time to read the transcript and the entries
   await page.click('.voice-save');
   await pause(page, 2400);
-}, { init: fakeVoice }));
+}, { init: fakeVoice, posterAt: 7 })); // the poster shows what the AI understood
 
 await browser.close();
 server.kill();

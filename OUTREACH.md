@@ -144,7 +144,7 @@ Teach first; mention TikTym only in the last line ("I built TikTym around this i
 
 ### The launch grid (first 9 posts, oldest first)
 
-Ready in Downloads › TikTym Instagram (Reels, Carousels, Profile, CAPTIONS.txt). The reels follow the order below, so their numbers match.
+Ready in Downloads › TikTym Instagram: one folder per post ("Post 1 - Carousel - …" to "Post 9 - Reel - …"), Profile, and CAPTIONS.txt.
 
 | # | Type | Post | Pin |
 |---|---|---|---|

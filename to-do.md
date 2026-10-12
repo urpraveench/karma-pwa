@@ -115,6 +115,10 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 
 
+Show the AI on the website (asked by Praveen, 12 October 2026: the site reads like a basic tracker). Only voice logging uses AI (Gemini); the Insights coaching is rules, so the copy doesn't call it AI.
+
+- [ ] **Claude:** website copy: hero line and a "Log by voice with AI" fact, How it works step 2, a first feature card "Log by voice, with AI", shields in the features intro and Today card, a privacy line and an FAQ on AI, "Stored in India" instead of "Your data stays in India" (voice may be processed outside India), link-preview and search descriptions, llms.txt (GTM-04, GTM-14, GTM-17, GTM-21).
+
 - [ ] **Claude (before scale):** load only recent months on app open, using the offline cache for older ones. Today every open downloads a user's full history: fine now, but after a year it is about 230 KB and 17 reads per open, which makes Firestore's free 10 GiB/month egress the first limit for long-time users.
 - [ ] **Idea (from content, 9 October 2026):** hours towards mastery: each practice's lifetime hours against 10,000 (e.g. "Course study: 42 of 10,000 hours"), for the 10,000-hour posts. Decide after first users' feedback.
 - [ ] **Idea (from content, 9 October 2026):** a challenge view for 100 Days, 100 Minutes (30 Exercise, 30 Reading, 30 Upskilling, 10 Meditation; a day counts when Today is cleared, carried minutes included): "Day 34 of 100", days won, and a shareable challenge card. Only if the challenge goes ahead; streaks and the progress card cover the start.
@@ -144,6 +148,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** website clip of voice logging (tap the microphone, the AI's entries to review, save), with the microphone and AI faked through the voice tests' hook; all clips re-recorded for 1.12's streak header, without the reminder offer (GTM-05), 12 October 2026
 - [x] Released 1.12.0: streak calendar (week dots on Today, Streak sheet with shields and a month of clear, shielded and missed days; also from Insights) and the gold "shield kept your streak" message; the logo set is live at app.tiktym.com/brand/, 11 October 2026
 - [x] **Claude:** streak calendar (asked by Praveen: "I'm just seeing only the number"): this week's days as dots under the streak on Today; tapping it, or Insights › Consistency's streak line, opens a Streak sheet with the shields as icons, how far off the next one is, and a month calendar of clear days (joined by a gold band), days a shield saved, missed days and rest days (TODAY-20, CALC-15). Not released yet, 11 October 2026
 - [x] **Claude:** "A shield kept your N-day streak yesterday" shows in gold with a shield icon instead of the red warning style, since it's good news (TODAY-17). Not released yet, 11 October 2026

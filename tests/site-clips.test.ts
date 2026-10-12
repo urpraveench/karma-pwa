@@ -3,7 +3,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 
 // The website's feature clips (npm run site:clips). Re-record them after any visible change to the app.
-const CLIPS = ['today', 'timer', 'backlog', 'insights'];
+const CLIPS = ['today', 'timer', 'backlog', 'insights', 'voice'];
 
 describe('website feature clips (GTM-05)', () => {
   for (const name of CLIPS) {

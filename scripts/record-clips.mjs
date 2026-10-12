@@ -37,18 +37,19 @@ await p0.locator('.fr-start .btn').click(); // first run: start with the ticked 
 await p0.locator('.tab', { hasText: 'Setup' }).click();
 await p0.locator('.li', { hasText: 'Load sample data' }).click();
 await p0.locator('.tab', { hasText: 'Today' }).click();
-await p0.evaluate(() => { localStorage.setItem('tiktym:tip-timer', '1'); }); // no first-run tip in the clips
+await p0.evaluate(() => { localStorage.setItem('tiktym:tip-timer', '1'); localStorage.setItem('tiktym:remind-card', 'no'); }); // no first-run tip or reminder offer in the clips
 const state = await prep.storageState();
 await prep.close();
 
 /** Records one scene; `scene` runs once the app is on screen. Returns the trimmed MP4's size. */
-async function record(name, scene, { at = NOW, seconds } = {}) {
+async function record(name, scene, { at = NOW, seconds, init } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'tiktym-clip-'));
   const ctx = await browser.newContext({ ...PHONE, storageState: state, recordVideo: { dir, size: PHONE.viewport } });
   const page = await ctx.newPage();
   const started = Date.now();
   await page.clock.install({ time: at });
   page.on('dialog', d => d.accept());
+  if (init) await page.addInitScript(init);
   await page.goto(URL_);
   await page.locator('.hello').waitFor();
   const from = (Date.now() - started) / 1000; // skip the blank frames before the app appears
@@ -107,6 +108,42 @@ results.push(await record('insights', async page => {
   for (let i = 0; i < 18; i++) { await page.mouse.wheel(0, 50); await pause(page, 160); }
   await pause(page, 1800);
 }));
+
+// 5. Voice: tap the microphone, say what you did, check what the AI understood, save.
+// No real microphone or AI here: a recorder that hands over a short blob, and the reply Gemini gives for this sentence,
+// through the same test hook the voice tests use (window.__TIKTYM_VOICE_AI__, test mode only).
+const fakeVoice = () => {
+  const track = { stop() {} };
+  const stream = { getTracks: () => [track], getAudioTracks: () => [track] };
+  Object.defineProperty(navigator, 'mediaDevices', { configurable: true, value: { getUserMedia: async () => stream } });
+  class Recorder {
+    static isTypeSupported(type) { return type === 'audio/webm;codecs=opus'; }
+    state = 'inactive'; ondataavailable = null; onstop = null; onerror = null;
+    constructor(_s, o) { this.mimeType = o?.mimeType || 'audio/webm'; }
+    start() { this.state = 'recording'; }
+    stop() { this.state = 'inactive'; this.ondataavailable?.({ data: new Blob(['voice'], { type: this.mimeType }) }); this.onstop?.(); }
+  }
+  Object.defineProperty(window, 'MediaRecorder', { configurable: true, value: Recorder });
+  window.__TIKTYM_VOICE_AI__ = async ({ categories }) => {
+    await new Promise(r => setTimeout(r, 1400)); // about as long as the real call takes
+    const find = name => categories.find(c => c.name === name) || categories[0];
+    return {
+      transcript: 'Went for a 20 minute run and read for 15 minutes',
+      entries: [{ categoryId: find('Exercise').id, minutes: 20 }, { categoryId: find('Reading').id, minutes: 15 }],
+      unresolved: [],
+    };
+  };
+};
+results.push(await record('voice', async page => {
+  await pause(page, 1000);
+  await page.click('.tab-log');
+  await pause(page, 2800); // recording: the wave moves and the time counts up
+  await page.getByRole('button', { name: 'Finish recording' }).click();
+  await page.locator('.voice-save').waitFor();
+  await pause(page, 2800); // time to read the transcript and the entries
+  await page.click('.voice-save');
+  await pause(page, 2400);
+}, { init: fakeVoice }));
 
 await browser.close();
 server.kill();

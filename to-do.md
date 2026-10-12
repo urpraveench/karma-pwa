@@ -115,6 +115,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 
 
+- [ ] **Deferred (12 October 2026, your call):** new users often see no streak badge on Today: it's hidden with no streak and fewer than 2 days showing up in a row (seen with an early user: "Good morning, Malleswari" on one line, nothing at the top right), so the streak calendar is reachable only from Insights. Proposed: always show it once there are practices; with neither, "Start a streak" in gold with this week's dots, opening the Streak sheet (TODAY-03, TODAY-04, TODAY-20).
 - [ ] **Claude (before scale):** load only recent months on app open, using the offline cache for older ones. Today every open downloads a user's full history: fine now, but after a year it is about 230 KB and 17 reads per open, which makes Firestore's free 10 GiB/month egress the first limit for long-time users.
 - [ ] **Idea (from content, 9 October 2026):** hours towards mastery: each practice's lifetime hours against 10,000 (e.g. "Course study: 42 of 10,000 hours"), for the 10,000-hour posts. Decide after first users' feedback.
 - [ ] **Idea (from content, 9 October 2026):** a challenge view for 100 Days, 100 Minutes (30 Exercise, 30 Reading, 30 Upskilling, 10 Meditation; a day counts when Today is cleared, carried minutes included): "Day 34 of 100", days won, and a shareable challenge card. Only if the challenge goes ahead; streaks and the progress card cover the start.

@@ -82,10 +82,8 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 **Phase 3: Instagram** (plan in OUTREACH.md › Instagram, started 12 October 2026)
 
-- [ ] **You:** create the account (Accounts Center › Add account), switch to a Business account (category App page), fill in the name, bio, link and contact from OUTREACH.md › Profile text
-- [ ] **Claude:** profile picture and 5 highlight covers (Start here, Voice, Streaks, How it works, Updates)
-- [ ] **Claude:** the launch grid: 5 reels (1080 × 1920, from the app clips, hook text on screen, no music) and 4 carousels (1080 × 1350), with captions
-- [ ] **You:** post the 9, pin 3, then announce from your personal Instagram and Invite friends
+- [ ] **You:** finish the profile: Business account (category App page), bio, link and contact from OUTREACH.md › Profile text; profile picture and highlight covers from Downloads › TikTym Instagram › Profile
+- [ ] **You:** post the 9 in the order in Downloads › TikTym Instagram › CAPTIONS.txt (captions, covers, alt text included), pin 3, then announce from your personal Instagram and Invite friends
 - [ ] **Claude:** once the handle exists, link it from the website footer and the app's Setup › About
 
 **Phase 2: App stores**
@@ -163,6 +161,9 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 ## Done
 
 Move items here when they're finished, newest first, so there's a record.
+
+- [x] 12 Oct 2026: Instagram account @tiktym.app created, name "TikTym Productivity Coach" (You)
+- [x] 12 Oct 2026: Instagram launch set in Downloads › TikTym Instagram: profile picture, 5 highlight covers, 5 reels with covers (recorded from the app at full resolution), 4 carousels (28 slides), CAPTIONS.txt with order, captions, hashtags and alt text (Claude)
 
 - [x] Released 1.13.0: reminders on by default with the phone asked on the first tap (NOTIF-12, FIRST-13), the morning idea splash (TODAY-21), the Evening log check switch (NOTIF-18), "around 7 am" (MOM-07); functions deployed with the 8 pm check; Privacy Policy mentions it, 12 October 2026
 - [x] **Claude:** the usual-time card said "around 07. 45 left today" (the browser's British hour format); now "around 7 am" (MOM-07). Found while recording the 1.13 walkthrough, 12 October 2026

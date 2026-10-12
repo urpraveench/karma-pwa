@@ -112,7 +112,7 @@ Teach first; mention TikTym only in the last line ("I built TikTym around this i
 ### Set up (one evening)
 
 1. In your Instagram app: profile › ☰ › Accounts Center › **Add account › Create new account**. It lives under your login but is a separate profile.
-2. Username, first one free: `@tiktym`, then `@tiktym.app`, then `@gettiktym`. Use the same handle everywhere later (YouTube, X).
+2. Username: **@tiktym.app** (created 12 Oct; https://instagram.com/tiktym.app). Use the same handle everywhere later (YouTube, X).
 3. Settings › Account type and tools › **Switch to professional account › Business**, category **App page** (or "Software"). Business gives Insights, a contact button and scheduling. Don't connect a Facebook page yet.
 4. Profile picture: the TikTym mark on its own (circle crop). Highlight covers: Start here, Voice, Streaks, How it works, Updates. Claude makes both.
 5. Fill in the profile from **Profile text** below. Turn off "Show account suggestions on profiles" only if odd accounts show up next to yours.
@@ -143,6 +143,8 @@ Teach first; mention TikTym only in the last line ("I built TikTym around this i
 - **Repurpose:** every LinkedIn educational post becomes a carousel a few days later.
 
 ### The launch grid (first 9 posts, oldest first)
+
+Ready in Downloads › TikTym Instagram (Reels, Carousels, Profile, CAPTIONS.txt). The reels follow the order below, so their numbers match.
 
 | # | Type | Post | Pin |
 |---|---|---|---|

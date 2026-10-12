@@ -101,3 +101,9 @@ h2{font-size:20px;font-weight:700;margin-bottom:8px}
 .preview p{margin:0 0 8px}
 .preview iframe{width:100%;height:720px;border:0;border-radius:8px;background:#EDF0EA}
 @media (max-width:640px){.topbar{flex-wrap:wrap}.nav{order:3;width:100%;margin-left:0}}
+
+/* push composer (ADMIN-10) */
+.notif{display:flex;gap:12px;align-items:flex-start;max-width:380px;margin:8px auto;padding:12px 14px;border-radius:18px;background:var(--bg);border:1px solid var(--line);box-shadow:0 4px 14px rgb(0 0 0 / .1)}
+.notif img{border-radius:9px;flex:none}
+.notif div{display:flex;flex-direction:column;min-width:0;font-size:14px;line-height:1.35}
+.notif span{color:var(--ink-2);overflow-wrap:anywhere}

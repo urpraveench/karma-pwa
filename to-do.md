@@ -30,6 +30,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] On iPhone: log a practice in full and check the icon's number drops by one; clear the day and check the number disappears (NOTIF-13). The count itself was checked 10 October
 - [ ] After the admin totals are deployed: the next morning, `adminStats/<yesterday>` in the Firestore console has accounts, sign-ups and active loggers that look right against Authentication, and `emails` counts any emails sent; `firebase functions:log --only adminStatsNightly` says "admin totals saved" (ADMIN-04)
 - [ ] After the admin console is deployed: Email › Send a test to me arrives in the TikTym template with a working unsubscribe link; then send a real broadcast to "Active in the last 7 days" and check `adminLog/<id>` counts it as sent, a second account with News off is counted under `skippedWhy.off`, and nobody gets it twice (ADMIN-07 to ADMIN-09)
+- [ ] After the admin console is deployed: Push › Send a test to my devices arrives on your phone and opens TikTym at the chosen path; a broadcast sent after 10 pm India time arrives at about 10 am, once, and `adminLog/<id>` shows it as held, then sent (ADMIN-10, ADMIN-11)
 - [ ] **You:** remove the last line of the LinkedIn page description ("TikTym is built by Pramal IT Services Private Limited.") in LinkedIn › Edit page
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
@@ -157,7 +158,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Decided 13 October 2026: a separate admin app in this repo and Firebase project, for Praveen only. Access is an `admin` custom claim that only a server script can set; every action runs in a Cloud Function that checks it, so `firestore.rules` stay closed to apps. Every send is recorded in `adminLog/`. FEATURES.md › 17. Admin console.
 
-- [ ] **Claude:** push composer: audience, title, text, test on my devices, count and confirm; held until daytime in each person's time zone (ADMIN-10, ADMIN-11)
 - [ ] **Claude:** send history page from `adminLog/` (ADMIN-12)
 - [ ] **Claude:** costs and limits: this month's Google Cloud spend by service from the billing export, and how close each free or paid limit is (Resend, App Check, Firestore reads, Hosting), with links to each console (ADMIN-13)
 - [ ] **Claude:** function health: last 24 hours of runs and errors per function, from Cloud Monitoring (ADMIN-14)
@@ -178,6 +178,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** push composer: Push page (audience, title, text, link in the app, notification mock), test on my devices, count then send with a second tap; `adminPushCount`, `adminPushTest`, `adminPushSend` and the `broadcastPushSend` queue (held until 10 am where it's night, once per person) (ADMIN-10, ADMIN-11). Not deployed yet, 13 October 2026
 - [x] **Claude:** email composer: Email page (audience, subject, heading, text, optional button), preview in the TikTym template with "up to N people", send a test to me, send with a second tap; `adminEmailPreview`, `adminEmailTest`, `adminEmailSend` and the `broadcastSend` queue (News on only, once per person, not on a day already emailed; outcomes counted in `adminLog/`) (ADMIN-07, ADMIN-08, ADMIN-09). Not deployed yet, 13 October 2026
 - [x] **Claude:** metrics page, the console's first page: six tiles with the change from a week before, 30-day charts of sign-ups, active loggers, entries and minutes with tooltips and a table, from the new `adminMetrics` function (admins only, 60 reads an open) (ADMIN-06). Not deployed yet, 13 October 2026
 - [x] **Claude:** the admin app: `admin/` page and `src/admin/`, its own build (`npm run admin:build` → `dist-admin/`) and hosting target `admin` (site `tiktym-admin`, noindex), Google sign-in, "This account isn't an admin" for anyone without the claim; browser tests on the emulators (ADMIN-05). Not deployed yet, 13 October 2026

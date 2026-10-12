@@ -4,9 +4,10 @@ import { adminView, type AdminView } from './access';
 import { auth } from './firebase';
 import { EmailPage } from './EmailPage';
 import { MetricsPage } from './MetricsPage';
+import { PushPage } from './PushPage';
 
 /** The console's pages, by the address's #fragment, so a reload stays put. */
-const PAGES = [{ id: 'metrics', label: 'Metrics' }, { id: 'email', label: 'Email' }] as const;
+const PAGES = [{ id: 'metrics', label: 'Metrics' }, { id: 'email', label: 'Email' }, { id: 'push', label: 'Push' }] as const;
 type PageId = typeof PAGES[number]['id'];
 const pageFromHash = (): PageId => PAGES.find(p => `#${p.id}` === location.hash)?.id ?? 'metrics';
 
@@ -67,6 +68,7 @@ export function App() {
       <main className="page">
         {page === 'metrics' && <MetricsPage />}
         {page === 'email' && <EmailPage />}
+        {page === 'push' && <PushPage />}
       </main>
     </div>
   );

@@ -38,8 +38,8 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 19 | 19 | 0 | 0 |
-| 17. Admin console | 14 | 9 | 5 | 0 |
-| **Total** | **339** | **321** | **5** | **13** |
+| 17. Admin console | 14 | 11 | 3 | 0 |
+| **Total** | **339** | **323** | **3** | **13** |
 
 ---
 
@@ -506,8 +506,8 @@ A separate app at admin.tiktym.com for Praveen only. Every action runs in a Clou
 | ADMIN-07 | Email composer | Email page: pick who gets it (everyone; active in the last 7 days; away 4 days or more), write a subject, heading and text (a blank line between paragraphs, **bold** allowed; "Hi name," added) and an optional button with an https link. The form says what to fix first. Preview shows the email in the TikTym template as people will get it and "up to N people"; Send a test to me sends it to my own address only. Send needs a preview of the current draft (editing it needs a new one) and a second tap ("This goes to up to N people"); afterwards the same draft needs a new preview. A refusal from the server is shown | E2E `admin/email.spec.ts`, Unit `adminEmail.test.ts`, `broadcast.test.ts` |
 | ADMIN-08 | Broadcast emails respect choices | Only accounts with "News about TikTym" on get a broadcast, each with a one-tap unsubscribe from News and the List-Unsubscribe headers; accounts already emailed that day (India time) are skipped and counted by reason in `adminLog/{id}.skippedWhy` | Unit `broadcast.test.ts` (sending: Manual) |
 | ADMIN-09 | Broadcast sends once, at any size | `adminLog/{id}` records the draft, who sent it and when; then one queued task per person (2 a second, retried up to 3 times); the task id and the person's `mail/{uid}.broadcasts` mean nobody gets the same broadcast twice, even if a task runs twice. The log counts queued, sent, skipped and failed (after the last try). Each send also counts in that day's `adminStats` emails (`news`, `test`) | Unit `broadcast.test.ts`, E2E `admin/email.spec.ts` (sending: Manual) |
-| ADMIN-10 | Push composer | Pick an audience (just me; everyone with a device; active in the last 7 days), write a title and text, send a test to my own devices, then "This goes to N people" and a second tap | Gap |
-| ADMIN-11 | Broadcast pushes respect quiet hours | A push outside 7 am to 10 pm in a person's time zone waits until 10 am there; expired devices are removed (as NOTIF-11); recorded in `adminLog/` | Gap |
+| ADMIN-10 | Push composer | Push page: pick who gets it (everyone with notifications on; of those, active in the last 7 days), write a title (60 characters) and text (160), and optionally a path in the app it opens (Today by default; links outside the app are refused). A notification mock shows it as it's typed. Send a test to my devices sends it to my own devices straight away (an error if none got it). Count people, then "Send to N people…" and a second tap; changing the draft needs a new count; nobody to send to is said plainly | E2E `admin/push.spec.ts`, Unit `adminPush.test.ts`, `pushBroadcast.test.ts` |
+| ADMIN-11 | Broadcast pushes respect quiet hours and send once | One queued task per person: between 10 pm and 7 am in their time zone it waits until 10 am there ("3 of them at night… waits until 10 am"). It reaches all their devices once, leaves the icon badge alone and has its own tag; expired devices are removed (as NOTIF-11); `reminders/{uid}.broadcasts` stops a repeat. `adminLog/{id}` counts queued, held, sent, skipped (no device) and failed | Unit `pushBroadcast.test.ts`, E2E `admin/push.spec.ts` (sending: Manual) |
 | ADMIN-12 | Send history | A list of every broadcast and test, newest first: when, email or push, audience, subject or title, and counts | Gap |
 | ADMIN-13 | Costs and limits | This month's Google Cloud spend by service (from the billing export) and how close each limit is: Resend per day and month (from TikTym's own send counts), App Check checks, Firestore reads, Hosting transfer; amber from 70%, red from 90%; each links to its console | Gap |
 | ADMIN-14 | Function health | For the last 24 hours, each Cloud Function's runs and errors (Cloud Monitoring), errors first, with a link to its logs | Gap |
@@ -528,7 +528,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 ## What's left to test
 
-**Gaps** (testable, no test yet): ADMIN-10 to ADMIN-14, the admin console being built (to-do.md › Admin console).
+**Gaps** (testable, no test yet): ADMIN-12 to ADMIN-14, the admin console being built (to-do.md › Admin console).
 
 **Manual** (check by hand before a release, on a real phone and the real Firebase project):
 

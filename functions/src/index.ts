@@ -14,6 +14,7 @@ import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { onTaskDispatched } from 'firebase-functions/v2/tasks';
 import { region as regionV1 } from 'firebase-functions/v1';
 import { adminCheck, type AdminCaller } from './admin.js';
+import { broadcastPushPayload, pushActiveFrom, pushDelaySeconds, readPushDraft, type PushAudience, type PushDraft } from './pushBroadcast.js';
 import { audienceRange, broadcastCheck, broadcastEmail, readDraft, type Audience, type Draft, type Recipient } from './broadcast.js';
 import { accountTotals, activeSince, cohortFrom, indiaDayRange, metricsDays, metricsFrom, statsDay, type Account, type EmailKind } from './adminStats.js';
 import { comebackDue, comebackRange, daysAway, indiaToday, latestLogDate, type MailState } from './comeback.js';
@@ -587,5 +588,91 @@ export const broadcastSend = onTaskDispatched({
     throw e;
   }
   await mailDoc(uid).set({ lastEmailDay: today, broadcasts: FieldValue.arrayUnion(id) }, { merge: true });
+  await log.update({ sent: FieldValue.increment(1) });
+});
+
+/** Accounts with a device that allowed notifications, and their time zones; only recent loggers for active7 (ADMIN-10). */
+async function pushAudience(audience: PushAudience): Promise<{ uid: string; tz: string }[]> {
+  const withDevices = await db.collection('reminders').where('devices', '>', 0).select('tz').get();
+  const from = pushActiveFrom(audience, indiaToday(new Date()));
+  const active = from ? new Set((await db.collection('mail').where('lastLogged', '>=', from).select().get()).docs.map(d => d.id)) : null;
+  return withDevices.docs.filter(d => !active || active.has(d.id)).map(d => ({ uid: d.id, tz: String(d.data().tz || 'Asia/Kolkata') }));
+}
+
+function pushDraftFrom(data: unknown): PushDraft {
+  const draft = readPushDraft((data as { draft?: unknown })?.draft);
+  if (!draft) throw new HttpsError('invalid-argument', 'Fill in the title (up to 60 characters) and text (up to 160); a link must be a path in the app, like /.');
+  return draft;
+}
+
+/** How many people a push audience reaches (ADMIN-10). */
+export const adminPushCount = onCall(async req => {
+  requireAdmin(req.auth);
+  return { count: (await pushAudience(pushDraftFrom(req.data).audience)).length };
+});
+
+/** Sends the draft to your own devices only, straight away, and records it in the send history (ADMIN-10, ADMIN-12). */
+export const adminPushTest = onCall({ secrets: [VAPID_PRIVATE_KEY] }, async req => {
+  requireAdmin(req.auth);
+  const draft = pushDraftFrom(req.data);
+  const ref = db.collection('adminLog').doc();
+  const sent = await pushToAccount(req.auth!.uid, broadcastPushPayload(draft, ref.id), `bc${ref.id}`).catch(() => 0);
+  if (!sent) throw new HttpsError('failed-precondition', 'None of your devices got it. Allow notifications in TikTym on your phone, then try again.');
+  await ref.set({ kind: 'push-test', ...draft, by: req.auth!.token.email ?? req.auth!.uid, createdAt: Timestamp.now(), queued: 1, sent: 1, devices: sent });
+  return { devices: sent };
+});
+
+/**
+ * Sends the draft to its audience (ADMIN-10, ADMIN-11): records it in adminLog/{id}, then queues one task per person,
+ * held until 10 am in their time zone when it's between 10 pm and 7 am there. The task id stops anyone being queued twice.
+ */
+export const adminPushSend = onCall({ timeoutSeconds: 540, memory: '512MiB' }, async req => {
+  requireAdmin(req.auth);
+  const draft = pushDraftFrom(req.data);
+  const people = await pushAudience(draft.audience);
+  const ref = db.collection('adminLog').doc();
+  await ref.set({ kind: 'push', ...draft, by: req.auth!.token.email ?? req.auth!.uid, createdAt: Timestamp.now(), queued: 0, held: 0, sent: 0, skipped: 0, failed: 0 });
+  const queue = getFunctions().taskQueue('locations/asia-south1/functions/broadcastPushSend');
+  const now = new Date();
+  let queued = 0, held = 0;
+  for (let i = 0; i < people.length; i += 100) {
+    const added = await Promise.all(people.slice(i, i + 100).map(p => {
+      const delay = pushDelaySeconds(now, p.tz);
+      return queue.enqueue({ id: ref.id, uid: p.uid }, { id: `bp-${ref.id}-${p.uid}`, ...(delay ? { scheduleDelaySeconds: delay } : {}) })
+        .then(() => (delay ? 2 : 1), (e: { code?: string }) => {
+          if (e?.code === 'functions/task-already-exists') return 0;
+          throw e;
+        });
+    }));
+    queued += added.filter(Boolean).length;
+    held += added.filter(n => n === 2).length;
+  }
+  await ref.update({ queued, held });
+  logger.info('push broadcast queued', { id: ref.id, audience: draft.audience, queued, held });
+  return { id: ref.id, queued, held };
+});
+
+/** Sends one broadcast push, from the queue, to all of the person's devices, once; counts the outcome (ADMIN-10, ADMIN-11). */
+export const broadcastPushSend = onTaskDispatched({
+  retryConfig: { maxAttempts: 3, minBackoffSeconds: 60 },
+  rateLimits: { maxDispatchesPerSecond: 20, maxConcurrentDispatches: 10 },
+  secrets: [VAPID_PRIVATE_KEY],
+}, async req => {
+  const { id, uid } = (req.data ?? {}) as { id?: unknown; uid?: unknown };
+  if (typeof id !== 'string' || !id || typeof uid !== 'string' || !uid) return;
+  const log = db.doc(`adminLog/${id}`);
+  const [entry, reminder] = await Promise.all([log.get(), reminderDoc(uid).get()]);
+  const draft = readPushDraft(entry.data());
+  if (!draft) return;
+  if ((reminder.data()?.broadcasts as string[] | undefined)?.includes(id)) return; // already sent: a task that ran twice
+  let sent: number;
+  try {
+    sent = await pushToAccount(uid, broadcastPushPayload(draft, id), `bc${id}`);
+  } catch (e) {
+    if (req.retryCount >= 2) await log.update({ failed: FieldValue.increment(1) }); // the last try
+    throw e;
+  }
+  if (!sent) { await log.update({ skipped: FieldValue.increment(1), 'skippedWhy.no-device': FieldValue.increment(1) }); return; }
+  await reminderDoc(uid).set({ broadcasts: FieldValue.arrayUnion(id) }, { merge: true });
   await log.update({ sent: FieldValue.increment(1) });
 });

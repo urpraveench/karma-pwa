@@ -36,6 +36,9 @@ export default defineConfig({
         start_url: '/',
         scope: '/',
         display: 'standalone',
+        // A link to app.tiktym.com that Chrome hands to the installed app (Android, computers) reuses an open TikTym
+        // window rather than opening a second one. iPhone never hands links to a home-screen app (NOTIF-17's email hint).
+        launch_handler: { client_mode: ['navigate-existing', 'auto'] },
         background_color: '#EDF0EA',
         theme_color: '#EDF0EA',
         icons: [

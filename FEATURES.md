@@ -34,11 +34,11 @@ Summary of coverage at the time of writing:
 | 10. Practices (Setup) | 23 | 23 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 17 | 15 | 0 | 2 |
-| 13. App shell, PWA and platform | 35 | 30 | 0 | 5 |
+| 13. App shell, PWA and platform | 36 | 31 | 0 | 5 |
 | 14. Marketing and sharing | 23 | 23 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 16 | 16 | 0 | 0 |
-| **Total** | **316** | **301** | **0** | **15** |
+| **Total** | **317** | **302** | **0** | **15** |
 
 ---
 
@@ -377,6 +377,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 |---|---|---|---|
 | APP-01 | Tab bar | Today, Insights, + (log), History, Setup; current tab highlighted; switching scrolls to top | E2E `app.spec.ts` |
 | APP-02 | Installable | Manifest with name, icons (including maskable) and standalone display | E2E `pwa.spec.ts` |
+| APP-32 | Links open the installed app where the phone allows | The manifest's `launch_handler` (navigate-existing) makes Chrome reuse an open TikTym window for an app.tiktym.com link it hands to the installed app (Android outside Gmail's own browser, computers). iPhone never hands links to a home-screen app, so emails say to open it from the icon (NOTIF-17) | E2E `pwa.spec.ts`; on a real Android phone: Manual |
 | APP-03 | Install on iPhone | Share › Add to Home Screen; opens full screen as "TikTym" | Manual |
 | APP-04 | Install on Android | Install app prompt | Manual |
 | APP-05 | Opens offline | App shell is precached; signed-in app opens with no connection | E2E `pwa.spec.ts` |

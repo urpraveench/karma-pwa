@@ -11,6 +11,13 @@ test.describe('Installable PWA', () => {
     expect(m.icons).toHaveLength(3);
   });
 
+  test('a link Chrome opens in the installed app reuses its open window (APP-32)', async ({ page }) => {
+    await page.goto('/');
+    const m = await page.evaluate(async () => (await fetch('/manifest.webmanifest')).json());
+    expect(m.launch_handler).toEqual({ client_mode: ['navigate-existing', 'auto'] });
+    expect(m).toMatchObject({ scope: '/', start_url: '/' }); // app.tiktym.com links, campaign tags included, are in scope
+  });
+
   test('opens offline once the service worker is installed', async ({ page, context }) => {
     await page.goto('/');
     await page.evaluate(() => navigator.serviceWorker.ready);

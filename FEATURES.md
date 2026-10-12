@@ -38,8 +38,8 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 19 | 19 | 0 | 0 |
-| 17. Admin console | 14 | 3 | 11 | 0 |
-| **Total** | **339** | **315** | **11** | **13** |
+| 17. Admin console | 14 | 4 | 10 | 0 |
+| **Total** | **339** | **316** | **10** | **13** |
 
 ---
 
@@ -500,7 +500,7 @@ A separate app at admin.tiktym.com for Praveen only. Every action runs in a Clou
 | ADMIN-01 | Granting admin | `npm run admin:grant -- <email>` (Admin SDK, the owner's Google login) sets the `admin` custom claim on that account and prints who now has it; `--revoke` removes it. No app or function can set it | Unit `admin.test.ts` (on the real project: Manual, in to-do.md) |
 | ADMIN-02 | Admin functions refuse others | Every admin function answers "permission-denied" to a caller who is signed out or has no `admin` claim, and does nothing | Unit `admin.test.ts` |
 | ADMIN-03 | Admin data is server-only | No app, signed in or not, can read or write `adminStats/` or `adminLog/` | Emulator `tests-emulator/rules.test.ts` |
-| ADMIN-04 | Nightly account totals | At 00:30 India time, `adminStats/{yesterday}` holds: all accounts, sign-ups that day, accounts that tapped Start, active loggers in the last 1, 7 and 28 days (from the server's last-logged date), activation (sign-ups of the last 7 days that logged anything), 7-day retention (sign-ups 7 to 13 days ago who logged in the last 7 days), emails sent that day by type, and accounts with a push device. Running twice gives the same document | Gap |
+| ADMIN-04 | Nightly account totals | At 00:30 India time, `adminStats/{yesterday}` holds: all accounts and that day's sign-ups (from Auth, India dates), accounts that tapped Start that day, active loggers (newest entry within the last 1, 7 and 28 days, from the server's last-logged date), activation (sign-ups of the last 7 days that logged anything), 7-day retention (sign-ups 7 to 13 days ago who logged in the last 7 days) and accounts with a push device. Each email adds to that India day's `emails.welcome`, `oneTap`, `nudge`, `recap` or `comeback` as it's sent. Running again replaces the day's numbers and keeps its email counts | Unit `adminStats.test.ts` (on the real project: Manual) |
 | ADMIN-05 | Admin sign-in | admin.tiktym.com shows only "Sign in with Google". An account with the claim sees the console; any other account sees "This account isn't an admin" and a Sign out button, and no data | Gap |
 | ADMIN-06 | Metrics page | Tiles for accounts, active loggers (1, 7, 28 days), activation and retention with the change from a week before; 30-day charts of sign-ups, active loggers, entries and minutes (from the anonymous totals); empty days show as zero | Gap |
 | ADMIN-07 | Email composer | Pick an audience (just me; everyone with News on; active in the last 7 days; away 4 or more days), write a subject and text, see a preview in the TikTym email template, and send a test to my own address. Send shows "This goes to N people" and needs a second tap | Gap |
@@ -528,7 +528,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 ## What's left to test
 
-**Gaps** (testable, no test yet): ADMIN-04 to ADMIN-14, the admin console being built (to-do.md › Admin console).
+**Gaps** (testable, no test yet): ADMIN-05 to ADMIN-14, the admin console being built (to-do.md › Admin console).
 
 **Manual** (check by hand before a release, on a real phone and the real Firebase project):
 

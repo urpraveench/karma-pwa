@@ -28,6 +28,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] After the evening log check is deployed: on a day with nothing logged, check "Did you log what you did today?" arrives at about 8 pm, once, and not on a day you logged; `firebase functions:log --only reminderSend` shows "evening check sent" or why it skipped (NOTIF-18)
 - [ ] After practice reminders are deployed: give a practice a reminder 15 minutes ahead, and check "Time for <practice>" arrives once at that time; then log that practice in full and check the next day's doesn't come once it's done (NOTIF-19)
 - [ ] On iPhone: log a practice in full and check the icon's number drops by one; clear the day and check the number disappears (NOTIF-13). The count itself was checked 10 October
+- [ ] After the admin totals are deployed: the next morning, `adminStats/<yesterday>` in the Firestore console has accounts, sign-ups and active loggers that look right against Authentication, and `emails` counts any emails sent; `firebase functions:log --only adminStatsNightly` says "admin totals saved" (ADMIN-04)
 - [ ] **You:** remove the last line of the LinkedIn page description ("TikTym is built by Pramal IT Services Private Limited.") in LinkedIn › Edit page
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
@@ -155,7 +156,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Decided 13 October 2026: a separate admin app in this repo and Firebase project, for Praveen only. Access is an `admin` custom claim that only a server script can set; every action runs in a Cloud Function that checks it, so `firestore.rules` stay closed to apps. Every send is recorded in `adminLog/`. FEATURES.md › 17. Admin console.
 
-- [ ] **Claude:** nightly account totals in `adminStats/{date}`: accounts, sign-ups, started, active loggers (1, 7, 28 days), activation, 7-day retention, emails sent, devices with push (ADMIN-04)
 - [ ] **Claude:** the admin app: its own Vite page and hosting target, Google sign-in, "not an admin" screen for anyone else (ADMIN-05)
 - [ ] **Claude:** metrics page: today's numbers and 30-day charts from `adminStats/` and the anonymous totals in `stats/` (ADMIN-06)
 - [ ] **Claude:** email composer: audience, subject, text, preview, send a test to me, count and confirm, sent through the queue in the TikTym email template with an unsubscribe link (ADMIN-07, ADMIN-08, ADMIN-09)
@@ -180,6 +180,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** nightly account totals in `adminStats/{day}` at 00:30 India time (`adminStatsNightly`): accounts, sign-ups, started, active loggers (1, 7, 28 days), activation, 7-day retention, accounts with push; each sent email counted by type as it goes (ADMIN-04). Not deployed yet, 13 October 2026
 - [x] **Claude:** admin access: `npm run admin:grant -- <email>` sets or removes the `admin` claim and lists who has it; `adminCheck` in functions lets in only that claim (wired into each admin function as it's built); `adminStats/` and `adminLog/` closed to every app, admins included (ADMIN-01, ADMIN-02, ADMIN-03), 13 October 2026
 - [x] Released 1.14.0: a reminder for each practice ("Remind me" on the practice sheet; NOTIF-19, NOTIF-20, PRAC-24), the start-date box hidden until Change (PRAC-12), plain-words load errors with Reload (AUTH-22, FIRST-04), an old open copy reloads into the new version (APP-33); functions deployed with the new `reminderPractices` trigger; app.tiktym.com/version.json shows 1.14.0 and tiktym.com/updates/ shows the release, 13 October 2026
 - [x] **Claude:** editing a practice shows the start-date box before Change is tapped: a `display:block` rule beats the `hidden` attribute. Hide it until Change (PRAC-12). Not released yet, 13 October 2026

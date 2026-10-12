@@ -13,6 +13,7 @@ import { HttpsError, onCall, onRequest } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { onTaskDispatched } from 'firebase-functions/v2/tasks';
 import { region as regionV1 } from 'firebase-functions/v1';
+import { accountTotals, activeSince, cohortFrom, indiaDayRange, statsDay, type Account, type EmailKind } from './adminStats.js';
 import { comebackDue, comebackRange, daysAway, indiaToday, latestLogDate, type MailState } from './comeback.js';
 import {
   comebackEmail, confirmUnsubscribePage, easiest, emailOn, FROM, firstName, justStarted, NUDGE_AFTER_MS, nudgeEmail, oneTapCheck, oneTapEmail,
@@ -46,13 +47,19 @@ const VAPID_PRIVATE_KEY = defineSecret('VAPID_PRIVATE_KEY');
 const mailDoc = (uid: string) => db.doc(`mail/${uid}`);
 const settingsDoc = (uid: string) => db.doc(`users/${uid}/meta/settings`);
 
-async function send(to: string, email: Email, idempotencyKey: string): Promise<void> {
+/** Counts one sent email of `kind` in today's admin totals (ADMIN-04); a retried send may count twice. */
+const countEmail = (kind: EmailKind) =>
+  db.doc(`adminStats/${indiaToday(new Date())}`).set({ emails: { [kind]: FieldValue.increment(1) } }, { merge: true })
+    .catch(e => logger.warn('email count failed', { kind, error: String(e) }));
+
+async function send(kind: EmailKind, to: string, email: Email, idempotencyKey: string): Promise<void> {
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${RESEND_API_KEY.value()}`, 'Content-Type': 'application/json', 'Idempotency-Key': idempotencyKey },
     body: JSON.stringify({ from: FROM, to: [to], reply_to: REPLY_TO, subject: email.subject, html: email.html, text: email.text, headers: email.headers }),
   });
   if (!res.ok) throw new Error(`Resend said ${res.status}: ${(await res.text()).slice(0, 300)}`);
+  await countEmail(kind);
 }
 
 /** The account's active practices, in the order shown, with today's daily minutes. */
@@ -94,7 +101,7 @@ export const welcome = onDocumentWritten({ document: 'users/{uid}/meta/settings'
   const to = await recipient(uid);
   if (!to) return;
   const email = welcomeEmail({ name: to.name, practices: await practices(uid), unsubscribe: unsubscribeLink(uid, 'tips', UNSUBSCRIBE_SECRET.value()) });
-  await send(to.email, email, `welcome-${uid}`);
+  await send('welcome', to.email, email, `welcome-${uid}`);
   await mailDoc(uid).update({ welcomeAt: Timestamp.now(), lastEmailDay: indiaToday(new Date()) });
   logger.info('welcome sent', { uid });
 });
@@ -112,7 +119,7 @@ export const firstMinute = onSchedule({ schedule: 'every 60 minutes', timeZone: 
       const [settings, to] = await Promise.all([settingsDoc(uid).get(), recipient(uid)]);
       const act = oneTapCheck(settings.data(), !!to);
       if (act !== 'send') { await handled(act); continue; }
-      await send(to!.email, oneTapEmail({ name: to!.name, unsubscribe: unsubscribeLink(uid, 'tips', UNSUBSCRIBE_SECRET.value()) }), `one-tap-${uid}`);
+      await send('oneTap', to!.email, oneTapEmail({ name: to!.name, unsubscribe: unsubscribeLink(uid, 'tips', UNSUBSCRIBE_SECRET.value()) }), `one-tap-${uid}`);
       await handled('sent');
       logger.info('one-tap email sent', { uid });
     } catch (e) {
@@ -130,7 +137,7 @@ export const firstMinute = onSchedule({ schedule: 'every 60 minutes', timeZone: 
       if (!settings.exists || !emailOn(settings.data(), 'tips')) { await handled('off'); continue; }
       const to = await recipient(uid), practice = easiest(list);
       if (!to || !practice) { await handled('no-recipient'); continue; }
-      await send(to.email, nudgeEmail({ name: to.name, practice, unsubscribe: unsubscribeLink(uid, 'tips', UNSUBSCRIBE_SECRET.value()) }), `nudge-${uid}`);
+      await send('nudge', to.email, nudgeEmail({ name: to.name, practice, unsubscribe: unsubscribeLink(uid, 'tips', UNSUBSCRIBE_SECRET.value()) }), `nudge-${uid}`);
       await handled('sent');
       logger.info('first-minute nudge sent', { uid });
     } catch (e) {
@@ -184,7 +191,7 @@ export const recapSend = onTaskDispatched({
   if (!recap) return;
   const current = categories.filter(c => !c.archivedFrom).map(c => ({ name: c.name, minutes: Number(c.targets?.[c.targets.length - 1]?.minutes ?? 0) }));
   const email = recapEmail({ name: to.name, recap, easiest: easiest(current)?.name, unsubscribe: unsubscribeLink(uid, 'recap', UNSUBSCRIBE_SECRET.value()) });
-  await send(to.email, email, `recap-${uid}-${week}`);
+  await send('recap', to.email, email, `recap-${uid}-${week}`);
   await mailDoc(uid).set({ recapWeek: week, recapAt: Timestamp.now(), lastEmailDay: today }, { merge: true });
   logger.info('weekly recap sent', { uid, week });
 });
@@ -227,7 +234,7 @@ export const comebackSend = onTaskDispatched({
   const practice = easiest(list);
   if (!to || !practice) return;
   const email = comebackEmail({ name: to.name, practice, days: daysAway(m!.lastLogged!, today), unsubscribe: unsubscribeLink(uid, 'tips', UNSUBSCRIBE_SECRET.value()) });
-  await send(to.email, email, `comeback-${uid}-${m!.lastLogged}`);
+  await send('comeback', to.email, email, `comeback-${uid}-${m!.lastLogged}`);
   await mailDoc(uid).set({ comebackFor: m!.lastLogged, comebackAt: Timestamp.now(), lastEmailDay: today }, { merge: true });
   logger.info('comeback sent', { uid, away: daysAway(m!.lastLogged!, today) });
 });
@@ -431,4 +438,36 @@ export const understandVoice = onCall({ enforceAppCheck: true, timeoutSeconds: 4
 /** Deleting an account also deletes its voice usage count (voiceUsage/{uid}), which the app itself can't reach. */
 export const voiceUsageCleanup = regionV1('asia-south1').auth.user().onDelete(async user => {
   await db.doc(`voiceUsage/${user.uid}`).delete();
+});
+
+/**
+ * At 00:30 India time: yesterday's account totals for the admin console, in adminStats/{day} (ADMIN-04). Sign-up dates
+ * come from Auth; only the last two weeks' sign-ups have their mail record read; the rest are count queries. Running
+ * again replaces the day's numbers and keeps its email counts.
+ */
+export const adminStatsNightly = onSchedule({ schedule: '30 0 * * *', timeZone: 'Asia/Kolkata', timeoutSeconds: 300 }, async () => {
+  const day = statsDay(new Date());
+  const accounts: (Account & { uid: string })[] = [];
+  let pageToken: string | undefined;
+  do {
+    const page = await getAuth().listUsers(1000, pageToken);
+    for (const u of page.users) accounts.push({ uid: u.uid, createdDay: indiaToday(new Date(u.metadata.creationTime)) });
+    pageToken = page.pageToken;
+  } while (pageToken);
+  const recent = accounts.filter(a => a.createdDay >= cohortFrom(day) && a.createdDay <= day);
+  const mails = recent.length ? await db.getAll(...recent.map(a => mailDoc(a.uid))) : [];
+  mails.forEach((m, i) => { recent[i].lastLogged = m.data()?.lastLogged; });
+
+  const since = activeSince(day), { start, end } = indiaDayRange(day);
+  const count = (q: FirebaseFirestore.Query) => q.count().get().then(r => r.data().count);
+  const [active1, active7, active28, started, pushAccounts] = await Promise.all([
+    count(db.collection('mail').where('lastLogged', '>=', since.active1)),
+    count(db.collection('mail').where('lastLogged', '>=', since.active7)),
+    count(db.collection('mail').where('lastLogged', '>=', since.active28)),
+    count(db.collection('mail').where('startedAt', '>=', Timestamp.fromDate(start)).where('startedAt', '<', Timestamp.fromDate(end))),
+    count(db.collection('reminders').where('devices', '>', 0)),
+  ]);
+  const totals = { ...accountTotals(accounts, day), started, active1, active7, active28, pushAccounts, computedAt: Timestamp.now() };
+  await db.doc(`adminStats/${day}`).set(totals, { merge: true });
+  logger.info('admin totals saved', { day, accounts: totals.accounts, active7 });
 });

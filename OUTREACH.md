@@ -103,6 +103,74 @@ Teach first; mention TikTym only in the last line ("I built TikTym around this i
 
 **Later, once 20 or more people use TikTym:** the second WhatsApp group (friends), a 30-second walkthrough video (timer, backlog limit, Insights), and the 100 Days, 100 Minutes challenge.
 
+## Instagram (plan from 12 October)
+
+**Why and how it differs from LinkedIn:** Instagram shows Reels to people who don't follow you yet, so a new account can reach strangers from day one. LinkedIn is where people read; Instagram is where they watch. Every post has to make sense with the sound off in the first 2 seconds. The audience skews younger, so students preparing for exams and fitness people come in alongside working professionals.
+
+**Faceless is fine:** screen recordings of the app, text on screen, and your voice if you like. No face needed, no "Founder" tag.
+
+### Set up (one evening)
+
+1. In your Instagram app: profile › ☰ › Accounts Center › **Add account › Create new account**. It lives under your login but is a separate profile.
+2. Username, first one free: `@tiktym`, then `@tiktym.app`, then `@gettiktym`. Use the same handle everywhere later (YouTube, X).
+3. Settings › Account type and tools › **Switch to professional account › Business**, category **App page** (or "Software"). Business gives Insights, a contact button and scheduling. Don't connect a Facebook page yet.
+4. Profile picture: the TikTym mark on its own (circle crop). Highlight covers: Start here, Voice, Streaks, How it works, Updates. Claude makes both.
+5. Fill in the profile from **Profile text** below. Turn off "Show account suggestions on profiles" only if odd accounts show up next to yours.
+6. Post the first 6 to 9 posts (the **launch grid**) **before** telling anyone, so a visitor sees a real profile, then pin 3.
+7. Then announce: a Story from your personal Instagram ("Built this for busy days. Follow along: @tiktym"), and Accounts Center › **Invite friends** for your contacts.
+
+### Profile text
+
+| Field | Text |
+|---|---|
+| Name (searchable, so use keywords) | `TikTym · Habit & time tracker` |
+| Category | App page |
+| Bio (141 of 150 characters) | `100 minutes a day for your productive life` / `30 move · 30 read · 30 grow · 10 breathe` / `Missed a day? Minutes carry forward` / `Free · log by voice 👇` |
+| Link (Edit profile › Links) | `https://tiktym.com/?utm_source=instagram&utm_medium=bio` titled "Start free" |
+| Contact button | Email: hello@tiktym.com |
+
+### What to post
+
+| Format | How often | Job | Size |
+|---|---|---|---|
+| Reels (7 to 20 s) | 2 a week | Reach strangers. Use **Trial reels** (shown to non-followers first) for new ideas | 1080 × 1920, text inside the middle 1080 × 1420 |
+| Carousels (5 to 8 slides) | 1 a week | Saves and shares: teach one idea, the LinkedIn educational posts reworked | 1080 × 1350 |
+| Stories | 3 or 4 a week | Followers: polls ("Did you read today?"), a question box, your own streak, reposts of users' shares | 1080 × 1920 |
+
+- **First 2 seconds:** the hook as big text, for example "I work 10 hours a day and still read 20 books a year", "Missed 4 days of gym? You owe 90 minutes, not 150", "I don't type my habits. I say them."
+- **Captions:** the hook again, 2 or 3 short lines, then "Link in bio". Keywords in the caption (habit tracker, productivity, reading habit, upskilling) do more than hashtags now; add 3 to 5 hashtags at most, such as #habittracker #productivityindia #readingchallenge #upskilling #100daysofcode.
+- **Music:** add trending audio inside Instagram, quietly under the video; Claude's clips come without music.
+- **Repurpose:** every LinkedIn educational post becomes a carousel a few days later.
+
+### The launch grid (first 9 posts, oldest first)
+
+| # | Type | Post | Pin |
+|---|---|---|---|
+| 1 | Carousel | 100 minutes a day: 30 move, 30 read, 30 grow, 10 breathe. What it adds up to in a year | Pin |
+| 2 | Reel | Voice: "I did 30 minutes of reading and a 20-minute walk" → logged | Pin |
+| 3 | Reel | What TikTym is in 15 seconds: Today, the mala, the timer | Pin |
+| 4 | Carousel | Missed 4 days? You owe 90, not 150 (the carry-forward rule) | |
+| 5 | Reel | The focus timer: tap, work, minutes logged | |
+| 6 | Carousel | The maths of mastery: 10,000 hours at 30 minutes a day | |
+| 7 | Reel | Streaks and shields: a missed day doesn't reset you | |
+| 8 | Carousel | 30 minutes of reading a day ≈ 20 books a year | |
+| 9 | Reel | Insights: this week vs last week | |
+
+### The daily 15 minutes
+
+- **Reply** to every comment and DM the same day. Comments in the first hour help a post most.
+- **Comment** on 3 or 4 posts from accounts your audience follows (Indian productivity, study, reading and fitness creators) as @tiktym, a real sentence, never a link. Keep a list of 10 in the table below.
+- **One-to-one DMs** convert best (3 in 6 on WhatsApp): 2 or 3 a week to friends on Instagram, the WhatsApp message reworded, with the Instagram link.
+
+| Account to comment on | Why | Since |
+|---|---|---|
+
+### Measuring (Monday review)
+
+Professional dashboard › Insights: accounts reached and the share that didn't follow you, profile visits, link taps, follows. Google Analytics: source `instagram`. Keep the reel formats that bring link taps; drop the rest.
+
+**Later:** a "comment TIME and I'll DM you the link" auto-reply (ManyChat, free plan); Collab posts with users who share their streak; the 100 Days, 100 Minutes challenge with a weekly check-in Story.
+
 ## Links with tracking
 
 Each channel gets its own link, so Google Analytics (Reports › Acquisition › Traffic acquisition, by session source and medium) shows which one brings visitors. Analytics only counts visitors who accept the cookie notice, so compare channels rather than reading totals.
@@ -114,6 +182,8 @@ Each channel gets its own link, so Google Analytics (Reports › Acquisition ›
 | WhatsApp one-to-one | `https://tiktym.com/?utm_source=whatsapp&utm_medium=direct` |
 | WhatsApp Status | `https://tiktym.com/?utm_source=whatsapp&utm_medium=status` |
 | WhatsApp group | `https://tiktym.com/?utm_source=whatsapp&utm_medium=group&utm_campaign=college` (change `college` for each group: `friends`, `office` and so on) |
+| Instagram bio | `https://tiktym.com/?utm_source=instagram&utm_medium=bio` |
+| Instagram DM | `https://tiktym.com/?utm_source=instagram&utm_medium=direct` |
 
 ## Messages ready to send
 

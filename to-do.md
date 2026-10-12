@@ -80,6 +80,14 @@ Preliminary findings (web search, 8 October 2026; not legal advice):
 Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site serves both addresses, so the old one keeps working; nothing is deployed until the new address is live.
 
 
+**Phase 3: Instagram** (plan in OUTREACH.md › Instagram, started 12 October 2026)
+
+- [ ] **You:** create the account (Accounts Center › Add account), switch to a Business account (category App page), fill in the name, bio, link and contact from OUTREACH.md › Profile text
+- [ ] **Claude:** profile picture and 5 highlight covers (Start here, Voice, Streaks, How it works, Updates)
+- [ ] **Claude:** the launch grid: 5 reels (1080 × 1920, from the app clips, hook text on screen, no music) and 4 carousels (1080 × 1350), with captions
+- [ ] **You:** post the 9, pin 3, then announce from your personal Instagram and Invite friends
+- [ ] **Claude:** once the handle exists, link it from the website footer and the app's Setup › About
+
 **Phase 2: App stores**
 
 Google Play (started 12 October 2026). The Play app is the live web app in a Chrome frame (Trusted Web Activity): app updates still ship by deploying the website, and only the frame needs Play releases.

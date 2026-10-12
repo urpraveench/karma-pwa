@@ -152,7 +152,9 @@ test.describe('Setup details', () => {
     await page.locator('.li', { hasText: 'Reading' }).click();
     await expect(page.locator('.sheet .hint')).toHaveText('New minutes or days apply from today. Past days keep their old target.');
     await expect(page.locator('.since span')).toHaveText('Since Wed 7 Oct');
+    await expect(page.locator('.sheet input[type=date]')).toBeHidden(); // only after Change
     await page.locator('.since .link', { hasText: 'Change' }).click();
+    await expect(page.locator('.sheet input[type=date]')).toBeVisible();
     await page.locator('.sheet input[type=date]').fill('2026-10-06');
     await page.click('.sheet button[type=submit]');
     await expect(page.locator('.li', { hasText: 'Reading' })).toContainText('since Tue 6 Oct');

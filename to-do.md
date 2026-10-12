@@ -163,6 +163,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** editing a practice shows the start-date box before Change is tapped: a `display:block` rule beats the `hidden` attribute. Hide it until Change (PRAC-12). Not released yet, 13 October 2026
 - [x] **Claude:** practice reminders 2/2: "Remind me" on the practice sheet (off, or a time from 7 am to 9:45 pm), the time shown in Setup's practice list, changelog line (PRAC-24). Not released yet, 12 October 2026
 - [x] **Claude:** practice reminders 1/2 (user feedback, 12 October 2026: "remind me to draft the mail at 10 am"): the server sends "Time for Reading" at a practice's own reminder time, only if that practice is still due today, once a day; practices set for the same time share one notification; the 15-minute job finds them by slot (NOTIF-19, NOTIF-20). Built and unit-tested, not deployed yet, 12 October 2026
 - [x] 12 Oct 2026: a copy of the app left open from before an update, whose code files the server no longer has, reloads itself once into the new version instead of failing to start; at most once a minute, never offline (APP-33) (Claude)

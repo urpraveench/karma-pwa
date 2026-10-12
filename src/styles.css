@@ -238,6 +238,7 @@ body.has-timer .toast{bottom:calc(160px + env(safe-area-inset-bottom,0px))}
 .voice-empty{color:var(--ink-2);font-size:14px;margin:2px 0 10px}.voice-save{margin-top:4px}
 .custom{margin-top:14px}
 input[type=date].in{-webkit-appearance:none;appearance:none;min-height:50px;display:block;text-align:left;margin-bottom:14px}
+input[type=date].in[hidden]{display:none}
 input[type=date].in::-webkit-date-and-time-value{text-align:left}
 .preset{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .preset .chip{padding:8px 13px}

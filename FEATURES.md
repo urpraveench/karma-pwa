@@ -314,7 +314,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | PRAC-09 | Edit name or colour | Saved; target history unchanged | Unit `categories.test.ts` |
 | PRAC-10 | Edit minutes or days | Applies from today; past days keep the old target | E2E `setup.spec.ts`, Unit `categories.test.ts` |
 | PRAC-11 | Edit twice in one day | Replaces today's change instead of stacking another | Unit `categories.test.ts` |
-| PRAC-12 | Change start date | Date picker, no future dates; targets before the new start are dropped | E2E `setup.spec.ts`, Unit `categories.test.ts` |
+| PRAC-12 | Change start date | "Since Wed 7 Oct" with Change; the date picker shows only after Change is tapped, no future dates; targets before the new start are dropped | E2E `setup.spec.ts`, Unit `categories.test.ts` |
 | PRAC-13 | Archive | Hidden from Today, backlog cleared, history kept; toast says so | E2E `setup.spec.ts` |
 | PRAC-14 | Restore | Back on Today; starts accruing again from the restore day | E2E `setup.spec.ts` (accrual is a Gap) |
 | PRAC-15 | Delete | Confirm, then the practice and all its logs are removed | E2E `setup.spec.ts` |

@@ -4,7 +4,7 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 **Owner:** **You** means it needs your accounts, devices or a decision. **Claude** means it can be done in a coding session once anything it depends on is in place.
 
-**Last updated:** 11 October 2026
+**Last updated:** 13 October 2026
 
 ## In progress
 
@@ -144,12 +144,30 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.
 - [ ] **You:** have a lawyer check the updated Terms and Privacy Policy, especially on-by-default analytics on the website.
 - [ ] **You:** upgrade Resend to a paid plan at about 50 active users; the free plan's 100 emails a day runs out on Mondays at about 80 (NOTIFICATIONS.md › Scaling the emails).
-- [ ] **Claude:** news broadcast: Praveen approves the text, it goes to everyone with News on; first use, announcing 100 Days, 100 Minutes in late October.
+- [ ] **Claude:** news broadcast: Praveen approves the text, it goes to everyone with News on; first use, announcing 100 Days, 100 Minutes in late October. Sent from the admin console's email composer (below).
 - [ ] **Claude:** first-week tips emails on days 3 and 6, only while still active (Tips and reminders).
 - [ ] **Claude:** monthly progress email on the 1st (Weekly recap switch), first on 1 November.
 - [ ] **Claude:** the "at most one email a day, mornings IST" rule across all scheduled emails.
 - [ ] **Claude:** streak-at-risk push (evening, 3+ day streak, nothing logged), within the one-push-a-day rule. After daily reminders are live.
 - [ ] **Claude:** phase 1 in-app: install tip, first-week tips, milestone celebrations, progress-card reminder, What's new dot, feedback ask.
+
+## Admin console (admin.tiktym.com)
+
+Decided 13 October 2026: a separate admin app in this repo and Firebase project, for Praveen only. Access is an `admin` custom claim that only a server script can set; every action runs in a Cloud Function that checks it, so `firestore.rules` stay closed to apps. Every send is recorded in `adminLog/`. FEATURES.md › 17. Admin console.
+
+- [ ] **Claude:** admin access: `npm run admin:grant -- <email>` sets the claim; `requireAdmin` in functions refuses anyone without it; `adminStats/` and `adminLog/` closed to apps (ADMIN-01, ADMIN-02, ADMIN-03)
+- [ ] **Claude:** nightly account totals in `adminStats/{date}`: accounts, sign-ups, started, active loggers (1, 7, 28 days), activation, 7-day retention, emails sent, devices with push (ADMIN-04)
+- [ ] **Claude:** the admin app: its own Vite page and hosting target, Google sign-in, "not an admin" screen for anyone else (ADMIN-05)
+- [ ] **Claude:** metrics page: today's numbers and 30-day charts from `adminStats/` and the anonymous totals in `stats/` (ADMIN-06)
+- [ ] **Claude:** email composer: audience, subject, text, preview, send a test to me, count and confirm, sent through the queue in the TikTym email template with an unsubscribe link (ADMIN-07, ADMIN-08, ADMIN-09)
+- [ ] **Claude:** push composer: audience, title, text, test on my devices, count and confirm; held until daytime in each person's time zone (ADMIN-10, ADMIN-11)
+- [ ] **Claude:** send history page from `adminLog/` (ADMIN-12)
+- [ ] **Claude:** costs and limits: this month's Google Cloud spend by service from the billing export, and how close each free or paid limit is (Resend, App Check, Firestore reads, Hosting), with links to each console (ADMIN-13)
+- [ ] **Claude:** function health: last 24 hours of runs and errors per function, from Cloud Monitoring (ADMIN-14)
+- [ ] **You:** create the admin hosting site (`firebase hosting:sites:create tiktym-admin`), connect admin.tiktym.com in the Firebase console with the DNS records in GoDaddy, and add admin.tiktym.com to Authentication › Settings › Authorized domains
+- [ ] **You:** once access is built, run `npm run admin:grant -- <your Google email>` (signed in with `gcloud auth application-default login`)
+- [ ] **You:** turn on Cloud Billing export to BigQuery (Billing › Billing export › Standard usage cost, dataset `billing_export` in project tiktym), before the costs page
+- [ ] **You:** upgrade Resend before the first broadcast to everyone (the free plan's 100 a day would block that day's welcome emails)
 
 ## 7. Housekeeping
 

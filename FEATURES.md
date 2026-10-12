@@ -38,7 +38,8 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 19 | 19 | 0 | 0 |
-| **Total** | **325** | **312** | **0** | **13** |
+| 17. Admin console | 14 | 0 | 14 | 0 |
+| **Total** | **339** | **312** | **14** | **13** |
 
 ---
 
@@ -490,6 +491,27 @@ See NOTIFICATIONS.md for the plan. Emails and usage statistics are on by default
 | NOTIF-19 | Practice reminder | A practice with its own reminder time (PRAC-24) gets a push at that time, in the account's time zone, on every device that allowed notifications: "Time for Reading" / "Even 5 minutes counts." Only if that practice is still due today (not done, not a rest day, not archived); once a day per practice; never after 10 pm. Practices set for the same time share one notification ("Time for Reading and Exercise"). Independent of the daily reminder and the evening log check | Unit `push.test.ts` (sending: Manual) |
 | NOTIF-20 | Practice reminders stay in step | The server's reminder record keeps the UTC slots of the account's practice reminders, updated when a practice, the settings or the devices change, and on the day daylight saving moves them; the 15-minute job finds accounts by slot. No device, or no practice with a reminder: no slots | Unit `push.test.ts` (sending: Manual) |
 
+## 17. Admin console
+
+A separate app at admin.tiktym.com for Praveen only. Every action runs in a Cloud Function that checks the `admin` claim; apps can't read any of its data.
+
+| ID | Scenario | Expected | Coverage |
+|---|---|---|---|
+| ADMIN-01 | Granting admin | `npm run admin:grant -- <email>` (Admin SDK, the owner's Google login) sets the `admin` custom claim on that account and prints who now has it; `--revoke` removes it. No app or function can set it | Gap |
+| ADMIN-02 | Admin functions refuse others | Every admin function answers "permission-denied" to a caller who is signed out or has no `admin` claim, and does nothing | Gap |
+| ADMIN-03 | Admin data is server-only | No app, signed in or not, can read or write `adminStats/` or `adminLog/` | Gap |
+| ADMIN-04 | Nightly account totals | At 00:30 India time, `adminStats/{yesterday}` holds: all accounts, sign-ups that day, accounts that tapped Start, active loggers in the last 1, 7 and 28 days (from the server's last-logged date), activation (sign-ups of the last 7 days that logged anything), 7-day retention (sign-ups 7 to 13 days ago who logged in the last 7 days), emails sent that day by type, and accounts with a push device. Running twice gives the same document | Gap |
+| ADMIN-05 | Admin sign-in | admin.tiktym.com shows only "Sign in with Google". An account with the claim sees the console; any other account sees "This account isn't an admin" and a Sign out button, and no data | Gap |
+| ADMIN-06 | Metrics page | Tiles for accounts, active loggers (1, 7, 28 days), activation and retention with the change from a week before; 30-day charts of sign-ups, active loggers, entries and minutes (from the anonymous totals); empty days show as zero | Gap |
+| ADMIN-07 | Email composer | Pick an audience (just me; everyone with News on; active in the last 7 days; away 4 or more days), write a subject and text, see a preview in the TikTym email template, and send a test to my own address. Send shows "This goes to N people" and needs a second tap | Gap |
+| ADMIN-08 | Broadcast emails respect choices | Only accounts with "News about TikTym" on get a broadcast, each with a one-tap unsubscribe for News; accounts already emailed that day (India time) are skipped and counted | Gap |
+| ADMIN-09 | Broadcast sends once, at any size | One queued task per person, 2 a second, retried on failure; a person never gets the same broadcast twice, even if a task runs twice. `adminLog/{id}` records the audience, text, and counts queued, sent, skipped and failed | Gap |
+| ADMIN-10 | Push composer | Pick an audience (just me; everyone with a device; active in the last 7 days), write a title and text, send a test to my own devices, then "This goes to N people" and a second tap | Gap |
+| ADMIN-11 | Broadcast pushes respect quiet hours | A push outside 7 am to 10 pm in a person's time zone waits until 10 am there; expired devices are removed (as NOTIF-11); recorded in `adminLog/` | Gap |
+| ADMIN-12 | Send history | A list of every broadcast and test, newest first: when, email or push, audience, subject or title, and counts | Gap |
+| ADMIN-13 | Costs and limits | This month's Google Cloud spend by service (from the billing export) and how close each limit is: Resend per day and month (from TikTym's own send counts), App Check checks, Firestore reads, Hosting transfer; amber from 70%, red from 90%; each links to its console | Gap |
+| ADMIN-14 | Function health | For the last 24 hours, each Cloud Function's runs and errors (Cloud Monitoring), errors first, with a link to its logs | Gap |
+
 ---
 
 ## Not built yet
@@ -506,7 +528,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 ## What's left to test
 
-**Gaps** (testable, no test yet): none.
+**Gaps** (testable, no test yet): ADMIN-01 to ADMIN-14, the admin console being built (to-do.md › Admin console).
 
 **Manual** (check by hand before a release, on a real phone and the real Firebase project):
 

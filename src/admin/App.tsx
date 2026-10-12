@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { adminView, type AdminView } from './access';
 import { auth } from './firebase';
+import { EmailPage } from './EmailPage';
 import { MetricsPage } from './MetricsPage';
+
+/** The console's pages, by the address's #fragment, so a reload stays put. */
+const PAGES = [{ id: 'metrics', label: 'Metrics' }, { id: 'email', label: 'Email' }] as const;
+type PageId = typeof PAGES[number]['id'];
+const pageFromHash = (): PageId => PAGES.find(p => `#${p.id}` === location.hash)?.id ?? 'metrics';
 
 const signInError = (e: unknown) => {
   const code = (e as { code?: string })?.code || '';
@@ -14,6 +20,8 @@ const signInError = (e: unknown) => {
 export function App() {
   const [view, setView] = useState<AdminView>({ kind: 'loading' });
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState<PageId>(pageFromHash);
+  useEffect(() => { const on = () => setPage(pageFromHash()); addEventListener('hashchange', on); return () => removeEventListener('hashchange', on); }, []);
 
   // A fresh token on every sign-in, so a claim granted or removed since the last one counts straight away.
   useEffect(() => onAuthStateChanged(auth, async u => {
@@ -50,11 +58,15 @@ export function App() {
     <div className="shell">
       <header className="topbar">
         <b>TikTym admin</b>
+        <nav className="nav">
+          {PAGES.map(p => <a key={p.id} href={`#${p.id}`} aria-current={page === p.id ? 'page' : undefined}>{p.label}</a>)}
+        </nav>
         <span className="who">{view.email}</span>
         <button className="btn small" onClick={() => signOut(auth)}>Sign out</button>
       </header>
       <main className="page">
-        <MetricsPage />
+        {page === 'metrics' && <MetricsPage />}
+        {page === 'email' && <EmailPage />}
       </main>
     </div>
   );

@@ -14,6 +14,7 @@ import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { onTaskDispatched } from 'firebase-functions/v2/tasks';
 import { region as regionV1 } from 'firebase-functions/v1';
 import { adminCheck, type AdminCaller } from './admin.js';
+import { audienceRange, broadcastCheck, broadcastEmail, readDraft, type Audience, type Draft, type Recipient } from './broadcast.js';
 import { accountTotals, activeSince, cohortFrom, indiaDayRange, metricsDays, metricsFrom, statsDay, type Account, type EmailKind } from './adminStats.js';
 import { comebackDue, comebackRange, daysAway, indiaToday, latestLogDate, type MailState } from './comeback.js';
 import {
@@ -488,4 +489,103 @@ export const adminMetrics = onCall(async req => {
     db.getAll(...days.map(d => db.doc(`stats/${d}`))),
   ]);
   return metricsFrom(days, admin.map(d => d.data()), stats.map(d => d.data()));
+});
+
+/** The accounts an audience is found by (ADMIN-07): every account with an email for everyone, else by last-logged date. */
+async function audienceUids(audience: Audience): Promise<string[]> {
+  const range = audienceRange(audience, indiaToday(new Date()));
+  if (!range) {
+    const uids: string[] = [];
+    let pageToken: string | undefined;
+    do {
+      const page = await getAuth().listUsers(1000, pageToken);
+      uids.push(...page.users.filter(u => u.email).map(u => u.uid));
+      pageToken = page.pageToken;
+    } while (pageToken);
+    return uids;
+  }
+  let q: FirebaseFirestore.Query = db.collection('mail');
+  if (range.from) q = q.where('lastLogged', '>=', range.from);
+  if (range.to) q = q.where('lastLogged', '<=', range.to);
+  return (await q.select().get()).docs.map(d => d.id);
+}
+
+function draftFrom(data: unknown): Draft {
+  const draft = readDraft((data as { draft?: unknown })?.draft);
+  if (!draft) throw new HttpsError('invalid-argument', 'Fill in the subject, heading and text; a button needs a label and an https link.');
+  return draft;
+}
+
+/** The email as people will see it, addressed to you, and how many people the audience could reach (ADMIN-07). */
+export const adminEmailPreview = onCall({ secrets: [UNSUBSCRIBE_SECRET], timeoutSeconds: 120 }, async req => {
+  requireAdmin(req.auth);
+  const draft = draftFrom(req.data);
+  const me = await recipient(req.auth!.uid);
+  const email = broadcastEmail(draft, me?.name ?? '', unsubscribeLink(req.auth!.uid, 'news', UNSUBSCRIBE_SECRET.value()));
+  return { subject: email.subject, html: email.html, count: (await audienceUids(draft.audience)).length };
+});
+
+/** Sends the draft to your own address only, and records it in the send history (ADMIN-07, ADMIN-12). */
+export const adminEmailTest = onCall({ secrets: [RESEND_API_KEY, UNSUBSCRIBE_SECRET] }, async req => {
+  requireAdmin(req.auth);
+  const draft = draftFrom(req.data);
+  const me = await recipient(req.auth!.uid);
+  if (!me) throw new HttpsError('failed-precondition', 'Your account has no email address.');
+  const ref = db.collection('adminLog').doc();
+  await send('test', me.email, broadcastEmail(draft, me.name, unsubscribeLink(req.auth!.uid, 'news', UNSUBSCRIBE_SECRET.value())), `test-${ref.id}`);
+  await ref.set({ kind: 'email-test', ...draft, to: me.email, by: me.email, createdAt: Timestamp.now(), queued: 1, sent: 1 });
+  return { to: me.email };
+});
+
+/**
+ * Sends the draft to its audience (ADMIN-08, ADMIN-09): records it in adminLog/{id}, then queues one task per person,
+ * sent 2 a second with retries. The task id stops anyone being queued twice for the same broadcast.
+ */
+export const adminEmailSend = onCall({ timeoutSeconds: 540, memory: '512MiB' }, async req => {
+  requireAdmin(req.auth);
+  const draft = draftFrom(req.data);
+  const uids = await audienceUids(draft.audience);
+  const ref = db.collection('adminLog').doc();
+  await ref.set({ kind: 'email', ...draft, by: req.auth!.token.email ?? req.auth!.uid, createdAt: Timestamp.now(), queued: 0, sent: 0, skipped: 0, failed: 0 });
+  const queue = getFunctions().taskQueue('locations/asia-south1/functions/broadcastSend');
+  let queued = 0;
+  for (let i = 0; i < uids.length; i += 100) {
+    const added = await Promise.all(uids.slice(i, i + 100).map(uid => queue.enqueue({ id: ref.id, uid }, { id: `bc-${ref.id}-${uid}` }).then(() => 1, (e: { code?: string }) => {
+      if (e?.code === 'functions/task-already-exists') return 0;
+      throw e;
+    })));
+    queued += added.reduce<number>((a, b) => a + b, 0);
+  }
+  await ref.update({ queued });
+  logger.info('broadcast queued', { id: ref.id, audience: draft.audience, queued });
+  return { id: ref.id, queued };
+});
+
+/** Sends one broadcast email, from the queue: checks News is on and nobody gets it twice, then counts the outcome (ADMIN-08, ADMIN-09). */
+export const broadcastSend = onTaskDispatched({
+  retryConfig: { maxAttempts: 3, minBackoffSeconds: 120 },
+  rateLimits: { maxDispatchesPerSecond: 2, maxConcurrentDispatches: 4 },
+  secrets: [RESEND_API_KEY, UNSUBSCRIBE_SECRET],
+}, async req => {
+  const { id, uid } = (req.data ?? {}) as { id?: unknown; uid?: unknown };
+  if (typeof id !== 'string' || !id || typeof uid !== 'string' || !uid) return;
+  const log = db.doc(`adminLog/${id}`);
+  const [entry, settings, mail] = await Promise.all([log.get(), settingsDoc(uid).get(), mailDoc(uid).get()]);
+  const draft = readDraft(entry.data());
+  if (!draft) return;
+  const today = indiaToday(new Date());
+  const m = mail.data() as Recipient | undefined;
+  const check = broadcastCheck({ settings: settings.data(), lastEmailDay: m?.lastEmailDay, broadcasts: m?.broadcasts }, id, today);
+  if (check === 'already-sent') return;
+  if (check !== 'send') { await log.update({ skipped: FieldValue.increment(1), [`skippedWhy.${check}`]: FieldValue.increment(1) }); return; }
+  const to = await recipient(uid);
+  if (!to) { await log.update({ skipped: FieldValue.increment(1), 'skippedWhy.no-email': FieldValue.increment(1) }); return; }
+  try {
+    await send('news', to.email, broadcastEmail(draft, to.name, unsubscribeLink(uid, 'news', UNSUBSCRIBE_SECRET.value())), `bc-${id}-${uid}`);
+  } catch (e) {
+    if (req.retryCount >= 2) await log.update({ failed: FieldValue.increment(1) }); // the last try
+    throw e;
+  }
+  await mailDoc(uid).set({ lastEmailDay: today, broadcasts: FieldValue.arrayUnion(id) }, { merge: true });
+  await log.update({ sent: FieldValue.increment(1) });
 });

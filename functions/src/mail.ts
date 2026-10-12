@@ -276,6 +276,35 @@ export function comebackEmail(o: { name: string; practice: Practice; days: numbe
   return { subject: `5 minutes of ${o.practice.name} today?`, html, text, headers: unsubscribeHeaders(o.unsubscribe) };
 }
 
+/** Paragraphs of a written email: a blank line between paragraphs, **bold** allowed, nothing else from the writer is HTML. */
+const paragraphs = (body: string) => body.replace(/\r\n/g, '\n').split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+
+/** An email written in the admin console (ADMIN-07): a greeting, the writer's paragraphs and an optional button, unsubscribing from News. */
+export function newsEmail(o: { name: string; subject: string; title: string; body: string; button?: { label: string; url: string }; unsubscribe: string }): Email {
+  const hi = o.name ? `Hi ${esc(o.name)},` : 'Hi,';
+  const ps = paragraphs(o.body);
+  const toApp = !!o.button && o.button.url.startsWith(APP_URL);
+  const why = "You're getting this because you have a TikTym account with News about TikTym switched on.";
+  const html = frame({
+    title: esc(o.title),
+    body: [
+      para(hi),
+      ...ps.map(p => para(bold(p).replace(/\n/g, '<br>'))),
+      ...(o.button ? [button(esc(o.button.label), o.button.url, toApp)] : []),
+    ],
+    why,
+    unsubscribe: o.unsubscribe,
+  });
+  const text = [
+    hi.replace(/&amp;/g, '&'), '',
+    ...ps.flatMap(p => [p.replace(/\*\*(.+?)\*\*/g, '$1'), '']),
+    ...(o.button ? [`${o.button.label}: ${o.button.url}`, ...(toApp ? [HOME_HINT] : []), ''] : []),
+    'Praveen', SIGN_OFF, '', '--',
+    `${why} Unsubscribe: ${o.unsubscribe}`,
+  ].join('\n');
+  return { subject: o.subject, html, text, headers: unsubscribeHeaders(o.unsubscribe) };
+}
+
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const dayMonth = (d: string) => [Number(d.slice(8, 10)), MONTHS[Number(d.slice(5, 7)) - 1]] as const;

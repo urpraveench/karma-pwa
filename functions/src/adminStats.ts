@@ -46,7 +46,7 @@ export function accountTotals(accounts: Account[], day: string): AccountTotals {
 }
 
 /** The kinds of email counted in adminStats/{day}.emails, as each one is sent. */
-export type EmailKind = 'welcome' | 'oneTap' | 'nudge' | 'recap' | 'comeback';
+export type EmailKind = 'welcome' | 'oneTap' | 'nudge' | 'recap' | 'comeback' | 'news' | 'test';
 
 /** One day on the metrics page's charts (ADMIN-06): account totals from adminStats, entries and minutes from stats. */
 export interface MetricsDay { day: string; signUps: number; active7: number; logs: number; minutes: number }

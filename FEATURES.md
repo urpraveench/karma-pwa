@@ -38,8 +38,8 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 19 | 19 | 0 | 0 |
-| 17. Admin console | 14 | 6 | 8 | 0 |
-| **Total** | **339** | **318** | **8** | **13** |
+| 17. Admin console | 14 | 9 | 5 | 0 |
+| **Total** | **339** | **321** | **5** | **13** |
 
 ---
 
@@ -503,9 +503,9 @@ A separate app at admin.tiktym.com for Praveen only. Every action runs in a Clou
 | ADMIN-04 | Nightly account totals | At 00:30 India time, `adminStats/{yesterday}` holds: all accounts and that day's sign-ups (from Auth, India dates), accounts that tapped Start that day, active loggers (newest entry within the last 1, 7 and 28 days, from the server's last-logged date), activation (sign-ups of the last 7 days that logged anything), 7-day retention (sign-ups 7 to 13 days ago who logged in the last 7 days) and accounts with a push device. Each email adds to that India day's `emails.welcome`, `oneTap`, `nudge`, `recap` or `comeback` as it's sent. Running again replaces the day's numbers and keeps its email counts | Unit `adminStats.test.ts` (on the real project: Manual) |
 | ADMIN-05 | Admin sign-in | admin.tiktym.com shows only "Sign in with Google". An account with the claim sees the console; any other account sees "This account isn't an admin" and a Sign out button, and no data | E2E `admin/console.spec.ts`, Unit `adminAccess.test.ts` |
 | ADMIN-06 | Metrics page | The console opens on Metrics: tiles for accounts, active loggers (1, 7, 28 days), activation and 7-day retention from the newest day the nightly job ran, each with the change from 7 days before (rates in points); 30-day bar charts of sign-ups, entries and minutes (captioned with the 30-day total) and active loggers over 7 days (captioned with the newest day), a tooltip for the day under the pointer, and the same numbers as a table. Missing days show as zero; before the first nightly run it says when the totals arrive. Read through `adminMetrics`, which only admins can call | E2E `admin/console.spec.ts`, Unit `adminMetrics.test.ts`, `adminStats.test.ts` |
-| ADMIN-07 | Email composer | Pick an audience (just me; everyone with News on; active in the last 7 days; away 4 or more days), write a subject and text, see a preview in the TikTym email template, and send a test to my own address. Send shows "This goes to N people" and needs a second tap | Gap |
-| ADMIN-08 | Broadcast emails respect choices | Only accounts with "News about TikTym" on get a broadcast, each with a one-tap unsubscribe for News; accounts already emailed that day (India time) are skipped and counted | Gap |
-| ADMIN-09 | Broadcast sends once, at any size | One queued task per person, 2 a second, retried on failure; a person never gets the same broadcast twice, even if a task runs twice. `adminLog/{id}` records the audience, text, and counts queued, sent, skipped and failed | Gap |
+| ADMIN-07 | Email composer | Email page: pick who gets it (everyone; active in the last 7 days; away 4 days or more), write a subject, heading and text (a blank line between paragraphs, **bold** allowed; "Hi name," added) and an optional button with an https link. The form says what to fix first. Preview shows the email in the TikTym template as people will get it and "up to N people"; Send a test to me sends it to my own address only. Send needs a preview of the current draft (editing it needs a new one) and a second tap ("This goes to up to N people"); afterwards the same draft needs a new preview. A refusal from the server is shown | E2E `admin/email.spec.ts`, Unit `adminEmail.test.ts`, `broadcast.test.ts` |
+| ADMIN-08 | Broadcast emails respect choices | Only accounts with "News about TikTym" on get a broadcast, each with a one-tap unsubscribe from News and the List-Unsubscribe headers; accounts already emailed that day (India time) are skipped and counted by reason in `adminLog/{id}.skippedWhy` | Unit `broadcast.test.ts` (sending: Manual) |
+| ADMIN-09 | Broadcast sends once, at any size | `adminLog/{id}` records the draft, who sent it and when; then one queued task per person (2 a second, retried up to 3 times); the task id and the person's `mail/{uid}.broadcasts` mean nobody gets the same broadcast twice, even if a task runs twice. The log counts queued, sent, skipped and failed (after the last try). Each send also counts in that day's `adminStats` emails (`news`, `test`) | Unit `broadcast.test.ts`, E2E `admin/email.spec.ts` (sending: Manual) |
 | ADMIN-10 | Push composer | Pick an audience (just me; everyone with a device; active in the last 7 days), write a title and text, send a test to my own devices, then "This goes to N people" and a second tap | Gap |
 | ADMIN-11 | Broadcast pushes respect quiet hours | A push outside 7 am to 10 pm in a person's time zone waits until 10 am there; expired devices are removed (as NOTIF-11); recorded in `adminLog/` | Gap |
 | ADMIN-12 | Send history | A list of every broadcast and test, newest first: when, email or push, audience, subject or title, and counts | Gap |
@@ -528,7 +528,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 ## What's left to test
 
-**Gaps** (testable, no test yet): ADMIN-07 to ADMIN-14, the admin console being built (to-do.md › Admin console).
+**Gaps** (testable, no test yet): ADMIN-10 to ADMIN-14, the admin console being built (to-do.md › Admin console).
 
 **Manual** (check by hand before a release, on a real phone and the real Firebase project):
 

@@ -13,7 +13,7 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
-## Coming next
+## 1.13.0 · 12 October 2026 · Reminders on from day one
 
 - **Clearer times.** The "your usual time" card on Today now says "around 7 am" instead of "around 07".
 - **Reminders on from day one.** Your 7 pm reminder is on from the start. The first time you tap in TikTym, your phone asks to allow notifications; allow it and the reminders arrive. Switch them off any time in Setup.

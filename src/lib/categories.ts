@@ -8,10 +8,15 @@ export interface CategoryForm {
   minutes: number;
   days: number[];
   start: DateStr;
+  /** The practice's own reminder time ('HH:MM'), or none (PRAC-24). */
+  remind?: string | null;
 }
 
 export function newCategory(f: CategoryForm, order: number): Category {
-  return { id: newId(), name: f.name, color: f.color, order, startDate: f.start, archivedFrom: null, targets: [{ from: f.start, minutes: f.minutes, days: [...f.days].sort() }] };
+  return {
+    id: newId(), name: f.name, color: f.color, order, startDate: f.start, archivedFrom: null, targets: [{ from: f.start, minutes: f.minutes, days: [...f.days].sort() }],
+    ...(f.remind ? { remind: f.remind } : {}),
+  };
 }
 
 /**
@@ -21,6 +26,7 @@ export function newCategory(f: CategoryForm, order: number): Category {
 export function editCategory(existing: Category, f: CategoryForm, today: DateStr): Category {
   const cat: Category = structuredClone(existing);
   cat.name = f.name; cat.color = f.color; cat.startDate = f.start;
+  if (f.remind) cat.remind = f.remind; else delete cat.remind;
   const t = { from: today, minutes: f.minutes, days: [...f.days].sort() };
   const last = cat.targets[cat.targets.length - 1];
   if (last.minutes !== t.minutes || last.days.join() !== t.days.join()) {

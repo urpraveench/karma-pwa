@@ -148,7 +148,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 - [ ] **Claude:** first-week tips emails on days 3 and 6, only while still active (Tips and reminders).
 - [ ] **Claude:** monthly progress email on the 1st (Weekly recap switch), first on 1 November.
 - [ ] **Claude:** the "at most one email a day, mornings IST" rule across all scheduled emails.
-- [ ] **Claude:** practice reminders 2/2: "Remind me" on the practice sheet (off, or a time from 7 am to 9:45 pm), the time shown in Setup's practice list, changelog line (PRAC-24).
 - [ ] **Claude:** streak-at-risk push (evening, 3+ day streak, nothing logged), within the one-push-a-day rule. After daily reminders are live.
 - [ ] **Claude:** phase 1 in-app: install tip, first-week tips, milestone celebrations, progress-card reminder, What's new dot, feedback ask.
 
@@ -164,6 +163,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** practice reminders 2/2: "Remind me" on the practice sheet (off, or a time from 7 am to 9:45 pm), the time shown in Setup's practice list, changelog line (PRAC-24). Not released yet, 12 October 2026
 - [x] **Claude:** practice reminders 1/2 (user feedback, 12 October 2026: "remind me to draft the mail at 10 am"): the server sends "Time for Reading" at a practice's own reminder time, only if that practice is still due today, once a day; practices set for the same time share one notification; the 15-minute job finds them by slot (NOTIF-19, NOTIF-20). Built and unit-tested, not deployed yet, 12 October 2026
 - [x] 12 Oct 2026: a copy of the app left open from before an update, whose code files the server no longer has, reloads itself once into the new version instead of failing to start; at most once a minute, never offline (APP-33) (Claude)
 - [x] 12 Oct 2026: when TikTym can't start or can't load the account's data, the login screen says so in plain words with a Reload button that loads the newest version, instead of "Check your connection and .env.local" or "Check Firestore rules"; offline says offline (AUTH-22, FIRST-04) (Claude)

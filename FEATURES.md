@@ -31,14 +31,14 @@ Summary of coverage at the time of writing:
 | 7. Focus timer | 22 | 19 | 0 | 3 |
 | 8. History | 9 | 9 | 0 | 0 |
 | 9. Insights | 24 | 24 | 0 | 0 |
-| 10. Practices (Setup) | 24 | 23 | 1 | 0 |
+| 10. Practices (Setup) | 24 | 24 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 17 | 15 | 0 | 2 |
 | 13. App shell, PWA and platform | 37 | 32 | 0 | 5 |
 | 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 19 | 19 | 0 | 0 |
-| **Total** | **325** | **311** | **1** | **13** |
+| **Total** | **325** | **312** | **0** | **13** |
 
 ---
 
@@ -326,7 +326,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | PRAC-21 | Archived practice in Insights | Kept in history charts, left out of practice health | E2E `setup.spec.ts` |
 | PRAC-22 | Reorder | Move up and Move down beside each practice in Setup; the new order shows on Today, the log sheet and Setup, and is saved | E2E `setup.spec.ts`, Unit `categories.test.ts` |
 | PRAC-23 | Reorder at the ends | The first practice can't move up and the last can't move down | E2E `setup.spec.ts`, Unit `categories.test.ts` |
-| PRAC-24 | Practice reminder time | The practice sheet has "Remind me": Off (the default) or a time from 7 am to 9:45 pm in 15-minute steps; saved with the practice and the device's time zone. Setup's list shows "Reminder 10 am" for a practice that has one. Where this device can't get notifications, the sheet says why | Gap |
+| PRAC-24 | Practice reminder time | The practice sheet has "Remind me": Off (the default) or a time from 7 am to 9:45 pm in 15-minute steps; saved with the practice and the device's time zone. Setup's list adds ", reminder at 10 am" for a practice that has one. Where this device can't get notifications, the sheet says why | E2E `reminders.spec.ts`, Unit `categories.test.ts` |
 
 ## 11. Settings and data (Setup)
 

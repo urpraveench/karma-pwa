@@ -227,11 +227,32 @@ function useAppState() {
     closeSheet(); void persist(() => store.putCategory(cat), msg);
   }, [store, setData, closeSheet, persist]);
 
+  /**
+   * A practice got its own reminder (PRAC-24): its time is local, so the account needs this device's time zone, and the
+   * phone must allow notifications. Called from the Save tap, so the browser lets it ask; with the daily reminder on,
+   * the first tap of each open already asks (below), so it doesn't ask twice.
+   */
+  const remindPractice = useCallback(() => {
+    if (!store) return;
+    const d0 = dataRef.current, tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (d0.settings.reminder?.tz !== tz) {
+      const settings = { ...d0.settings, reminder: { ...d0.settings.reminder, tz } };
+      setData({ ...d0, settings });
+      void persist(() => store.putSettings(settings));
+    }
+    if (canPush() && Notification.permission === 'default' && !reminderOn(d0.settings)) {
+      void enablePush((id, d) => store.putDevice(id, d))
+        .then(status => { if (status === 'blocked') toast('Notifications are blocked. Allow them for TikTym in your browser settings.', 5000); })
+        .catch(e => console.warn(e));
+    }
+  }, [store, setData, persist, toast]);
+
   const saveCategory = useCallback((id: string | undefined, f: CategoryForm) => {
     const d0 = dataRef.current, ex = id ? d0.categories.find(x => x.id === id) : undefined;
     if (ex) putCategory(editCategory(ex, f, today()), 'Saved changes');
     else { putCategory(newCategory(f, nextOrder(d0.categories)), `Added ${f.name}`); track('practice_added'); count('practicesAdded'); }
-  }, [putCategory]);
+    if (f.remind) remindPractice();
+  }, [putCategory, remindPractice]);
 
   /** Moves a practice one place up or down (PRAC-22). */
   const reorderCategory = useCallback((id: string, dir: -1 | 1) => {

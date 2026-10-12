@@ -72,3 +72,14 @@ describe('reordering', () => {
     expect(nextOrder([cat('a', 0), cat('b', 5)])).toBe(6);
   });
 });
+
+describe("a practice's own reminder time (PRAC-24)", () => {
+  it('is saved only when set, and removed when turned off', () => {
+    expect(newCategory(form({ remind: '10:00' }), 0).remind).toBe('10:00');
+    expect('remind' in newCategory(form({ remind: null }), 0)).toBe(false);
+    const set = editCategory(base, form({ remind: '16:00' }), '2026-10-07');
+    expect(set.remind).toBe('16:00');
+    expect(set.targets).toEqual(base.targets);
+    expect('remind' in editCategory(set, form({ remind: null }), '2026-10-07')).toBe(false);
+  });
+});

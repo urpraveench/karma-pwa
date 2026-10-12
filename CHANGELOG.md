@@ -15,6 +15,7 @@ Format, newest first:
 
 ## Coming next
 
+- **A reminder for each practice.** Want a nudge to read at 10 am, or to exercise at 6 pm? Open the practice in Setup and pick a time under "Remind me". It comes only if that practice is still to do that day.
 - **Clearer when something goes wrong.** If TikTym can't finish loading, or can't load your practices, it now says so in plain words with a Reload button, instead of a technical message.
 - **Smoother updates.** If TikTym was left open while we released a new version, it now moves to the new version by itself instead of getting stuck on the sign-in screen.
 

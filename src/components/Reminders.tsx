@@ -5,7 +5,7 @@ import { usePushStatus, type PushStatus } from '../state/push';
 // Daily reminders in Setup › Notifications and privacy (NOTIF-12). The reminder and the evening log check are on by
 // default in every account; the phone's own "Allow" is asked on the first tap in the app (state/app.tsx).
 
-const WHY: Partial<Record<PushStatus, string>> = {
+export const WHY: Partial<Record<PushStatus, string>> = {
   unsupported: "This browser can't show notifications.",
   'needs-install': 'On iPhone, reminders work once TikTym is on your home screen. Add it, open it from there, then turn this on.',
   blocked: "Notifications are blocked for TikTym. Allow them in your browser's site settings, then come back here.",

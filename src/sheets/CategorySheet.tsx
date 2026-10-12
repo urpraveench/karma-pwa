@@ -1,9 +1,12 @@
 import { useRef, useState, type CSSProperties, type FormEvent } from 'react';
+import { WHY } from '../components/Reminders';
 import { Sheet } from '../components/Sheet';
 import { addDays, fmtShort } from '../lib/date';
 import { haptic } from '../lib/feedback';
+import { practiceRemindTime, REMINDER_TIMES, timeLabel } from '../lib/reminders';
 import { COLORS, DAY_NAMES, WD } from '../lib/util';
 import { useApp } from '../state/app';
+import { usePushStatus } from '../state/push';
 import { useFeedback } from '../ui/feedback';
 
 const PRESETS = [10, 15, 20, 30, 45, 60];
@@ -19,7 +22,10 @@ export function CategorySheet({ id }: { id?: string }) {
   const [days, setDays] = useState<number[]>(cur ? [...cur.days] : [0, 1, 2, 3, 4, 5, 6]);
   const [start, setStart] = useState(ex?.startDate || T);
   const [color, setColor] = useState(ex?.color || COLORS[data.categories.length % COLORS.length]);
+  const [remind, setRemind] = useState(ex ? practiceRemindTime(ex) ?? '' : '');
   const [editStart, setEditStart] = useState(false);
+  const push = usePushStatus();
+  const why = push ? WHY[push] : undefined;
   const startRef = useRef<HTMLInputElement>(null);
 
   const step = (d: number) => { setMinutes(v => String(Math.max(1, (parseInt(v, 10) || 0) + d))); haptic(4); };
@@ -31,7 +37,7 @@ export function CategorySheet({ id }: { id?: string }) {
     if (!n) { toast('Give the practice a name'); return; }
     if (!(m > 0 && m <= 1440)) { toast('Minutes a day must be between 1 and 1440'); return; }
     if (!days.length) { toast('Pick at least one day'); return; }
-    saveCategory(ex?.id, { name: n, color, minutes: m, days, start: start || T });
+    saveCategory(ex?.id, { name: n, color, minutes: m, days, start: start || T, remind: remind || null });
   }
 
   const starts: [string, string][] = [[T, 'Today'], [addDays(T, -1), 'Yesterday'], [addDays(T, -7), 'Last week']];
@@ -63,6 +69,13 @@ export function CategorySheet({ id }: { id?: string }) {
               {starts.map(([d, l]) => <button type="button" key={d} onClick={() => setStart(d)} aria-pressed={start === d}>{l}</button>)}
             </div>
           )}
+        </div>
+        <div className="field"><label className="flabel" htmlFor="cr">Remind me</label>
+          <select className="in" id="cr" value={remind} onChange={e => setRemind(e.target.value)}>
+            <option value="">Off</option>
+            {REMINDER_TIMES.map(t => <option key={t} value={t}>{timeLabel(t)}</option>)}
+          </select>
+          {remind && <p className="hint" style={{ textAlign: 'left', marginTop: 6 }}>{why ?? `A push at ${timeLabel(remind)}, only if it's still to do that day.`}</p>}
         </div>
         <div className="field"><span className="flabel">Colour</span>
           <div className="swatches">{COLORS.map(c => <button type="button" className="sw" key={c} onClick={() => setColor(c)} style={{ '--c': c } as CSSProperties} aria-pressed={c === color} aria-label={`Colour ${c}`} />)}</div>

@@ -121,3 +121,44 @@ test.describe('Safari on an iPhone, not from the home screen', () => {
     await expect(reminderRow(page)).toBeDisabled();
   });
 });
+
+test("a practice's own reminder: picked on its sheet, saved with the time zone, shown in Setup, and turned off (PRAC-24)", async ({ page }) => {
+  await fakePush(page, 'granted', { permission: 'granted' });
+  await signInWith(page, DATA);
+  await tab(page, 'Setup').click();
+  await page.locator('.li-prac', { hasText: 'Reading' }).locator('.li-open').click();
+  await expect(page.getByLabel('Remind me')).toHaveValue(''); // off to start
+  await page.getByLabel('Remind me').selectOption('10:00');
+  await expect(page.locator('.sheet')).toContainText("A push at 10 am, only if it's still to do that day.");
+  await page.click('.sheet button[type=submit]');
+  await expect(toast(page)).toHaveText('Saved changes');
+  await expect(page.locator('.li-prac', { hasText: 'Reading' })).toContainText('reminder at 10 am');
+  await expect(page.locator('.li-prac', { hasText: 'Exercise' })).not.toContainText('reminder');
+  const read = () => page.evaluate(() => {
+    const key = Object.keys(localStorage).find(k => k.startsWith('tiktym:data:'))!;
+    return JSON.parse(localStorage.getItem(key)!) as { categories: { id: string; remind?: string }[]; settings: { reminder?: { tz?: string } } };
+  });
+  let d = await read();
+  expect(d.categories.find(c => c.id === 'rd')?.remind).toBe('10:00');
+  expect(d.settings.reminder?.tz).toMatch(/^Asia\/(Kolkata|Calcutta)$/);
+
+  await page.locator('.li-prac', { hasText: 'Reading' }).locator('.li-open').click();
+  await expect(page.getByLabel('Remind me')).toHaveValue('10:00');
+  await page.getByLabel('Remind me').selectOption('');
+  await page.click('.sheet button[type=submit]');
+  await expect(page.locator('.li-prac', { hasText: 'Reading' })).not.toContainText('reminder');
+  d = await read();
+  expect(d.categories.find(c => c.id === 'rd')?.remind).toBeUndefined();
+});
+
+test.describe("a practice's reminder on an iPhone outside the home-screen app", () => {
+  test.use({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1' });
+  test('the sheet says why it can\'t come yet (PRAC-24)', async ({ page }) => {
+    await fakePush(page, 'granted', { noPush: true });
+    await signInWith(page, DATA);
+    await tab(page, 'Setup').click();
+    await page.locator('.li-prac', { hasText: 'Exercise' }).locator('.li-open').click();
+    await page.getByLabel('Remind me').selectOption('18:00');
+    await expect(page.locator('.sheet')).toContainText('On iPhone, reminders work once TikTym is on your home screen.');
+  });
+});

@@ -9,6 +9,7 @@ import { Icon } from '../ui/icons';
 import { BUILD } from '../version';
 import { NotificationsPrivacy } from '../components/NotificationsPrivacy';
 import { useInstall } from '../state/install';
+import { practiceRemindTime, timeLabel } from '../lib/reminders';
 
 const SHORT_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const dayTxt = (d: number[]) => d.length === 7 ? 'every day' : d.length === 0 ? 'no days' : [1, 2, 3, 4, 5, 6, 0].filter(x => d.includes(x)).map(x => SHORT_DAYS[x]).join(', ');
@@ -35,7 +36,7 @@ export function Setup() {
             <div className="li li-prac" key={c.id} style={{ '--c': c.color } as CSSProperties}>
               <button className="li-open" type="button" onClick={() => openSheet({ kind: 'editCat', id: c.id })}>
                 <i />
-                <span className="t">{c.name}{c.archivedFrom && <> <span className="badge">Archived</span></>}<small>{t.minutes} min {dayTxt(t.days)}, since {fmtShort(c.startDate)}</small></span>
+                <span className="t">{c.name}{c.archivedFrom && <> <span className="badge">Archived</span></>}<small>{t.minutes} min {dayTxt(t.days)}, since {fmtShort(c.startDate)}{practiceRemindTime(c) && `, reminder at ${timeLabel(practiceRemindTime(c)!)}`}</small></span>
               </button>
               <span className="move">
                 <button className="x" type="button" aria-label={`Move ${c.name} up`} disabled={i === 0} onClick={() => reorderCategory(c.id, -1)}><Icon.up /></button>

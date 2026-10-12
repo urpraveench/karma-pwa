@@ -38,8 +38,8 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 19 | 19 | 0 | 0 |
-| 17. Admin console | 14 | 5 | 9 | 0 |
-| **Total** | **339** | **317** | **9** | **13** |
+| 17. Admin console | 14 | 6 | 8 | 0 |
+| **Total** | **339** | **318** | **8** | **13** |
 
 ---
 
@@ -502,7 +502,7 @@ A separate app at admin.tiktym.com for Praveen only. Every action runs in a Clou
 | ADMIN-03 | Admin data is server-only | No app, signed in or not, can read or write `adminStats/` or `adminLog/` | Emulator `tests-emulator/rules.test.ts` |
 | ADMIN-04 | Nightly account totals | At 00:30 India time, `adminStats/{yesterday}` holds: all accounts and that day's sign-ups (from Auth, India dates), accounts that tapped Start that day, active loggers (newest entry within the last 1, 7 and 28 days, from the server's last-logged date), activation (sign-ups of the last 7 days that logged anything), 7-day retention (sign-ups 7 to 13 days ago who logged in the last 7 days) and accounts with a push device. Each email adds to that India day's `emails.welcome`, `oneTap`, `nudge`, `recap` or `comeback` as it's sent. Running again replaces the day's numbers and keeps its email counts | Unit `adminStats.test.ts` (on the real project: Manual) |
 | ADMIN-05 | Admin sign-in | admin.tiktym.com shows only "Sign in with Google". An account with the claim sees the console; any other account sees "This account isn't an admin" and a Sign out button, and no data | E2E `admin/console.spec.ts`, Unit `adminAccess.test.ts` |
-| ADMIN-06 | Metrics page | Tiles for accounts, active loggers (1, 7, 28 days), activation and retention with the change from a week before; 30-day charts of sign-ups, active loggers, entries and minutes (from the anonymous totals); empty days show as zero | Gap |
+| ADMIN-06 | Metrics page | The console opens on Metrics: tiles for accounts, active loggers (1, 7, 28 days), activation and 7-day retention from the newest day the nightly job ran, each with the change from 7 days before (rates in points); 30-day bar charts of sign-ups, entries and minutes (captioned with the 30-day total) and active loggers over 7 days (captioned with the newest day), a tooltip for the day under the pointer, and the same numbers as a table. Missing days show as zero; before the first nightly run it says when the totals arrive. Read through `adminMetrics`, which only admins can call | E2E `admin/console.spec.ts`, Unit `adminMetrics.test.ts`, `adminStats.test.ts` |
 | ADMIN-07 | Email composer | Pick an audience (just me; everyone with News on; active in the last 7 days; away 4 or more days), write a subject and text, see a preview in the TikTym email template, and send a test to my own address. Send shows "This goes to N people" and needs a second tap | Gap |
 | ADMIN-08 | Broadcast emails respect choices | Only accounts with "News about TikTym" on get a broadcast, each with a one-tap unsubscribe for News; accounts already emailed that day (India time) are skipped and counted | Gap |
 | ADMIN-09 | Broadcast sends once, at any size | One queued task per person, 2 a second, retried on failure; a person never gets the same broadcast twice, even if a task runs twice. `adminLog/{id}` records the audience, text, and counts queued, sent, skipped and failed | Gap |
@@ -528,7 +528,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 ## What's left to test
 
-**Gaps** (testable, no test yet): ADMIN-06 to ADMIN-14, the admin console being built (to-do.md › Admin console).
+**Gaps** (testable, no test yet): ADMIN-07 to ADMIN-14, the admin console being built (to-do.md › Admin console).
 
 **Manual** (check by hand before a release, on a real phone and the real Firebase project):
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { adminView, type AdminView } from './access';
 import { auth } from './firebase';
+import { MetricsPage } from './MetricsPage';
 
 const signInError = (e: unknown) => {
   const code = (e as { code?: string })?.code || '';
@@ -47,14 +48,13 @@ export function App() {
 
   return (
     <div className="shell">
-      <header className="bar">
+      <header className="topbar">
         <b>TikTym admin</b>
         <span className="who">{view.email}</span>
         <button className="btn small" onClick={() => signOut(auth)}>Sign out</button>
       </header>
       <main className="page">
-        <h2>Admin console</h2>
-        <p className="muted">Metrics, emails, push and costs come here as each page is built (to-do.md › Admin console).</p>
+        <MetricsPage />
       </main>
     </div>
   );

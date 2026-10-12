@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { accountTotals, activeSince, cohortFrom, indiaDayRange, statsDay } from '../functions/src/adminStats';
+import { accountTotals, activeSince, cohortFrom, indiaDayRange, metricsDays, metricsFrom, statsDay } from '../functions/src/adminStats';
 
 const DAY = '2026-10-12';
 
@@ -44,5 +44,41 @@ describe('nightly account totals (ADMIN-04)', () => {
 
   it('is all zeros with no accounts', () => {
     expect(accountTotals([], DAY)).toEqual({ accounts: 0, signUps: 0, activation: { of: 0, logged: 0 }, retention: { of: 0, active: 0 } });
+  });
+});
+
+describe('metrics page data (ADMIN-06)', () => {
+  const days = metricsDays(new Date('2026-10-12T19:00:00Z'));
+  const computed = { computedAt: { seconds: 1 } };
+
+  it('covers the 30 India days ending yesterday, oldest first', () => {
+    expect(days).toHaveLength(30);
+    expect(days[0]).toBe('2026-09-13');
+    expect(days[29]).toBe(DAY);
+  });
+
+  it('charts each day, counting missing days and fields as zero', () => {
+    const admin = days.map(() => undefined) as (Record<string, unknown> | undefined)[];
+    const stats = [...admin];
+    admin[29] = { ...computed, signUps: 3, active7: 9 };
+    stats[29] = { logs: 40, minutes: 1200 };
+    stats[28] = { logs: 'x' };
+    const m = metricsFrom(days, admin, stats);
+    expect(m.days[29]).toEqual({ day: DAY, signUps: 3, active7: 9, logs: 40, minutes: 1200 });
+    expect(m.days[28]).toEqual({ day: '2026-10-11', signUps: 0, active7: 0, logs: 0, minutes: 0 });
+  });
+
+  it('tiles come from the newest day the nightly job ran, compared with 7 days before it', () => {
+    const admin = days.map(() => undefined) as (Record<string, unknown> | undefined)[];
+    admin[29] = { emails: { welcome: 2 } }; // only email counts: the job hasn't run for it yet
+    admin[28] = { ...computed, accounts: 50, active1: 5, active7: 20, active28: 30, activation: { of: 6, logged: 4 }, retention: { of: 5, active: 2 } };
+    admin[21] = { ...computed, accounts: 40, active7: 15 };
+    const m = metricsFrom(days, admin, []);
+    expect(m.latest).toEqual({ day: '2026-10-11', accounts: 50, active1: 5, active7: 20, active28: 30, activation: { of: 6, logged: 4 }, retention: { of: 5, active: 2 } });
+    expect(m.weekBefore).toMatchObject({ day: '2026-10-04', accounts: 40, active7: 15, activation: { of: 0, logged: 0 } });
+  });
+
+  it('has no tiles before the job has ever run', () => {
+    expect(metricsFrom(days, [], [])).toMatchObject({ latest: null, weekBefore: null });
   });
 });

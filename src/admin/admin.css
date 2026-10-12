@@ -30,7 +30,41 @@ h2{font-size:20px;font-weight:700;margin-bottom:8px}
 .btn.small{padding:6px 12px;font-size:14px}
 
 .shell{min-height:100vh}
-.bar{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface)}
-.bar b{font-size:16px}
-.bar .who{margin-left:auto;color:var(--ink-2);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.topbar{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface)}
+.topbar b{font-size:16px;white-space:nowrap}
+.topbar .btn{white-space:nowrap}
+.topbar .who{margin-left:auto;color:var(--ink-2);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .page{max-width:1080px;margin:0 auto;padding:24px 16px 64px}
+
+/* metrics (ADMIN-06) */
+:root{--chart:#1F8A6E}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--chart:#28A57E}}
+:root[data-theme="dark"]{--chart:#28A57E}
+.head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.head h2{margin:0}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.tile{display:flex;flex-direction:column;gap:2px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:13px}
+.tile .label{font-weight:600;color:var(--ink-2)}
+.tile .value{font-size:28px;font-weight:800;line-height:1.2;font-variant-numeric:tabular-nums}
+.tile .change{color:var(--ink);font-weight:600}
+.charts{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr));gap:12px}
+.chart{margin:0;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.chart figcaption{display:flex;justify-content:space-between;gap:8px;font-size:14px;margin-bottom:6px}
+.plot{position:relative;padding-bottom:18px}
+.plot svg{display:block;width:100%;height:150px;overflow:visible}
+.plot .bar{fill:var(--chart)}
+.plot .bar.on{fill:var(--ink)}
+.plot .grid{stroke:var(--line);stroke-dasharray:2 4;vector-effect:non-scaling-stroke}
+.plot .axis{stroke:var(--ink-2);vector-effect:non-scaling-stroke}
+.plot .hit{fill:transparent;outline:none}
+.plot .scale{position:absolute;top:-4px;left:0;font-size:11px;background:var(--surface);padding-right:4px}
+.plot .from,.plot .to{position:absolute;bottom:0;font-size:11px}
+.plot .from{left:0}.plot .to{right:0}
+.tip{position:absolute;top:-6px;transform:translate(-50%,-100%);padding:4px 8px;border-radius:8px;background:var(--surface);border:1px solid var(--line);box-shadow:0 2px 8px rgb(0 0 0 / .12);font-size:13px;white-space:nowrap;pointer-events:none}
+.tip.start{transform:translate(-8px,-100%)}
+.tip.end{transform:translate(calc(-100% + 8px),-100%)}
+.table{margin-top:20px}
+.table summary{cursor:pointer;font-weight:600}
+.table table{margin-top:10px;border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+.table th,.table td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right}
+.table th:first-child,.table td:first-child{text-align:left}

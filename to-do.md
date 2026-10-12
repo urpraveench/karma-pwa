@@ -156,7 +156,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Decided 13 October 2026: a separate admin app in this repo and Firebase project, for Praveen only. Access is an `admin` custom claim that only a server script can set; every action runs in a Cloud Function that checks it, so `firestore.rules` stay closed to apps. Every send is recorded in `adminLog/`. FEATURES.md › 17. Admin console.
 
-- [ ] **Claude:** metrics page: today's numbers and 30-day charts from `adminStats/` and the anonymous totals in `stats/` (ADMIN-06)
 - [ ] **Claude:** email composer: audience, subject, text, preview, send a test to me, count and confirm, sent through the queue in the TikTym email template with an unsubscribe link (ADMIN-07, ADMIN-08, ADMIN-09)
 - [ ] **Claude:** push composer: audience, title, text, test on my devices, count and confirm; held until daytime in each person's time zone (ADMIN-10, ADMIN-11)
 - [ ] **Claude:** send history page from `adminLog/` (ADMIN-12)
@@ -179,6 +178,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** metrics page, the console's first page: six tiles with the change from a week before, 30-day charts of sign-ups, active loggers, entries and minutes with tooltips and a table, from the new `adminMetrics` function (admins only, 60 reads an open) (ADMIN-06). Not deployed yet, 13 October 2026
 - [x] **Claude:** the admin app: `admin/` page and `src/admin/`, its own build (`npm run admin:build` → `dist-admin/`) and hosting target `admin` (site `tiktym-admin`, noindex), Google sign-in, "This account isn't an admin" for anyone without the claim; browser tests on the emulators (ADMIN-05). Not deployed yet, 13 October 2026
 - [x] **Claude:** nightly account totals in `adminStats/{day}` at 00:30 India time (`adminStatsNightly`): accounts, sign-ups, started, active loggers (1, 7, 28 days), activation, 7-day retention, accounts with push; each sent email counted by type as it goes (ADMIN-04). Not deployed yet, 13 October 2026
 - [x] **Claude:** admin access: `npm run admin:grant -- <email>` sets or removes the `admin` claim and lists who has it; `adminCheck` in functions lets in only that claim (wired into each admin function as it's built); `adminStats/` and `adminLog/` closed to every app, admins included (ADMIN-01, ADMIN-02, ADMIN-03), 13 October 2026

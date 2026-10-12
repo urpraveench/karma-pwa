@@ -13,7 +13,8 @@ import { HttpsError, onCall, onRequest } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { onTaskDispatched } from 'firebase-functions/v2/tasks';
 import { region as regionV1 } from 'firebase-functions/v1';
-import { accountTotals, activeSince, cohortFrom, indiaDayRange, statsDay, type Account, type EmailKind } from './adminStats.js';
+import { adminCheck, type AdminCaller } from './admin.js';
+import { accountTotals, activeSince, cohortFrom, indiaDayRange, metricsDays, metricsFrom, statsDay, type Account, type EmailKind } from './adminStats.js';
 import { comebackDue, comebackRange, daysAway, indiaToday, latestLogDate, type MailState } from './comeback.js';
 import {
   comebackEmail, confirmUnsubscribePage, easiest, emailOn, FROM, firstName, justStarted, NUDGE_AFTER_MS, nudgeEmail, oneTapCheck, oneTapEmail,
@@ -470,4 +471,21 @@ export const adminStatsNightly = onSchedule({ schedule: '30 0 * * *', timeZone: 
   const totals = { ...accountTotals(accounts, day), started, active1, active7, active28, pushAccounts, computedAt: Timestamp.now() };
   await db.doc(`adminStats/${day}`).set(totals, { merge: true });
   logger.info('admin totals saved', { day, accounts: totals.accounts, active7 });
+});
+
+/** Refuses anyone but an admin (ADMIN-02); every admin function calls this first. */
+function requireAdmin(auth: AdminCaller): void {
+  const check = adminCheck(auth);
+  if (check !== 'ok') throw new HttpsError(check, 'Admins only.');
+}
+
+/** The metrics page (ADMIN-06): the last 30 days of admin totals and anonymous daily totals, 60 reads. */
+export const adminMetrics = onCall(async req => {
+  requireAdmin(req.auth);
+  const days = metricsDays(new Date());
+  const [admin, stats] = await Promise.all([
+    db.getAll(...days.map(d => db.doc(`adminStats/${d}`))),
+    db.getAll(...days.map(d => db.doc(`stats/${d}`))),
+  ]);
+  return metricsFrom(days, admin.map(d => d.data()), stats.map(d => d.data()));
 });

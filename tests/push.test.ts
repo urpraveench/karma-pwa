@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { deviceGone, reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from '../functions/src/push';
+import { deviceGone, NUDGE_GAP_MS, nudgeCheck, nudgePayload, nudgeSlotFor, reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from '../functions/src/push';
 import { badgeCount, nearestTime, REMINDER_TIMES, reminderOn, reminderText, reminderTime, slotAt, timeLabel, utcSlot } from '../src/lib/reminders';
 
 describe('when the daily reminder goes (NOTIF-09)', () => {
@@ -39,7 +39,7 @@ describe('when the daily reminder goes (NOTIF-09)', () => {
 
   it('an account is in a slot only with the reminder on and a device to send to', () => {
     const now = new Date('2026-10-07T06:00:00Z');
-    expect(reminderTarget({ reminder: { time: '19:00', tz: 'Asia/Kolkata' } }, 1, now)).toEqual({ slot: '13:30', time: '19:00', tz: 'Asia/Kolkata', devices: 1 });
+    expect(reminderTarget({ reminder: { time: '19:00', tz: 'Asia/Kolkata' } }, 1, now)).toEqual({ slot: '13:30', time: '19:00', tz: 'Asia/Kolkata', devices: 1, nudgeSlot: '14:30' });
     expect(reminderTarget({ reminder: { time: '19:00', tz: 'Asia/Kolkata' } }, 0, now).slot).toBeNull();
     expect(reminderTarget({ reminder: { on: false, tz: 'Asia/Kolkata' } }, 2, now).slot).toBeNull();
   });
@@ -99,5 +99,50 @@ describe('expired devices (NOTIF-11)', () => {
     expect(r).toMatchObject({ sent: 2, removed: 1, failed: null });
     expect(removed).toEqual(['old']);
     expect((await sendToDevices(['busy'], send, async () => {})).failed).toBeTruthy();
+  });
+});
+
+describe('the 8 pm evening log check (NOTIF-18)', () => {
+  it("8 pm in the person's own time zone, on by default, off with the switch or no device", () => {
+    expect(nudgeSlotFor({}, 1, 'Asia/Kolkata', '2026-10-07')).toBe('14:30');
+    expect(nudgeSlotFor({}, 1, 'Europe/London', '2026-07-01')).toBe('19:00');
+    expect(nudgeSlotFor({ logNudge: false }, 1, 'Asia/Kolkata', '2026-10-07')).toBeNull();
+    expect(nudgeSlotFor({}, 0, 'Asia/Kolkata', '2026-10-07')).toBeNull();
+    // independent of the daily reminder: still on with the reminder switched off
+    expect(reminderTarget({ reminder: { on: false, tz: 'Asia/Kolkata' } }, 1, new Date('2026-10-07T06:00:00Z'))).toMatchObject({ slot: null, nudgeSlot: '14:30' });
+  });
+
+  const doc: ReminderDoc = { slot: '13:30', time: '19:00', tz: 'Asia/Kolkata', devices: 1, nudgeSlot: '14:30' };
+  const at = new Date('2026-10-07T14:30:20Z'); // 8:00 pm in India
+  const quiet = { logged: false, due: true };
+
+  it('only when nothing is logged today and something was due', () => {
+    expect(nudgeCheck(doc, at, quiet)).toEqual({ act: 'send', date: '2026-10-07', slot: '14:30' });
+    expect(nudgeCheck(doc, at, { logged: true, due: true }).act).toBe('logged');
+    expect(nudgeCheck(doc, at, { logged: false, due: false }).act).toBe('nothing-due');
+  });
+
+  it('once a day, never within the hour after the daily reminder, never after 10 pm', () => {
+    expect(nudgeCheck({ ...doc, nudgeSent: '2026-10-07' }, at, quiet).act).toBe('sent-today');
+    const reminded = { ...doc, lastSent: '2026-10-07' };
+    expect(nudgeCheck({ ...reminded, lastSentAt: at.getTime() - 30 * 60_000 }, at, quiet).act).toBe('just-reminded');
+    expect(nudgeCheck({ ...reminded, lastSentAt: at.getTime() - NUDGE_GAP_MS - 1 }, at, quiet).act).toBe('send');
+    expect(nudgeCheck({ ...doc, lastSent: '2026-10-06', lastSentAt: at.getTime() - 60_000 }, at, quiet).act).toBe('send'); // yesterday's
+    expect(nudgeCheck(doc, new Date('2026-10-07T16:45:00Z'), quiet).act).toBe('too-late');
+    const london: ReminderDoc = { ...doc, tz: 'Europe/London', nudgeSlot: '20:00' }; // set in winter, now summer
+    expect(nudgeCheck(london, new Date('2026-07-01T18:00:00Z'), quiet)).toMatchObject({ act: 'later', slot: '19:00' });
+  });
+
+  it('asks, and points to the quickest way to answer', () => {
+    expect(JSON.parse(nudgePayload(2, true))).toEqual({ title: 'Did you log what you did today?', body: 'Tap the mic and just say it.', badge: 2, url: '/', tag: 'log-nudge' });
+    expect(JSON.parse(nudgePayload(2, false)).badge).toBeNull();
+  });
+
+  it('the 15-minute job queues it alongside the reminders; records from before it get their 8 pm slot', () => {
+    const src = readFileSync('functions/src/index.ts', 'utf8');
+    expect(src).toContain("where('nudgeSlot', '==', slot)");
+    expect(src).toContain("queue.enqueue({ uid: d.id, kind: 'nudge' })");
+    expect(src).toContain('if (doc.nudgeSlot === undefined) fix.nudgeSlot');
+    expect(src).toContain('lastSentAt: now.getTime()');
   });
 });

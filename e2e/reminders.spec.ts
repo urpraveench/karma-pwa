@@ -96,6 +96,22 @@ test('turned on from Setup, at 7 pm until a time is picked (NOTIF-12)', async ({
   expect((await saved(page)).settings.reminder).toMatchObject({ on: true, time: '19:00' });
 });
 
+test('the 8 pm evening log check: on by default once notifications are allowed, and can be switched off (NOTIF-18)', async ({ page }) => {
+  await fakePush(page, 'granted', { permission: 'default' });
+  await signInWith(page, DATA);
+  await tab(page, 'Setup').click();
+  const nudge = page.locator('.li', { hasText: 'Evening log check' });
+  await expect(nudge).toContainText("Push · at 8 pm, only if nothing's logged that day");
+  await expect(nudge).toHaveAttribute('aria-pressed', 'false'); // nothing allowed yet
+  await reminderRow(page).click(); // allowing notifications turns it on with them
+  await expect(nudge).toHaveAttribute('aria-pressed', 'true');
+  expect((await saved(page)).settings.logNudge).toBeUndefined(); // on by default, nothing stored
+  await nudge.click();
+  await expect(nudge).toHaveAttribute('aria-pressed', 'false');
+  expect((await saved(page)).settings.logNudge).toBe(false);
+  await expect(reminderRow(page)).toHaveAttribute('aria-pressed', 'true'); // the daily reminder is separate
+});
+
 test.describe('Safari on an iPhone, not from the home screen', () => {
   test.use({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1' });
   test('Setup says reminders need TikTym on the home screen, and Today never offers them (NOTIF-12)', async ({ page }) => {

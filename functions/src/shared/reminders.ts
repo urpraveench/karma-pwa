@@ -18,6 +18,12 @@ export const reminderOn = (s: Settings | undefined) => s?.reminder?.on !== false
 export const reminderTime = (s: Settings | undefined) => (s?.reminder?.time && REMINDER_TIMES.includes(s.reminder.time) ? s.reminder.time : DEFAULT_REMINDER);
 export const badgeOn = (s: Settings | undefined) => s?.badge !== false;
 
+/** The evening log check (NOTIF-18): 8 pm local, on unless switched off, independent of the daily reminder. */
+export const LOG_NUDGE_TIME = '20:00';
+export const logNudgeOn = (s: Settings | undefined) => s?.logNudge !== false;
+/** What it says: a question, and the quickest way to answer it. */
+export const LOG_NUDGE_TEXT = { title: 'Did you log what you did today?', body: 'Tap the mic and just say it.' };
+
 /** The number on the app icon: practices left today, or 0 (no badge) when the day is clear or the badge is off (NOTIF-13). */
 export const badgeCount = (s: Settings | undefined, left: unknown[]) => (badgeOn(s) ? left.length : 0);
 

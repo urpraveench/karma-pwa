@@ -274,6 +274,14 @@ function useAppState() {
     return status;
   }, [store, setReminder, toast]);
 
+  /** The 8 pm evening log check (NOTIF-18). */
+  const setLogNudge = useCallback((on: boolean) => {
+    if (!store) return;
+    const d0 = dataRef.current, settings = { ...d0.settings, logNudge: on };
+    setData({ ...d0, settings });
+    void persist(() => store.putSettings(settings));
+  }, [store, setData, persist]);
+
   /** Practices left today on the app icon (NOTIF-13). */
   const setBadge = useCallback((on: boolean) => {
     if (!store) return;
@@ -347,7 +355,7 @@ function useAppState() {
     view, setView, range, setRange, sheet, openSheet, closeSheet,
     hideMoment, tipHidden, hideTip,
     logEntry, logEntries, deleteLog, updateLog, saveCategory, reorderCategory, toggleArchive, deleteCategory, setBacklogCap, setEmailPref,
-    setReminder, enableReminders, setBadge,
+    setReminder, enableReminders, setBadge, setLogNudge,
     loadSample, startOver, importBackup, exportBackup, signOut, deleteAccount,
   };
 }

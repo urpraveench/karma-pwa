@@ -37,8 +37,8 @@ Summary of coverage at the time of writing:
 | 13. App shell, PWA and platform | 36 | 31 | 0 | 5 |
 | 14. Marketing and sharing | 23 | 23 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
-| 16. Notifications | 16 | 16 | 0 | 0 |
-| **Total** | **318** | **303** | **0** | **15** |
+| 16. Notifications | 17 | 17 | 0 | 0 |
+| **Total** | **319** | **304** | **0** | **15** |
 
 ---
 
@@ -474,6 +474,7 @@ See NOTIFICATIONS.md for the plan. Emails and usage statistics are on by default
 | NOTIF-06 | Weekly recap email | Mondays at 8 am India time, if "Weekly recap" is on and something was logged in the last two weeks: last week (Monday to Sunday) in minutes against the targets, days shown up, best day, each practice with a bar, the show-up streak, how it compares with the week before (never as a telling-off), and one gentle suggestion. A practice that started mid-week counts from its start. A week with nothing logged gets a short "no catching up needed, 5 minutes today" note instead. Once per account per week | Unit `recap.test.ts` (sending: Manual) |
 | NOTIF-16 | Weekly recap at any size | The Monday job looks only at accounts with an entry in the last two weeks (the server's last-logged date) and queues one recap each; the queue sends 2 a second and retries a failed send, so thousands get theirs and nobody gets two (one per account per week, even if the job or a send runs twice). If another TikTym email already went to that person that day, the recap is skipped for the week | Unit `recap.test.ts` (sending: Manual) |
 | NOTIF-17 | Emails point to the home-screen app | Under each email's button, and in the plain text: "Added TikTym to your home screen? Open it from there, so you stay signed in." (a link can't open the home-screen app on iPhone, and the browser there doesn't share its sign-in). Not in the welcome, which is sent before anyone installs and explains how | Unit `mail-home.test.ts` |
+| NOTIF-18 | Evening log check | At 8 pm in the account's time zone, for every device that allowed notifications, on by default and independent of the daily reminder: "Did you log what you did today?" / "Tap the mic and just say it." Only if nothing is logged that day and something was due; once a day; never within an hour after the daily reminder; never after 10 pm; daylight saving corrected on the day. Setup › Evening log check ("Push · at 8 pm, only if nothing's logged that day") switches it off | Unit `push.test.ts`, E2E `reminders.spec.ts` (sending: Manual) |
 | NOTIF-07 | Comeback email | After 3 full days with nothing logged, the next morning (9 am India time), if "Tips and reminders" is on: "no need to make up for the missed days", with 5 minutes of the shortest practice and an Open TikTym button. Once per absence: no second one until the person logs again and goes quiet again. Only for absences that began in the last two weeks. The server keeps each account's last-logged date as entries are saved, so it looks only at people who are away | Unit `comeback.test.ts` (sending: Manual) |
 | NOTIF-08 | At most one email a day | A scheduled email (comeback) waits until the next day if another TikTym email already went to that person today, India time (for example Monday's recap) | Unit `comeback.test.ts` |
 | NOTIF-09 | Daily push reminder | Once notifications are allowed, a reminder at the time chosen in Setup (15-minute steps, 7 am to 9:45 pm, in the person's own time zone) on every device that allowed them: which practices are still due today ("2 practices left today: Exercise and Reading. Even 5 minutes counts."). Shows TikTym's icon, and on Android a white TikTym ring in the status bar. At most one a day. Tapping it opens TikTym | Unit `push.test.ts` (sending: Manual) |

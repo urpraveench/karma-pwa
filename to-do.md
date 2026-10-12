@@ -25,6 +25,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] The first Monday after the weekly recap is deployed: check it arrives at about 8 am for an account that logged last week, that the numbers match History for that week, and that the function's log says how many went (NOTIF-06)
 - [ ] On Android Chrome: allow reminders, set a time 15 minutes ahead, and check the reminder arrives once, names what's left, shows the white ring in the status bar, and opens TikTym; `firebase functions:log --only reminderSend` shows it (NOTIF-09). iPhone checked 10 October
 - [ ] After the "one tap away" email is deployed: sign in with a spare Google account, stop at the practice picker, and check the email arrives about a day later, once; then tap Start and check the welcome still arrives (NOTIF-15, NOTIF-03)
+- [ ] After the evening log check is deployed: on a day with nothing logged, check "Did you log what you did today?" arrives at about 8 pm, once, and not on a day you logged; `firebase functions:log --only reminderSend` shows "evening check sent" or why it skipped (NOTIF-18)
 - [ ] On iPhone: log a practice in full and check the icon's number drops by one; clear the day and check the number disappears (NOTIF-13). The count itself was checked 10 October
 - [ ] **You:** remove the last line of the LinkedIn page description ("TikTym is built by Pramal IT Services Private Limited.") in LinkedIn › Edit page
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
@@ -116,7 +117,6 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 
 - [ ] **Deferred (12 October 2026, your call):** new users often see no streak badge on Today: it's hidden with no streak and fewer than 2 days showing up in a row (seen with an early user: "Good morning, Malleswari" on one line, nothing at the top right), so the streak calendar is reachable only from Insights. Proposed: always show it once there are practices; with neither, "Start a streak" in gold with this week's dots, opening the Streak sheet (TODAY-03, TODAY-04, TODAY-20).
-- [ ] **Claude:** an 8 pm "Did you log what you did today?" push for everyone with notifications on, by default, in their own time zone: only if nothing is logged that day, skipped if their own reminder went out in the last hour, with an on/off switch in Setup (asked by Praveen, 12 October 2026) (NOTIF-18).
 - [ ] **Claude (before scale):** load only recent months on app open, using the offline cache for older ones. Today every open downloads a user's full history: fine now, but after a year it is about 230 KB and 17 reads per open, which makes Firestore's free 10 GiB/month egress the first limit for long-time users.
 - [ ] **Idea (from content, 9 October 2026):** hours towards mastery: each practice's lifetime hours against 10,000 (e.g. "Course study: 42 of 10,000 hours"), for the 10,000-hour posts. Decide after first users' feedback.
 - [ ] **Idea (from content, 9 October 2026):** a challenge view for 100 Days, 100 Minutes (30 Exercise, 30 Reading, 30 Upskilling, 10 Meditation; a day counts when Today is cleared, carried minutes included): "Day 34 of 100", days won, and a shareable challenge card. Only if the challenge goes ahead; streaks and the progress card cover the start.
@@ -149,6 +149,7 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** 8 pm evening log check, "Did you log what you did today? Tap the mic and just say it.", for every account with notifications allowed, on by default with a Setup switch: only if nothing is logged that day and something was due, never within an hour after the daily reminder (asked by Praveen) (NOTIF-18). Privacy Policy updated. Not deployed yet, 12 October 2026
 - [x] **Claude:** today's idea as a full-screen card on the first open of each day, then Today; closes with "Start my day", a tap, or after 7 seconds; not on the account's first day (asked by Praveen) (TODAY-21). Not released yet, 12 October 2026
 - [x] Released 1.12.1: links Chrome hands to the installed app reuse its open window (APP-32). Functions deployed with the email home-screen hint (NOTIF-17) and the queued weekly recap (`recapSend`, NOTIF-16), after Monday 12 October's run of the old loop sent 6 recaps, 12 October 2026
 - [x] **Claude:** the manifest's `launch_handler` (navigate-existing), so a link Chrome hands to the installed app reuses an open TikTym window (Android outside Gmail's own browser, computers) (APP-32). Released in 1.12.1, 12 October 2026

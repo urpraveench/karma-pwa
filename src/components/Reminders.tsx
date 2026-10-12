@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { showInstallCard, type InstallNudge } from '../lib/install';
-import { badgeOn, nearestTime, REMINDER_TIMES, reminderOn, reminderTime, timeLabel } from '../lib/reminders';
+import { badgeOn, LOG_NUDGE_TIME, logNudgeOn, nearestTime, REMINDER_TIMES, reminderOn, reminderTime, timeLabel } from '../lib/reminders';
 import { useApp } from '../state/app';
 import { useInstall } from '../state/install';
 import { usePushStatus, type PushStatus } from '../state/push';
@@ -74,6 +74,24 @@ export function ReminderRow() {
         </label>
       )}
     </>
+  );
+}
+
+/** Setup › Evening log check (NOTIF-18): the 8 pm push, on by default, once this device can get notifications. */
+export function LogNudgeRow() {
+  const { data, enableReminders, setLogNudge } = useApp();
+  const status = usePushStatus();
+  const on = status === 'on' && logNudgeOn(data.settings);
+  const why = status ? WHY[status] : undefined;
+  const toggle = () => {
+    if (status === 'ask') void enableReminders(reminderTime(data.settings)).then(s => { if (s === 'on') setLogNudge(true); });
+    else if (status === 'on') setLogNudge(!on);
+  };
+  return (
+    <button className="li" type="button" aria-pressed={on} disabled={!!why || !status} onClick={toggle}>
+      <span className="t">Evening log check<small>{why ?? `Push · at ${timeLabel(LOG_NUDGE_TIME)}, only if nothing's logged that day`}</small></span>
+      <span className={`switch${on ? ' on' : ''}`} aria-hidden="true"><i /></span>
+    </button>
   );
 }
 

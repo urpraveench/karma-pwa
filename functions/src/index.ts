@@ -20,9 +20,9 @@ import {
 } from './mail.js';
 import { addDays, lastWeekStart, recapCheck, recapFrom, weekRecap, type RecapCategory, type RecapLog, type RecapMail } from './recap.js';
 import webpush from 'web-push';
-import { reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from './push.js';
+import { nudgeCheck, nudgePayload, nudgeSlotFor, reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from './push.js';
 import { practicesLeft } from './shared/backlog.js';
-import { badgeOn, slotAt, VAPID_PUBLIC_KEY } from './shared/reminders.js';
+import { badgeOn, localParts, slotAt, VAPID_PUBLIC_KEY } from './shared/reminders.js';
 import type { AppData, Category, Log, PushDevice, Settings } from './shared/types.js';
 import { quotaMessage, readVoiceRequest, voiceAnswer, voicePrompt, voiceQuota, voiceUsageNumbers, VOICE_MODEL, type VoiceUsage } from './voice.js';
 
@@ -246,53 +246,93 @@ export const reminderSettings = onDocumentWritten({ document: 'users/{uid}/meta/
 export const reminderDevices = onDocumentWritten({ document: 'users/{uid}/devices/{id}' }, event => syncReminder(event.params.uid));
 
 /**
- * Every 15 minutes: queue a reminder for each account whose chosen time falls in this slot (NOTIF-09). The query reads
- * only those accounts, and the queue sends at a steady rate with retries, so it scales like the comeback.
+ * Every 15 minutes: queue a reminder for each account whose chosen time falls in this slot (NOTIF-09), and the evening
+ * log check for each account whose 8 pm does (NOTIF-18). The queries read only those accounts, and the queue sends at a
+ * steady rate with retries, so it scales like the comeback.
  */
 export const remindersDue = onSchedule({ schedule: '*/15 * * * *', timeZone: 'UTC' }, async () => {
   const slot = slotAt(new Date());
-  const due = await db.collection('reminders').where('slot', '==', slot).get();
+  const [due, nudges] = await Promise.all([
+    db.collection('reminders').where('slot', '==', slot).get(),
+    db.collection('reminders').where('nudgeSlot', '==', slot).get(),
+  ]);
   const queue = getFunctions().taskQueue('locations/asia-south1/functions/reminderSend');
-  await Promise.all(due.docs.map(d => queue.enqueue({ uid: d.id })));
-  if (due.size) logger.info('reminders queued', { slot, queued: due.size });
+  await Promise.all([...due.docs.map(d => queue.enqueue({ uid: d.id })), ...nudges.docs.map(d => queue.enqueue({ uid: d.id, kind: 'nudge' }))]);
+  if (due.size || nudges.size) logger.info('reminders queued', { slot, queued: due.size, nudges: nudges.size });
 });
 
-/** Sends one account's reminder to each of its devices, if anything is still due today; removes devices that are gone (NOTIF-09 to NOTIF-11). */
-export const reminderSend = onTaskDispatched({
-  retryConfig: { maxAttempts: 3, minBackoffSeconds: 60 },
-  rateLimits: { maxDispatchesPerSecond: 20, maxConcurrentDispatches: 10 },
-  secrets: [VAPID_PRIVATE_KEY],
-}, async req => {
-  const uid = String((req.data as { uid?: unknown })?.uid ?? '');
-  if (!uid) return;
-  const doc = (await reminderDoc(uid).get()).data() as ReminderDoc | undefined;
-  if (!doc?.slot) return;
-  const check = reminderCheck(doc, new Date());
-  if (check.slot !== doc.slot) await reminderDoc(uid).update({ slot: check.slot }); // daylight saving moved it
-  if (check.act !== 'send') return;
-
-  const [settings, cats, months, devices] = await Promise.all([
-    settingsDoc(uid).get(), db.collection(`users/${uid}/categories`).get(), db.collection(`users/${uid}/months`).get(), db.collection(`users/${uid}/devices`).get(),
+/** An account's settings, practices and entries, as the app has them. */
+async function accountData(uid: string): Promise<AppData> {
+  const [settings, cats, months] = await Promise.all([
+    settingsDoc(uid).get(), db.collection(`users/${uid}/categories`).get(), db.collection(`users/${uid}/months`).get(),
   ]);
-  const data: AppData = {
+  return {
     settings: (settings.data() || {}) as Settings,
     categories: cats.docs.map(d => d.data() as Category),
     logs: months.docs.flatMap(m => Object.values((m.data().entries || {}) as Record<string, Log>)),
   };
-  const left = practicesLeft(data, check.date);
-  if (!left.length) return; // today is clear, or a rest day
-  const payload = reminderPayload(left, badgeOn(data.settings));
+}
+
+/** Sends one payload to each of the account's devices, removing those that are gone. Throws if none got it, so the queue retries. */
+async function pushToAccount(uid: string, payload: string, topic: string): Promise<number> {
+  const devices = await db.collection(`users/${uid}/devices`).get();
   const options = {
     vapidDetails: { subject: 'mailto:hello@tiktym.com', publicKey: VAPID_PUBLIC_KEY, privateKey: VAPID_PRIVATE_KEY.value() },
-    TTL: 3 * 3600, urgency: 'normal' as const, topic: 'daily-reminder',
+    TTL: 3 * 3600, urgency: 'normal' as const, topic,
   };
   const { sent, removed, failed } = await sendToDevices(devices.docs,
     d => { const device = d.data() as PushDevice; return webpush.sendNotification({ endpoint: device.endpoint, keys: device.keys }, payload, options); },
     d => d.ref.delete());
   if (failed) logger.warn('push failed on a device', { uid, error: String(failed) });
-  if (sent) await reminderDoc(uid).update({ lastSent: check.date });
-  else if (failed) throw failed; // nothing reached: let the queue retry
-  logger.info('reminder sent', { uid, devices: sent, removed, left: left.length });
+  if (!sent && failed) throw failed; // nothing reached: let the queue retry
+  if (removed) logger.info('gone devices removed', { uid, removed });
+  return sent;
+}
+
+/**
+ * Sends one account's daily reminder if anything is still due today (NOTIF-09 to NOTIF-11), or, for kind 'nudge', the
+ * 8 pm evening log check if nothing is logged today (NOTIF-18).
+ */
+export const reminderSend = onTaskDispatched({
+  retryConfig: { maxAttempts: 3, minBackoffSeconds: 60 },
+  rateLimits: { maxDispatchesPerSecond: 20, maxConcurrentDispatches: 10 },
+  secrets: [VAPID_PRIVATE_KEY],
+}, async req => {
+  const { uid: rawUid, kind } = (req.data || {}) as { uid?: unknown; kind?: unknown };
+  const uid = String(rawUid ?? '');
+  if (!uid) return;
+  const doc = (await reminderDoc(uid).get()).data() as ReminderDoc | undefined;
+  if (!doc) return;
+  const now = new Date();
+
+  if (kind === 'nudge') {
+    if (!doc.nudgeSlot) return;
+    const data = await accountData(uid);
+    const date = localParts(now, doc.tz).date;
+    const left = practicesLeft(data, date);
+    const check = nudgeCheck(doc, now, { logged: data.logs.some(l => l.date === date && l.minutes > 0), due: left.length > 0 });
+    if (check.slot !== doc.nudgeSlot) await reminderDoc(uid).update({ nudgeSlot: check.slot }); // daylight saving moved it
+    if (check.act !== 'send') { logger.info('evening check skipped', { uid, why: check.act }); return; }
+    const sent = await pushToAccount(uid, nudgePayload(left.length, badgeOn(data.settings)), 'log-nudge');
+    if (sent) await reminderDoc(uid).update({ nudgeSent: check.date });
+    logger.info('evening check sent', { uid, devices: sent });
+    return;
+  }
+
+  if (!doc.slot) return;
+  const check = reminderCheck(doc, now);
+  const fix: Partial<ReminderDoc> = {};
+  if (check.slot !== doc.slot) fix.slot = check.slot; // daylight saving moved it
+  if (doc.nudgeSlot === undefined) fix.nudgeSlot = nudgeSlotFor(undefined, doc.devices, doc.tz, check.date); // records from before NOTIF-18
+  if (Object.keys(fix).length) await reminderDoc(uid).update(fix);
+  if (check.act !== 'send') return;
+
+  const data = await accountData(uid);
+  const left = practicesLeft(data, check.date);
+  if (!left.length) return; // today is clear, or a rest day
+  const sent = await pushToAccount(uid, reminderPayload(left, badgeOn(data.settings)), 'daily-reminder');
+  if (sent) await reminderDoc(uid).update({ lastSent: check.date, lastSentAt: now.getTime() });
+  logger.info('reminder sent', { uid, devices: sent, left: left.length });
 });
 
 /**

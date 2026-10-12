@@ -44,6 +44,8 @@ export interface Settings {
   reminder?: { on?: boolean; time?: string; tz?: string };
   /** Practices left today on the app icon; a missing or true value means on (NOTIF-13). */
   badge?: boolean;
+  /** The 8 pm "Did you log what you did today?" push; a missing or true value means on (NOTIF-18). */
+  logNudge?: boolean;
 }
 
 /** A device that allowed notifications, saved at users/{uid}/devices/{id} (the id is a hash of the endpoint). */

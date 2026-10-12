@@ -15,6 +15,7 @@ Format, newest first:
 
 ## Coming next
 
+- **An 8 pm check-in.** If you allow notifications and haven't logged anything by 8 pm, TikTym asks: "Did you log what you did today?" Tap the mic and just say it. Switch it off in Setup.
 - **Start the day with an idea.** The first time you open TikTym each day, today's idea fills the screen for a moment before Today. Tap to go straight in.
 
 ## 1.12.1 · 12 October 2026 · Links open where you are

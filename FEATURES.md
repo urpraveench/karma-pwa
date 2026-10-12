@@ -34,11 +34,11 @@ Summary of coverage at the time of writing:
 | 10. Practices (Setup) | 23 | 23 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 17 | 15 | 0 | 2 |
-| 13. App shell, PWA and platform | 37 | 31 | 1 | 5 |
+| 13. App shell, PWA and platform | 37 | 32 | 0 | 5 |
 | 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 17 | 17 | 0 | 0 |
-| **Total** | **322** | **308** | **1** | **13** |
+| **Total** | **322** | **309** | **0** | **13** |
 
 ---
 
@@ -400,7 +400,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | APP-20 | Firebase's reserved addresses (`/__/…`, e.g. the Google sign-in relay page) | Always loaded from the network, never answered by the service worker with the app | E2E `pwa.spec.ts` |
 | APP-21 | Version shown | Login page and Setup › About show the version, commit and build date, e.g. "TikTym 1.0.0 · 63836b6 · 8 Oct 2026" | E2E `app.spec.ts` |
 | APP-22 | Newer version live | A bar at the top of every screen, including login: "New version ready (1.0.1)" with Reload; Reload loads the new version. No bar when up to date, offline, or in the dev server | E2E `app.spec.ts` (the offline case isn't tested) |
-| APP-33 | Old copy left open after an update | A copy of the app from before a deploy, whose code files the server no longer has, reloads itself once into the new version instead of failing to start; if that reload fails too (within a minute), or the device is offline, it shows AUTH-22's message instead of reloading again | Gap |
+| APP-33 | Old copy left open after an update | A copy of the app from before a deploy, whose code files the server no longer has, reloads itself once into the new version instead of failing to start; if that reload fails too (within a minute), or the device is offline, it shows AUTH-22's message instead of reloading again | E2E `firebase/start-fails.spec.ts`, Unit `startError.test.ts` |
 | APP-23 | Version file | Each build publishes `version.json` (version, commit, build date); the service worker never caches it | Unit `version.test.ts`, E2E `pwa.spec.ts` |
 | APP-24 | App Check | With `VITE_RECAPTCHA_SITE_KEY` set, the app attaches a reCAPTCHA Enterprise (Google Cloud Fraud Defense) App Check token to Firebase requests; without it, and in test mode or with the emulators, App Check is off | Unit `app-check.test.ts` (the on/off switch; live tokens are checked in the Firebase console, see to-do.md) |
 | APP-25 | Light mode colours | The same contrast check as APP-14, in light: login, Today, Insights, History, Setup, the sheets and the focus timer | E2E `colours.spec.ts` |

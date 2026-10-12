@@ -82,8 +82,15 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 **Phase 2: App stores**
 
-- [ ] **You:** open a Google Play developer account (US$25).
-- [ ] **Claude:** package the PWA for Google Play (Trusted Web Activity) and write the store listing (GTM-07).
+Google Play (started 12 October 2026). The Play app is the live web app in a Chrome frame (Trusted Web Activity): app updates still ship by deploying the website, and only the frame needs Play releases.
+
+- [ ] **You:** open a Google Play developer account (US$25) at play.google.com/console/signup (personal or organisation: see the plan), verify your identity and an Android phone, then create the app "TikTym" with Play App Signing on.
+- [ ] **You:** send Claude the app signing key's SHA-256 fingerprint (Play Console › Test and release › App integrity › App signing).
+- [ ] **Claude:** build the Android app (Bubblewrap; package `com.tiktym.app`; upload key kept outside the repo), test it on the Android emulator, and serve `/.well-known/assetlinks.json` from app.tiktym.com so it opens full screen without an address bar (GTM-07).
+- [ ] **Claude:** store listing: short and full description, 512 px icon, 1024×500 feature graphic, phone screenshots from the real app, and draft answers for Data safety, Content rating and Target audience (18+).
+- [ ] **You:** fill in the Play Console forms (Claude's drafts), give reviewers a test login, upload the app, and start a closed test.
+- [ ] **You (personal account only):** 12 or more testers opted in to the closed test for 14 days in a row before Google allows production; the current users are the natural testers.
+- [ ] **You:** apply for production, then publish.
 
 **Phase 3: Launch**
 

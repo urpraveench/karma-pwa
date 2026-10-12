@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { deviceGone, nudgeCheck, nudgePayload, nudgeSlotFor, reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from '../functions/src/push';
-import { badgeCount, nearestTime, REMINDER_TIMES, reminderOn, reminderText, reminderTime, slotAt, timeLabel, utcSlot } from '../src/lib/reminders';
+import { deviceGone, nudgeCheck, nudgePayload, nudgeSlotFor, practiceCheck, practicePayload, practiceSlotsFor, reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from '../functions/src/push';
+import { badgeCount, nearestTime, practiceRemindTime, REMINDER_TIMES, reminderOn, reminderText, reminderTime, slotAt, timeLabel, utcSlot } from '../src/lib/reminders';
 
 describe('when the daily reminder goes (NOTIF-09)', () => {
   it('times run every 15 minutes from 7 am to 9:45 pm, never at night', () => {
@@ -39,7 +39,7 @@ describe('when the daily reminder goes (NOTIF-09)', () => {
 
   it('an account is in a slot only with the reminder on and a device to send to', () => {
     const now = new Date('2026-10-07T06:00:00Z');
-    expect(reminderTarget({ reminder: { time: '19:00', tz: 'Asia/Kolkata' } }, 1, now)).toEqual({ slot: '13:30', time: '19:00', tz: 'Asia/Kolkata', devices: 1, nudgeSlot: '14:30' });
+    expect(reminderTarget({ reminder: { time: '19:00', tz: 'Asia/Kolkata' } }, 1, now)).toEqual({ slot: '13:30', time: '19:00', tz: 'Asia/Kolkata', devices: 1, nudgeSlot: '14:30', practiceSlots: [] });
     expect(reminderTarget({ reminder: { time: '19:00', tz: 'Asia/Kolkata' } }, 0, now).slot).toBeNull();
     expect(reminderTarget({ reminder: { on: false, tz: 'Asia/Kolkata' } }, 2, now).slot).toBeNull();
   });
@@ -147,3 +147,63 @@ describe('the 8 pm evening log check (NOTIF-18)', () => {
   });
 });
 
+
+describe("a practice's own reminder (NOTIF-19, NOTIF-20)", () => {
+  const cat = (id: string, name: string, remind?: string | null, archivedFrom: string | null = null) => ({ id, name, remind, archivedFrom });
+  const cats = [cat('r', 'Reading', '10:00'), cat('e', 'Exercise', '10:00'), cat('w', 'Writing', '16:00'), cat('m', 'Meditation'), cat('o', 'Old', '12:00', '2026-09-01')];
+  const doc: ReminderDoc = { slot: '13:30', time: '19:00', tz: 'Asia/Kolkata', devices: 1, practiceSlots: ['04:30', '10:30'] };
+  const ten = new Date('2026-10-07T04:30:20Z'); // 10:00 am in India
+  const all = new Set(['r', 'e', 'w', 'm']);
+
+  it('only allowed times count; none is the default', () => {
+    expect(practiceRemindTime({ remind: '10:00' })).toBe('10:00');
+    expect([practiceRemindTime({}), practiceRemindTime({ remind: null }), practiceRemindTime({ remind: '03:00' })]).toEqual([null, null, null]);
+  });
+
+  it("each time once, as a UTC slot in the person's time zone; archived practices and accounts without a device have none (NOTIF-20)", () => {
+    expect(practiceSlotsFor(cats, 1, 'Asia/Kolkata', '2026-10-07')).toEqual(['04:30', '10:30']);
+    expect(practiceSlotsFor(cats, 1, 'Europe/London', '2026-07-01')).toEqual(['09:00', '15:00']);
+    expect(practiceSlotsFor(cats, 0, 'Asia/Kolkata', '2026-10-07')).toEqual([]);
+    expect(reminderTarget({ reminder: { tz: 'Asia/Kolkata' } }, 1, new Date('2026-10-07T06:00:00Z'), cats).practiceSlots).toEqual(['04:30', '10:30']);
+    expect(reminderTarget({ reminder: { on: false, tz: 'Asia/Kolkata' } }, 1, new Date('2026-10-07T06:00:00Z'), cats)).toMatchObject({ slot: null, practiceSlots: ['04:30', '10:30'] });
+  });
+
+  it('at its time, only while the practice is still due; practices set for the same time share one', () => {
+    const r = practiceCheck(cats, doc, ten, all);
+    expect(r.send.map(c => c.id)).toEqual(['r', 'e']);
+    expect(r.handled).toEqual(['r', 'e']);
+    expect(r.date).toBe('2026-10-07');
+    const done = practiceCheck(cats, doc, ten, new Set(['e', 'w'])); // Reading is done for today
+    expect(done.send.map(c => c.id)).toEqual(['e']);
+    expect(done.handled).toEqual(['r', 'e']);
+    expect(practiceCheck(cats, doc, new Date('2026-10-07T10:30:00Z'), all).send.map(c => c.id)).toEqual(['w']);
+  });
+
+  it('once a day; not before its time, not over an hour late, never after 10 pm', () => {
+    expect(practiceCheck(cats, { ...doc, practiceSent: { r: '2026-10-07' } }, ten, all).send.map(c => c.id)).toEqual(['e']);
+    expect(practiceCheck(cats, { ...doc, practiceSent: { r: '2026-10-06', e: '2026-10-06' } }, ten, all).send).toHaveLength(2);
+    expect(practiceCheck(cats, doc, new Date('2026-10-07T04:15:00Z'), all).send).toEqual([]); // 9:45 am
+    expect(practiceCheck(cats, doc, new Date('2026-10-07T05:30:00Z'), all).send).toEqual([]); // 11 am
+    const late = [cat('n', 'Night reading', '21:45')];
+    expect(practiceCheck(late, doc, new Date('2026-10-07T16:30:00Z'), new Set(['n'])).send).toEqual([]); // 10 pm
+  });
+
+  it('daylight saving: the slots are worked out for the day it runs (NOTIF-20)', () => {
+    const london: ReminderDoc = { ...doc, tz: 'Europe/London', practiceSlots: ['10:00', '16:00'] }; // set in winter, now summer
+    const r = practiceCheck(cats, london, new Date('2026-07-01T09:00:00Z'), all);
+    expect(r.slots).toEqual(['09:00', '15:00']);
+    expect(r.send.map(c => c.id)).toEqual(['r', 'e']);
+  });
+
+  it('says what to do, gently, with the badge count unless the badge is off', () => {
+    expect(JSON.parse(practicePayload([{ name: 'Reading', remind: '10:00' }], 3, true))).toEqual({ title: 'Time for Reading', body: 'Even 5 minutes counts.', badge: 3, url: '/', tag: 'practice-1000' });
+    expect(JSON.parse(practicePayload([{ name: 'Reading', remind: '10:00' }, { name: 'Exercise', remind: '10:00' }], 3, false))).toMatchObject({ title: 'Time for Reading and Exercise', badge: null });
+  });
+
+  it('the 15-minute job queues them by slot, and a practice change keeps the record in step', () => {
+    const src = readFileSync('functions/src/index.ts', 'utf8');
+    expect(src).toContain("where('practiceSlots', 'array-contains', slot)");
+    expect(src).toContain("queue.enqueue({ uid: d.id, kind: 'practice' })");
+    expect(src).toContain("document: 'users/{uid}/categories/{id}'");
+  });
+});

@@ -17,6 +17,8 @@ export interface Category {
   startDate: DateStr;
   archivedFrom: DateStr | null;
   targets: Target[];
+  /** This practice's own push reminder, 'HH:MM' local, or none (PRAC-24, NOTIF-19). */
+  remind?: string | null;
 }
 
 export interface Log {

@@ -1,21 +1,63 @@
 // Who gets a push reminder, and when (NOTIF-09, NOTIF-11). Pure, so it's unit-tested (tests/push.test.ts). The server-only
 // record reminders/{uid} keeps the account's reminder time, time zone and UTC slot, how many devices allowed
 // notifications, and the local date of the last reminder (lastSent). The 15-minute job queries it by slot.
-import { LOG_NUDGE_TEXT, LOG_NUDGE_TIME, localParts, logNudgeOn, reminderOn, reminderText, reminderTime, utcSlot } from './shared/reminders.js';
+import { LOG_NUDGE_TEXT, LOG_NUDGE_TIME, localParts, logNudgeOn, practiceReminderText, practiceRemindTime, reminderOn, reminderText, reminderTime, utcSlot } from './shared/reminders.js';
 import type { Category, Settings } from './shared/types.js';
 
 export interface ReminderDoc {
   slot: string | null; time: string; tz: string; devices: number; lastSent?: string;
   /** The UTC slot of 8 pm local for the evening log check (NOTIF-18), and the local date it last went. */
   nudgeSlot?: string | null; nudgeSent?: string;
+  /** The UTC slots of the practices' own reminders (NOTIF-19, NOTIF-20), and the local date each practice's last went. */
+  practiceSlots?: string[]; practiceSent?: Record<string, string>;
 }
 
 /** reminders/{uid} as the settings and devices say it should be: no slot while off, or with no device to send to. */
-export function reminderTarget(settings: Settings | undefined, devices: number, now: Date): Omit<ReminderDoc, 'lastSent' | 'nudgeSent'> {
+export function reminderTarget(settings: Settings | undefined, devices: number, now: Date, categories: PracticeReminder[] = []): Omit<ReminderDoc, 'lastSent' | 'nudgeSent' | 'practiceSent'> {
   const time = reminderTime(settings), tz = settings?.reminder?.tz || 'Asia/Kolkata', date = localParts(now, tz).date;
   const on = reminderOn(settings) && devices > 0;
-  return { slot: on ? utcSlot(time, tz, date) : null, time, tz, devices, nudgeSlot: nudgeSlotFor(settings, devices, tz, date) };
+  return {
+    slot: on ? utcSlot(time, tz, date) : null, time, tz, devices, nudgeSlot: nudgeSlotFor(settings, devices, tz, date),
+    practiceSlots: practiceSlotsFor(categories, devices, tz, date),
+  };
 }
+
+type PracticeReminder = Pick<Category, 'id' | 'name' | 'remind' | 'archivedFrom'>;
+
+/** The UTC slots of the active practices' own reminder times on `date`, each once; none without a device (NOTIF-20). */
+export function practiceSlotsFor(categories: PracticeReminder[], devices: number, tz: string, date: string): string[] {
+  if (!devices) return [];
+  const times = categories.filter(c => !c.archivedFrom).map(practiceRemindTime).filter((t): t is string => !!t);
+  return [...new Set(times.map(t => utcSlot(t, tz, date)))].sort();
+}
+
+const minutes = (hhmm: string) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5));
+
+/**
+ * The practice reminders due when the job finds this account in a slot (NOTIF-19): practices whose own time has come in
+ * the last hour and that haven't had one today. `send` are those still due today (ids in `left`); `handled` is every one
+ * that came up, sent or not, so it isn't looked at again today. Nothing after 10 pm. `slots` is today's set, which
+ * daylight saving may have moved.
+ */
+export function practiceCheck(categories: PracticeReminder[], doc: ReminderDoc, now: Date, left: Set<string>):
+  { date: string; send: PracticeReminder[]; handled: string[]; slots: string[] } {
+  const { date, time } = localParts(now, doc.tz), at = minutes(time);
+  const slots = practiceSlotsFor(categories, doc.devices, doc.tz, date);
+  if (time >= '22:00') return { date, send: [], handled: [], slots };
+  const come = categories.filter(c => {
+    const t = practiceRemindTime(c);
+    return t && !c.archivedFrom && doc.practiceSent?.[c.id] !== date && minutes(t) <= at && at < minutes(t) + 60;
+  });
+  return { date, send: come.filter(c => left.has(c.id)), handled: come.map(c => c.id), slots };
+}
+
+/** A practice reminder's notification; the tag is per time, so it doesn't replace the daily reminder. */
+export function practicePayload(due: Pick<Category, 'name' | 'remind'>[], left: number, badge: boolean): string {
+  return JSON.stringify({ ...practiceReminderText(due), badge: badge ? left : null, url: '/', tag: practiceTag(due[0]?.remind) });
+}
+
+/** The notification tag and web-push topic (letters, digits and '-' only) for a practice reminder time. */
+export const practiceTag = (time: string | null | undefined) => `practice-${(time ?? '').replace(':', '')}`;
 
 /** 8 pm local as a UTC slot, or null when the evening log check is off or there's no device (NOTIF-18). */
 export const nudgeSlotFor = (settings: Settings | undefined, devices: number, tz: string, date: string) =>

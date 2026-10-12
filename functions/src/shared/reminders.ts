@@ -72,6 +72,14 @@ export const slotAt = (instant: Date) => {
 
 const list = (names: string[]) => names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
 
+/** A practice's own reminder time (PRAC-24, NOTIF-19), or null when it has none or it isn't an allowed time. */
+export const practiceRemindTime = (c: Pick<Category, 'remind'>) => (c.remind && REMINDER_TIMES.includes(c.remind) ? c.remind : null);
+
+/** What a practice reminder says (NOTIF-19): practices set for the same time share one. */
+export function practiceReminderText(due: Pick<Category, 'name'>[]): { title: string; body: string } {
+  return { title: `Time for ${list(due.map(c => c.name))}`, body: 'Even 5 minutes counts.' };
+}
+
 /** What the reminder says, from the practices still due today. Gentle: no minutes owed, no streak warnings. */
 export function reminderText(left: Pick<Category, 'name'>[]): { title: string; body: string } {
   const names = left.map(c => c.name);

@@ -31,14 +31,14 @@ Summary of coverage at the time of writing:
 | 7. Focus timer | 22 | 19 | 0 | 3 |
 | 8. History | 9 | 9 | 0 | 0 |
 | 9. Insights | 24 | 24 | 0 | 0 |
-| 10. Practices (Setup) | 23 | 23 | 0 | 0 |
+| 10. Practices (Setup) | 24 | 23 | 1 | 0 |
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
 | 12. Sync and storage | 17 | 15 | 0 | 2 |
 | 13. App shell, PWA and platform | 37 | 32 | 0 | 5 |
 | 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
-| 16. Notifications | 17 | 17 | 0 | 0 |
-| **Total** | **322** | **309** | **0** | **13** |
+| 16. Notifications | 19 | 19 | 0 | 0 |
+| **Total** | **325** | **311** | **1** | **13** |
 
 ---
 
@@ -326,6 +326,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | PRAC-21 | Archived practice in Insights | Kept in history charts, left out of practice health | E2E `setup.spec.ts` |
 | PRAC-22 | Reorder | Move up and Move down beside each practice in Setup; the new order shows on Today, the log sheet and Setup, and is saved | E2E `setup.spec.ts`, Unit `categories.test.ts` |
 | PRAC-23 | Reorder at the ends | The first practice can't move up and the last can't move down | E2E `setup.spec.ts`, Unit `categories.test.ts` |
+| PRAC-24 | Practice reminder time | The practice sheet has "Remind me": Off (the default) or a time from 7 am to 9:45 pm in 15-minute steps; saved with the practice and the device's time zone. Setup's list shows "Reminder 10 am" for a practice that has one. Where this device can't get notifications, the sheet says why | Gap |
 
 ## 11. Settings and data (Setup)
 
@@ -486,6 +487,8 @@ See NOTIFICATIONS.md for the plan. Emails and usage statistics are on by default
 | NOTIF-12 | Reminders on by default | The 7 pm reminder (and the 8 pm log check, NOTIF-18) is on in every account from sign-up, and Setup › Notifications and privacy shows it on; switching it off there is the only way to stop it. A phone shows nothing until it allows notifications, and browsers let a page ask only from a tap, so the first tap anywhere in the app (the first-run screen included) asks the phone, once per open, with no card or screen of TikTym's own; Allow saves the device with the reminder at 7 pm. Not asked when the reminder is switched off, or once the phone has answered. Refused: says where to allow them, and Setup explains. On an iPhone outside the home-screen app, Setup explains that reminders need TikTym on the home screen | E2E `reminders.spec.ts`, Emulator `tests-emulator/rules.test.ts` |
 | NOTIF-13 | App badge | The home-screen icon shows how many practices are still due today (a practice logged partly still counts; never minutes), set while the app is open, cleared when the day is clear, and refreshed by each reminder. "Show count on app icon" in Setup, on by default, shown only where the device supports badges (iPhone home screen, installed computer apps; not Android) | E2E `badge.spec.ts`, Unit `push.test.ts` (on a real iPhone: Manual) |
 | NOTIF-14 | Devices go with the account | Deleting the account removes its saved notification devices along with everything else | Emulator `tests-emulator/store.test.ts` |
+| NOTIF-19 | Practice reminder | A practice with its own reminder time (PRAC-24) gets a push at that time, in the account's time zone, on every device that allowed notifications: "Time for Reading" / "Even 5 minutes counts." Only if that practice is still due today (not done, not a rest day, not archived); once a day per practice; never after 10 pm. Practices set for the same time share one notification ("Time for Reading and Exercise"). Independent of the daily reminder and the evening log check | Unit `push.test.ts` (sending: Manual) |
+| NOTIF-20 | Practice reminders stay in step | The server's reminder record keeps the UTC slots of the account's practice reminders, updated when a practice, the settings or the devices change, and on the day daylight saving moves them; the 15-minute job finds accounts by slot. No device, or no practice with a reminder: no slots | Unit `push.test.ts` (sending: Manual) |
 
 ---
 

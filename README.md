@@ -185,7 +185,7 @@ gcloud auth application-default login
 npm run admin:grant -- you@example.com            # --revoke to remove, --project to pick another project
 ```
 
-The console reads and sends only through Cloud Functions that check the claim (`functions/src/admin.ts`); `adminStats/` and `adminLog/` are closed to every app.
+Run it locally with `npm run admin:dev` (port 5174, the real project from `.env.local`); deploy with `firebase deploy --only hosting:admin`, which builds `dist-admin/` first. The console reads and sends only through Cloud Functions that check the claim (`functions/src/admin.ts`); `adminStats/` and `adminLog/` are closed to every app.
 
 ## Pending work
 

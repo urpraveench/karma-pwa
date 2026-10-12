@@ -1,0 +1,36 @@
+/* The admin console (admin.tiktym.com): TikTym's colours, system fonts, built for a laptop and fine on a phone. */
+:root{
+  --bg:#EDF0EA;--surface:#F8FAF6;--surface-2:#E2E8E0;--ink:#16302E;--ink-2:#55685F;--line:#CBD5CA;
+  --due:#B42318;--gold:#C98E0E;--ok:#24724F;
+  color-scheme:light;box-sizing:border-box;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1B19;--surface:#162624;--surface-2:#1F322F;--ink:#E4ECE7;--ink-2:#93A89F;--line:#2C433F;
+  --due:#F07A68;--gold:#E6B23C;--ok:#5BC08F;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1B19;--surface:#162624;--surface-2:#1F322F;--ink:#E4ECE7;--ink-2:#93A89F;--line:#2C433F;
+  --due:#F07A68;--gold:#E6B23C;--ok:#5BC08F;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2.5px solid var(--gold);outline-offset:2px;border-radius:6px}
+h1,h2,h3{margin:0;line-height:1.2;letter-spacing:-.01em}
+h1{font-size:28px;font-weight:800}
+h2{font-size:20px;font-weight:700;margin-bottom:8px}
+.muted{color:var(--ink-2)}
+.error{color:var(--due)}
+
+.center{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px 16px;text-align:center}
+.center p{margin:0}
+
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 18px;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.primary:hover{opacity:.9}
+.btn.small{padding:6px 12px;font-size:14px}
+
+.shell{min-height:100vh}
+.bar{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface)}
+.bar b{font-size:16px}
+.bar .who{margin-left:auto;color:var(--ink-2);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.page{max-width:1080px;margin:0 auto;padding:24px 16px 64px}

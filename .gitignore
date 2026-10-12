@@ -13,3 +13,5 @@ firestore-debug.log
 dist-e2e-google
 dist-clips
 dist-e2e-ga
+dist-admin
+dist-e2e-admin

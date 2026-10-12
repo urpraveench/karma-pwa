@@ -10,6 +10,9 @@
         ],
         "site": [
           "tiktym-site"
+        ],
+        "admin": [
+          "tiktym-admin"
         ]
       }
     }

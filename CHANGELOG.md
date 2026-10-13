@@ -15,6 +15,7 @@ Format, newest first:
 
 ## Coming next
 
+- **Fewer questions after logging.** "How did it feel?" now comes up only after a focus timer session, not every time you log, so the message after a quick tap is short and stays out of the way.
 - **One tap logs today, not your backlog.** The coloured button on a practice now logs just today's minutes, so doing your 60 minutes of exercise logs 60, even with minutes carried over from earlier days. Carried-over minutes get their own red button once today's part is done, so you clear them only when you've really done them. Each practice also shows today's target on its own: "0 of 60, 120 carried".
 - **Evening check and practice reminders on iPhone.** If TikTym is on your iPhone's home screen, the 8 pm "Did you log what you did today?" check and your practice reminders now arrive, as the daily reminder already did.
 

@@ -184,7 +184,7 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 | LOG-03 | Undo from the toast | Removes the entry and restores the totals; toast "Undone" | E2E `today.spec.ts` |
 | LOG-04 | Clear the last pending practice | Full-screen "All clear" celebration with the streak; tap anywhere to close, or Undo last entry | E2E `today.spec.ts`, `today-states.spec.ts` |
 | LOG-05 | Streak milestones in the celebration | Extra line at 7, 21, 30, 50, 100 and 108 days; on a clear day that earns a shield, "You earned a shield: it keeps your streak if you miss a day." instead | E2E `today-states.spec.ts` |
-| LOG-31 | Say how it felt | After a single entry, the toast also offers 😞 😐 🙂 ("Felt low", "Felt okay", "Felt good"); a tap saves it on the entry (synced and in backups), and the toast says "Noted" | E2E `today.spec.ts` |
+| LOG-31 | Say how it felt | After a focus timer session is logged, the toast also offers 😞 😐 🙂 ("Felt low", "Felt okay", "Felt good"); a tap saves it on the entry (synced and in backups), and the toast says "Noted". Quick taps, the log sheet and voice don't ask | E2E `timer.spec.ts`, `today.spec.ts` |
 | LOG-32 | Clear carried-over minutes | With today's target done and backlog left, the button turns red and reads "+N carried"; a tap logs the backlog (toast "Name done for today"). Tapping the name logs any other amount | E2E `today-states.spec.ts` |
 
 ### Log sheet

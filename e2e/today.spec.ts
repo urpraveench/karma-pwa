@@ -67,13 +67,9 @@ test.describe('Today', () => {
     await expect(page.locator('.sheet')).toHaveCount(0);
   });
 
-  test('one tap says how a session felt, saved with the entry (LOG-31)', async ({ page }) => {
+  test('a quick tap does not ask how it felt (LOG-31)', async ({ page }) => {
     await page.locator('.cat').nth(0).locator('.qbtn').click();
     await expect(toast(page)).toHaveText('Exercise done for today');
-    await page.getByRole('button', { name: 'Felt good' }).click();
-    await expect(toast(page)).toHaveText('Noted');
-    const feels = await page.evaluate(() => Object.keys(localStorage).filter(k => k.startsWith('tiktym:data:'))
-      .flatMap(k => JSON.parse(localStorage.getItem(k)!).logs.map((l: { feel?: number }) => l.feel)));
-    expect(feels).toEqual([3]);
+    await expect(page.getByRole('group', { name: 'How did it feel?' })).toHaveCount(0);
   });
 });

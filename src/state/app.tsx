@@ -192,7 +192,7 @@ function useAppState() {
     }
     const b = before.per[l.catId].today, a = after.per[l.catId].today, cleared = b.end > 0 && a.end === 0;
     const todayDone = l.date === T0 && dueLeft(b) > 0 && dueLeft(a) === 0 && a.end > 0;
-    toast(cleared ? `${cat.name} done for today` : todayDone ? `Today's ${cat.name} done, ${carriedLeft(a)} carried left` : `+${l.minutes} ${cat.name}${l.date !== T0 ? `, ${dayLabel(l.date, T0)}` : ''}`, 6000, undo, feel => setFeel(l.id, feel));
+    toast(cleared ? `${cat.name} done for today` : todayDone ? `Today's ${cat.name} done, ${carriedLeft(a)} carried left` : `+${l.minutes} ${cat.name}${l.date !== T0 ? `, ${dayLabel(l.date, T0)}` : ''}`, 6000, undo, method === 'timer' ? feel => setFeel(l.id, feel) : undefined); // only a timer session asks how it felt (LOG-31)
   }, [store, toast, celebrate, setData, setFeel]);
 
   /** `method` says how the minutes were logged, for anonymous analytics (with consent). */

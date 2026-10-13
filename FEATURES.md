@@ -37,9 +37,9 @@ Summary of coverage at the time of writing:
 | 13. App shell, PWA and platform | 37 | 32 | 0 | 5 |
 | 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
-| 16. Notifications | 19 | 19 | 0 | 0 |
+| 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| **Total** | **339** | **326** | **0** | **13** |
+| **Total** | **340** | **327** | **0** | **13** |
 
 ---
 
@@ -490,6 +490,7 @@ See NOTIFICATIONS.md for the plan. Emails and usage statistics are on by default
 | NOTIF-14 | Devices go with the account | Deleting the account removes its saved notification devices along with everything else | Emulator `tests-emulator/store.test.ts` |
 | NOTIF-19 | Practice reminder | A practice with its own reminder time (PRAC-24) gets a push at that time, in the account's time zone, on every device that allowed notifications: "Time for Reading" / "Even 5 minutes counts." Only if that practice is still due today (not done, not a rest day, not archived); once a day per practice; never after 10 pm. Practices set for the same time share one notification ("Time for Reading and Exercise"). Independent of the daily reminder and the evening log check | Unit `push.test.ts` (sending: Manual) |
 | NOTIF-20 | Practice reminders stay in step | The server's reminder record keeps the UTC slots of the account's practice reminders, updated when a practice, the settings or the devices change, and on the day daylight saving moves them; the 15-minute job finds accounts by slot. No device, or no practice with a reminder: no slots | Unit `push.test.ts` (sending: Manual) |
+| NOTIF-21 | Pushes accepted on every phone | Every push goes out with a topic every push service accepts, Apple's included (only URL-safe letters, at most 32, padded to a length divisible by 4), so the daily reminder, the evening check, practice reminders and admin pushes all reach iPhones. A push the service refuses (4xx other than too-many-requests) is logged with the service's reason and not retried; network errors, rate limits and server errors are retried | Unit `push.test.ts` (on a real iPhone: Manual) |
 
 ## 17. Admin console
 

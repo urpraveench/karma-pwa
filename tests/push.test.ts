@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { deviceGone, nudgeCheck, nudgePayload, nudgeSlotFor, practiceCheck, practicePayload, practiceSlotsFor, reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from '../functions/src/push';
+import { deviceGone, nudgeCheck, nudgePayload, nudgeSlotFor, practiceCheck, practicePayload, practiceSlotsFor, practiceTag, reminderCheck, reminderPayload, reminderTarget, retryablePush, sendToDevices, webPushTopic, type ReminderDoc } from '../functions/src/push';
 import { badgeCount, nearestTime, practiceRemindTime, REMINDER_TIMES, reminderOn, reminderText, reminderTime, slotAt, timeLabel, utcSlot } from '../src/lib/reminders';
 
 describe('when the daily reminder goes (NOTIF-09)', () => {
@@ -205,5 +205,29 @@ describe("a practice's own reminder (NOTIF-19, NOTIF-20)", () => {
     expect(src).toContain("where('practiceSlots', 'array-contains', slot)");
     expect(src).toContain("queue.enqueue({ uid: d.id, kind: 'practice' })");
     expect(src).toContain("document: 'users/{uid}/categories/{id}'");
+  });
+});
+
+describe('pushes every service accepts (NOTIF-21)', () => {
+  it('pads each topic TikTym sends to a length Apple can decode, keeping only URL-safe letters', () => {
+    for (const name of ['daily-reminder', 'log-nudge', practiceTag('09:30'), practiceTag('21:45'), 'bcAbCdEfGhIjKlMnOpQrSt']) {
+      const t = webPushTopic(name);
+      expect(t).toMatch(/^[A-Za-z0-9_-]{4,32}$/);
+      expect(t.length % 4).toBe(0);
+      expect(t.startsWith(name)).toBe(true);
+    }
+    expect(webPushTopic('log-nudge')).toBe('log-nudge000');
+    expect(webPushTopic('practice-0930')).toBe('practice-0930000');
+    expect(webPushTopic('daily-reminder')).toBe('daily-reminder00');
+    expect(webPushTopic('a b:c/d')).toBe('abcd');
+    expect(webPushTopic('x'.repeat(40))).toHaveLength(32);
+  });
+
+  it('retries only what may work next time: no answer, too many requests, server errors; never a refused request', () => {
+    expect(retryablePush(new Error('socket hang up'))).toBe(true);
+    expect(retryablePush({ statusCode: 429 })).toBe(true);
+    expect(retryablePush({ statusCode: 503 })).toBe(true);
+    expect(retryablePush({ statusCode: 400, body: '{"reason":"BadWebPushTopic"}' })).toBe(false);
+    expect(retryablePush({ statusCode: 403 })).toBe(false);
   });
 });

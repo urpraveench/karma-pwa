@@ -111,6 +111,23 @@ export function reminderPayload(left: Pick<Category, 'name'>[], badge: boolean):
 }
 
 /**
+ * The Topic header for a push, in a form every push service accepts (NOTIF-21): only URL-safe Base64 letters, at most
+ * 32, padded with zeros to a length divisible by 4. Apple's service decodes the topic as Base64 and refuses lengths it
+ * can't decode (`BadWebPushTopic`), such as 9 ("log-nudge") or 13 ("practice-0930").
+ */
+export function webPushTopic(name: string): string {
+  let t = name.replace(/[^A-Za-z0-9_-]/g, '').slice(0, 32);
+  while (t.length % 4) t += '0';
+  return t;
+}
+
+/** Whether a failed push may work if tried again: no answer, too many requests, or a server error. A refused request (4xx) never will (NOTIF-21). */
+export function retryablePush(e: unknown): boolean {
+  const code = (e as { statusCode?: unknown })?.statusCode;
+  return typeof code !== 'number' || code === 429 || code >= 500;
+}
+
+/**
  * Sends to each device in turn. A device that's gone is removed; any other failure is kept, so the caller can let the
  * queue retry when nothing got through (NOTIF-11).
  */

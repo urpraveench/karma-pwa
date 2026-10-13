@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { deviceGone, nudgeCheck, nudgePayload, nudgeSlotFor, practiceCheck, practicePayload, practiceSlotsFor, practiceTag, reminderCheck, reminderPayload, reminderTarget, retryablePush, sendToDevices, webPushTopic, type ReminderDoc } from '../functions/src/push';
+import { deviceGone, FCM_CHANNEL, fcmFailure, fcmMessage, nudgeCheck, nudgePayload, nudgeSlotFor, practiceCheck, practicePayload, practiceSlotsFor, practiceTag, reminderCheck, reminderPayload, reminderTarget, retryablePush, sendToDevices, webPushTopic, type ReminderDoc } from '../functions/src/push';
 import { badgeCount, nearestTime, practiceRemindTime, REMINDER_TIMES, reminderOn, reminderText, reminderTime, slotAt, timeLabel, utcSlot } from '../src/lib/reminders';
 
 describe('when the daily reminder goes (NOTIF-09)', () => {
@@ -229,5 +229,42 @@ describe('pushes every service accepts (NOTIF-21)', () => {
     expect(retryablePush({ statusCode: 503 })).toBe(true);
     expect(retryablePush({ statusCode: 400, body: '{"reason":"BadWebPushTopic"}' })).toBe(false);
     expect(retryablePush({ statusCode: 403 })).toBe(false);
+  });
+});
+
+describe('reminders reach the Android app through FCM (AND-08)', () => {
+  it('sends the same notification as web push, in the Reminders channel with the status-bar ring (AND-08)', () => {
+    const m = fcmMessage('tok', reminderPayload([{ name: 'Reading' }], true), 'daily-reminder');
+    const web = JSON.parse(reminderPayload([{ name: 'Reading' }], true));
+    expect(m.token).toBe('tok');
+    expect(m.notification).toEqual({ title: web.title, body: web.body });
+    expect(m.data).toEqual({ url: '/' });
+    expect(m.android.notification).toEqual({ tag: 'daily-reminder', icon: 'ic_stat_tiktym', color: '#16302E', channelId: FCM_CHANNEL });
+    expect(m.android.ttl).toBe(3 * 3600 * 1000);
+    expect(m.android.collapseKey).toBe(webPushTopic('daily-reminder'));
+    expect(existsSync('android/app/src/main/res/drawable/ic_stat_tiktym.xml')).toBe(true);
+  });
+
+  it('keeps an admin push\'s link, so a tap opens that screen (AND-08)', () => {
+    const payload = JSON.stringify({ title: 'New', body: 'Insights got better', badge: null, url: '/?tab=insights', tag: 'bc-x' });
+    expect(fcmMessage('tok', payload, 'bcx').data).toEqual({ url: '/?tab=insights' });
+  });
+
+  it('a token FCM reports gone is removed; a busy FCM is retried; any other refusal is not (AND-08)', async () => {
+    const gone = fcmFailure({ code: 'messaging/registration-token-not-registered', message: 'gone' });
+    expect(deviceGone((gone as { statusCode: number }).statusCode)).toBe(true);
+    expect(deviceGone((fcmFailure({ code: 'messaging/invalid-registration-token' }) as { statusCode: number }).statusCode)).toBe(true);
+    expect(retryablePush(fcmFailure({ code: 'messaging/server-unavailable' }))).toBe(true);
+    expect(retryablePush(fcmFailure({ code: 'messaging/message-rate-exceeded' }))).toBe(true);
+    const refused = fcmFailure({ code: 'messaging/invalid-argument', message: 'bad' });
+    expect(retryablePush(refused)).toBe(false);
+    expect((refused as { body: string }).body).toBe('messaging/invalid-argument');
+    const network = new Error('socket hang up');
+    expect(fcmFailure(network)).toBe(network);
+
+    const removed: string[] = [];
+    const r = await sendToDevices(['app', 'old-app'], async d => { if (d === 'old-app') throw gone; }, async d => { removed.push(d); });
+    expect(r).toEqual({ sent: 1, removed: 1, failed: null });
+    expect(removed).toEqual(['old-app']);
   });
 });

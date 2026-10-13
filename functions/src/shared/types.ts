@@ -50,10 +50,21 @@ export interface Settings {
   logNudge?: boolean;
 }
 
-/** A device that allowed notifications, saved at users/{uid}/devices/{id} (the id is a hash of the endpoint). */
-export interface PushDevice {
+/**
+ * A device that allowed notifications, saved at users/{uid}/devices/{id}: a browser's web-push subscription (the id is a
+ * hash of the endpoint), or the Android app's FCM token (the id is a hash of the token) (AND-05).
+ */
+export type PushDevice = WebPushDevice | FcmDevice;
+
+export interface WebPushDevice {
   endpoint: string;
   keys: { p256dh: string; auth: string };
+  createdAt: number;
+}
+
+export interface FcmDevice {
+  fcm: string;
+  platform: 'android';
   createdAt: number;
 }
 

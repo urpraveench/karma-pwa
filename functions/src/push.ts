@@ -142,3 +142,39 @@ export async function sendToDevices<D>(devices: D[], send: (d: D) => Promise<unk
   }
   return { sent, removed, failed };
 }
+
+/**
+ * The same notification for the Android app, as an FCM message (AND-08): in the app's "Reminders" channel, with the
+ * white TikTym ring in the status bar (android/app/src/main/res/drawable/ic_stat_tiktym.xml), held for up to 3 hours
+ * like web push, and replacing an earlier one with the same tag. A tap opens the app at `url` (src/state/push.ts).
+ */
+export function fcmMessage(token: string, payload: string, topic: string) {
+  const d = JSON.parse(payload) as { title?: string; body?: string; url?: string; tag?: string };
+  return {
+    token,
+    notification: { title: d.title || 'TikTym', body: d.body || '' },
+    data: { url: d.url || '/' },
+    android: {
+      ttl: 3 * 3600 * 1000, priority: 'normal' as const, collapseKey: webPushTopic(topic),
+      notification: { tag: d.tag || 'tiktym', icon: 'ic_stat_tiktym', color: '#16302E', channelId: FCM_CHANNEL },
+    },
+  };
+}
+
+/** The Android app's notification channel; the app creates it (src/state/push.ts), so its name shows in Android's settings. */
+export const FCM_CHANNEL = 'reminders';
+
+const FCM_GONE = ['messaging/registration-token-not-registered', 'messaging/invalid-registration-token'];
+const FCM_RETRY = ['messaging/internal-error', 'messaging/server-unavailable', 'messaging/unknown-error', 'messaging/message-rate-exceeded', 'messaging/quota-exceeded'];
+
+/**
+ * An FCM failure in web push's terms, so sendToDevices and retryablePush treat both alike (AND-08): a token that's gone
+ * becomes 410 (removed), a busy or failing FCM 503 (retried), any other refusal 400 (logged, not retried). An error
+ * with no FCM code (no answer at all) passes through unchanged, so it's retried.
+ */
+export function fcmFailure(e: unknown): unknown {
+  const code = (e as { code?: unknown })?.code;
+  if (typeof code !== 'string' || !code.startsWith('messaging/')) return e;
+  const statusCode = FCM_GONE.includes(code) ? 410 : FCM_RETRY.includes(code) ? 503 : 400;
+  return Object.assign(new Error((e as Error).message || code), { statusCode, body: code });
+}

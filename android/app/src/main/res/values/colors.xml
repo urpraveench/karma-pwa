@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TikTym's dark green, for notification accents (AND-08). -->
+    <color name="tiktym_notification">#16302E</color>
+</resources>

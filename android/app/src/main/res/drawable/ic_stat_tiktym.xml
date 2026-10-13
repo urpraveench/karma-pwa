@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TikTym ring for the status bar (AND-08), from public/brand/svg/tiktym-mark-white.svg. Android uses only its shape. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp" android:viewportWidth="112" android:viewportHeight="112">
+    <path android:fillColor="#FFFFFFFF" android:pathData="M60.86,18.95a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M68.89,21.76a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M76.09,26.29a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M82.11,32.31a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M86.64,39.51a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M89.45,47.54a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M90.40,56.00a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M89.45,64.46a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M86.64,72.49a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M82.11,79.69a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M76.09,85.71a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M68.89,90.24a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M60.86,93.05a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M52.40,94.00a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M43.94,93.05a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M35.91,90.24a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M28.71,85.71a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M22.69,79.69a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:fillAlpha="0.32" android:pathData="M18.16,72.49a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:fillAlpha="0.32" android:pathData="M15.35,64.46a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:fillAlpha="0.32" android:pathData="M14.40,56.00a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:fillAlpha="0.32" android:pathData="M15.35,47.54a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:fillAlpha="0.32" android:pathData="M18.16,39.51a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:fillAlpha="0.32" android:pathData="M22.69,32.31a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:fillAlpha="0.32" android:pathData="M28.71,26.29a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:fillAlpha="0.32" android:pathData="M35.91,21.76a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:fillAlpha="0.32" android:pathData="M43.94,18.95a3.6,3.6 0 1,0 7.2,0a3.6,3.6 0 1,0 -7.2,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M50.00,18.00a6,6 0 1,0 12,0a6,6 0 1,0 -12,0"/>
+</vector>

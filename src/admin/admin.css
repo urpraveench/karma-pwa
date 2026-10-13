@@ -116,3 +116,23 @@ h2{font-size:20px;font-weight:700;margin-bottom:8px}
 .history .sending{font-weight:600}
 .tag{font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-2)}
 .tag.email,.tag.push{background:var(--ink);color:var(--bg)}
+
+/* costs and limits (ADMIN-13) */
+.costs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:12px;align-items:start}
+.panel{padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--surface);display:flex;flex-direction:column;gap:8px}
+.panel h3{font-size:16px}
+.panel a{color:var(--ink);font-weight:600}
+.panel table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+.panel td{padding:6px 0;border-bottom:1px solid var(--line)}
+.panel td:last-child{text-align:right}
+.total{font-size:28px;font-weight:800}
+.limits{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.limits li{display:flex;flex-direction:column;gap:4px}
+.limits .line{display:flex;justify-content:space-between;gap:8px}
+.level{font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;border:1px solid var(--line)}
+.level.ok::before{content:"✓ "}.level.amber::before,.level.red::before{content:"! "}
+.level.amber{border-color:var(--gold)}.level.red{border-color:var(--due);color:var(--due)}
+.meter{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.meter span{display:block;height:100%;border-radius:4px;background:var(--ok)}
+.meter span.amber{background:var(--gold)}.meter span.red{background:var(--due)}
+code{font-size:13px;background:var(--surface-2);padding:1px 5px;border-radius:5px}

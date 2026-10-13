@@ -1,9 +1,9 @@
 // TikTym's Cloud Functions (asia-south1, next to the database): the welcome, one-tap-away, first-minute, weekly recap and comeback
 // emails, the unsubscribe page, daily push reminders, and voice logging's AI call. What each email says, and who gets it, lives in mail.ts (unit-tested); this file reads,
 // sends and records. NOTIFICATIONS.md has the plan.
-import { getApp, initializeApp } from 'firebase-admin/app';
+import { applicationDefault, getApp, initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
-import { FieldValue, getFirestore, Timestamp } from 'firebase-admin/firestore';
+import { FieldPath, FieldValue, getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { getFunctions } from 'firebase-admin/functions';
 import { logger } from 'firebase-functions';
 import { defineSecret } from 'firebase-functions/params';
@@ -14,6 +14,7 @@ import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { onTaskDispatched } from 'firebase-functions/v2/tasks';
 import { region as regionV1 } from 'firebase-functions/v1';
 import { adminCheck, type AdminCaller } from './admin.js';
+import { billingFrom, billingQuery, level, LIMITS, periodStart, QUOTA_TZ, sumSeries, type LimitDef } from './costs.js';
 import { historyEntry, type HistoryEntry } from './adminLog.js';
 import { broadcastPushPayload, pushActiveFrom, pushDelaySeconds, readPushDraft, type PushAudience, type PushDraft } from './pushBroadcast.js';
 import { audienceRange, broadcastCheck, broadcastEmail, readDraft, type Audience, type Draft, type Recipient } from './broadcast.js';
@@ -683,4 +684,62 @@ export const adminHistory = onCall(async req => {
   requireAdmin(req.auth);
   const snap = await db.collection('adminLog').orderBy('createdAt', 'desc').limit(50).get();
   return { entries: snap.docs.map(d => historyEntry(d.id, d.data())).filter((e): e is HistoryEntry => !!e) };
+});
+
+const projectId = () => process.env.GCLOUD_PROJECT || getApp().options.projectId || 'tiktym';
+
+/** Calls a Google Cloud REST API as the functions' service account. */
+async function googleApi<T>(url: string, body?: unknown): Promise<T> {
+  const { access_token } = await applicationDefault().getAccessToken();
+  const res = await fetch(url, {
+    method: body ? 'POST' : 'GET',
+    headers: { Authorization: `Bearer ${access_token}`, ...(body ? { 'Content-Type': 'application/json' } : {}) },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  });
+  const json = await res.json().catch(() => ({})) as { error?: { message?: string } };
+  if (!res.ok) throw new Error(json.error?.message || `HTTP ${res.status}`);
+  return json as T;
+}
+
+/** The sum of a metric from `start` to now, trying each metric type in order until one has data (0 if none do). */
+async function metricTotal(types: string[], start: Date): Promise<number> {
+  for (const type of types) {
+    const q = new URLSearchParams({
+      filter: `metric.type = "${type}"`, 'interval.startTime': start.toISOString(), 'interval.endTime': new Date().toISOString(),
+      'aggregation.alignmentPeriod': `${Math.max(60, Math.ceil((Date.now() - start.getTime()) / 1000))}s`,
+      'aggregation.perSeriesAligner': 'ALIGN_SUM', 'aggregation.crossSeriesReducer': 'REDUCE_SUM',
+    });
+    const sum = sumSeries(await googleApi(`https://monitoring.googleapis.com/v3/projects/${projectId()}/timeSeries?${q}`));
+    if (sum !== null) return sum;
+  }
+  return 0;
+}
+
+/** Emails TikTym sent in the India day or month so far, from adminStats emails counts. */
+async function emailsSent(period: 'day' | 'month'): Promise<number> {
+  const today = indiaToday(new Date());
+  const docs = period === 'day'
+    ? [await db.doc(`adminStats/${today}`).get()]
+    : (await db.collection('adminStats').where(FieldPath.documentId(), '>=', `${today.slice(0, 8)}01`).where(FieldPath.documentId(), '<=', today).get()).docs;
+  return docs.reduce((s, d) => s + Object.values((d.data()?.emails ?? {}) as Record<string, number>).reduce((a, b) => a + (Number(b) || 0), 0), 0);
+}
+
+/** Costs and limits (ADMIN-13): each part fails on its own, so one missing permission never blanks the page. */
+export const adminCosts = onCall({ timeoutSeconds: 60 }, async req => {
+  requireAdmin(req.auth);
+  const project = projectId(), now = new Date();
+  const billing = googleApi<{ rows?: { f: { v: string | null }[] }[]; jobComplete?: boolean }>(
+    `https://bigquery.googleapis.com/bigquery/v2/projects/${project}/queries`, { query: billingQuery(project), useLegacySql: false, timeoutMs: 20_000 },
+  ).then(r => (r.jobComplete === false ? { status: 'unavailable' as const, reason: 'The billing query is still running. Refresh in a minute.' } : { status: 'ok' as const, ...billingFrom(r) }),
+    (e: Error) => ({ status: 'unavailable' as const, reason: e.message }));
+  const limits = Promise.all(LIMITS.map(async (l: LimitDef) => {
+    const base = { id: l.id, label: l.label, limit: l.limit, unit: l.unit, link: l.link.replace('{project}', project) };
+    try {
+      const used = 'emails' in l.source ? await emailsSent(l.period) : await metricTotal(l.source.metrics, periodStart(now, l.period, QUOTA_TZ));
+      return { ...base, used, level: level(used, l.limit) };
+    } catch (e) {
+      return { ...base, used: null, level: null, error: (e as Error).message };
+    }
+  }));
+  return { billing: await billing, limits: await limits };
 });

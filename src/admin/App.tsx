@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { adminView, type AdminView } from './access';
 import { auth } from './firebase';
+import { CostsPage } from './CostsPage';
 import { EmailPage } from './EmailPage';
 import { HistoryPage } from './HistoryPage';
 import { MetricsPage } from './MetricsPage';
 import { PushPage } from './PushPage';
 
 /** The console's pages, by the address's #fragment, so a reload stays put. */
-const PAGES = [{ id: 'metrics', label: 'Metrics' }, { id: 'email', label: 'Email' }, { id: 'push', label: 'Push' }, { id: 'history', label: 'History' }] as const;
+const PAGES = [{ id: 'metrics', label: 'Metrics' }, { id: 'email', label: 'Email' }, { id: 'push', label: 'Push' }, { id: 'history', label: 'History' }, { id: 'costs', label: 'Costs' }] as const;
 type PageId = typeof PAGES[number]['id'];
 const pageFromHash = (): PageId => PAGES.find(p => `#${p.id}` === location.hash)?.id ?? 'metrics';
 
@@ -71,6 +72,7 @@ export function App() {
         {page === 'email' && <EmailPage />}
         {page === 'push' && <PushPage />}
         {page === 'history' && <HistoryPage />}
+        {page === 'costs' && <CostsPage />}
       </main>
     </div>
   );

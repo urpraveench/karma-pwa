@@ -31,6 +31,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] After the admin totals are deployed: the next morning, `adminStats/<yesterday>` in the Firestore console has accounts, sign-ups and active loggers that look right against Authentication, and `emails` counts any emails sent; `firebase functions:log --only adminStatsNightly` says "admin totals saved" (ADMIN-04)
 - [ ] After the admin console is deployed: Email › Send a test to me arrives in the TikTym template with a working unsubscribe link; then send a real broadcast to "Active in the last 7 days" and check `adminLog/<id>` counts it as sent, a second account with News off is counted under `skippedWhy.off`, and nobody gets it twice (ADMIN-07 to ADMIN-09)
 - [ ] After the admin console is deployed: Push › Send a test to my devices arrives on your phone and opens TikTym at the chosen path; a broadcast sent after 10 pm India time arrives at about 10 am, once, and `adminLog/<id>` shows it as held, then sent (ADMIN-10, ADMIN-11)
+- [ ] After the admin console is deployed: Costs shows this month's spend (once the billing export has data) and a number for every limit; a limit saying "Couldn't read" means a missing permission (grant the functions' service account Monitoring Viewer, BigQuery Data Viewer and BigQuery Job User) or a metric name that differs on the real project (fix it in `functions/src/costs.ts`). Check Firestore reads roughly match the Firebase console's Usage tab (ADMIN-13)
 - [ ] **You:** remove the last line of the LinkedIn page description ("TikTym is built by Pramal IT Services Private Limited.") in LinkedIn › Edit page
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
@@ -158,7 +159,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Decided 13 October 2026: a separate admin app in this repo and Firebase project, for Praveen only. Access is an `admin` custom claim that only a server script can set; every action runs in a Cloud Function that checks it, so `firestore.rules` stay closed to apps. Every send is recorded in `adminLog/`. FEATURES.md › 17. Admin console.
 
-- [ ] **Claude:** costs and limits: this month's Google Cloud spend by service from the billing export, and how close each free or paid limit is (Resend, App Check, Firestore reads, Hosting), with links to each console (ADMIN-13)
 - [ ] **Claude:** function health: last 24 hours of runs and errors per function, from Cloud Monitoring (ADMIN-14)
 - [ ] **You:** create the admin hosting site (`firebase hosting:sites:create tiktym-admin`; `.firebaserc` already maps the `admin` target to it), connect admin.tiktym.com in the Firebase console with the DNS records in GoDaddy, add admin.tiktym.com to Authentication › Settings › Authorized domains, and to the reCAPTCHA Enterprise key's domains (App Check)
 - [ ] **You:** run `npm run admin:grant -- <your Google email>` (signed in with `gcloud auth application-default login`)
@@ -177,6 +177,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** costs and limits: Costs page with this month's Google Cloud spend by service (BigQuery billing export) and use against each limit (Resend from TikTym's counts; App Check, Firestore reads and writes, Hosting transfer from Cloud Monitoring), each part failing on its own; the new `adminCosts` function (ADMIN-13). Not deployed yet, 13 October 2026
 - [x] **Claude:** send history: History page with the newest 50 sends and tests and their progress, from the new `adminHistory` function (ADMIN-12). Not deployed yet, 13 October 2026
 - [x] **Claude:** push composer: Push page (audience, title, text, link in the app, notification mock), test on my devices, count then send with a second tap; `adminPushCount`, `adminPushTest`, `adminPushSend` and the `broadcastPushSend` queue (held until 10 am where it's night, once per person) (ADMIN-10, ADMIN-11). Not deployed yet, 13 October 2026
 - [x] **Claude:** email composer: Email page (audience, subject, heading, text, optional button), preview in the TikTym template with "up to N people", send a test to me, send with a second tap; `adminEmailPreview`, `adminEmailTest`, `adminEmailSend` and the `broadcastSend` queue (News on only, once per person, not on a day already emailed; outcomes counted in `adminLog/`) (ADMIN-07, ADMIN-08, ADMIN-09). Not deployed yet, 13 October 2026

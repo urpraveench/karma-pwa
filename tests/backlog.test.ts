@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { activeCats, calc, dueOn, showUpStreak, usualHour } from '../src/lib/backlog';
+import { activeCats, calc, carriedLeft, dueLeft, dueOn, showUpStreak, usualHour } from '../src/lib/backlog';
 import type { AppData, Category, Log, Settings } from '../src/lib/types';
 
 const EVERY_DAY = [0, 1, 2, 3, 4, 5, 6];
@@ -98,9 +98,24 @@ describe('calc', () => {
     expect(after.today.end).toBe(0);
   });
 
-  it('totals carried minutes still to work off today', () => {
+  it("minutes logged today count toward today's target before the backlog (CALC-13)", () => {
     const c = calc(data([cat()], [log('2026-10-01', 40), log('2026-10-02', 30)]), '2026-10-02');
-    expect(c.totals.carryLeft).toBe(30); // 60 carried in, 30 logged against it
+    expect(c.totals.carryLeft).toBe(60); // 60 carried in; the 30 logged go to today's 100
+    expect(carriedLeft(c.per.c.today)).toBe(60);
+    const more = calc(data([cat()], [log('2026-10-01', 40), log('2026-10-02', 130)]), '2026-10-02');
+    expect(carriedLeft(more.per.c.today)).toBe(30); // today's 100 done, 30 of the 60 carried worked off
+  });
+
+  it("today's own minutes left exclude the backlog (CALC-16)", () => {
+    const c = calc(data([cat()], [log('2026-10-01', 40), log('2026-10-02', 30)]), '2026-10-02').per.c.today;
+    expect(dueLeft(c)).toBe(70);
+    expect(dueLeft(c) + carriedLeft(c)).toBe(c.end);
+    const over = calc(data([cat()], [log('2026-10-01', 40), log('2026-10-02', 120)]), '2026-10-02').per.c.today;
+    expect(dueLeft(over)).toBe(0);
+    expect(carriedLeft(over)).toBe(40);
+    const rest = calc(data([cat({ targets: [{ from: '2026-10-01', minutes: 100, days: [4] }] })], []), '2026-10-02').per.c.today; // due Thursdays only: 1 Oct, not 2 Oct
+    expect(dueLeft(rest)).toBe(0);
+    expect(carriedLeft(rest)).toBe(100);
   });
 });
 

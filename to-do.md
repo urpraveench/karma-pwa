@@ -8,7 +8,9 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 ## In progress
 
-Nothing right now.
+A user did 60 minutes of Exercise, tapped "+180" and got credit for three days' backlog. One tap should mean "I did today's practice".
+
+- [ ] **Claude:** the coloured button logs only what's left of today's target; once that's done, a red "+N carried" button clears the backlog on purpose; the row reads "0 of 60, 120 carried" and "Today's 60 done, 120 carried"; the toast says what's still carried (LOG-01, LOG-32, TODAY-11)
 
 ## Setup layout
 
@@ -182,6 +184,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** minutes logged count toward today's target first, then the carried-over backlog, so "carried" means backlog still owed after today's part (CALC-13, CALC-16). 13 October 2026
 - [x] **Claude:** bug fixed: iPhone users didn't get the 8 pm evening check or practice reminders, because Apple's push service refused topics whose length isn't valid Base64 (`BadWebPushTopic`, found via the Health page). Every topic is now padded to a valid length, and refused pushes are logged with the reason instead of retried (NOTIF-21); deployed (reminderSend, adminPushTest, broadcastPushSend, with adminHealth's fix), 13 October 2026
 - [x] **Claude:** Health lists each function once, under its readable name with Cloud Run's counts, instead of twice (Cloud Run service and Cloud Function) (found by Praveen) (ADMIN-14), 13 October 2026
 - [x] **Claude:** "One person" audience on the Email and Push pages (asked by Praveen; deployed): type their account's email; the preview or Check says if there's no such account, their News is off or they have no device; History shows who it went to (ADMIN-07, ADMIN-08, ADMIN-10, ADMIN-12), 13 October 2026

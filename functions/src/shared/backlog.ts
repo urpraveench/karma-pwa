@@ -30,7 +30,7 @@ export interface Totals {
   /** Minutes done today, counting each practice only up to what it owed. */
   doneCap: number;
   done: number;
-  /** Carried-over minutes not yet worked off today. */
+  /** Carried-over minutes still owed beyond today's own target (CALC-13). */
   carryLeft: number;
 }
 
@@ -65,6 +65,11 @@ export function dueOn(cat: Category, d: DateStr): number {
 }
 
 export const targetMinutesOn = (cat: Category, d: DateStr) => targetOn(cat, d)?.minutes || 0;
+
+/** What's left of the day's own target: minutes logged count toward it before the backlog (CALC-16). */
+export const dueLeft = (r: DayRow) => Math.max(0, r.due - r.done);
+/** Carried-over minutes still owed once the day's own target is counted (CALC-13). */
+export const carriedLeft = (r: DayRow) => r.end - dueLeft(r);
 
 export const capDays = (settings: Settings | undefined) => {
   const v = settings?.backlogCap;
@@ -102,7 +107,7 @@ export function calc(data: AppData, asOf: DateStr = today()): Calc {
     due: t('due'), opening: t('opening'), owed: t('owed'), end: t('end'),
     doneCap: sum(act.map(c => Math.min(per[c.id].today.done, per[c.id].today.owed))),
     done: t('done'),
-    carryLeft: sum(act.map(c => Math.max(0, per[c.id].today.opening - per[c.id].today.done))),
+    carryLeft: sum(act.map(c => carriedLeft(per[c.id].today))),
   };
   const dayEnd = (d: DateStr) => sum(data.categories.map(c => per[c.id].byDate.get(d)?.end || 0));
   const dayDue = (d: DateStr) => sum(data.categories.map(c => per[c.id].byDate.get(d)?.owed || 0));

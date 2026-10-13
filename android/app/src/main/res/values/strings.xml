@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">TikTym</string>
+    <string name="title_activity_main">TikTym</string>
+    <string name="package_name">com.tiktym.app</string>
+    <string name="custom_url_scheme">com.tiktym.app</string>
+</resources>

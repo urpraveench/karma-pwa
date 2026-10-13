@@ -20,12 +20,16 @@ const versionFile: Plugin = {
   generateBundle() { this.emitFile({ type: 'asset', fileName: 'version.json', source: JSON.stringify(BUILD) + '\n' }); },
 };
 
+// The Android app (Capacitor, `npm run android:build`) bundles these files in the install: no service worker or web
+// manifest there, since the app opens from its own files and Play delivers updates (AND-01, AND-06).
+const NATIVE = process.env.TIKTYM_NATIVE === '1';
+
 export default defineConfig({
   define: { __BUILD__: JSON.stringify(BUILD) },
   plugins: [
     react(),
     versionFile,
-    VitePWA({
+    !NATIVE && VitePWA({
       // A new deploy activates on the next load, without asking.
       registerType: 'autoUpdate',
       includeManifestIcons: false, // the precache glob below already covers icons/

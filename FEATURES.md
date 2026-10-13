@@ -12,6 +12,7 @@ Each scenario has an ID (for example `LOG-04`) that you can quote in commits, is
 |---|---|
 | **E2E** `file` | A Playwright browser test in `e2e/` checks it. `firebase/…` and `firebase-google/…` tests run the app in Firebase mode against the local emulators |
 | **Unit** `file` | A Vitest test in `tests/` checks it |
+| **Android** `file` | A Playwright test in `e2e-android/` drives the Android app's WebView on the Android emulator, against the local Firebase emulators |
 | **Emulator** `file` | A Vitest test in `tests-emulator/` checks it against the local Firebase emulators |
 | **Gap** | Not tested yet. Candidate for a new test |
 | **Manual** | Needs a real Firebase project, a real phone, or real time passing. Check by hand before a release |
@@ -39,8 +40,8 @@ Summary of coverage at the time of writing:
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 19 | 19 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| 18. Android app | 7 | 0 | 7 | 0 |
-| **Total** | **346** | **326** | **7** | **13** |
+| 18. Android app | 7 | 2 | 5 | 0 |
+| **Total** | **346** | **328** | **5** | **13** |
 
 ---
 
@@ -519,8 +520,8 @@ The same app inside a native Android shell (Capacitor), built from this codebase
 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
-| AND-01 | The app opens | The installed app (`com.tiktym.app`) opens full screen from files bundled in the install, so it opens without a connection; no service worker runs inside it | Gap |
-| AND-02 | Email sign-in in the app | Signing in with email and password opens the same account and data as on the web | Gap |
+| AND-01 | The app opens | The installed app (`com.tiktym.app`) opens full screen from files bundled in the install, so it opens without a connection; no service worker runs inside it | Android `e2e-android/shell.spec.ts` (emulator; a real phone: Manual) |
+| AND-02 | Email sign-in in the app | Signing in with email and password opens the same account and data as on the web | Android `e2e-android/shell.spec.ts` (emulator; a real phone: Manual) |
 | AND-03 | Google sign-in in the app | Continue with Google shows Android's own account picker and signs in to the same account as Google sign-in on the web | Gap |
 | AND-04 | App Check in the app | The app proves it's genuine with Play Integrity (a debug token in test builds), so voice logging and other checked calls work | Gap |
 | AND-05 | Reminders in the app | Allowing notifications saves the phone as a device; reminders, the evening check, practice reminders and admin pushes arrive through FCM, as they do through web push on the web | Gap |
@@ -543,7 +544,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 ## What's left to test
 
-**Gaps** (testable, no test yet): AND-01 to AND-07, the Android app being built (to-do.md › Phase 2: App stores).
+**Gaps** (testable, no test yet): AND-03 to AND-07, the Android app being built (to-do.md › Phase 2: App stores).
 
 **Manual** (check by hand before a release, on a real phone and the real Firebase project):
 

@@ -16,6 +16,7 @@ Before each commit, run the checks for what changed. All must pass:
 - `npm test` and `npx tsc --noEmit`: always
 - `npm run test:e2e:headless`: for any UI or behaviour change
 - `npm run test:emulator`: for changes to `src/store/`, `src/auth.ts` or `firestore.rules`
+- `npm run android:build:test` then `npm run test:android` (with an Android emulator running): for changes to `android/`, `capacitor.config.ts`, the native build in `vite.config.ts`, or anything that behaves differently inside the Android app
 
 Gate the commit on each command's exit code (`set -o pipefail` when piping output), never on a printed summary line: Playwright prints failures above its last line, and the emulator projects retry once, so a summary can look green when it isn't.
 
@@ -50,6 +51,8 @@ Every deploy gets a new version, so the app's version label and update bar mean 
 | `npm run site:install-videos` | Re-record the website's install videos (iOS simulator and Android emulator, from the live app) |
 | `npm run site:updates` | Rebuild the website's What's new page (`site/updates/`) from CHANGELOG.md |
 | `npm run og:image` | Redraw the link-preview image (app and website) |
+| `npm run android:build` | Android app against the live project (README › Android app); `npm run android:build:test` is for tests only and must never be shipped |
+| `npm run test:android` | Android app tests on a running Android emulator |
 | `npm run brand:kit` | Redraw the logo set in `public/brand/` (every lockup and colour, SVG and PNG) |
 
 ## Conventions

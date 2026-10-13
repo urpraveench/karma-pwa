@@ -99,7 +99,6 @@ Google Play (started 12 October 2026; changed 13 October from a Trusted Web Acti
 - [ ] **You:** wait for Dun & Bradstreet India to issue the D-U-N-S number for Pramal IT Services Pvt Ltd (requested 13 October 2026, reference DR101320263470822114; queries to serviceindia@dnb.com). Answer any D&B verification call or email the same day. If it hasn't arrived by **Fri 23 Oct**, open a Personal account instead (PLAY-ACCOUNT.md › 1)
 - [ ] **You:** open a Google Play developer account (US$25) at play.google.com/console/signup (follow PLAY-ACCOUNT.md: personal or organisation), verify your identity and an Android phone, then create the app "TikTym" with Play App Signing on.
 - [ ] **You (this week):** recruit 15 Android testers for the closed test and the 100 Days challenge (your current users lean iPhone, so ask Android users directly); note them in OUTREACH.md
-- [ ] **Claude (Android shell 1/5):** Capacitor project in `android/` (`com.tiktym.app`), the app built without the service worker and bundled in the install, opens on the emulator, email sign-in works on the same Firebase project (AND-01, AND-02)
 - [ ] **Claude (Android shell 2/5):** register the Android app in Firebase, native Google sign-in passed to Firebase Auth (AND-03)
 - [ ] **Claude (Android shell 3/5):** App Check in the app with Play Integrity (debug provider for test builds), so voice logging works (AND-04)
 - [ ] **Claude (Android shell 4/5):** push through FCM: the app saves its FCM token as a device, the server sends reminders and broadcasts to FCM devices alongside web push (AND-05)
@@ -185,6 +184,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** Android shell 1/5: Capacitor 8 project in `android/` (`com.tiktym.app`, Android 7 and up), built without the service worker or web App Check (`npm run android:build`), opens from its own files and offline, email sign-in on the same Firebase project; automated on the Android emulator (`npm run android:build:test`, `npm run test:android`) (AND-01, AND-02). On the `android` branch, 13 October 2026
 - [x] Deployed the admin console: 13 new admin functions (metrics, email, push, history, costs, health, the nightly totals and the two send queues), the existing functions updated (each email now counted in `adminStats`), and https://admin.tiktym.com live (HTTPS, noindex); a call without the admin claim is refused. The app itself is unchanged, so no app release, 13 October 2026
 - [x] **Claude:** Costs reads the FOCUS billing export (finds the billing dataset and table itself, FOCUS or Standard; "no data yet" before the first rows), and the Resend limit is the paid plan's 50,000 a month with no daily cap (ADMIN-13), 13 October 2026
 - [x] **You:** Cloud Billing export to BigQuery turned on, as FOCUS usage cost (dataset `gcp_billing_immutable_014531_E38200_BE39C7_us`, US; no tables yet on 13 October), and Resend upgraded, 13 October 2026

@@ -23,14 +23,21 @@
     "functions:shared": "node scripts/functions-shared.mjs",
     "admin:grant": "node scripts/admin-grant.mjs",
     "admin:dev": "vite --config vite.admin.config.ts",
-    "admin:build": "tsc --noEmit && vite build --config vite.admin.config.ts"
+    "admin:build": "tsc --noEmit && vite build --config vite.admin.config.ts",
+    "android:build": "tsc --noEmit && TIKTYM_NATIVE=1 VITE_RECAPTCHA_SITE_KEY= vite build --outDir dist-android --emptyOutDir && cap sync android && cd android && JAVA_HOME=/opt/homebrew/opt/openjdk@21 ./gradlew assembleDebug -q",
+    "android:open": "cap open android",
+    "android:build:test": "TIKTYM_NATIVE=1 TIKTYM_EMULATORS=1 VITE_BACKEND=firebase VITE_USE_EMULATORS=true VITE_ENABLE_GOOGLE=false VITE_GA_MEASUREMENT_ID= VITE_RECAPTCHA_SITE_KEY= VITE_FIREBASE_API_KEY=fake-api-key VITE_FIREBASE_PROJECT_ID=demo-tiktym VITE_FIREBASE_AUTH_DOMAIN=localhost vite build --outDir dist-android --emptyOutDir && TIKTYM_EMULATORS=1 cap sync android && cd android && JAVA_HOME=/opt/homebrew/opt/openjdk@21 ./gradlew assembleDebug -q",
+    "test:android": "playwright test -c playwright.android.config.ts"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
     "firebase": "^12.19.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
     "@firebase/rules-unit-testing": "^5.0.2",
     "@playwright/test": "^1.63.0",
     "@types/react": "^19.3.0",

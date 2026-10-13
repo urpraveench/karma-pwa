@@ -188,6 +188,17 @@ npm run admin:grant -- you@example.com            # --revoke to remove, --projec
 
 Run it locally with `npm run admin:dev` (port 5174, the real project from `.env.local`); deploy with `firebase deploy --only hosting:admin`, which builds `dist-admin/` first. The console reads and sends only through Cloud Functions that check the claim (`functions/src/admin.ts`); `adminStats/` and `adminLog/` are closed to every app.
 
+## Android app
+
+The same React app inside a native Android shell (Capacitor 8, `android/`, package `com.tiktym.app`); the web app is unchanged. Needs Android Studio's SDK (`~/Library/Android/sdk`) and Java 21 (Homebrew `openjdk@21`).
+
+| Command | Use |
+|---|---|
+| `npm run android:build` | Real build against the live project: no service worker, no web App Check; then `cap sync` and a debug APK in `android/app/build/outputs/apk/debug/` |
+| `npm run android:build:test` | Test build against the local Firebase emulators, served over http. **Never ship it**; run `npm run android:build` before any release |
+| `npm run test:android` | Drives the test build on a running Android emulator (`emulator -avd Medium_Phone_API_36.0`) through Playwright, against the Firebase emulators |
+| `npm run android:open` | Opens the project in Android Studio |
+
 ## Pending work
 
 Everything still to do, including the public launch checklist, is tracked in [to-do.md](to-do.md). The go-to-market plan is in [GTM.md](GTM.md).

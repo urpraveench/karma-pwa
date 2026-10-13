@@ -17,11 +17,17 @@ if (args.error) {
 
 initializeApp({ credential: applicationDefault(), projectId: args.project });
 const auth = getAuth();
-const user = await auth.getUserByEmail(args.email).catch(() => null);
-if (!user) {
-  console.error(`No account with ${args.email} in ${args.project}. Sign in to the app with it once, then run this again.`);
+const user = await auth.getUserByEmail(args.email).catch(e => {
+  if (e?.code === 'auth/user-not-found') {
+    console.error(`No account with ${args.email} in ${args.project}. Sign in to the app with it once, then run this again.`);
+  } else {
+    console.error(`Couldn't look up ${args.email} in ${args.project}: ${e?.message || e}`);
+    if (/quota project|x-goog-user-project|adc-troubleshooting|PERMISSION_DENIED|insufficient/i.test(String(e?.message))) {
+      console.error(`Try: gcloud auth application-default set-quota-project ${args.project}`);
+    }
+  }
   process.exit(1);
-}
+});
 await auth.setCustomUserClaims(user.uid, nextClaims(user.customClaims, args.revoke));
 console.log(args.revoke ? `${args.email} is no longer an admin.` : `${args.email} is now an admin. Sign out and in again on admin.tiktym.com to pick it up.`);
 

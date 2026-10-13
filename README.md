@@ -182,6 +182,7 @@ admin.tiktym.com (being built; to-do.md › Admin console) is for accounts with 
 
 ```sh
 gcloud auth application-default login
+gcloud auth application-default set-quota-project tiktym   # once; Google needs it for Auth calls with a personal login
 npm run admin:grant -- you@example.com            # --revoke to remove, --project to pick another project
 ```
 

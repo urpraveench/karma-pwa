@@ -160,7 +160,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Decided 13 October 2026: a separate admin app in this repo and Firebase project, for Praveen only. Access is an `admin` custom claim that only a server script can set; every action runs in a Cloud Function that checks it, so `firestore.rules` stay closed to apps. Every send is recorded in `adminLog/`. FEATURES.md › 17. Admin console.
 
-- [ ] **You:** run `npm run admin:grant -- <your Google email>` (signed in with `gcloud auth application-default login`)
 - [ ] **You:** turn on Cloud Billing export to BigQuery (Billing › Billing export › Standard usage cost, dataset `billing_export` in project tiktym), before the costs page
 - [ ] **You:** upgrade Resend before the first broadcast to everyone (the free plan's 100 a day would block that day's welcome emails)
 
@@ -176,6 +175,8 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **You:** admin access granted to praveen.cherukuru@gmail.com with `npm run admin:grant` (the only admin), 13 October 2026
+- [x] **Claude:** `admin:grant` said "No account" for any failed lookup; it now shows the real error, and suggests `gcloud auth application-default set-quota-project tiktym` when Google asks for a quota project (needed with a personal login), 13 October 2026
 - [x] **You:** admin.tiktym.com added to Authentication's authorized domains and the reCAPTCHA Enterprise key's domains, 13 October 2026
 - [x] **Claude:** function health: Health page with each function's runs and errors in the last 24 hours, errors first, with links to logs, from the new `adminHealth` function (ADMIN-14). Not deployed yet, 13 October 2026
 - [x] **You:** admin hosting site `tiktym-admin` created and admin.tiktym.com pointed at it (DNS resolves to tiktym-admin.web.app; the HTTPS certificate was still being issued on 13 October), 13 October 2026

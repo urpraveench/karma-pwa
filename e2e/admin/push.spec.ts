@@ -69,3 +69,25 @@ test('a test goes to my own devices; a bad link is caught first; nobody to send 
   await page.getByRole('button', { name: 'Count people' }).click();
   await expect(page.getByRole('button', { name: 'Nobody to send to' })).toBeDisabled();
 });
+
+test('push to one person: checked by email, and said plainly when they have no device (ADMIN-10)', async ({ page }) => {
+  const checks = await stubFunction(page, 'adminPushCount', (d: unknown) =>
+    ((d as { draft: { to?: string } }).draft.to === 'nodevice@example.com' ? { count: 0, note: 'That account has no device with notifications on.' } : { count: 1 }));
+  const sends = await stubFunction(page, 'adminPushSend', { id: 'p9', queued: 1, held: 0 });
+  await openPush(page);
+  await page.getByLabel('One person').check();
+  await page.getByLabel('Title').fill('Hi Ravi');
+  await page.getByLabel('Text').fill('Testing a reminder.');
+  await page.getByLabel('Their email').fill('nodevice@example.com');
+  await page.getByRole('button', { name: 'Check', exact: true }).click();
+  await expect(page.getByRole('alert')).toHaveText('That account has no device with notifications on.');
+  await expect(page.getByRole('button', { name: 'Nobody to send to' })).toBeDisabled();
+
+  await page.getByLabel('Their email').fill('Ravi@Example.com');
+  await page.getByRole('button', { name: 'Check', exact: true }).click();
+  await page.getByRole('button', { name: 'Send to ravi@example.com…' }).click();
+  await page.getByRole('button', { name: 'Yes, send it' }).click();
+  await expect(page.getByRole('status')).toContainText('Queued for 1 person');
+  expect(checks).toHaveLength(2);
+  expect(sends).toEqual([{ draft: { audience: 'person', title: 'Hi Ravi', body: 'Testing a reminder.', url: '/', to: 'ravi@example.com' } }]);
+});

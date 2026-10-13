@@ -4,18 +4,23 @@ import type { Audience, Draft } from '../../functions/src/broadcast';
 
 export type { Audience, Draft };
 
-export interface EmailForm { audience: Audience; subject: string; title: string; body: string; buttonLabel: string; buttonUrl: string }
+export interface EmailForm { audience: Audience; to: string; subject: string; title: string; body: string; buttonLabel: string; buttonUrl: string }
 
-export const EMPTY_FORM: EmailForm = { audience: 'everyone', subject: '', title: '', body: '', buttonLabel: '', buttonUrl: '' };
+export const EMPTY_FORM: EmailForm = { audience: 'everyone', to: '', subject: '', title: '', body: '', buttonLabel: '', buttonUrl: '' };
 
 export const AUDIENCE_TEXT: Record<Audience, { label: string; hint: string }> = {
   everyone: { label: 'Everyone', hint: 'Every account with News about TikTym on' },
   active7: { label: 'Active in the last 7 days', hint: 'Logged something in the last 7 days' },
   away4: { label: 'Away 4 days or more', hint: 'Logged before, nothing in the last 4 days' },
+  person: { label: 'One person', hint: 'One account, by the email it signs in with' },
 };
+
+/** An email address as the server accepts it (functions/src/broadcast.ts › readEmail). */
+export const isEmail = (v: string) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.trim());
 
 /** What to fix before the form can be previewed or sent, or null. */
 export function formProblem(f: EmailForm): string | null {
+  if (f.audience === 'person' && !isEmail(f.to)) return 'Enter the email their TikTym account uses.';
   if (!f.subject.trim()) return 'Write a subject.';
   if (f.subject.trim().length > 120) return 'Keep the subject to 120 characters.';
   if (!f.title.trim()) return 'Write a heading.';
@@ -34,6 +39,7 @@ export function formProblem(f: EmailForm): string | null {
 /** The draft the functions take; the button only when it has a label. */
 export function draftOf(f: EmailForm): Draft {
   const d: Draft = { audience: f.audience, subject: f.subject.trim(), title: f.title.trim(), body: f.body.trim() };
+  if (f.audience === 'person') d.to = f.to.trim().toLowerCase();
   if (f.buttonLabel.trim()) d.button = { label: f.buttonLabel.trim(), url: f.buttonUrl.trim() };
   return d;
 }

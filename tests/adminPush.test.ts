@@ -20,3 +20,11 @@ describe('push composer form (ADMIN-10)', () => {
     expect(pushDraftOf({ ...full, audience: 'active7', url: ' /x ' })).toMatchObject({ audience: 'active7', url: '/x' });
   });
 });
+
+describe('push to one person (ADMIN-10)', () => {
+  it('asks for their email first, and sends it with the draft', () => {
+    expect(pushProblem({ ...full, audience: 'person' })).toBe('Enter the email their TikTym account uses.');
+    expect(pushDraftOf({ ...full, audience: 'person', to: 'Ravi@Example.com' })).toEqual({ audience: 'person', title: 'Day 1', body: 'Log 5 minutes.', url: '/', to: 'ravi@example.com' });
+    expect(pushDraftOf(full)).not.toHaveProperty('to');
+  });
+});

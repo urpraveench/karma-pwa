@@ -7,7 +7,7 @@ const at = { toDate: () => new Date('2026-10-13T04:30:00Z') };
 describe('send history (ADMIN-12)', () => {
   it('reads an email broadcast, its headline and counts', () => {
     const e = historyEntry('b1', { kind: 'email', createdAt: at, by: 'p@x.com', audience: 'away4', subject: 'Hi', title: 'Heading', queued: 40, sent: 30, skipped: 4, skippedWhy: { off: 3, 'emailed-today': 1, x: 0 } })!;
-    expect(e).toEqual({ id: 'b1', kind: 'email', at: '2026-10-13T04:30:00.000Z', by: 'p@x.com', audience: 'away4', headline: 'Hi', queued: 40, held: 0, sent: 30, skipped: 4, failed: 0, skippedWhy: { off: 3, 'emailed-today': 1 } });
+    expect(e).toEqual({ id: 'b1', kind: 'email', at: '2026-10-13T04:30:00.000Z', by: 'p@x.com', audience: 'away4', to: null, headline: 'Hi', queued: 40, held: 0, sent: 30, skipped: 4, failed: 0, skippedWhy: { off: 3, 'emailed-today': 1 } });
     expect(kindLabel(e)).toBe('Email');
     expect(audienceLabel(e)).toBe('Away 4 days or more');
     expect(progress(e)).toEqual({ state: 'sending', text: 'Sending: 34 of 40 done. 30 sent, 4 skipped (3 News off, 1 already emailed that day)' });
@@ -32,5 +32,13 @@ describe('send history (ADMIN-12)', () => {
     const done = historyEntry('b2', { kind: 'email', createdAt: at, audience: 'everyone', queued: 3, sent: 1, skipped: 1, skippedWhy: { 'no-email': 1 }, failed: 1 })!;
     expect(progress(done)).toEqual({ state: 'done', text: '1 sent, 1 skipped (1 no email address), 1 failed' });
     expect(progress(historyEntry('b3', { kind: 'push', createdAt: at, audience: 'devices', queued: 0 })!)).toEqual({ state: 'done', text: 'Nobody in the audience' });
+  });
+});
+
+describe('one-person sends in the history (ADMIN-12)', () => {
+  it('names who it went to', () => {
+    const e = historyEntry('b4', { kind: 'email', createdAt: at, audience: 'person', to: 'asha@example.com', subject: 'Hello', queued: 1, sent: 1 })!;
+    expect(audienceLabel(e)).toBe('One person (asha@example.com)');
+    expect(historyEntry('b5', { kind: 'email', createdAt: at, audience: 'everyone', to: 'stray@example.com' })!.to).toBeNull();
   });
 });

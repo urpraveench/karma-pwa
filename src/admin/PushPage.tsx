@@ -14,11 +14,13 @@ const people = (n: number) => `${n.toLocaleString('en-GB')} ${n === 1 ? 'person'
 
 export function PushPage() {
   const [form, setForm] = useState<PushForm>(EMPTY_PUSH);
-  const [counted, setCounted] = useState<{ key: string; count: number } | null>(null);
+  const [counted, setCounted] = useState<{ key: string; count: number; note?: string } | null>(null);
   const [step, setStep] = useState<Step>({ kind: 'idle' });
   const problem = pushProblem(form);
   const key = JSON.stringify(pushDraftOf(form));
   const count = counted?.key === key ? counted.count : null;
+  const note = counted?.key === key ? counted.note : undefined;
+  const whom = (n: number) => (form.audience === 'person' ? form.to.trim().toLowerCase() : people(n));
   const busy = step.kind === 'busy';
 
   const set = (patch: Partial<PushForm>) => { setForm(f => ({ ...f, ...patch })); if (!busy) setStep({ kind: 'idle' }); };
@@ -29,7 +31,8 @@ export function PushPage() {
 
   const doCount = () => run('Counting…', async () => {
     const draft = pushDraftOf(form);
-    setCounted({ key: JSON.stringify(draft), count: (await call<{ count: number }>('adminPushCount', draft)).count });
+    const r = await call<{ count: number; note?: string }>('adminPushCount', draft);
+    setCounted({ key: JSON.stringify(draft), count: r.count, note: r.note });
   });
   const doTest = () => run('Sending a test…', async () => {
     const r = await call<{ devices: number }>('adminPushTest', pushDraftOf(form));
@@ -54,6 +57,9 @@ export function PushPage() {
                 <span><b>{PUSH_AUDIENCE_TEXT[a].label}</b><span className="muted">{PUSH_AUDIENCE_TEXT[a].hint}</span></span>
               </label>
             ))}
+            {form.audience === 'person' && (
+              <label>Their email<input type="email" value={form.to} placeholder="name@example.com" onChange={e => set({ to: e.target.value })} /></label>
+            )}
             <p className="muted small">Each person gets it once, on all their devices. Between 10 pm and 7 am in their time zone, it waits until 10 am.</p>
           </fieldset>
           <label>Title<input value={form.title} maxLength={60} onChange={e => set({ title: e.target.value })} /></label>
@@ -63,17 +69,18 @@ export function PushPage() {
           <label>Opens (optional)<input value={form.url} placeholder="/" onChange={e => set({ url: e.target.value })} />
             <span className="muted small">A path in the app; empty opens Today.</span>
           </label>
-          {problem && (form.title || form.body || form.url) && <p className="muted small">{problem}</p>}
+          {problem && (form.to || form.title || form.body || form.url) && <p className="muted small">{problem}</p>}
           <div className="actions">
-            <button className="btn" type="submit" disabled={!!problem || busy}>Count people</button>
+            <button className="btn" type="submit" disabled={!!problem || busy}>{form.audience === 'person' ? 'Check' : 'Count people'}</button>
             <button className="btn" type="button" disabled={!!problem || busy} onClick={doTest}>Send a test to my devices</button>
             <button className="btn primary" type="button" disabled={count === null || count === 0 || busy} onClick={() => setStep({ kind: 'confirm' })}>
-              {count === null ? 'Count to send' : count === 0 ? 'Nobody to send to' : `Send to ${people(count)}…`}
+              {count === null ? (form.audience === 'person' ? 'Check to send' : 'Count to send') : count === 0 ? 'Nobody to send to' : `Send to ${whom(count)}…`}
             </button>
           </div>
+          {note && <p className="error" role="alert">{note}</p>}
           {step.kind === 'confirm' && count !== null && (
             <div className="confirm" role="alertdialog" aria-label="Confirm sending">
-              <p><b>This goes to {people(count)}</b> ({PUSH_AUDIENCE_TEXT[form.audience].label.toLowerCase()}). It can't be undone.</p>
+              <p><b>This goes to {whom(count)}</b> ({PUSH_AUDIENCE_TEXT[form.audience].label.toLowerCase()}). It can't be undone.</p>
               <div className="actions">
                 <button className="btn primary" type="button" onClick={doSend}>Yes, send it</button>
                 <button className="btn" type="button" onClick={() => setStep({ kind: 'idle' })}>Cancel</button>

@@ -6,7 +6,7 @@ import { AUDIENCE_TEXT, draftOf, EMPTY_FORM, formProblem, peopleText, type Audie
 // Write an email, preview it as people will see it, send a test to yourself, then send it to an audience with a
 // second tap (ADMIN-07 to ADMIN-09). Sending queues one email per person on the server; the History page follows it.
 
-type Preview = { key: string; subject: string; html: string; count: number };
+type Preview = { key: string; subject: string; html: string; count: number; note?: string };
 type Step = { kind: 'idle' } | { kind: 'busy'; what: string } | { kind: 'confirm' } | { kind: 'done'; text: string } | { kind: 'error'; text: string };
 
 const call = <R,>(name: string, draft: Draft) => httpsCallable<{ draft: Draft }, R>(functions, name)({ draft }).then(r => r.data);
@@ -20,6 +20,8 @@ export function EmailPage() {
   const problem = formProblem(form);
   const key = JSON.stringify(draftOf(form));
   const current = preview?.key === key ? preview : null; // a preview of an older draft can't be sent
+  const sendable = !!current && current.count > 0 && !current.note;
+  const whom = (n: number) => (form.audience === 'person' ? form.to.trim().toLowerCase() : peopleText(n));
   const busy = step.kind === 'busy';
 
   const set = (patch: Partial<EmailForm>) => { setForm(f => ({ ...f, ...patch })); if (step.kind !== 'busy') setStep({ kind: 'idle' }); };
@@ -54,7 +56,12 @@ export function EmailPage() {
                 <span><b>{AUDIENCE_TEXT[a].label}</b><span className="muted">{AUDIENCE_TEXT[a].hint}</span></span>
               </label>
             ))}
-            <p className="muted small">Only people with News about TikTym on get it, never twice, and not on a day they already had a TikTym email.</p>
+            {form.audience === 'person' && (
+              <label>Their email<input type="email" value={form.to} placeholder="name@example.com" onChange={e => set({ to: e.target.value })} /></label>
+            )}
+            <p className="muted small">{form.audience === 'person'
+              ? 'Only if their News about TikTym is on.'
+              : 'Only people with News about TikTym on get it, never twice, and not on a day they already had a TikTym email.'}</p>
           </fieldset>
           <label>Subject<input value={form.subject} maxLength={120} onChange={e => set({ subject: e.target.value })} /></label>
           <label>Heading<input value={form.title} maxLength={80} onChange={e => set({ title: e.target.value })} /></label>
@@ -65,17 +72,18 @@ export function EmailPage() {
             <label>Button label (optional)<input value={form.buttonLabel} maxLength={40} onChange={e => set({ buttonLabel: e.target.value })} /></label>
             <label>Button link<input value={form.buttonUrl} placeholder="https://app.tiktym.com/" onChange={e => set({ buttonUrl: e.target.value })} /></label>
           </div>
-          {problem && (form.subject || form.title || form.body) && <p className="muted small">{problem}</p>}
+          {problem && (form.to || form.subject || form.title || form.body) && <p className="muted small">{problem}</p>}
           <div className="actions">
             <button className="btn" type="submit" disabled={!!problem || busy}>Preview</button>
             <button className="btn" type="button" disabled={!!problem || busy} onClick={doTest}>Send a test to me</button>
-            <button className="btn primary" type="button" disabled={!current || busy} onClick={() => setStep({ kind: 'confirm' })}>
-              {current ? `Send to ${peopleText(current.count)}…` : 'Preview to send'}
+            <button className="btn primary" type="button" disabled={!sendable || busy} onClick={() => setStep({ kind: 'confirm' })}>
+              {!current ? 'Preview to send' : sendable ? `Send to ${whom(current.count)}…` : 'Nobody to send to'}
             </button>
           </div>
-          {step.kind === 'confirm' && current && (
+          {current?.note && <p className="error" role="alert">{current.note}</p>}
+          {step.kind === 'confirm' && sendable && (
             <div className="confirm" role="alertdialog" aria-label="Confirm sending">
-              <p><b>This goes to {peopleText(current.count)}</b> ({AUDIENCE_TEXT[form.audience].label.toLowerCase()}). It can't be undone.</p>
+              <p><b>This goes to {whom(current!.count)}</b> ({AUDIENCE_TEXT[form.audience].label.toLowerCase()}). It can't be undone.</p>
               <div className="actions">
                 <button className="btn primary" type="button" onClick={doSend}>Yes, send it</button>
                 <button className="btn" type="button" onClick={() => setStep({ kind: 'idle' })}>Cancel</button>

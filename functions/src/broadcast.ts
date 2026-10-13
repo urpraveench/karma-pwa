@@ -3,17 +3,22 @@
 import { addDays } from './recap.js';
 import { emailOn, newsEmail, type Email } from './mail.js';
 
-/** Who a broadcast goes to: everyone (with News on), people active in the last 7 days, or people away 4 days or more. */
-export type Audience = 'everyone' | 'active7' | 'away4';
-export const AUDIENCES: Audience[] = ['everyone', 'active7', 'away4'];
+/** Who a broadcast goes to: everyone (with News on), people active in the last 7 days, people away 4 days or more, or one account by its email. */
+export type Audience = 'everyone' | 'active7' | 'away4' | 'person';
+export const AUDIENCES: Audience[] = ['everyone', 'active7', 'away4', 'person'];
 
 export interface Draft {
   audience: Audience;
+  /** The account's email, for the 'person' audience only. */
+  to?: string;
   subject: string;
   title: string;
   body: string;
   button?: { label: string; url: string };
 }
+
+/** A trimmed, lower-case email address, or null. */
+export const readEmail = (v: unknown) => (typeof v === 'string' && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.trim()) && v.trim().length <= 254 ? v.trim().toLowerCase() : null);
 
 const text = (v: unknown, max: number) => (typeof v === 'string' && v.trim() && v.trim().length <= max ? v.trim() : null);
 
@@ -24,6 +29,11 @@ export function readDraft(v: unknown): Draft | null {
   const subject = text(d.subject, 120), title = text(d.title, 80), body = text(d.body, 5000);
   if (!audience || !subject || !title || !body) return null;
   const draft: Draft = { audience, subject, title, body };
+  if (audience === 'person') {
+    const to = readEmail(d.to);
+    if (!to) return null;
+    draft.to = to;
+  }
   if (d.button !== undefined && d.button !== null) {
     const b = d.button as Record<string, unknown>;
     const label = text(b.label, 40), url = text(b.url, 500);
@@ -33,7 +43,7 @@ export function readDraft(v: unknown): Draft | null {
   return draft;
 }
 
-/** The lastLogged range an audience is found by, or null for everyone (every account with an email address). */
+/** The lastLogged range an audience is found by, or null for everyone (every account with an email address) and one person. */
 export function audienceRange(audience: Audience, today: string): { from?: string; to?: string } | null {
   if (audience === 'active7') return { from: addDays(today, -6) };
   if (audience === 'away4') return { to: addDays(today, -4) };
@@ -46,10 +56,13 @@ export const broadcastEmail = (d: Draft, name: string, unsubscribe: string): Ema
 
 export interface Recipient { settings: { emails?: Partial<Record<'tips' | 'recap' | 'news', boolean>> } | undefined; lastEmailDay?: string; broadcasts?: string[] }
 
-/** Whether one person gets broadcast `id` today: News on, not emailed already today, and not sent this one before. */
-export function broadcastCheck(r: Recipient, id: string, today: string): 'send' | 'off' | 'emailed-today' | 'already-sent' {
+/**
+ * Whether one person gets broadcast `id` today: News on, not sent this one before, and (for a group, not an email to
+ * one person) not emailed already today.
+ */
+export function broadcastCheck(r: Recipient, id: string, today: string, oneToOne = false): 'send' | 'off' | 'emailed-today' | 'already-sent' {
   if (r.broadcasts?.includes(id)) return 'already-sent';
   if (!emailOn(r.settings, 'news')) return 'off';
-  if (r.lastEmailDay === today) return 'emailed-today';
+  if (!oneToOne && r.lastEmailDay === today) return 'emailed-today';
   return 'send';
 }

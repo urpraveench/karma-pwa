@@ -12,6 +12,7 @@ export const kindLabel = (e: HistoryEntry) => ({ email: 'Email', 'email-test': '
 
 export function audienceLabel(e: HistoryEntry): string {
   if (!e.audience) return `Just me (${e.by})`;
+  if (e.audience === 'person') return `One person (${e.to ?? 'unknown'})`;
   const text = e.kind === 'email' ? AUDIENCE_TEXT[e.audience as keyof typeof AUDIENCE_TEXT] : PUSH_AUDIENCE_TEXT[e.audience as keyof typeof PUSH_AUDIENCE_TEXT];
   return text?.label ?? e.audience;
 }

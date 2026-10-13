@@ -94,15 +94,22 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 **Phase 2: App stores**
 
-Google Play (started 12 October 2026). The Play app is the live web app in a Chrome frame (Trusted Web Activity): app updates still ship by deploying the website, and only the frame needs Play releases.
+Google Play (started 12 October 2026; changed 13 October from a Trusted Web Activity to a Capacitor app with the ledger, see GTM.md › Strategy). Native changes need a Play release; the screens are the same React app as the website.
 
 - [ ] **You:** open a Google Play developer account (US$25) at play.google.com/console/signup (personal or organisation: see the plan), verify your identity and an Android phone, then create the app "TikTym" with Play App Signing on.
+- [ ] **You (this week):** recruit 15 Android testers for the closed test and the 100 Days challenge (your current users lean iPhone, so ask Android users directly); note them in OUTREACH.md
+- [ ] **Claude (by Fri 16 Oct):** Android shell: Capacitor around the existing app (`com.tiktym.app`), native Google sign-in passed to Firebase, push through FCM with a second sending path on the server, offline from the bundled files; upload key kept outside the repo
+- [ ] **Claude (Fri 16 Oct):** speed check on a low-end Android emulator: opens in about 2 seconds or less, scrolling smooth; if not, report before going further
+- [ ] **Claude (by Sun 1 Nov):** the ledger: Usage access reader (per-app minutes stay on the phone; only daily totals for social, video and games sync), app groups the person can change, "Invested · Scrolled" on Today and Insights against 100 a day, 700 a week and about 3,000 a month, a home-screen widget, and an optional ongoing notification
+- [ ] **Claude (before submitting):** check Play's current policy on Usage access and write the Data safety answers to match
+- [ ] **You (each build):** install it on your Android phone with Claude's checklist and report what you see
 - [ ] **You:** send Claude the app signing key's SHA-256 fingerprint (Play Console › Test and release › App integrity › App signing).
-- [ ] **Claude:** build the Android app (Bubblewrap; package `com.tiktym.app`; upload key kept outside the repo), test it on the Android emulator, and serve `/.well-known/assetlinks.json` from app.tiktym.com so it opens full screen without an address bar (GTM-07).
 - [ ] **Claude:** store listing: short and full description, 512 px icon, 1024×500 feature graphic, phone screenshots from the real app, and draft answers for Data safety, Content rating and Target audience (18+).
 - [ ] **You:** fill in the Play Console forms (Claude's drafts), give reviewers a test login, upload the app, and start a closed test.
 - [ ] **You (personal account only):** 12 or more testers opted in to the closed test for 14 days in a row before Google allows production; the current users are the natural testers.
 - [ ] **You:** apply for production, then publish.
+- [ ] **You and Claude (Mon 30 Nov):** the ledger test: at least half the Android testers scroll 15% or more less and invest more in week 4 than week 1. Pass: public release, then the iPhone app. Fail: interview testers, try the swap prompt (GTM.md › Strategy)
+- [ ] **You (early November, as a hedge):** enrol in the Apple Developer Program (US$99/year) and request the Family Controls entitlement, so approval isn't the bottleneck if the test passes
 
 **Phase 3: Launch**
 
@@ -143,7 +150,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 ## Notifications (see NOTIFICATIONS.md)
 
-Decided 10 October 2026: everything on by default, each switchable off in Setup or from any email. Emails come from "Praveen from TikTym" <hello@tiktym.com>, replies to the support Gmail; the welcome goes out after first-run Start.
+**Parked 13 October 2026 until the ledger test (30 Nov):** the monthly progress email, first-week tips and streak-at-risk push below; the news broadcast for the challenge still goes out (it recruits testers). Decided 10 October 2026: everything on by default, each switchable off in Setup or from any email. Emails come from "Praveen from TikTym" <hello@tiktym.com>, replies to the support Gmail; the welcome goes out after first-run Start.
 
 - [ ] **You:** create a Resend API key (Sending access, tiktym.com) and store it with `firebase functions:secrets:set RESEND_API_KEY --project tiktym`. Never paste it into chat or code.
 - [ ] **You:** send a personal welcome email to each new sign-up until the automatic one is live.

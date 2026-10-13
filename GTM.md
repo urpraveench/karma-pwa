@@ -4,6 +4,20 @@ Day-to-day outreach (tasks, messages, tracking links, logs) is in [OUTREACH.md](
 
 How TikTym gets its first users in India, and what has to be true before it does. Pending steps are tracked in [to-do.md](to-do.md) under "Go-to-market"; this file is the why.
 
+## Strategy (decided 13 October 2026)
+
+**The thesis.** A working professional who wants to grow needs a daily ritual: 100 minutes for body, mind, career and reading (700 a week, about 3,000 a month; a bad day is made up at the weekend). People don't grow because nobody measures the positive side of their day. The phone measures every minute scrolled (Indians average about 5 hours of phone time a day, about 2.5 hours of it on social media), buries that number in Settings, and measures nothing they invest in themselves.
+
+**The gap TikTym fills: the ledger.** Minutes invested against minutes scrolled, in one unit, always in view on the home screen. Blocking apps (Opal, one sec) take time away but leave it empty; single-purpose apps measure one side of life; Digital Wellbeing measures only consumption. Nobody shows both sides together, and nobody turns freed minutes into a planned 100.
+
+**Why Android first.** Measuring scrolled minutes automatically needs a native app (a web app can't read usage; people won't send screenshots). Android gives exact per-app minutes through Usage access and runs on most phones in India. iPhone gives only approximate minutes (15-minute thresholds) and needs Apple's Family Controls approval; it follows if the Android test passes. Current users who allowed notifications lean iPhone (4 of 6 devices, 13 October), so Android testers must be recruited deliberately.
+
+**How it's built.** Capacitor: the existing React app, tested by 339 scenarios, runs inside a native shell; only the widget, the usage reader, native Google sign-in and push (FCM) are native code, kept small and isolated. The web app stays for iPhone and computers. Revisit only if the app is clearly slow on a low-end Android phone (more than about 2 seconds to open) or the ledger test points to a native-first product.
+
+**The test that decides what's next (Mon 30 November 2026).** Testers join with the 100 Days, 100 Minutes challenge on 2 November. Pass: at least half of the Android testers scroll 15% or more less and invest more in week 4 than in week 1. Pass → public Play release, then the iPhone app. Fail → interview the testers, try the "swap" prompt, and keep what was built (the Play app, the testers, the data).
+
+**Parked until then:** pivots to courses, coaching institutes or a company version; AI coach features other than the ledger; monthly progress and first-week emails; the iPhone native app.
+
 **Decided, 8 October 2026:** the name stays **TikTym** (no IP India results for "TikTym", nor for "TikTim" in phonetic search), the domain is **tiktym.com** (owned), and the first audience is **working professionals**.
 
 ## Who it's for
@@ -58,8 +72,8 @@ The website lives at `tiktym.com`; the app lives at `app.tiktym.com` (`tiktym.we
 
 ## Phase 2: App stores
 
-- **Google Play:** publish the PWA as a Trusted Web Activity (Google's own wrapper). US$25 one-time developer fee. Makes TikTym searchable where Android users look.
-- **Apple App Store:** later, only with traction. It needs a native wrapper and risks rejection as "just a website".
+- **Google Play (first, from October 2026):** a Capacitor Android app with the ledger and the home-screen widget (see Strategy). US$25 one-time developer fee; a personal account needs 12 or more testers in a closed test for 14 days before release to everyone.
+- **Apple App Store:** after the ledger test passes: Capacitor plus Swift extensions for Screen Time thresholds, the widget and an intercept screen. US$99 a year, and Apple must approve the Family Controls entitlement first.
 
 ## Phase 3: Launch and growth (weeks 4–12)
 

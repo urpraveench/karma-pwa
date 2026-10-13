@@ -39,7 +39,8 @@ Summary of coverage at the time of writing:
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 19 | 19 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| **Total** | **339** | **326** | **0** | **13** |
+| 18. Android app | 7 | 0 | 7 | 0 |
+| **Total** | **346** | **326** | **7** | **13** |
 
 ---
 
@@ -512,6 +513,20 @@ A separate app at admin.tiktym.com for Praveen only. Every action runs in a Clou
 | ADMIN-13 | Costs and limits | Costs page: this month's Google Cloud spend after credits and discounts, in total and by service, from the BigQuery billing export (it finds the export's table itself: FOCUS usage cost, using EffectiveCost since the 1st, or Standard usage cost; before the first rows arrive it says so), and each limit with use, percentage and a level in words (OK; amber "Over 70%"; red "Over 90%"): Resend emails this month (TikTym's own counts, India days; the paid plan's 50,000), App Check checks this month, Firestore reads and writes today, Hosting transfer today (Cloud Monitoring, from midnight Pacific). Each part says on its own if it can't be read, and each links to its console. Refresh reloads it | E2E `admin/costs.spec.ts`, Unit `costs.test.ts`, `adminCosts.test.ts` (reading the real project: Manual) |
 | ADMIN-14 | Function health | Health page: for the last 24 hours (Cloud Monitoring), each function that ran, with runs and errors (4xx or 5xx responses for second-generation functions, under their Cloud Run service names; non-ok runs for the first-generation sign-up trigger), errors first then busiest, each with a link to its logs. A line says how many functions had errors, or "No errors in the last 24 hours."; if Monitoring can't be read it says which role is missing. Refresh reloads it | E2E `admin/health.spec.ts`, Unit `health.test.ts` (reading the real project: Manual) |
 
+## 18. Android app
+
+The same app inside a native Android shell (Capacitor), built from this codebase; the web app is unchanged. Being built on the `android` branch (GTM.md › Strategy).
+
+| ID | Scenario | Expected | Coverage |
+|---|---|---|---|
+| AND-01 | The app opens | The installed app (`com.tiktym.app`) opens full screen from files bundled in the install, so it opens without a connection; no service worker runs inside it | Gap |
+| AND-02 | Email sign-in in the app | Signing in with email and password opens the same account and data as on the web | Gap |
+| AND-03 | Google sign-in in the app | Continue with Google shows Android's own account picker and signs in to the same account as Google sign-in on the web | Gap |
+| AND-04 | App Check in the app | The app proves it's genuine with Play Integrity (a debug token in test builds), so voice logging and other checked calls work | Gap |
+| AND-05 | Reminders in the app | Allowing notifications saves the phone as a device; reminders, the evening check, practice reminders and admin pushes arrive through FCM, as they do through web push on the web | Gap |
+| AND-06 | Updates in the app | No "new version" bar inside the app (Play delivers updates); Setup › About shows the app's version | Gap |
+| AND-07 | Fast on a low-end phone | On a low-end Android phone (emulator profile), the first screen appears in about 2 seconds or less and scrolling is smooth | Gap |
+
 ---
 
 ## Not built yet
@@ -528,7 +543,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 ## What's left to test
 
-**Gaps** (testable, no test yet): none.
+**Gaps** (testable, no test yet): AND-01 to AND-07, the Android app being built (to-do.md › Phase 2: App stores).
 
 **Manual** (check by hand before a release, on a real phone and the real Firebase project):
 

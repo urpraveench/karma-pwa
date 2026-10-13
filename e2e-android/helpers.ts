@@ -32,11 +32,28 @@ export async function launch(device: AndroidDevice): Promise<Page> {
 }
 
 /** A new account on the Auth emulator, made directly so the test can sign in with it. */
-export async function newAccount(): Promise<{ email: string; password: string }> {
+export async function newAccount(): Promise<{ email: string; password: string; uid: string }> {
   const email = `android${Date.now()}${Math.floor(Math.random() * 1e6)}@example.com`, password = 'test-pass-123';
   const res = await fetch('http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts:signUp?key=fake-api-key', {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password, returnSecureToken: true }),
   });
   if (!res.ok) throw new Error(`Auth emulator: ${res.status}`);
-  return { email, password };
+  return { email, password, uid: (await res.json()).localId };
+}
+
+/** Signs in with email on the sign-in screen and starts the account from first run, landing on Today. */
+export async function signIn(page: Page, account: { email: string; password: string }) {
+  await page.fill('#em', account.email);
+  await page.fill('#pw', account.password);
+  await page.click('button[type=submit]');
+  await expect(page.locator('.hello, .first-run')).toBeVisible({ timeout: 30_000 });
+  if (await page.locator('.first-run').count()) await page.locator('.fr-start .btn').click();
+  await expect(page.locator('.hello')).toBeVisible({ timeout: 30_000 });
+}
+
+/** The account's saved notification devices, read from the Firestore emulator past the rules. */
+export async function devices(uid: string): Promise<Record<string, unknown>[]> {
+  const res = await fetch(`http://127.0.0.1:8080/v1/projects/demo-tiktym/databases/(default)/documents/users/${uid}/devices`, { headers: { Authorization: 'Bearer owner' } });
+  const docs = ((await res.json()).documents ?? []) as { name: string; fields: Record<string, { stringValue?: string; integerValue?: string }> }[];
+  return docs.map(d => ({ id: d.name.split('/').pop(), ...Object.fromEntries(Object.entries(d.fields).map(([k, v]) => [k, v.stringValue ?? Number(v.integerValue)])) }));
 }

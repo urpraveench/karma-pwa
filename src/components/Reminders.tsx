@@ -1,6 +1,6 @@
 import { badgeOn, LOG_NUDGE_TIME, logNudgeOn, REMINDER_TIMES, reminderOn, reminderTime, timeLabel } from '../lib/reminders';
 import { useApp } from '../state/app';
-import { usePushStatus, type PushStatus } from '../state/push';
+import { BLOCKED_HELP, usePushStatus, type PushStatus } from '../state/push';
 
 // Daily reminders in Setup › Notifications and privacy (NOTIF-12). The reminder and the evening log check are on by
 // default in every account; the phone's own "Allow" is asked on the first tap in the app (state/app.tsx).
@@ -8,7 +8,7 @@ import { usePushStatus, type PushStatus } from '../state/push';
 export const WHY: Partial<Record<PushStatus, string>> = {
   unsupported: "This browser can't show notifications.",
   'needs-install': 'On iPhone, reminders work once TikTym is on your home screen. Add it, open it from there, then turn this on.',
-  blocked: "Notifications are blocked for TikTym. Allow them in your browser's site settings, then come back here.",
+  blocked: BLOCKED_HELP.setup,
 };
 
 /** Setup › Daily reminder: the switch and the time, or why it can't work on this device. */

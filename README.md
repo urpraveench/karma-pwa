@@ -203,6 +203,8 @@ Google sign-in in the app uses Android's own account picker (`@capacitor-firebas
 
 App Check in the app comes from Android's own App Check (`@capacitor-firebase/app-check`), handed to the web SDK as a custom provider, since reCAPTCHA can't run in the app. `VITE_ANDROID_APPCHECK` picks the provider: `debug` for the debug APKs above, `play` (Play Integrity) for the Play build. A debug build passes only once its debug secret (printed in `adb logcat` as "Enter this debug secret…", new for each install) is added in Firebase console › App Check › TikTym Android › Manage debug tokens. Play Integrity needs the Play Console linked to the Firebase project and the provider registered in App Check.
 
+Notifications in the app use FCM (`@capacitor/push-notifications`) instead of web push: allowing them saves the app's FCM token in `users/{uid}/devices` next to browsers' subscriptions, and the functions send each device the same notification its own way (`pushToAccount`, `fcmMessage` in `functions/src/push.ts`), into the app's "Reminders" channel with the ring in `res/drawable/ic_stat_tiktym.xml`. The app needs the functions deployed with this change before its devices get anything.
+
 ## Pending work
 
 Everything still to do, including the public launch checklist, is tracked in [to-do.md](to-do.md). The go-to-market plan is in [GTM.md](GTM.md).

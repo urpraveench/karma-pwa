@@ -40,8 +40,8 @@ Summary of coverage at the time of writing:
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| 18. Android app | 8 | 5 | 3 | 0 |
-| **Total** | **348** | **332** | **3** | **13** |
+| 18. Android app | 8 | 6 | 2 | 0 |
+| **Total** | **348** | **333** | **2** | **13** |
 
 ---
 
@@ -525,7 +525,7 @@ The same app inside a native Android shell (Capacitor), built from this codebase
 | AND-02 | Email sign-in in the app | Signing in with email and password opens the same account and data as on the web | Android `e2e-android/shell.spec.ts` (emulator; a real phone: Manual) |
 | AND-03 | Google sign-in in the app | Continue with Google shows Android's own account picker and signs in to the same account as Google sign-in on the web; closing the picker shows no message; a phone with no Google account is told where to add one | Android `e2e-android/google.spec.ts` (emulator), Unit `nativeGoogle.test.ts`; a real phone with a Google account: Manual |
 | AND-04 | App Check in the app | The app proves it's genuine with Android's own App Check (Play Integrity in Play builds, the debug provider in debug builds) instead of reCAPTCHA, started once, and its token goes with the app's Firebase calls, so voice logging and other checked calls work | Android `e2e-android/appCheck.spec.ts` (emulator), Unit `nativeAppCheck.test.ts`; Play Integrity on a Play install and a registered debug secret: Manual |
-| AND-05 | Notifications in the app | As on the web (NOTIF-12), the first tap of an open asks Android for notifications while the reminder is on; Allow saves the phone's FCM token as a device in the account (once, and again if Android renews it), and Setup shows reminders on. Refused: Setup says to allow them in Android's settings for TikTym. Tapping a notification opens TikTym at its link | Gap |
+| AND-05 | Notifications in the app | As on the web (NOTIF-12), the first tap of an open asks Android for notifications while the reminder is on; Allow saves the phone's FCM token as a device in the account (once, and again if Android renews it), and Setup shows reminders on. Refused: Setup says to allow them in Android's settings for TikTym. Tapping a notification opens TikTym | Android `e2e-android/push.spec.ts` (emulator; a real phone: Manual) |
 | AND-08 | Reminders reach the app | The daily reminder, the evening check, practice reminders and admin pushes go through FCM to the app's devices, alongside web push to the account's browsers, with the white TikTym ring in the status bar and a "Reminders" notification channel. A token FCM reports gone is removed and not tried again (as NOTIF-11); a refused send is logged and not retried, a busy or failing FCM is retried | Unit `push.test.ts` (a real phone getting them: Manual) |
 | AND-06 | Updates in the app | No "new version" bar inside the app (Play delivers updates); Setup › About shows the app's version | Gap |
 | AND-07 | Fast on a low-end phone | On a low-end Android phone (emulator profile), the first screen appears in about 2 seconds or less and scrolling is smooth | Gap |
@@ -546,7 +546,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 ## What's left to test
 
-**Gaps** (testable, no test yet): AND-05 to AND-07, the Android app being built (to-do.md › Phase 2: App stores).
+**Gaps** (testable, no test yet): AND-06, AND-07, the Android app being built (to-do.md › Phase 2: App stores).
 
 **Manual** (check by hand before a release, on a real phone and the real Firebase project):
 

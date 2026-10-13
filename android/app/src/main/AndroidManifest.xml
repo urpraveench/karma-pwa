@@ -43,4 +43,6 @@
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Android 13 and up: the app asks before showing reminders (AND-05). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 </manifest>

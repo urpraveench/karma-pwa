@@ -146,7 +146,7 @@ export async function sendToDevices<D>(devices: D[], send: (d: D) => Promise<unk
 /**
  * The same notification for the Android app, as an FCM message (AND-08): in the app's "Reminders" channel, with the
  * white TikTym ring in the status bar (android/app/src/main/res/drawable/ic_stat_tiktym.xml), held for up to 3 hours
- * like web push, and replacing an earlier one with the same tag. A tap opens the app at `url` (src/state/push.ts).
+ * like web push, and replacing an earlier one with the same tag. A tap opens the app (Android's default); `url` goes along as on the web.
  */
 export function fcmMessage(token: string, payload: string, topic: string) {
   const d = JSON.parse(payload) as { title?: string; body?: string; url?: string; tag?: string };

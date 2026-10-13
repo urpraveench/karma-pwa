@@ -12,7 +12,7 @@ import { startingCategories, type Choice } from '../lib/firstRun';
 import { defaultCategories, sampleData } from '../lib/sample';
 import { saveTimer } from '../lib/timer';
 import { badgeCount, reminderOn, reminderTime, timeLabel } from '../lib/reminders';
-import { canPush, enablePush, resavePush, type PushStatus } from './push';
+import { BLOCKED_HELP, enablePush, pushAskable, pushAskableSoon, resavePush, type PushStatus } from './push';
 import { newId } from '../lib/util';
 import { shouldAutoReload, startErrorMessage } from '../lib/startError';
 import { reloadToLatest } from './update';
@@ -240,9 +240,9 @@ function useAppState() {
       setData({ ...d0, settings });
       void persist(() => store.putSettings(settings));
     }
-    if (canPush() && Notification.permission === 'default' && !reminderOn(d0.settings)) {
+    if (pushAskable() && !reminderOn(d0.settings)) {
       void enablePush((id, d) => store.putDevice(id, d))
-        .then(status => { if (status === 'blocked') toast('Notifications are blocked. Allow them for TikTym in your browser settings.', 5000); })
+        .then(status => { if (status === 'blocked') toast(BLOCKED_HELP.toast, 5000); })
         .catch(e => console.warn(e));
     }
   }, [store, setData, persist, toast]);
@@ -302,7 +302,7 @@ function useAppState() {
     try { status = await enablePush((id, d) => store.putDevice(id, d)); }
     catch (e) { console.warn(e); toast('Could not turn on reminders. Try again later.'); return 'ask'; }
     if (status === 'on') { setReminder({ on: true, time }); toast(`Reminder set for ${timeLabel(time)}, if anything's left`); track('reminders_on'); }
-    else if (status === 'blocked') toast('Notifications are blocked. Allow them for TikTym in your browser settings.', 5000);
+    else if (status === 'blocked') toast(BLOCKED_HELP.toast, 5000);
     return status;
   }, [store, setReminder, toast]);
 
@@ -335,15 +335,20 @@ function useAppState() {
   // and browsers only let a page ask from a tap. So the first tap anywhere asks, once per open, with no screen of our own.
   useEffect(() => {
     if ((phase.kind !== 'ready' && phase.kind !== 'choose') || !store) return;
-    if (!canPush() || Notification.permission !== 'default' || !reminderOn(dataRef.current.settings)) return;
+    if (!reminderOn(dataRef.current.settings)) return;
+    let live = true;
     const ask = () => {
       document.removeEventListener('pointerup', ask, true);
       document.removeEventListener('keydown', ask, true);
-      if (Notification.permission === 'default') void enableReminders(reminderTime(dataRef.current.settings));
+      if (pushAskable()) void enableReminders(reminderTime(dataRef.current.settings));
     };
-    document.addEventListener('pointerup', ask, true);
-    document.addEventListener('keydown', ask, true);
-    return () => { document.removeEventListener('pointerup', ask, true); document.removeEventListener('keydown', ask, true); };
+    // The Android app learns its permission asynchronously (AND-05); a browser knows at once.
+    void pushAskableSoon().then(askable => {
+      if (!live || !askable) return;
+      document.addEventListener('pointerup', ask, true);
+      document.addEventListener('keydown', ask, true);
+    });
+    return () => { live = false; document.removeEventListener('pointerup', ask, true); document.removeEventListener('keydown', ask, true); };
   }, [phase.kind, store, enableReminders]);
 
   const setBacklogCap = useCallback((v: number) => {

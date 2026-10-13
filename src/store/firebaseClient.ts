@@ -1,8 +1,10 @@
 import { initializeApp } from 'firebase/app';
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
+import { Capacitor } from '@capacitor/core';
+import { CustomProvider, initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore, initializeFirestore, persistentLocalCache, type Firestore } from 'firebase/firestore';
 import { appCheckSiteKey, firebaseConfig } from '../config';
+import { nativeAppCheckMode, nativeAppCheckToken } from '../lib/nativeAppCheck';
 
 // Import this module dynamically, only in firebase mode, so test mode never downloads the SDK.
 
@@ -10,8 +12,12 @@ export const app = initializeApp(firebaseConfig);
 
 // App Check: proves requests come from this app on app.tiktym.com, so Firestore and Auth can refuse anything else
 // once enforcement is on in the Firebase console. Must start before Auth and Firestore are used.
-const siteKey = appCheckSiteKey();
-if (siteKey) initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(siteKey), isTokenAutoRefreshEnabled: true });
+// In the Android app the token comes from Android's own App Check instead: Play Integrity, or the debug provider in debug builds (AND-04).
+const siteKey = appCheckSiteKey(), nativeMode = Capacitor.isNativePlatform() ? nativeAppCheckMode(import.meta.env.VITE_ANDROID_APPCHECK) : null;
+if (nativeMode) {
+  const getToken = nativeAppCheckToken(() => import('@capacitor-firebase/app-check'), nativeMode);
+  initializeAppCheck(app, { provider: new CustomProvider({ getToken }), isTokenAutoRefreshEnabled: true });
+} else if (siteKey) initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(siteKey), isTokenAutoRefreshEnabled: true });
 export const auth = getAuth(app);
 
 // Offline persistence: logging works without signal and syncs later.

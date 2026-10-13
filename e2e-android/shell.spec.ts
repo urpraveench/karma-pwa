@@ -10,7 +10,7 @@ test.afterAll(async () => {
   await device?.close();
 });
 
-test('opens on the sign-in screen from its own files, with no service worker and no web App Check (AND-01)', async () => {
+test('opens on the sign-in screen from its own files, with no service worker and no reCAPTCHA (AND-01)', async () => {
   const page = await launch(device);
   await expect(page.locator('.login h1')).toHaveText('TikTym');
   expect(new URL(page.url()).hostname).toBe('localhost'); // served from the install, not the website

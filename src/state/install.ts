@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core';
 import { useEffect, useState } from 'react';
 import { installEnv, type InstallEnv } from '../lib/install';
 
@@ -16,8 +17,9 @@ if (typeof window !== 'undefined') {
   addEventListener('appinstalled', () => { offer = null; justInstalled = true; changed(); });
 }
 
+// The Android app is installed by definition; its WebView would otherwise look like an in-app browser (AND-06).
 const standalone = () =>
-  justInstalled || matchMedia('(display-mode: standalone)').matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
+  Capacitor.isNativePlatform() || justInstalled || matchMedia('(display-mode: standalone)').matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
 
 /** Where this page could be installed from, kept current as the browser's offer arrives or the app gets installed. */
 export function useInstall(): { env: InstallEnv; install: () => Promise<boolean> } {

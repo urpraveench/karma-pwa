@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core';
 import { useEffect, useState } from 'react';
 import { isDifferentBuild, type Build } from '../version';
 
@@ -5,12 +6,13 @@ const CHECK_EVERY = 30 * 60_000;
 
 /**
  * The live build, when it differs from the one running. Checked on start, whenever the app comes back on
- * screen, and every 30 minutes. Stays null in the dev server, offline, or when version.json can't be read.
+ * screen, and every 30 minutes. Stays null in the dev server, offline, or when version.json can't be read, and always in
+ * the Android app, which Play updates (AND-06).
  */
 export function useNewerBuild(): Build | null {
   const [live, setLive] = useState<Build | null>(null);
   useEffect(() => {
-    if (import.meta.env.DEV) return;
+    if (import.meta.env.DEV || Capacitor.isNativePlatform()) return;
     let alive = true;
     const check = async () => {
       try {

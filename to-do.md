@@ -182,6 +182,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.15.0: the coloured button logs only today's minutes and a red "+N carried" button clears the backlog; "How did it feel?" only after a focus timer session; iPhone evening check and practice reminders. App and website deployed, 14 October 2026
 - [x] **Claude:** CLAUDE.md › Branches: `main` is production, live fixes branch off `main`, feature branches like `android` merge in only when they ship and take `main` after each release, deploy only from `main`. 14 October 2026
 - [x] **Claude:** "How did it feel?" only after a focus timer session, not after every quick tap or typed entry; the question made every toast twice as tall and covered the row just logged (LOG-31). 14 October 2026
 - [x] **Claude:** the coloured button logs only what's left of today's target; once that's done, a red "+N carried" button clears the backlog on purpose; the row reads "0 of 60, 120 carried" and "Today's 60 done, 120 carried"; the toast says what's still carried; the website's feature list says "One tap logs today's minutes" (LOG-01, LOG-32, TODAY-11). From a user who did 60 minutes of Exercise and got 180 logged. 14 October 2026

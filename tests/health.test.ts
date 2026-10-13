@@ -30,4 +30,16 @@ describe('function health (ADMIN-14)', () => {
     expect(q.getAll('aggregation.groupByFields')).toEqual(['resource.label.service_name', 'metric.label.response_code_class']);
     expect(healthQuery(GEN1_METRIC, new Date()).getAll('aggregation.groupByFields')).toEqual(['resource.label.function_name', 'metric.label.status']);
   });
+
+  it('lists a second-generation function once, under its readable name, with Cloud Run\'s counts (ADMIN-14)', () => {
+    const fn = (name: string, status: string, n: number) => ({ resource: { labels: { function_name: name } }, metric: { labels: { status } }, points: [{ value: { int64Value: String(n) } }] });
+    const rows = healthRows(
+      { timeSeries: [run('remindersend', '2xx', 10), run('remindersend', '5xx', 7), run('adminmetrics', '2xx', 11)] },
+      { timeSeries: [fn('reminderSend', 'ok', 10), fn('reminderSend', 'error', 6), fn('adminMetrics', 'ok', 11), fn('signedUp', 'ok', 2)] },
+      'tiktym',
+    );
+    expect(rows.map(r => [r.name, r.runs, r.errors])).toEqual([['reminderSend', 17, 7], ['adminMetrics', 11, 0], ['signedUp', 2, 0]]);
+    expect(rows[0].logs).toBe('https://console.cloud.google.com/run/detail/asia-south1/remindersend/logs?project=tiktym');
+    expect(rows[2].logs).toContain('/functions/details/asia-south1/signedUp?');
+  });
 });

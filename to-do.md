@@ -168,6 +168,7 @@ No more blank screen on a slow connection (reported by a friend, 8 October 2026)
 
 Decided 13 October 2026: a separate admin app in this repo and Firebase project, for Praveen only. Access is an `admin` custom claim that only a server script can set; every action runs in a Cloud Function that checks it, so `firestore.rules` stay closed to apps. Every send is recorded in `adminLog/`. FEATURES.md › 17. Admin console.
 
+
 ## 7. Housekeeping
 
 - [ ] **You (email avatar, free):** let hello@tiktym.com receive mail (it has no MX records, so mail to it bounces): ImprovMX (free) forwarding hello@ to your Gmail, with its two MX records in GoDaddy DNS; then create a Google account for hello@tiktym.com ("Use your existing email") and set its photo to `public/brand/png/tiktym-app-icon.png`, so Gmail shows the TikTym logo instead of a blank avatar. Not guaranteed for automated mail, but works for most Gmail readers.
@@ -180,6 +181,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** Health lists each function once, under its readable name with Cloud Run's counts, instead of twice (Cloud Run service and Cloud Function) (found by Praveen) (ADMIN-14), 13 October 2026
 - [x] **Claude:** "One person" audience on the Email and Push pages (asked by Praveen; deployed): type their account's email; the preview or Check says if there's no such account, their News is off or they have no device; History shows who it went to (ADMIN-07, ADMIN-08, ADMIN-10, ADMIN-12), 13 October 2026
 - [x] Deployed the admin console: 13 new admin functions (metrics, email, push, history, costs, health, the nightly totals and the two send queues), the existing functions updated (each email now counted in `adminStats`), and https://admin.tiktym.com live (HTTPS, noindex); a call without the admin claim is refused. The app itself is unchanged, so no app release, 13 October 2026
 - [x] **Claude:** Costs reads the FOCUS billing export (finds the billing dataset and table itself, FOCUS or Standard; "no data yet" before the first rows), and the Resend limit is the paid plan's 50,000 a month with no daily cap (ADMIN-13), 13 October 2026

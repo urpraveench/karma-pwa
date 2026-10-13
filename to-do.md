@@ -96,7 +96,7 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 Google Play (started 12 October 2026; changed 13 October from a Trusted Web Activity to a Capacitor app with the ledger, see GTM.md › Strategy). Native changes need a Play release; the screens are the same React app as the website.
 
-- [ ] **You:** open a Google Play developer account (US$25) at play.google.com/console/signup (personal or organisation: see the plan), verify your identity and an Android phone, then create the app "TikTym" with Play App Signing on.
+- [ ] **You:** open a Google Play developer account (US$25) at play.google.com/console/signup (follow PLAY-ACCOUNT.md: personal or organisation), verify your identity and an Android phone, then create the app "TikTym" with Play App Signing on.
 - [ ] **You (this week):** recruit 15 Android testers for the closed test and the 100 Days challenge (your current users lean iPhone, so ask Android users directly); note them in OUTREACH.md
 - [ ] **Claude (by Fri 16 Oct):** Android shell: Capacitor around the existing app (`com.tiktym.app`), native Google sign-in passed to Firebase, push through FCM with a second sending path on the server, offline from the bundled files; upload key kept outside the repo
 - [ ] **Claude (Fri 16 Oct):** speed check on a low-end Android emulator: opens in about 2 seconds or less, scrolling smooth; if not, report before going further

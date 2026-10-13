@@ -12,27 +12,42 @@ type Answer = { timeSeries?: Series[] };
 
 const total = (s: Series) => (s.points ?? []).reduce((a, p) => a + Number(p.value?.int64Value ?? p.value?.doubleValue ?? 0), 0);
 
-/** Rows from the two Monitoring answers, errors first, then busiest; a function with no runs isn't listed. */
+/**
+ * Rows from the two Monitoring answers, one per function, errors first, then busiest; a function with no runs isn't
+ * listed. Monitoring reports a second-generation function twice, as a Cloud Run service (lower case) and as a Cloud
+ * Function (camel case): they're merged under the readable name, using Cloud Run's counts (4xx and 5xx responses are
+ * errors). The first-generation signedUp trigger has only the Cloud Function counts (any status but ok is an error).
+ */
 export function healthRows(run: Answer, gen1: Answer, project: string, region = 'asia-south1'): HealthRow[] {
-  const rows = new Map<string, HealthRow>();
-  const add = (name: string, logs: string, n: number, error: boolean) => {
-    const r = rows.get(name) ?? { name, runs: 0, errors: 0, logs };
-    r.runs += n;
-    if (error) r.errors += n;
-    rows.set(name, r);
-  };
+  type Counts = { runs: number; errors: number };
+  const byKey = new Map<string, { name?: string; service?: string; run?: Counts; fn?: Counts }>();
+  const entry = (name: string) => byKey.get(name.toLowerCase()) ?? byKey.set(name.toLowerCase(), {}).get(name.toLowerCase())!;
+  const add = (c: Counts | undefined, n: number, error: boolean): Counts => ({ runs: (c?.runs ?? 0) + n, errors: (c?.errors ?? 0) + (error ? n : 0) });
   for (const s of run.timeSeries ?? []) {
     const name = s.resource?.labels?.service_name;
     if (!name) continue;
     const cls = s.metric?.labels?.response_code_class ?? '';
-    add(name, `https://console.cloud.google.com/run/detail/${region}/${name}/logs?project=${project}`, total(s), cls === '4xx' || cls === '5xx');
+    const e = entry(name);
+    e.service = name;
+    e.run = add(e.run, total(s), cls === '4xx' || cls === '5xx');
   }
   for (const s of gen1.timeSeries ?? []) {
     const name = s.resource?.labels?.function_name;
     if (!name) continue;
-    add(name, `https://console.cloud.google.com/functions/details/${region}/${name}?project=${project}&tab=logs`, total(s), (s.metric?.labels?.status ?? 'ok') !== 'ok');
+    const e = entry(name);
+    e.name = name;
+    e.fn = add(e.fn, total(s), (s.metric?.labels?.status ?? 'ok') !== 'ok');
   }
-  return [...rows.values()].filter(r => r.runs > 0).sort((a, b) => b.errors - a.errors || b.runs - a.runs || a.name.localeCompare(b.name));
+  const rows: HealthRow[] = [];
+  for (const e of byKey.values()) {
+    const counts = e.run ?? e.fn!;
+    const name = e.name ?? e.service!;
+    const logs = e.service
+      ? `https://console.cloud.google.com/run/detail/${region}/${e.service}/logs?project=${project}`
+      : `https://console.cloud.google.com/functions/details/${region}/${name}?project=${project}&tab=logs`;
+    rows.push({ name, runs: counts.runs, errors: counts.errors, logs });
+  }
+  return rows.filter(r => r.runs > 0).sort((a, b) => b.errors - a.errors || b.runs - a.runs || a.name.localeCompare(b.name));
 }
 
 /** The Monitoring query for one metric over the last 24 hours, summed per function and outcome. */

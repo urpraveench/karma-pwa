@@ -13,6 +13,10 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
+## Coming next
+
+- **Evening check and practice reminders on iPhone.** If TikTym is on your iPhone's home screen, the 8 pm "Did you log what you did today?" check and your practice reminders now arrive, as the daily reminder already did.
+
 ## 1.14.0 · 13 October 2026 · A reminder for each practice
 
 - **A reminder for each practice.** Want a nudge to read at 10 am, or to exercise at 6 pm? Open the practice in Setup and pick a time under "Remind me". It comes only if that practice is still to do that day.

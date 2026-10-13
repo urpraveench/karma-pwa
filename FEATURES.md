@@ -38,10 +38,10 @@ Summary of coverage at the time of writing:
 | 13. App shell, PWA and platform | 37 | 32 | 0 | 5 |
 | 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
-| 16. Notifications | 19 | 19 | 0 | 0 |
+| 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
 | 18. Android app | 7 | 2 | 5 | 0 |
-| **Total** | **346** | **328** | **5** | **13** |
+| **Total** | **347** | **329** | **5** | **13** |
 
 ---
 
@@ -492,6 +492,7 @@ See NOTIFICATIONS.md for the plan. Emails and usage statistics are on by default
 | NOTIF-14 | Devices go with the account | Deleting the account removes its saved notification devices along with everything else | Emulator `tests-emulator/store.test.ts` |
 | NOTIF-19 | Practice reminder | A practice with its own reminder time (PRAC-24) gets a push at that time, in the account's time zone, on every device that allowed notifications: "Time for Reading" / "Even 5 minutes counts." Only if that practice is still due today (not done, not a rest day, not archived); once a day per practice; never after 10 pm. Practices set for the same time share one notification ("Time for Reading and Exercise"). Independent of the daily reminder and the evening log check | Unit `push.test.ts` (sending: Manual) |
 | NOTIF-20 | Practice reminders stay in step | The server's reminder record keeps the UTC slots of the account's practice reminders, updated when a practice, the settings or the devices change, and on the day daylight saving moves them; the 15-minute job finds accounts by slot. No device, or no practice with a reminder: no slots | Unit `push.test.ts` (sending: Manual) |
+| NOTIF-21 | Pushes accepted on every phone | Every push goes out with a topic every push service accepts, Apple's included (only URL-safe letters, at most 32, padded to a length divisible by 4), so the daily reminder, the evening check, practice reminders and admin pushes all reach iPhones. A push the service refuses (4xx other than too-many-requests) is logged with the service's reason and not retried; network errors, rate limits and server errors are retried | Unit `push.test.ts` (on a real iPhone: Manual) |
 
 ## 17. Admin console
 
@@ -512,7 +513,7 @@ A separate app at admin.tiktym.com for Praveen only. Every action runs in a Clou
 | ADMIN-11 | Broadcast pushes respect quiet hours and send once | One queued task per person: between 10 pm and 7 am in their time zone it waits until 10 am there ("3 of them at night… waits until 10 am"). It reaches all their devices once, leaves the icon badge alone and has its own tag; expired devices are removed (as NOTIF-11); `reminders/{uid}.broadcasts` stops a repeat. `adminLog/{id}` counts queued, held, sent, skipped (no device) and failed | Unit `pushBroadcast.test.ts`, E2E `admin/push.spec.ts` (sending: Manual) |
 | ADMIN-12 | Send history | History page: the newest 50 broadcasts and tests, newest first: email or push (test), subject or title, when (India time), audience ("Just me" for tests, "One person (their email)" for a one-person send), and how far it has got ("Sending: 32 of 40 done", waiting for daytime, then sent, skipped by reason, failed; "Nobody in the audience"). Refresh reloads it; with nothing sent yet it says so | E2E `admin/history.spec.ts`, Unit `adminLog.test.ts` |
 | ADMIN-13 | Costs and limits | Costs page: this month's Google Cloud spend after credits and discounts, in total and by service, from the BigQuery billing export (it finds the export's table itself: FOCUS usage cost, using EffectiveCost since the 1st, or Standard usage cost; before the first rows arrive it says so), and each limit with use, percentage and a level in words (OK; amber "Over 70%"; red "Over 90%"): Resend emails this month (TikTym's own counts, India days; the paid plan's 50,000), App Check checks this month, Firestore reads and writes today, Hosting transfer today (Cloud Monitoring, from midnight Pacific). Each part says on its own if it can't be read, and each links to its console. Refresh reloads it | E2E `admin/costs.spec.ts`, Unit `costs.test.ts`, `adminCosts.test.ts` (reading the real project: Manual) |
-| ADMIN-14 | Function health | Health page: for the last 24 hours (Cloud Monitoring), each function that ran, with runs and errors (4xx or 5xx responses for second-generation functions, under their Cloud Run service names; non-ok runs for the first-generation sign-up trigger), errors first then busiest, each with a link to its logs. A line says how many functions had errors, or "No errors in the last 24 hours."; if Monitoring can't be read it says which role is missing. Refresh reloads it | E2E `admin/health.spec.ts`, Unit `health.test.ts` (reading the real project: Manual) |
+| ADMIN-14 | Function health | Health page: for the last 24 hours (Cloud Monitoring), each function that ran, listed once under its readable name (Monitoring reports each function as both a Cloud Run service and a Cloud Function), with runs and errors (4xx or 5xx responses for second-generation functions, under their Cloud Run service names; non-ok runs for the first-generation sign-up trigger), errors first then busiest, each with a link to its logs. A line says how many functions had errors, or "No errors in the last 24 hours."; if Monitoring can't be read it says which role is missing. Refresh reloads it | E2E `admin/health.spec.ts`, Unit `health.test.ts` (reading the real project: Manual) |
 
 ## 18. Android app
 

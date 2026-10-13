@@ -27,7 +27,7 @@ import {
 } from './mail.js';
 import { addDays, lastWeekStart, recapCheck, recapFrom, weekRecap, type RecapCategory, type RecapLog, type RecapMail } from './recap.js';
 import webpush from 'web-push';
-import { nudgeCheck, nudgePayload, nudgeSlotFor, practiceCheck, practicePayload, practiceTag, reminderCheck, reminderPayload, reminderTarget, sendToDevices, type ReminderDoc } from './push.js';
+import { nudgeCheck, nudgePayload, nudgeSlotFor, practiceCheck, practicePayload, practiceTag, reminderCheck, reminderPayload, reminderTarget, retryablePush, sendToDevices, webPushTopic, type ReminderDoc } from './push.js';
 import { practicesLeft } from './shared/backlog.js';
 import { badgeOn, localParts, slotAt, VAPID_PUBLIC_KEY } from './shared/reminders.js';
 import type { AppData, Category, Log, PushDevice, Settings } from './shared/types.js';
@@ -303,13 +303,13 @@ async function pushToAccount(uid: string, payload: string, topic: string): Promi
   const devices = await db.collection(`users/${uid}/devices`).get();
   const options = {
     vapidDetails: { subject: 'mailto:hello@tiktym.com', publicKey: VAPID_PUBLIC_KEY, privateKey: VAPID_PRIVATE_KEY.value() },
-    TTL: 3 * 3600, urgency: 'normal' as const, topic,
+    TTL: 3 * 3600, urgency: 'normal' as const, topic: webPushTopic(topic),
   };
   const { sent, removed, failed } = await sendToDevices(devices.docs,
     d => { const device = d.data() as PushDevice; return webpush.sendNotification({ endpoint: device.endpoint, keys: device.keys }, payload, options); },
     d => d.ref.delete());
-  if (failed) logger.warn('push failed on a device', { uid, error: String(failed) });
-  if (!sent && failed) throw failed; // nothing reached: let the queue retry
+  if (failed) logger.warn('push failed on a device', { uid, error: String(failed), status: (failed as { statusCode?: unknown }).statusCode, reason: (failed as { body?: unknown }).body });
+  if (!sent && failed && retryablePush(failed)) throw failed; // nothing reached, and it may next time: let the queue retry
   if (removed) logger.info('gone devices removed', { uid, removed });
   return sent;
 }

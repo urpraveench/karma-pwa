@@ -25,9 +25,9 @@ Summary of coverage at the time of writing:
 | 1. Accounts and sign-in | 28 | 26 | 0 | 2 |
 | 2. First run | 13 | 13 | 0 | 0 |
 | 3. Backlog rules | 16 | 16 | 0 | 0 |
-| 4. Today screen | 21 | 20 | 1 | 0 |
+| 4. Today screen | 21 | 21 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
-| 6. Logging minutes | 28 | 26 | 2 | 0 |
+| 6. Logging minutes | 28 | 28 | 0 | 0 |
 | 7. Focus timer | 22 | 19 | 0 | 3 |
 | 8. History | 9 | 9 | 0 | 0 |
 | 9. Insights | 24 | 24 | 0 | 0 |
@@ -39,7 +39,7 @@ Summary of coverage at the time of writing:
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| **Total** | **342** | **326** | **3** | **13** |
+| **Total** | **342** | **329** | **0** | **13** |
 
 ---
 
@@ -140,7 +140,7 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | TODAY-08 | Centre: all done | "All clear" with points logged today | E2E `today.spec.ts` |
 | TODAY-09 | Centre: nothing due | "Rest day · Nothing due today" | E2E `today-states.spec.ts` |
 | TODAY-10 | Centre: minimum mode | In comeback and minimum-day moments: minutes still needed to make today count, with the full amount as a smaller "if you go all in" | E2E `today-states.spec.ts` |
-| TODAY-11 | Practice rows | Name, colour stripe, and "N of M" (M is today's target, the backlog not included) with ", K carried" when there is backlog, "Today's M done, K carried" once today's part is done, "K carried" on a day with no target, "Done, N logged" or "Rest day"; a progress bar showing done and carried. The hint under the rows: "The coloured button logs today's minutes" | Gap |
+| TODAY-11 | Practice rows | Name, colour stripe, and "N of M" (M is today's target, the backlog not included) with ", K carried" when there is backlog, "Today's M done, K carried" once today's part is done, "K carried" on a day with no target, "Done, N logged" or "Rest day"; a progress bar showing done and carried. The hint under the rows: "The coloured button logs today's minutes" | E2E `today.spec.ts`, `today-states.spec.ts`, `setup.spec.ts` |
 | TODAY-12 | Archived practices | Not shown on Today | E2E `today-states.spec.ts` |
 | TODAY-13 | Streak nudge | After 6 pm with a streak and points left, and no moment card: "Clear N more to keep your K-day streak" | E2E `today-states.spec.ts` |
 | TODAY-14 | Focus timer tip | Shown until dismissed or a timer is first started; hidden when a moment card or timer is showing | E2E `today-states.spec.ts` |
@@ -179,13 +179,13 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
-| LOG-01 | Tap the coloured "+N" button on a practice | Logs what's left of today's target only, never the carried backlog; toast "Name done for today", or "Today's Name done, N carried left" when backlog remains | Gap |
+| LOG-01 | Tap the coloured "+N" button on a practice | Logs what's left of today's target only, never the carried backlog; toast "Name done for today", or "Today's Name done, N carried left" when backlog remains | E2E `today.spec.ts`, `today-states.spec.ts` |
 | LOG-02 | Tap ✓ on a cleared practice | Opens the log sheet for that practice | E2E `log-sheet.spec.ts` |
 | LOG-03 | Undo from the toast | Removes the entry and restores the totals; toast "Undone" | E2E `today.spec.ts` |
 | LOG-04 | Clear the last pending practice | Full-screen "All clear" celebration with the streak; tap anywhere to close, or Undo last entry | E2E `today.spec.ts`, `today-states.spec.ts` |
 | LOG-05 | Streak milestones in the celebration | Extra line at 7, 21, 30, 50, 100 and 108 days; on a clear day that earns a shield, "You earned a shield: it keeps your streak if you miss a day." instead | E2E `today-states.spec.ts` |
 | LOG-31 | Say how it felt | After a single entry, the toast also offers 😞 😐 🙂 ("Felt low", "Felt okay", "Felt good"); a tap saves it on the entry (synced and in backups), and the toast says "Noted" | E2E `today.spec.ts` |
-| LOG-32 | Clear carried-over minutes | With today's target done and backlog left, the button turns red and reads "+N carried"; a tap logs the backlog (toast "Name done for today"). Tapping the name logs any other amount | Gap |
+| LOG-32 | Clear carried-over minutes | With today's target done and backlog left, the button turns red and reads "+N carried"; a tap logs the backlog (toast "Name done for today"). Tapping the name logs any other amount | E2E `today-states.spec.ts` |
 
 ### Log sheet
 

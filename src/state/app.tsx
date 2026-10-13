@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { errCode, startAuth, type AuthApi } from '../auth';
-import { calc, practicesLeft } from '../lib/backlog';
+import { calc, carriedLeft, dueLeft, practicesLeft } from '../lib/backlog';
 import { editCategory, moveCategory, newCategory, nextOrder, type CategoryForm } from '../lib/categories';
 import { dayLabel, today, ymd } from '../lib/date';
 import { startAccountAnalytics, track } from '../lib/analytics';
@@ -190,8 +190,9 @@ function useAppState() {
     if (mm?.minMode && mm.minGoal && before.totals.done < mm.minGoal && after.totals.done >= mm.minGoal) {
       haptic([15, 50, 25]); toast('Today counts. Anything more is a bonus.', 4500, undo); return;
     }
-    const cleared = before.per[l.catId].today.end > 0 && after.per[l.catId].today.end === 0;
-    toast(cleared ? `${cat.name} done for today` : `+${l.minutes} ${cat.name}${l.date !== T0 ? `, ${dayLabel(l.date, T0)}` : ''}`, 6000, undo, feel => setFeel(l.id, feel));
+    const b = before.per[l.catId].today, a = after.per[l.catId].today, cleared = b.end > 0 && a.end === 0;
+    const todayDone = l.date === T0 && dueLeft(b) > 0 && dueLeft(a) === 0 && a.end > 0;
+    toast(cleared ? `${cat.name} done for today` : todayDone ? `Today's ${cat.name} done, ${carriedLeft(a)} carried left` : `+${l.minutes} ${cat.name}${l.date !== T0 ? `, ${dayLabel(l.date, T0)}` : ''}`, 6000, undo, feel => setFeel(l.id, feel));
   }, [store, toast, celebrate, setData, setFeel]);
 
   /** `method` says how the minutes were logged, for anonymous analytics (with consent). */

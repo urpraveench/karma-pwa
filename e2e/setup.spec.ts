@@ -145,7 +145,7 @@ test.describe('Setup details', () => {
     await page.locator('.seg-full button', { hasText: 'Yesterday' }).click();
     await page.click('.sheet button[type=submit]');
     await tab(page, 'Today').click();
-    await expect(page.locator('.cat', { hasText: 'Journaling' }).locator('.cat-meta')).toHaveText('0 of 30, 15 carried');
+    await expect(page.locator('.cat', { hasText: 'Journaling' }).locator('.cat-meta')).toHaveText('0 of 15, 15 carried');
   });
 
   test('editing shows the hint and lets you move the start date (PRAC-12, PRAC-18)', async ({ page }) => {

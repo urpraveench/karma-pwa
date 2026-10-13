@@ -4,7 +4,7 @@ import { InstallCard } from '../components/InstallGuide';
 import { MomentCard } from '../components/MomentCard';
 import { ideaFor } from '../lib/ideas';
 import { easiestPending } from '../lib/moments';
-import { activeCats, showUpStreak } from '../lib/backlog';
+import { activeCats, carriedLeft, dueLeft, showUpStreak } from '../lib/backlog';
 import { addDays, fmtLong } from '../lib/date';
 import { dayMark, weekStart } from '../lib/streak';
 import { greeting } from '../lib/user';
@@ -73,8 +73,10 @@ export function Today() {
       {cats.length ? cats.map(cat => {
         const r = c.per[cat.id].today, owed = Math.max(r.owed, 1);
         const doneW = r.owed ? Math.min(100, r.done / owed * 100) : (r.done ? 100 : 0);
-        const carryLeft = Math.max(0, r.opening - r.done), carryW = carryLeft / owed * 100;
-        const meta = r.owed === 0 && r.done === 0 ? 'Rest day' : r.end === 0 ? `Done, ${r.done} logged` : `${r.done} of ${r.owed}${carryLeft ? `, ${carryLeft} carried` : ''}`;
+        const todayLeft = dueLeft(r), carryLeft = carriedLeft(r), carryW = carryLeft / owed * 100;
+        const meta = r.owed === 0 && r.done === 0 ? 'Rest day' : r.end === 0 ? `Done, ${r.done} logged`
+          : todayLeft ? `${r.done} of ${r.due}${carryLeft ? `, ${carryLeft} carried` : ''}`
+          : r.due ? `Today's ${r.due} done, ${carryLeft} carried` : `${carryLeft} carried`;
         const isLive = tm?.catId === cat.id;
         return (
           <div className="cat" key={cat.id} style={{ '--c': cat.color } as CSSProperties}>
@@ -88,13 +90,15 @@ export function Today() {
             {isLive
               ? <button className="tbtn live" onClick={openFocus} aria-label={`Open the running ${cat.name} timer`}><b>{minute}</b> <small>min</small></button>
               : <button className="tbtn" onClick={() => start(cat.id)} aria-label={`Start a ${cat.name} timer`}><Icon.play /></button>}
-            {r.end > 0
-              ? <button className="qbtn" onClick={() => logEntry(cat.id, r.end, T, '', 'quick')} aria-label={`Log ${r.end} minutes of ${cat.name}`}>+{r.end}</button>
+            {todayLeft > 0
+              ? <button className="qbtn" onClick={() => logEntry(cat.id, todayLeft, T, '', 'quick')} aria-label={`Log ${todayLeft} minutes of ${cat.name}`}>+{todayLeft}</button>
+              : carryLeft > 0
+              ? <button className="qbtn carry" onClick={() => logEntry(cat.id, carryLeft, T, '', 'quick')} aria-label={`Log ${carryLeft} carried-over minutes of ${cat.name}`}>+{carryLeft}<small>carried</small></button>
               : <button className="qbtn done" onClick={() => openSheet({ kind: 'log', catId: cat.id })} aria-label={`Log more ${cat.name}`}>✓</button>}
           </div>
         );
       }) : <div className="empty">No practices yet. Add one in Setup.</div>}
-      {cats.length > 0 && <p className="row-hint">▶ starts a timer. The coloured button logs everything left. Tap a name for other amounts.</p>}
+      {cats.length > 0 && <p className="row-hint">▶ starts a timer. The coloured button logs today's minutes. Tap a name for other amounts.</p>}
       <aside className="idea" aria-label="Today's idea"><small>Today's idea</small><p>{ideaFor(T)}</p></aside>
     </>
   );

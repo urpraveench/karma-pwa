@@ -45,4 +45,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Android 13 and up: the app asks before showing reminders (AND-05). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Voice logging: the WebView asks Android for the microphone when the page does (AND-09). -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 </manifest>

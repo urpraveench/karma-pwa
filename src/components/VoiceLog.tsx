@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core';
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { dayLabel } from '../lib/date';
 import type { Category, DateStr } from '../lib/types';
@@ -12,7 +13,9 @@ const MAX_SECONDS = 30;
 const BAR_COUNT = 17;
 
 const captureMessage = (code: VoiceCaptureErrorCode) => {
-  if (code === 'permission') return 'Microphone access is off. Allow it in your browser settings, then try again.';
+  if (code === 'permission') return Capacitor.isNativePlatform() // the Android app (AND-09)
+    ? 'Microphone access is off. Turn it on in Android Settings › Apps › TikTym › Permissions, then try again.'
+    : 'Microphone access is off. Allow it in your browser settings, then try again.';
   if (code === 'missing-microphone') return 'I could not find a microphone on this device.';
   if (code === 'microphone-busy') return 'Another app may be using the microphone. Close it, then try again.';
   if (code === 'unsupported') return 'Voice recording is not available in this browser.';

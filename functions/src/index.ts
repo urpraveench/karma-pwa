@@ -495,8 +495,19 @@ export const adminMetrics = onCall(async req => {
   return metricsFrom(days, admin.map(d => d.data()), stats.map(d => d.data()));
 });
 
-/** The accounts an audience is found by (ADMIN-07): every account with an email for everyone, else by last-logged date. */
-async function audienceUids(audience: Audience): Promise<string[]> {
+/** The account with this email, or null. */
+const accountByEmail = (email: string) => getAuth().getUserByEmail(email).catch(() => null);
+
+/**
+ * The accounts an audience is found by (ADMIN-07): one account by its email, every account with an email for
+ * everyone, else by last-logged date.
+ */
+async function audienceUids(draft: Draft): Promise<string[]> {
+  if (draft.audience === 'person') {
+    const u = await accountByEmail(draft.to!);
+    return u ? [u.uid] : [];
+  }
+  const audience: Audience = draft.audience;
   const range = audienceRange(audience, indiaToday(new Date()));
   if (!range) {
     const uids: string[] = [];
@@ -526,7 +537,13 @@ export const adminEmailPreview = onCall({ secrets: [UNSUBSCRIBE_SECRET], timeout
   const draft = draftFrom(req.data);
   const me = await recipient(req.auth!.uid);
   const email = broadcastEmail(draft, me?.name ?? '', unsubscribeLink(req.auth!.uid, 'news', UNSUBSCRIBE_SECRET.value()));
-  return { subject: email.subject, html: email.html, count: (await audienceUids(draft.audience)).length };
+  const uids = await audienceUids(draft);
+  let note: string | undefined;
+  if (draft.audience === 'person') {
+    if (!uids.length) note = 'No TikTym account has that email address.';
+    else if (!emailOn((await settingsDoc(uids[0]).get()).data(), 'news')) note = 'They switched off "News about TikTym", so they won\'t get it.';
+  }
+  return { subject: email.subject, html: email.html, count: uids.length, ...(note ? { note } : {}) };
 });
 
 /** Sends the draft to your own address only, and records it in the send history (ADMIN-07, ADMIN-12). */
@@ -548,7 +565,7 @@ export const adminEmailTest = onCall({ secrets: [RESEND_API_KEY, UNSUBSCRIBE_SEC
 export const adminEmailSend = onCall({ timeoutSeconds: 540, memory: '512MiB' }, async req => {
   requireAdmin(req.auth);
   const draft = draftFrom(req.data);
-  const uids = await audienceUids(draft.audience);
+  const uids = await audienceUids(draft);
   const ref = db.collection('adminLog').doc();
   await ref.set({ kind: 'email', ...draft, by: req.auth!.token.email ?? req.auth!.uid, createdAt: Timestamp.now(), queued: 0, sent: 0, skipped: 0, failed: 0 });
   const queue = getFunctions().taskQueue('locations/asia-south1/functions/broadcastSend');
@@ -579,7 +596,7 @@ export const broadcastSend = onTaskDispatched({
   if (!draft) return;
   const today = indiaToday(new Date());
   const m = mail.data() as Recipient | undefined;
-  const check = broadcastCheck({ settings: settings.data(), lastEmailDay: m?.lastEmailDay, broadcasts: m?.broadcasts }, id, today);
+  const check = broadcastCheck({ settings: settings.data(), lastEmailDay: m?.lastEmailDay, broadcasts: m?.broadcasts }, id, today, draft.audience === 'person');
   if (check === 'already-sent') return;
   if (check !== 'send') { await log.update({ skipped: FieldValue.increment(1), [`skippedWhy.${check}`]: FieldValue.increment(1) }); return; }
   const to = await recipient(uid);
@@ -594,8 +611,14 @@ export const broadcastSend = onTaskDispatched({
   await log.update({ sent: FieldValue.increment(1) });
 });
 
-/** Accounts with a device that allowed notifications, and their time zones; only recent loggers for active7 (ADMIN-10). */
-async function pushAudience(audience: PushAudience): Promise<{ uid: string; tz: string }[]> {
+/** Accounts with a device that allowed notifications, and their time zones; only recent loggers for active7, or one account (ADMIN-10). */
+async function pushAudience(draft: PushDraft): Promise<{ uid: string; tz: string }[]> {
+  if (draft.audience === 'person') {
+    const u = await accountByEmail(draft.to!);
+    const r = u ? (await reminderDoc(u.uid).get()).data() : undefined;
+    return u && Number(r?.devices) > 0 ? [{ uid: u.uid, tz: String(r?.tz || 'Asia/Kolkata') }] : [];
+  }
+  const audience: PushAudience = draft.audience;
   const withDevices = await db.collection('reminders').where('devices', '>', 0).select('tz').get();
   const from = pushActiveFrom(audience, indiaToday(new Date()));
   const active = from ? new Set((await db.collection('mail').where('lastLogged', '>=', from).select().get()).docs.map(d => d.id)) : null;
@@ -611,7 +634,13 @@ function pushDraftFrom(data: unknown): PushDraft {
 /** How many people a push audience reaches (ADMIN-10). */
 export const adminPushCount = onCall(async req => {
   requireAdmin(req.auth);
-  return { count: (await pushAudience(pushDraftFrom(req.data).audience)).length };
+  const draft = pushDraftFrom(req.data);
+  const people = await pushAudience(draft);
+  let note: string | undefined;
+  if (draft.audience === 'person' && !people.length) {
+    note = (await accountByEmail(draft.to!)) ? 'That account has no device with notifications on.' : 'No TikTym account has that email address.';
+  }
+  return { count: people.length, ...(note ? { note } : {}) };
 });
 
 /** Sends the draft to your own devices only, straight away, and records it in the send history (ADMIN-10, ADMIN-12). */
@@ -632,7 +661,7 @@ export const adminPushTest = onCall({ secrets: [VAPID_PRIVATE_KEY] }, async req 
 export const adminPushSend = onCall({ timeoutSeconds: 540, memory: '512MiB' }, async req => {
   requireAdmin(req.auth);
   const draft = pushDraftFrom(req.data);
-  const people = await pushAudience(draft.audience);
+  const people = await pushAudience(draft);
   const ref = db.collection('adminLog').doc();
   await ref.set({ kind: 'push', ...draft, by: req.auth!.token.email ?? req.auth!.uid, createdAt: Timestamp.now(), queued: 0, held: 0, sent: 0, skipped: 0, failed: 0 });
   const queue = getFunctions().taskQueue('locations/asia-south1/functions/broadcastPushSend');

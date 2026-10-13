@@ -1,13 +1,14 @@
 // Push notifications written in the admin console and sent to a group of people (ADMIN-10, ADMIN-11). Pure, so it's
 // unit-tested (tests/pushBroadcast.test.ts); index.ts finds the accounts, queues one task per person and sends.
 import { addDays } from './recap.js';
+import { readEmail } from './broadcast.js';
 import { localParts } from './shared/reminders.js';
 
-/** Everyone with a device that allowed notifications, or only those of them who logged in the last 7 days. */
-export type PushAudience = 'devices' | 'active7';
-export const PUSH_AUDIENCES: PushAudience[] = ['devices', 'active7'];
+/** Everyone with a device that allowed notifications, only those of them who logged in the last 7 days, or one account by its email. */
+export type PushAudience = 'devices' | 'active7' | 'person';
+export const PUSH_AUDIENCES: PushAudience[] = ['devices', 'active7', 'person'];
 
-export interface PushDraft { audience: PushAudience; title: string; body: string; url: string }
+export interface PushDraft { audience: PushAudience; title: string; body: string; url: string; to?: string }
 
 const text = (v: unknown, max: number) => (typeof v === 'string' && v.trim() && v.trim().length <= max ? v.trim() : null);
 
@@ -18,7 +19,9 @@ export function readPushDraft(v: unknown): PushDraft | null {
   const title = text(d.title, 60), body = text(d.body, 160);
   const url = d.url === undefined || d.url === '' ? '/' : text(d.url, 200);
   if (!audience || !title || !body || !url || !/^\/(?!\/)[^\s"<>]*$/.test(url)) return null;
-  return { audience, title, body, url };
+  if (audience !== 'person') return { audience, title, body, url };
+  const to = readEmail(d.to);
+  return to ? { audience, title, body, url, to } : null;
 }
 
 /** The lastLogged a person needs for the active audience, or null for everyone with a device. */

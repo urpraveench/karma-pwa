@@ -27,3 +27,13 @@ describe('email composer form (ADMIN-07)', () => {
     expect(peopleText(1250)).toBe('up to 1,250 people');
   });
 });
+
+describe('email to one person (ADMIN-07)', () => {
+  it('asks for their email first, and sends it with the draft', () => {
+    expect(formProblem({ ...full, audience: 'person' })).toBe('Enter the email their TikTym account uses.');
+    expect(formProblem({ ...full, audience: 'person', to: 'asha@x' })).toBe('Enter the email their TikTym account uses.');
+    expect(formProblem({ ...full, audience: 'person', to: 'asha@example.com' })).toBeNull();
+    expect(draftOf({ ...full, audience: 'person', to: ' Asha@Example.com ' })).toMatchObject({ audience: 'person', to: 'asha@example.com' });
+    expect(draftOf({ ...full, to: 'asha@example.com' })).not.toHaveProperty('to');
+  });
+});

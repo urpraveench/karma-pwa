@@ -105,3 +105,29 @@ test('a refusal from the server is shown, and nothing is sent (ADMIN-07)', async
   await expect(page.getByRole('button', { name: 'Preview to send' })).toBeDisabled();
   errors = errors.filter(e => !e.includes('400')); // the browser logs the refused request itself
 });
+
+test('email one person: their address is checked, sent with the draft, and the preview says when they won\'t get it (ADMIN-07)', async ({ page }) => {
+  const previews = await stubFunction(page, 'adminEmailPreview', (d: unknown) => {
+    const to = (d as { draft: { to?: string } }).draft.to;
+    return to === 'off@example.com' ? { ...PREVIEW, count: 1, note: 'They switched off "News about TikTym", so they won\'t get it.' } : { ...PREVIEW, count: 1 };
+  });
+  const sends = await stubFunction(page, 'adminEmailSend', { id: 'b9', queued: 1 });
+  await openEmail(page);
+  await page.getByLabel('One person').check();
+  await write(page);
+  await expect(page.getByText('Enter the email their TikTym account uses.')).toBeVisible();
+  await page.getByLabel('Their email').fill('Off@Example.com');
+  await page.getByRole('button', { name: 'Preview', exact: true }).click();
+  await expect(page.getByRole('alert')).toHaveText('They switched off "News about TikTym", so they won\'t get it.');
+  await expect(page.getByRole('button', { name: 'Nobody to send to' })).toBeDisabled();
+
+  await page.getByLabel('Their email').fill('asha@example.com');
+  await page.getByRole('button', { name: 'Preview', exact: true }).click();
+  await page.getByRole('button', { name: 'Send to asha@example.com…' }).click();
+  await expect(page.getByRole('alertdialog', { name: 'Confirm sending' })).toContainText('This goes to asha@example.com (one person)');
+  await page.getByRole('button', { name: 'Yes, send it' }).click();
+  await expect(page.getByRole('status')).toContainText('Queued for 1 person');
+  expect(previews.map(p => (p as { draft: { to?: string } }).draft.to)).toEqual(['off@example.com', 'asha@example.com']);
+  expect(sends).toEqual([{ draft: { audience: 'person', to: 'asha@example.com', subject: 'The challenge starts', title: 'The challenge starts 2 November', body: '100 Days, 100 Minutes.\n\n**Join us**.' } }]);
+  errors = errors.filter(e => !e.includes("Blocked script execution in 'about:srcdoc'"));
+});

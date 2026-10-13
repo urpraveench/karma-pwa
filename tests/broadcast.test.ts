@@ -63,3 +63,18 @@ describe('broadcast emails respect choices and send once (ADMIN-08, ADMIN-09)', 
     expect(broadcastCheck({ settings: {}, broadcasts: ['b0', 'b1'] }, 'b1', today)).toBe('already-sent');
   });
 });
+
+describe('one person (ADMIN-07, ADMIN-08)', () => {
+  it('needs a valid email for one person, kept in lower case; other audiences ignore it', () => {
+    expect(readDraft({ ...ok, audience: 'person', to: ' Asha@Example.COM ' })).toEqual({ ...ok, audience: 'person', to: 'asha@example.com' });
+    expect(readDraft({ ...ok, audience: 'person' })).toBeNull();
+    expect(readDraft({ ...ok, audience: 'person', to: 'not-an-email' })).toBeNull();
+    expect(readDraft({ ...ok, to: 'asha@example.com' })).toEqual(ok);
+  });
+
+  it('still respects News off, but an email to one person goes even if they had another today', () => {
+    expect(broadcastCheck({ settings: {}, lastEmailDay: '2026-10-13' }, 'b1', '2026-10-13', true)).toBe('send');
+    expect(broadcastCheck({ settings: { emails: { news: false } } }, 'b1', '2026-10-13', true)).toBe('off');
+    expect(broadcastCheck({ settings: {}, broadcasts: ['b1'] }, 'b1', '2026-10-13', true)).toBe('already-sent');
+  });
+});

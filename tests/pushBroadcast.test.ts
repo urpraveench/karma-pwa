@@ -50,3 +50,11 @@ describe('broadcast pushes respect quiet hours (ADMIN-11)', () => {
     expect(pushDelaySeconds(new Date('2026-10-13T03:00:00Z'), 'America/New_York')).toBe(11 * 3600); // 11 pm there
   });
 });
+
+describe('push to one person (ADMIN-10)', () => {
+  it('needs a valid email for one person, kept in lower case', () => {
+    expect(readPushDraft({ ...ok, audience: 'person', to: 'Ravi@Example.com' })).toEqual({ ...ok, audience: 'person', to: 'ravi@example.com', url: '/' });
+    expect(readPushDraft({ ...ok, audience: 'person', to: 'nope' })).toBeNull();
+    expect(readPushDraft({ ...ok, to: 'ravi@example.com' })).toEqual({ ...ok, url: '/' });
+  });
+});

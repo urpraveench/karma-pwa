@@ -40,8 +40,8 @@ Summary of coverage at the time of writing:
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| 18. Android app | 7 | 2 | 5 | 0 |
-| **Total** | **347** | **329** | **5** | **13** |
+| 18. Android app | 7 | 3 | 4 | 0 |
+| **Total** | **347** | **330** | **4** | **13** |
 
 ---
 
@@ -523,7 +523,7 @@ The same app inside a native Android shell (Capacitor), built from this codebase
 |---|---|---|---|
 | AND-01 | The app opens | The installed app (`com.tiktym.app`) opens full screen from files bundled in the install, so it opens without a connection; no service worker runs inside it | Android `e2e-android/shell.spec.ts` (emulator; a real phone: Manual) |
 | AND-02 | Email sign-in in the app | Signing in with email and password opens the same account and data as on the web | Android `e2e-android/shell.spec.ts` (emulator; a real phone: Manual) |
-| AND-03 | Google sign-in in the app | Continue with Google shows Android's own account picker and signs in to the same account as Google sign-in on the web | Gap |
+| AND-03 | Google sign-in in the app | Continue with Google shows Android's own account picker and signs in to the same account as Google sign-in on the web; closing the picker shows no message; a phone with no Google account is told where to add one | Android `e2e-android/google.spec.ts` (emulator), Unit `nativeGoogle.test.ts`; a real phone with a Google account: Manual |
 | AND-04 | App Check in the app | The app proves it's genuine with Play Integrity (a debug token in test builds), so voice logging and other checked calls work | Gap |
 | AND-05 | Reminders in the app | Allowing notifications saves the phone as a device; reminders, the evening check, practice reminders and admin pushes arrive through FCM, as they do through web push on the web | Gap |
 | AND-06 | Updates in the app | No "new version" bar inside the app (Play delivers updates); Setup › About shows the app's version | Gap |
@@ -545,7 +545,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 ## What's left to test
 
-**Gaps** (testable, no test yet): AND-03 to AND-07, the Android app being built (to-do.md › Phase 2: App stores).
+**Gaps** (testable, no test yet): AND-04 to AND-07, the Android app being built (to-do.md › Phase 2: App stores).
 
 **Manual** (check by hand before a release, on a real phone and the real Firebase project):
 

@@ -199,6 +199,8 @@ The same React app inside a native Android shell (Capacitor 8, `android/`, packa
 | `npm run test:android` | Drives the test build on a running Android emulator (`emulator -avd Medium_Phone_API_36.0`) through Playwright, against the Firebase emulators |
 | `npm run android:open` | Opens the project in Android Studio |
 
+Google sign-in in the app uses Android's own account picker (`@capacitor-firebase/authentication`), then signs in to Firebase Auth with Google's token, so it's the same account as on the web. It works only for builds signed with a key whose SHA-1 is on the Firebase Android app "TikTym Android" (Project settings › Your apps): the debug key on this Mac is there; add the Play app signing key after the first upload, then download `android/app/google-services.json` again.
+
 ## Pending work
 
 Everything still to do, including the public launch checklist, is tracked in [to-do.md](to-do.md). The go-to-market plan is in [GTM.md](GTM.md).

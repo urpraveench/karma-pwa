@@ -36,6 +36,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] After the push-topic fix is deployed: on an iPhone with TikTym on the home screen, the 8 pm evening check arrives on a day with nothing logged, and a practice reminder arrives at its time; Health shows reminderSend with no errors the next day (NOTIF-21)
 - [ ] **You:** remove the last line of the LinkedIn page description ("TikTym is built by Pramal IT Services Private Limited.") in LinkedIn › Edit page
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
+- [ ] **You:** in the Android app on your phone (Claude's build), tap Continue with Google: Android's own account picker opens, and choosing your account opens the same data as on the web (AND-03)
 - [ ] Haptics on Android when logging (APP-17)
 - [ ] **You:** after the fix, run the 5-minute Meditation test again: the chime should play right as the timer reaches its target (TIMER-05).
 - [ ] **You:** on a real iPhone and Android phone, tap the centre microphone and say "walked 20, read 15"; check the sound bars move, "Understanding…" appears, both entries reach the review screen without being saved, and blocking microphone access leaves typing usable (LOG-26, LOG-29). The full flow was checked in Chrome on a Mac on 11 October.
@@ -100,7 +101,7 @@ Google Play (started 12 October 2026; changed 13 October from a Trusted Web Acti
 - [ ] **You:** wait for Dun & Bradstreet India to issue the D-U-N-S number for Pramal IT Services Pvt Ltd (requested 13 October 2026, reference DR101320263470822114; queries to serviceindia@dnb.com). Answer any D&B verification call or email the same day. If it hasn't arrived by **Fri 23 Oct**, open a Personal account instead (PLAY-ACCOUNT.md › 1)
 - [ ] **You:** open a Google Play developer account (US$25) at play.google.com/console/signup (follow PLAY-ACCOUNT.md: personal or organisation), verify your identity and an Android phone, then create the app "TikTym" with Play App Signing on.
 - [ ] **You (this week):** recruit 15 Android testers for the closed test and the 100 Days challenge (your current users lean iPhone, so ask Android users directly); note them in OUTREACH.md
-- [ ] **Claude (Android shell 2/5):** register the Android app in Firebase, native Google sign-in passed to Firebase Auth (AND-03)
+- [ ] **Claude (after the first Play upload):** add the Play app signing key's SHA-1 and SHA-256 (Play Console › App integrity) to the Firebase Android app "TikTym Android", then download `android/app/google-services.json` again; without it Google sign-in fails in the Play build (AND-03)
 - [ ] **Claude (Android shell 3/5):** App Check in the app with Play Integrity (debug provider for test builds), so voice logging works (AND-04)
 - [ ] **Claude (Android shell 4/5):** push through FCM: the app saves its FCM token as a device, the server sends reminders and broadcasts to FCM devices alongside web push (AND-05)
 - [ ] **Claude (Android shell 5/5):** no web update bar inside the app (updates come from Play), and the version shows in Setup › About (AND-06)
@@ -185,6 +186,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** Android shell 2/5: the Android app is registered in Firebase ("TikTym Android", debug key fingerprints), and Continue with Google in the app opens Android's own account picker (`@capacitor-firebase/authentication`), whose Google token signs in to Firebase Auth as on the web; closing the picker shows nothing, a phone with no Google account is told where to add one (AND-03). On the `android` branch, 13 October 2026
 - [x] **Claude:** Android shell 1/5: Capacitor 8 project in `android/` (`com.tiktym.app`, Android 7 and up), built without the service worker or web App Check (`npm run android:build`), opens from its own files and offline, email sign-in on the same Firebase project; automated on the Android emulator (`npm run android:build:test`, `npm run test:android`) (AND-01, AND-02). On the `android` branch, 13 October 2026
 - [x] **Claude:** bug fixed: iPhone users didn't get the 8 pm evening check or practice reminders, because Apple's push service refused topics whose length isn't valid Base64 (`BadWebPushTopic`, found via the Health page). Every topic is now padded to a valid length, and refused pushes are logged with the reason instead of retried (NOTIF-21); deployed (reminderSend, adminPushTest, broadcastPushSend, with adminHealth's fix), 13 October 2026
 - [x] **Claude:** Health lists each function once, under its readable name with Cloud Run's counts, instead of twice (Cloud Run service and Cloud Function) (found by Praveen) (ADMIN-14), 13 October 2026

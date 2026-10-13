@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "961077922651",
+    "project_id": "tiktym",
+    "storage_bucket": "tiktym.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961077922651:android:cf8e19d00f88c1961ea87e",
+        "android_client_info": {
+          "package_name": "com.tiktym.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "961077922651-p0oetjsurbn3v8l2d6ud48mkicvpsj90.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tiktym.app",
+            "certificate_hash": "aca8f79b853302eafc7f8567d32fbd05fd9cf8f0"
+          }
+        },
+        {
+          "client_id": "961077922651-hpg7fldc3gub2ngl23htrmlam8aje7v0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGMFqCDnHSVwuifqVMrHhI7oc9yrxf_zI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "961077922651-hpg7fldc3gub2ngl23htrmlam8aje7v0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

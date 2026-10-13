@@ -10,6 +10,8 @@ const config: CapacitorConfig = {
   appName: 'TikTym',
   webDir: 'dist-android',
   android: { backgroundColor: '#EDF0EA' },
+  // Google sign-in through Android's own account picker; the app's Firebase Auth (web SDK) signs in with the token (AND-03).
+  plugins: { FirebaseAuthentication: { skipNativeAuth: true, providers: ['google.com'] } },
   ...(emulators ? { server: { androidScheme: 'http', cleartext: true } } : {}),
 };
 

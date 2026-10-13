@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core';
 import { config, FIREBASE_READY } from './config';
 import { LocalStore } from './store/local';
 import { setStatsSink } from './lib/stats';
@@ -31,6 +32,17 @@ const AUTH_ERR: Record<string, string> = {
 };
 export const errCode = (e: unknown) => (e as { code?: string })?.code || (e as Error)?.message || String(e);
 export const authMsg = (e: unknown) => AUTH_ERR[(e as { code?: string })?.code || ''] || 'Something went wrong: ' + errCode(e);
+
+/**
+ * What to say when Android's own Google account picker fails (AND-03). Closing the picker is not an error worth a
+ * message; a phone with no Google account on it gets told where to add one.
+ */
+export function nativeGoogleMsg(e: unknown): string | null {
+  const m = (e as Error)?.message || String(e);
+  if (/cancel/i.test(m)) return null;
+  if (/no credential/i.test(m)) return 'Add a Google account to this phone (Settings › Passwords & accounts), or sign in with email.';
+  return 'Google sign-in failed: ' + errCode(e);
+}
 
 /**
  * Running from an iPhone or iPad home screen (iOS sets `navigator.standalone`). There, a sign-in pop-up opens in
@@ -86,6 +98,17 @@ async function startFirebaseAuth(cb: AuthCallbacks): Promise<AuthApi> {
     resetPassword: email => attempt(() => A.sendPasswordResetEmail(auth, email)),
     async google() {
       if (!config.enableGoogle) return GOOGLE_NOT_SET_UP;
+      // Inside the Android app Google refuses sign-in in a web view, so Android's own account picker gets the Google
+      // ID token and Firebase Auth here signs in with it: the same account as Google sign-in on the web (AND-03).
+      if (Capacitor.isNativePlatform()) {
+        const { FirebaseAuthentication } = await import('@capacitor-firebase/authentication');
+        try {
+          const idToken = (await FirebaseAuthentication.signInWithGoogle({ skipNativeAuth: true })).credential?.idToken;
+          if (!idToken) return 'Google sign-in failed: no token from Google.';
+          await A.signInWithCredential(auth, A.GoogleAuthProvider.credential(idToken));
+          return null;
+        } catch (e) { return (e as { code?: string }).code?.startsWith('auth/') ? authMsg(e) : nativeGoogleMsg(e); }
+      }
       const p = new A.GoogleAuthProvider();
       if (isIOSHomeScreenApp()) { await A.signInWithRedirect(auth, p); return null; }
       try { await A.signInWithPopup(auth, p); return null; }
@@ -94,6 +117,10 @@ async function startFirebaseAuth(cb: AuthCallbacks): Promise<AuthApi> {
         return 'Google sign-in failed: ' + errCode(e);
       }
     },
-    signOut: () => A.signOut(auth),
+    async signOut() {
+      // so the next Google sign-in in the Android app asks which account again
+      if (Capacitor.isNativePlatform()) await import('@capacitor-firebase/authentication').then(m => m.FirebaseAuthentication.signOut()).catch(e => console.warn(e));
+      await A.signOut(auth);
+    },
   };
 }

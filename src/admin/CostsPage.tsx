@@ -29,7 +29,7 @@ export function CostsPage() {
             {data.billing.status === 'ok' ? (
               <>
                 <b className="total">{money(data.billing.total, data.billing.currency)}</b>
-                <span className="muted small">After credits, from the billing export (it lags by a few hours)</span>
+                <span className="muted small">After credits and discounts, from the billing export (it lags by a few hours)</span>
                 {data.billing.services.length ? (
                   <table><tbody>
                     {data.billing.services.map(s => <tr key={s.service}><td>{s.service}</td><td>{money(s.cost, data.billing.status === 'ok' ? data.billing.currency : 'INR')}</td></tr>)}
@@ -37,7 +37,7 @@ export function CostsPage() {
                 ) : <p className="muted">Nothing charged this month.</p>}
               </>
             ) : (
-              <p className="muted">Couldn't read the billing export: {data.billing.reason} Turn on Billing › Billing export › Standard usage cost into the dataset <code>billing_export</code>.</p>
+              <p className="muted">Couldn't read the billing export: {data.billing.reason} It's set up in Billing › Billing export (FOCUS or Standard usage cost, to BigQuery in this project).</p>
             )}
             <a href="https://console.cloud.google.com/billing" target="_blank" rel="noreferrer">Open Cloud Billing</a>
           </section>

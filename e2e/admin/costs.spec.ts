@@ -39,14 +39,14 @@ test('shows this month\'s spend by service and each limit with its level in word
   await expect(item('Firestore reads today').getByRole('link', { name: 'Open console' })).toHaveAttribute('href', /firestore\/usage/);
 });
 
-test('without the billing export, says how to turn it on and still shows the limits (ADMIN-13)', async ({ page }) => {
+test('before the billing export has data, says so and still shows the limits (ADMIN-13)', async ({ page }) => {
   await stubFunction(page, 'adminCosts', {
-    billing: { status: 'unavailable', reason: 'Not found: Table tiktym:billing_export.gcp_billing_export_v1_*.' },
+    billing: { status: 'unavailable', reason: 'The billing export has no data yet; it can take a day after turning it on.' },
     limits: [limit({ id: 'resend-day', label: 'Resend emails today', limit: 100, used: 3, level: 'ok' })],
   });
   await signInAsAdmin(page);
   await page.goto('/#costs');
-  await expect(page.getByRole('region', { name: 'Google Cloud this month' })).toContainText("Couldn't read the billing export: Not found");
-  await expect(page.getByRole('region', { name: 'Google Cloud this month' })).toContainText('Billing › Billing export › Standard usage cost');
+  await expect(page.getByRole('region', { name: 'Google Cloud this month' })).toContainText("Couldn't read the billing export: The billing export has no data yet; it can take a day after turning it on.");
+  await expect(page.getByRole('region', { name: 'Google Cloud this month' })).toContainText('Billing › Billing export (FOCUS or Standard usage cost');
   await expect(page.locator('.limits li')).toContainText('OK3 of 100 (3%)');
 });

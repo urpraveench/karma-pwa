@@ -14,10 +14,9 @@ export interface LimitDef {
 /** Firebase's daily and monthly allowances reset at midnight Pacific time; Resend's plan is counted in India days. */
 export const QUOTA_TZ = 'America/Los_Angeles';
 
-/** The limits from GTM.md › Capacity on the free plan. Change Resend's when its plan changes. */
+/** The limits from GTM.md › Capacity on the free plan. Resend: the paid plan from 13 October 2026, 50,000 a month and no daily cap; change it with the plan. */
 export const LIMITS: LimitDef[] = [
-  { id: 'resend-day', label: 'Resend emails today', limit: 100, unit: 'count', period: 'day', link: 'https://resend.com/emails', source: { emails: true } },
-  { id: 'resend-month', label: 'Resend emails this month', limit: 3000, unit: 'count', period: 'month', link: 'https://resend.com/emails', source: { emails: true } },
+  { id: 'resend-month', label: 'Resend emails this month', limit: 50_000, unit: 'count', period: 'month', link: 'https://resend.com/emails', source: { emails: true } },
   { id: 'app-check', label: 'App Check checks this month', limit: 10_000, unit: 'count', period: 'month', link: 'https://console.cloud.google.com/security/recaptcha?project={project}',
     source: { metrics: ['recaptchaenterprise.googleapis.com/assessment_count'] } },
   { id: 'firestore-reads', label: 'Firestore reads today', limit: 50_000, unit: 'count', period: 'day', link: 'https://console.firebase.google.com/project/{project}/firestore/usage',
@@ -47,14 +46,39 @@ export function sumSeries(res: { timeSeries?: { points?: { value?: { int64Value?
   return total;
 }
 
-/** The billing export query: this month's cost after credits, per service. The export's table name ends in the billing account ID. */
-export const billingQuery = (project: string, dataset = 'billing_export') => `
+export type ExportFormat = 'focus' | 'standard';
+export interface BillingTable { dataset: string; table: string; format: ExportFormat }
+
+/**
+ * The billing export's table among the project's datasets: a FOCUS usage cost table (in Google's own
+ * gcp_billing_immutable_* dataset, or any dataset) first, else a standard usage cost table (gcp_billing_export_v1_*).
+ * Null before the export has written anything.
+ */
+export function pickBillingTable(datasets: { id: string; tables: string[] }[]): BillingTable | null {
+  const all = datasets.flatMap(d => d.tables.map(t => ({ dataset: d.id, table: t })));
+  const focus = all.find(t => /focus/i.test(t.table) || (/^gcp_billing_immutable_/.test(t.dataset) && !/^gcp_billing_export_/.test(t.table)));
+  if (focus) return { ...focus, format: 'focus' };
+  const standard = all.find(t => /^gcp_billing_export_v1_/.test(t.table));
+  return standard ? { ...standard, format: 'standard' } : null;
+}
+
+/** This month's cost per service: FOCUS's EffectiveCost (credits and discounts applied), or standard cost plus credits. */
+export function billingQuery(project: string, t: BillingTable): string {
+  const from = `\`${project}.${t.dataset}.${t.table}\``;
+  if (t.format === 'focus') return `
+  SELECT ServiceName AS service, BillingCurrency AS currency, SUM(EffectiveCost) AS cost
+  FROM ${from}
+  WHERE ChargePeriodStart >= TIMESTAMP(DATE_TRUNC(CURRENT_DATE('America/Los_Angeles'), MONTH), 'America/Los_Angeles')
+  GROUP BY service, currency
+  ORDER BY cost DESC`;
+  return `
   SELECT service.description AS service, currency,
     SUM(cost) + SUM(IFNULL((SELECT SUM(c.amount) FROM UNNEST(credits) AS c), 0)) AS cost
-  FROM \`${project}.${dataset}.gcp_billing_export_v1_*\`
+  FROM ${from}
   WHERE invoice.month = FORMAT_DATE('%Y%m', CURRENT_DATE('America/Los_Angeles'))
   GROUP BY service, currency
   ORDER BY cost DESC`;
+}
 
 export interface Billing { currency: string; total: number; services: { service: string; cost: number }[] }
 

@@ -15,7 +15,7 @@ import { onTaskDispatched } from 'firebase-functions/v2/tasks';
 import { region as regionV1 } from 'firebase-functions/v1';
 import { adminCheck, type AdminCaller } from './admin.js';
 import { GEN1_METRIC, healthQuery, healthRows, RUN_METRIC } from './health.js';
-import { billingFrom, billingQuery, level, LIMITS, periodStart, QUOTA_TZ, sumSeries, type LimitDef } from './costs.js';
+import { billingFrom, billingQuery, level, LIMITS, periodStart, pickBillingTable, QUOTA_TZ, sumSeries, type LimitDef } from './costs.js';
 import { historyEntry, type HistoryEntry } from './adminLog.js';
 import { broadcastPushPayload, pushActiveFrom, pushDelaySeconds, readPushDraft, type PushAudience, type PushDraft } from './pushBroadcast.js';
 import { audienceRange, broadcastCheck, broadcastEmail, readDraft, type Audience, type Draft, type Recipient } from './broadcast.js';
@@ -729,10 +729,19 @@ async function emailsSent(period: 'day' | 'month'): Promise<number> {
 export const adminCosts = onCall({ timeoutSeconds: 60 }, async req => {
   requireAdmin(req.auth);
   const project = projectId(), now = new Date();
-  const billing = googleApi<{ rows?: { f: { v: string | null }[] }[]; jobComplete?: boolean }>(
-    `https://bigquery.googleapis.com/bigquery/v2/projects/${project}/queries`, { query: billingQuery(project), useLegacySql: false, timeoutMs: 20_000 },
-  ).then(r => (r.jobComplete === false ? { status: 'unavailable' as const, reason: 'The billing query is still running. Refresh in a minute.' } : { status: 'ok' as const, ...billingFrom(r) }),
-    (e: Error) => ({ status: 'unavailable' as const, reason: e.message }));
+  const billing = (async () => {
+    const api = `https://bigquery.googleapis.com/bigquery/v2/projects/${project}`;
+    const ds = await googleApi<{ datasets?: { datasetReference: { datasetId: string } }[] }>(`${api}/datasets`);
+    const ids = (ds.datasets ?? []).map(d => d.datasetReference.datasetId).filter(id => /billing/i.test(id));
+    const datasets = await Promise.all(ids.map(async id => ({
+      id, tables: ((await googleApi<{ tables?: { tableReference: { tableId: string } }[] }>(`${api}/datasets/${id}/tables`)).tables ?? []).map(t => t.tableReference.tableId),
+    })));
+    const table = pickBillingTable(datasets);
+    if (!table) return { status: 'unavailable' as const, reason: ids.length ? 'The billing export has no data yet; it can take a day after turning it on.' : 'No billing export dataset found.' };
+    const r = await googleApi<{ rows?: { f: { v: string | null }[] }[]; jobComplete?: boolean }>(`${api}/queries`, { query: billingQuery(project, table), useLegacySql: false, timeoutMs: 20_000 });
+    if (r.jobComplete === false) return { status: 'unavailable' as const, reason: 'The billing query is still running. Refresh in a minute.' };
+    return { status: 'ok' as const, ...billingFrom(r) };
+  })().catch((e: Error) => ({ status: 'unavailable' as const, reason: e.message }));
   const limits = Promise.all(LIMITS.map(async (l: LimitDef) => {
     const base = { id: l.id, label: l.label, limit: l.limit, unit: l.unit, link: l.link.replace('{project}', project) };
     try {

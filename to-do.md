@@ -31,7 +31,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] After the admin totals are deployed: the next morning, `adminStats/<yesterday>` in the Firestore console has accounts, sign-ups and active loggers that look right against Authentication, and `emails` counts any emails sent; `firebase functions:log --only adminStatsNightly` says "admin totals saved" (ADMIN-04)
 - [ ] After the admin console is deployed: Email › Send a test to me arrives in the TikTym template with a working unsubscribe link; then send a real broadcast to "Active in the last 7 days" and check `adminLog/<id>` counts it as sent, a second account with News off is counted under `skippedWhy.off`, and nobody gets it twice (ADMIN-07 to ADMIN-09)
 - [ ] After the admin console is deployed: Push › Send a test to my devices arrives on your phone and opens TikTym at the chosen path; a broadcast sent after 10 pm India time arrives at about 10 am, once, and `adminLog/<id>` shows it as held, then sent (ADMIN-10, ADMIN-11)
-- [ ] After the admin console is deployed: Costs shows this month's spend (once the billing export has data) and a number for every limit; a limit saying "Couldn't read" means a missing permission (grant the functions' service account Monitoring Viewer, BigQuery Data Viewer and BigQuery Job User) or a metric name that differs on the real project (fix it in `functions/src/costs.ts`). Check Firestore reads roughly match the Firebase console's Usage tab (ADMIN-13)
+- [ ] After the admin console is deployed: Costs shows this month's spend once the FOCUS export has data (if it says a column isn't found, the FOCUS table's names differ from the spec's: fix `billingQuery` in `functions/src/costs.ts`) and a number for every limit; a limit saying "Couldn't read" means a missing permission (grant the functions' service account Monitoring Viewer, BigQuery Data Viewer and BigQuery Job User) or a metric name that differs on the real project (fix it in `functions/src/costs.ts`). Check Firestore reads roughly match the Firebase console's Usage tab (ADMIN-13)
 - [ ] After the admin console is deployed: Health lists the functions that ran in the last 24 hours with sensible run counts (reminders every 15 minutes, the nightly totals once), and its Logs links open each function's logs (ADMIN-14)
 - [ ] **You:** remove the last line of the LinkedIn page description ("TikTym is built by Pramal IT Services Private Limited.") in LinkedIn › Edit page
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
@@ -160,8 +160,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Decided 13 October 2026: a separate admin app in this repo and Firebase project, for Praveen only. Access is an `admin` custom claim that only a server script can set; every action runs in a Cloud Function that checks it, so `firestore.rules` stay closed to apps. Every send is recorded in `adminLog/`. FEATURES.md › 17. Admin console.
 
-- [ ] **You:** turn on Cloud Billing export to BigQuery (Billing › Billing export › Standard usage cost, dataset `billing_export` in project tiktym), before the costs page
-- [ ] **You:** upgrade Resend before the first broadcast to everyone (the free plan's 100 a day would block that day's welcome emails)
 
 ## 7. Housekeeping
 
@@ -175,6 +173,8 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** Costs reads the FOCUS billing export (finds the billing dataset and table itself, FOCUS or Standard; "no data yet" before the first rows), and the Resend limit is the paid plan's 50,000 a month with no daily cap (ADMIN-13), 13 October 2026
+- [x] **You:** Cloud Billing export to BigQuery turned on, as FOCUS usage cost (dataset `gcp_billing_immutable_014531_E38200_BE39C7_us`, US; no tables yet on 13 October), and Resend upgraded, 13 October 2026
 - [x] **You:** admin access granted to praveen.cherukuru@gmail.com with `npm run admin:grant` (the only admin), 13 October 2026
 - [x] **Claude:** `admin:grant` said "No account" for any failed lookup; it now shows the real error, and suggests `gcloud auth application-default set-quota-project tiktym` when Google asks for a quota project (needed with a personal login), 13 October 2026
 - [x] **You:** admin.tiktym.com added to Authentication's authorized domains and the reCAPTCHA Enterprise key's domains, 13 October 2026

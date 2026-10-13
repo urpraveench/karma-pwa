@@ -180,7 +180,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
-- [x] **Claude:** "One person" audience on the Email and Push pages (asked by Praveen): type their account's email; the preview or Check says if there's no such account, their News is off or they have no device; History shows who it went to (ADMIN-07, ADMIN-08, ADMIN-10, ADMIN-12), 13 October 2026
+- [x] **Claude:** "One person" audience on the Email and Push pages (asked by Praveen; deployed): type their account's email; the preview or Check says if there's no such account, their News is off or they have no device; History shows who it went to (ADMIN-07, ADMIN-08, ADMIN-10, ADMIN-12), 13 October 2026
 - [x] Deployed the admin console: 13 new admin functions (metrics, email, push, history, costs, health, the nightly totals and the two send queues), the existing functions updated (each email now counted in `adminStats`), and https://admin.tiktym.com live (HTTPS, noindex); a call without the admin claim is refused. The app itself is unchanged, so no app release, 13 October 2026
 - [x] **Claude:** Costs reads the FOCUS billing export (finds the billing dataset and table itself, FOCUS or Standard; "no data yet" before the first rows), and the Resend limit is the paid plan's 50,000 a month with no daily cap (ADMIN-13), 13 October 2026
 - [x] **You:** Cloud Billing export to BigQuery turned on, as FOCUS usage cost (dataset `gcp_billing_immutable_014531_E38200_BE39C7_us`, US; no tables yet on 13 October), and Resend upgraded, 13 October 2026

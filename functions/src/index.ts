@@ -14,6 +14,7 @@ import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { onTaskDispatched } from 'firebase-functions/v2/tasks';
 import { region as regionV1 } from 'firebase-functions/v1';
 import { adminCheck, type AdminCaller } from './admin.js';
+import { GEN1_METRIC, healthQuery, healthRows, RUN_METRIC } from './health.js';
 import { billingFrom, billingQuery, level, LIMITS, periodStart, QUOTA_TZ, sumSeries, type LimitDef } from './costs.js';
 import { historyEntry, type HistoryEntry } from './adminLog.js';
 import { broadcastPushPayload, pushActiveFrom, pushDelaySeconds, readPushDraft, type PushAudience, type PushDraft } from './pushBroadcast.js';
@@ -742,4 +743,17 @@ export const adminCosts = onCall({ timeoutSeconds: 60 }, async req => {
     }
   }));
   return { billing: await billing, limits: await limits };
+});
+
+/** Function health (ADMIN-14): each function's runs and errors in the last 24 hours, errors first. */
+export const adminHealth = onCall({ timeoutSeconds: 60 }, async req => {
+  requireAdmin(req.auth);
+  const project = projectId(), now = new Date();
+  const ask = (metric: string) => googleApi<{ timeSeries?: [] }>(`https://monitoring.googleapis.com/v3/projects/${project}/timeSeries?${healthQuery(metric, now)}`);
+  try {
+    const [run, gen1] = await Promise.all([ask(RUN_METRIC), ask(GEN1_METRIC)]);
+    return { status: 'ok' as const, rows: healthRows(run, gen1, project) };
+  } catch (e) {
+    return { status: 'unavailable' as const, reason: (e as Error).message };
+  }
 });

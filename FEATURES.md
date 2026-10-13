@@ -38,8 +38,8 @@ Summary of coverage at the time of writing:
 | 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 19 | 19 | 0 | 0 |
-| 17. Admin console | 14 | 13 | 1 | 0 |
-| **Total** | **339** | **325** | **1** | **13** |
+| 17. Admin console | 14 | 14 | 0 | 0 |
+| **Total** | **339** | **326** | **0** | **13** |
 
 ---
 
@@ -510,7 +510,7 @@ A separate app at admin.tiktym.com for Praveen only. Every action runs in a Clou
 | ADMIN-11 | Broadcast pushes respect quiet hours and send once | One queued task per person: between 10 pm and 7 am in their time zone it waits until 10 am there ("3 of them at night… waits until 10 am"). It reaches all their devices once, leaves the icon badge alone and has its own tag; expired devices are removed (as NOTIF-11); `reminders/{uid}.broadcasts` stops a repeat. `adminLog/{id}` counts queued, held, sent, skipped (no device) and failed | Unit `pushBroadcast.test.ts`, E2E `admin/push.spec.ts` (sending: Manual) |
 | ADMIN-12 | Send history | History page: the newest 50 broadcasts and tests, newest first: email or push (test), subject or title, when (India time), audience ("Just me" for tests), and how far it has got ("Sending: 32 of 40 done", waiting for daytime, then sent, skipped by reason, failed; "Nobody in the audience"). Refresh reloads it; with nothing sent yet it says so | E2E `admin/history.spec.ts`, Unit `adminLog.test.ts` |
 | ADMIN-13 | Costs and limits | Costs page: this month's Google Cloud spend after credits, in total and by service (from the BigQuery billing export, `billing_export` dataset), and each limit with use, percentage and a level in words (OK; amber "Over 70%"; red "Over 90%"): Resend emails today and this month (TikTym's own counts, India days), App Check checks this month, Firestore reads and writes today, Hosting transfer today (Cloud Monitoring, from midnight Pacific). Each part says on its own if it can't be read (no billing export, a missing permission), and each links to its console. Refresh reloads it | E2E `admin/costs.spec.ts`, Unit `costs.test.ts`, `adminCosts.test.ts` (reading the real project: Manual) |
-| ADMIN-14 | Function health | For the last 24 hours, each Cloud Function's runs and errors (Cloud Monitoring), errors first, with a link to its logs | Gap |
+| ADMIN-14 | Function health | Health page: for the last 24 hours (Cloud Monitoring), each function that ran, with runs and errors (4xx or 5xx responses for second-generation functions, under their Cloud Run service names; non-ok runs for the first-generation sign-up trigger), errors first then busiest, each with a link to its logs. A line says how many functions had errors, or "No errors in the last 24 hours."; if Monitoring can't be read it says which role is missing. Refresh reloads it | E2E `admin/health.spec.ts`, Unit `health.test.ts` (reading the real project: Manual) |
 
 ---
 
@@ -528,7 +528,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 ## What's left to test
 
-**Gaps** (testable, no test yet): ADMIN-14, the admin console being built (to-do.md › Admin console).
+**Gaps** (testable, no test yet): none.
 
 **Manual** (check by hand before a release, on a real phone and the real Firebase project):
 

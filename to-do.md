@@ -32,6 +32,7 @@ These can't be automated, or need the real project and a real phone. IDs refer t
 - [ ] After the admin console is deployed: Email › Send a test to me arrives in the TikTym template with a working unsubscribe link; then send a real broadcast to "Active in the last 7 days" and check `adminLog/<id>` counts it as sent, a second account with News off is counted under `skippedWhy.off`, and nobody gets it twice (ADMIN-07 to ADMIN-09)
 - [ ] After the admin console is deployed: Push › Send a test to my devices arrives on your phone and opens TikTym at the chosen path; a broadcast sent after 10 pm India time arrives at about 10 am, once, and `adminLog/<id>` shows it as held, then sent (ADMIN-10, ADMIN-11)
 - [ ] After the admin console is deployed: Costs shows this month's spend (once the billing export has data) and a number for every limit; a limit saying "Couldn't read" means a missing permission (grant the functions' service account Monitoring Viewer, BigQuery Data Viewer and BigQuery Job User) or a metric name that differs on the real project (fix it in `functions/src/costs.ts`). Check Firestore reads roughly match the Firebase console's Usage tab (ADMIN-13)
+- [ ] After the admin console is deployed: Health lists the functions that ran in the last 24 hours with sensible run counts (reminders every 15 minutes, the nightly totals once), and its Logs links open each function's logs (ADMIN-14)
 - [ ] **You:** remove the last line of the LinkedIn page description ("TikTym is built by Pramal IT Services Private Limited.") in LinkedIn › Edit page
 - [ ] Install on Android (APP-04); the app opens full screen as "TikTym"
 - [ ] Haptics on Android when logging (APP-17)
@@ -159,7 +160,6 @@ Decided 10 October 2026: everything on by default, each switchable off in Setup 
 
 Decided 13 October 2026: a separate admin app in this repo and Firebase project, for Praveen only. Access is an `admin` custom claim that only a server script can set; every action runs in a Cloud Function that checks it, so `firestore.rules` stay closed to apps. Every send is recorded in `adminLog/`. FEATURES.md › 17. Admin console.
 
-- [ ] **Claude:** function health: last 24 hours of runs and errors per function, from Cloud Monitoring (ADMIN-14)
 - [ ] **You:** add admin.tiktym.com to Authentication › Settings › Authorized domains, and to the reCAPTCHA Enterprise key's domains (App Check)
 - [ ] **You:** run `npm run admin:grant -- <your Google email>` (signed in with `gcloud auth application-default login`)
 - [ ] **You:** turn on Cloud Billing export to BigQuery (Billing › Billing export › Standard usage cost, dataset `billing_export` in project tiktym), before the costs page
@@ -177,6 +177,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** function health: Health page with each function's runs and errors in the last 24 hours, errors first, with links to logs, from the new `adminHealth` function (ADMIN-14). Not deployed yet, 13 October 2026
 - [x] **You:** admin hosting site `tiktym-admin` created and admin.tiktym.com pointed at it (DNS resolves to tiktym-admin.web.app; the HTTPS certificate was still being issued on 13 October), 13 October 2026
 - [x] **Claude:** costs and limits: Costs page with this month's Google Cloud spend by service (BigQuery billing export) and use against each limit (Resend from TikTym's counts; App Check, Firestore reads and writes, Hosting transfer from Cloud Monitoring), each part failing on its own; the new `adminCosts` function (ADMIN-13). Not deployed yet, 13 October 2026
 - [x] **Claude:** send history: History page with the newest 50 sends and tests and their progress, from the new `adminHistory` function (ADMIN-12). Not deployed yet, 13 October 2026

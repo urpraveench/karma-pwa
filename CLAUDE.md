@@ -26,6 +26,14 @@ Push only when the user asks.
 
 If the user asks for something that skips a step (for example "just fix it quickly"), still do steps 1 to 4, but say so in one line rather than asking.
 
+## Branches
+
+- `main` is production: what's live or about to be. Every release and every deploy is made from `main`.
+- A fix for the live app gets a short branch off `main` (never off a feature branch): build and test it there, merge it into `main`, release, deploy, push, then delete the branch.
+- A long piece of work that may not ship soon (for example `android`) lives on its own branch and merges into `main` only when it's ready to go live. Never merge it into `main` early to get a fix out.
+- After each release, merge `main` into every open feature branch, so they carry the live fixes and their final merge stays small. Changes flow `main` → feature branch, not back, until the feature ships.
+- `firebase deploy` builds whatever is checked out, so run it only on `main` with a clean tree. Bump the version only on `main`, at release; a feature branch takes the next number when it ships.
+
 ## Releasing
 
 Every deploy gets a new version, so the app's version label and update bar mean something.

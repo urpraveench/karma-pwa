@@ -25,10 +25,10 @@ Summary of coverage at the time of writing:
 |---|---|---|---|---|
 | 1. Accounts and sign-in | 28 | 26 | 0 | 2 |
 | 2. First run | 13 | 13 | 0 | 0 |
-| 3. Backlog rules | 15 | 15 | 0 | 0 |
+| 3. Backlog rules | 16 | 16 | 0 | 0 |
 | 4. Today screen | 21 | 21 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
-| 6. Logging minutes | 27 | 27 | 0 | 0 |
+| 6. Logging minutes | 28 | 28 | 0 | 0 |
 | 7. Focus timer | 22 | 19 | 0 | 3 |
 | 8. History | 9 | 9 | 0 | 0 |
 | 9. Insights | 24 | 24 | 0 | 0 |
@@ -41,7 +41,7 @@ Summary of coverage at the time of writing:
 | 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
 | 18. Android app | 9 | 8 | 1 | 0 |
-| **Total** | **349** | **335** | **1** | **13** |
+| **Total** | **351** | **337** | **1** | **13** |
 
 ---
 
@@ -123,9 +123,10 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | CALC-10 | Streak | Consecutive days ending with nothing owed; today counts only once it is clear; days with nothing due don't break or extend it; a shield can cover a missed day (CALC-14) | Unit `backlog.test.ts` |
 | CALC-11 | Best streak | Longest run on record, including the current one | Unit `backlog.test.ts` |
 | CALC-12 | "Days showing up" streak | Consecutive days with any entry; starts from yesterday if today has none yet | Unit `backlog.test.ts` |
-| CALC-13 | Carried over still to clear | Today's carried-in minutes not yet worked off | Unit `backlog.test.ts` |
+| CALC-13 | Carried over still to clear | Minutes logged today count toward today's target first, then the carried-in backlog: carried = what's still owed beyond today's target (60 due, 120 carried in, 60 logged: 120 still carried) | Unit `backlog.test.ts` |
 | CALC-14 | Streak shields | Three clear days in a row earn a shield (3 at most). A missed day spends a shield instead of breaking the streak; the missed minutes still carry over, and the shielded day doesn't count towards the streak or the next shield. Today never spends one. Worked out from history, so nothing extra is stored | Unit `backlog.test.ts`, E2E `today-states.spec.ts` |
 | CALC-15 | What each day did for the streak | From the same calc as the streak: clear (nothing left at day end), shield (missed, a shield kept the streak), missed, nothing due (no target and nothing carried), today (not clear yet), future, before the first practice. A day owing only carried-over minutes still has to be cleared. Next shield: "N more clear days in a row earn a shield", "Clear today/tomorrow to earn a shield", or "You hold 3 shields, the most you can" | Unit `streak.test.ts` |
+| CALC-16 | Today's own minutes left | Today's target minus what's logged today (never below 0); what the coloured button logs | Unit `backlog.test.ts` |
 
 ## 4. Today screen
 
@@ -141,7 +142,7 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | TODAY-08 | Centre: all done | "All clear" with points logged today | E2E `today.spec.ts` |
 | TODAY-09 | Centre: nothing due | "Rest day · Nothing due today" | E2E `today-states.spec.ts` |
 | TODAY-10 | Centre: minimum mode | In comeback and minimum-day moments: minutes still needed to make today count, with the full amount as a smaller "if you go all in" | E2E `today-states.spec.ts` |
-| TODAY-11 | Practice rows | Name, colour stripe, "N of M, K carried" or "Done, N logged" or "Rest day", and a progress bar showing done and carried | E2E `today.spec.ts`, `today-states.spec.ts` |
+| TODAY-11 | Practice rows | Name, colour stripe, and "N of M" (M is today's target, the backlog not included) with ", K carried" when there is backlog, "Today's M done, K carried" once today's part is done, "K carried" on a day with no target, "Done, N logged" or "Rest day"; a progress bar showing done and carried. The hint under the rows: "The coloured button logs today's minutes" | E2E `today.spec.ts`, `today-states.spec.ts`, `setup.spec.ts` |
 | TODAY-12 | Archived practices | Not shown on Today | E2E `today-states.spec.ts` |
 | TODAY-13 | Streak nudge | After 6 pm with a streak and points left, and no moment card: "Clear N more to keep your K-day streak" | E2E `today-states.spec.ts` |
 | TODAY-14 | Focus timer tip | Shown until dismissed or a timer is first started; hidden when a moment card or timer is showing | E2E `today-states.spec.ts` |
@@ -180,12 +181,13 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
-| LOG-01 | Tap the coloured "+N" button on a practice | Logs everything left for today; toast "Name done for today" | E2E `today.spec.ts` |
+| LOG-01 | Tap the coloured "+N" button on a practice | Logs what's left of today's target only, never the carried backlog; toast "Name done for today", or "Today's Name done, N carried left" when backlog remains | E2E `today.spec.ts`, `today-states.spec.ts` |
 | LOG-02 | Tap ✓ on a cleared practice | Opens the log sheet for that practice | E2E `log-sheet.spec.ts` |
 | LOG-03 | Undo from the toast | Removes the entry and restores the totals; toast "Undone" | E2E `today.spec.ts` |
 | LOG-04 | Clear the last pending practice | Full-screen "All clear" celebration with the streak; tap anywhere to close, or Undo last entry | E2E `today.spec.ts`, `today-states.spec.ts` |
 | LOG-05 | Streak milestones in the celebration | Extra line at 7, 21, 30, 50, 100 and 108 days; on a clear day that earns a shield, "You earned a shield: it keeps your streak if you miss a day." instead | E2E `today-states.spec.ts` |
-| LOG-31 | Say how it felt | After a single entry, the toast also offers 😞 😐 🙂 ("Felt low", "Felt okay", "Felt good"); a tap saves it on the entry (synced and in backups), and the toast says "Noted" | E2E `today.spec.ts` |
+| LOG-31 | Say how it felt | After a focus timer session is logged, the toast also offers 😞 😐 🙂 ("Felt low", "Felt okay", "Felt good"); a tap saves it on the entry (synced and in backups), and the toast says "Noted". Quick taps, the log sheet and voice don't ask | E2E `timer.spec.ts`, `today.spec.ts` |
+| LOG-32 | Clear carried-over minutes | With today's target done and backlog left, the button turns red and reads "+N carried"; a tap logs the backlog (toast "Name done for today"). Tapping the name logs any other amount | E2E `today-states.spec.ts` |
 
 ### Log sheet
 

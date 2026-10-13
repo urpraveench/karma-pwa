@@ -47,6 +47,17 @@ test.describe('Focus timer', () => {
     await expect(page).toHaveTitle('TikTym');
   });
 
+  test('after a timer session, one tap says how it felt, saved with the entry (LOG-31)', async ({ page }) => {
+    await page.clock.fastForward('12:00');
+    await page.click('.f-stop');
+    await expect(toast(page)).toHaveText('+12 Reading');
+    await page.getByRole('button', { name: 'Felt good' }).click();
+    await expect(toast(page)).toHaveText('Noted');
+    const feels = await page.evaluate(() => Object.keys(localStorage).filter(k => k.startsWith('tiktym:data:'))
+      .flatMap(k => JSON.parse(localStorage.getItem(k)!).logs.map((l: { feel?: number }) => l.feel)));
+    expect(feels).toEqual([3]);
+  });
+
   test('stopping under a minute logs nothing', async ({ page }) => {
     await page.click('.f-stop');
     await expect(toast(page)).toHaveText('Under a minute, so nothing was logged');

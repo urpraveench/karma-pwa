@@ -34,7 +34,34 @@ test.describe('Today states', () => {
     await signInWith(page, seedData([reading('2026-10-05')], [['r', '2026-10-05', 30], ['r', '2026-10-06', 20]]));
     await expect(page.locator('.mala-center .big')).toHaveText('40');
     await expect(page.locator('.mala-center .carry')).toHaveText('10 carried over');
-    await expect(page.locator('.cat-meta')).toHaveText('0 of 40, 10 carried');
+    await expect(page.locator('.cat-meta')).toHaveText('0 of 30, 10 carried');
+  });
+
+  test('the coloured button logs only today\'s minutes, then a red button clears the backlog (LOG-01, LOG-32, TODAY-11)', async ({ page }) => {
+    // Exercise 60 a day, missed on 5 and 6 Oct: 60 due today and 120 carried, as in the user's report
+    const ex = { id: 'e', name: 'Exercise', start: '2026-10-05', minutes: 60 };
+    await signInWith(page, seedData([ex, { id: 'm', name: 'Meditation', start: '2026-10-07', minutes: 10 }]));
+    const row = page.locator('.cat').nth(0);
+    await expect(row.locator('.cat-meta')).toHaveText('0 of 60, 120 carried');
+    await expect(row.locator('.qbtn')).toHaveText('+60');
+    await expect(page.locator('.row-hint')).toContainText("The coloured button logs today's minutes.");
+    await row.locator('.qbtn').click();
+    await expect(toast(page)).toHaveText("Today's Exercise done, 120 carried left");
+    await expect(row.locator('.cat-meta')).toHaveText("Today's 60 done, 120 carried");
+    await expect(page.locator('.mala-center .carry')).toHaveText('120 carried over');
+    const carry = row.locator('.qbtn.carry');
+    await expect(carry).toHaveText('+120carried');
+    await expect(carry).toHaveAttribute('aria-label', 'Log 120 carried-over minutes of Exercise');
+    await carry.click();
+    await expect(toast(page)).toHaveText('Exercise done for today');
+    await expect(row.locator('.cat-meta')).toHaveText('Done, 180 logged');
+    await expect(row.locator('.qbtn.done')).toBeVisible();
+  });
+
+  test('a day with no target but a backlog shows only what is carried (TODAY-11)', async ({ page }) => {
+    await signInWith(page, seedData([reading('2026-10-05', { days: [1] })])); // Mondays only: 5 Oct missed, nothing due today
+    await expect(page.locator('.cat-meta')).toHaveText('30 carried');
+    await expect(page.locator('.cat .qbtn.carry')).toHaveText('+30carried');
   });
 
   test('rest day when nothing is scheduled (TODAY-09)', async ({ page }) => {

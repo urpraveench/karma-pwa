@@ -1,4 +1,5 @@
 // Generated from src/lib/reminders.ts by `npm run functions:shared`. Don't edit: change src/lib/reminders.ts and run it again.
+import type { Tier } from './levels.js';
 import type { Category, Settings } from './types.js';
 
 // Daily push reminders and the app badge (NOTIF-09 to NOTIF-13; NOTIFICATIONS.md). Shared with the Cloud Functions
@@ -76,13 +77,24 @@ const list = (names: string[]) => names.length < 2 ? names.join('') : `${names.s
 export const practiceRemindTime = (c: Pick<Category, 'remind'>) => (c.remind && REMINDER_TIMES.includes(c.remind) ? c.remind : null);
 
 /** What a practice reminder says (NOTIF-19): practices set for the same time share one. */
-export function practiceReminderText(due: Pick<Category, 'name'>[]): { title: string; body: string } {
-  return { title: `Time for ${list(due.map(c => c.name))}`, body: 'Even 5 minutes counts.' };
+export function practiceReminderText(due: Pick<Category, 'name'>[], tier: Tier = 'Steady'): { title: string; body: string } {
+  return { title: `Time for ${list(due.map(c => c.name))}`, body: pushLine(tier) };
+}
+
+/** The line under a reminder's title in the coach's voice (COACH-07): Steady, and every account before levels, as before. */
+export function pushLine(tier: Tier): string {
+  switch (tier) {
+    case 'Starting': return '5 minutes is a win today.';
+    case 'Building': return 'A few minutes keeps the chain growing.';
+    case 'Strong': return 'You know the drill. Go get it.';
+    case 'Relentless': return "The streak won't feed itself.";
+    default: return 'Even 5 minutes counts.';
+  }
 }
 
 /** What the reminder says, from the practices still due today. Gentle: no minutes owed, no streak warnings. */
-export function reminderText(left: Pick<Category, 'name'>[]): { title: string; body: string } {
+export function reminderText(left: Pick<Category, 'name'>[], tier: Tier = 'Steady'): { title: string; body: string } {
   const names = left.map(c => c.name);
-  if (names.length === 1) return { title: `${names[0]} is left today`, body: 'Even 5 minutes counts.' };
-  return { title: `${names.length} practices left today`, body: `${list(names)}. Even 5 minutes counts.` };
+  if (names.length === 1) return { title: `${names[0]} is left today`, body: pushLine(tier) };
+  return { title: `${names.length} practices left today`, body: `${list(names)}. ${pushLine(tier)}` };
 }

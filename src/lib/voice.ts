@@ -1,10 +1,10 @@
-import { tierOf, type Tier } from './levels';
+import { tierAt, type Tier } from './levels';
 
 // The coach's voice by tier (COACH-01): gentle at Starting, blunt and witty at Relentless. Steady is the voice from before
 // levels, so nothing reads differently until levels begin.
 
 /** The tier whose voice to use: Steady before levels began. */
-export const voiceOf = (level: number | null | undefined): Tier => level ? tierOf(level) : 'Steady';
+export const voiceOf = (level: number | null | undefined): Tier => tierAt(level ? { level } : null);
 
 const mins = (n: number) => `${n} minute${n === 1 ? '' : 's'}`;
 

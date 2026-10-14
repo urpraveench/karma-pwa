@@ -28,7 +28,8 @@ import {
 import { addDays, lastWeekStart, recapCheck, recapFrom, weekRecap, type RecapCategory, type RecapLog, type RecapMail } from './recap.js';
 import webpush from 'web-push';
 import { nudgeCheck, nudgePayload, nudgeSlotFor, practiceCheck, practicePayload, practiceTag, reminderCheck, reminderPayload, reminderTarget, retryablePush, sendToDevices, webPushTopic, type ReminderDoc } from './push.js';
-import { practicesLeft } from './shared/backlog.js';
+import { calc, practicesLeft } from './shared/backlog.js';
+import { tierAt } from './shared/levels.js';
 import { badgeOn, localParts, slotAt, VAPID_PUBLIC_KEY } from './shared/reminders.js';
 import type { AppData, Category, Log, PushDevice, Settings } from './shared/types.js';
 import { quotaMessage, readVoiceRequest, voiceAnswer, voicePrompt, voiceQuota, voiceUsageNumbers, VOICE_MODEL, type VoiceUsage } from './voice.js';
@@ -236,10 +237,11 @@ export const comebackSend = onTaskDispatched({
   const [mail, settings] = await Promise.all([mailDoc(uid).get(), settingsDoc(uid).get()]);
   const m = mail.data() as MailState | undefined;
   if (!comebackDue(m, today) || !emailOn(settings.data(), 'tips')) return; // logged since, already sent, or switched off
-  const [to, list] = await Promise.all([recipient(uid), practices(uid)]);
+  const [to, list, data] = await Promise.all([recipient(uid), practices(uid), accountData(uid)]);
   const practice = easiest(list);
   if (!to || !practice) return;
-  const email = comebackEmail({ name: to.name, practice, days: daysAway(m!.lastLogged!, today), unsubscribe: unsubscribeLink(uid, 'tips', UNSUBSCRIBE_SECRET.value()) });
+  const tier = tierAt(calc(data, today).level); // the coach's voice for this account (COACH-08)
+  const email = comebackEmail({ name: to.name, practice, days: daysAway(m!.lastLogged!, today), unsubscribe: unsubscribeLink(uid, 'tips', UNSUBSCRIBE_SECRET.value()), tier });
   await send('comeback', to.email, email, `comeback-${uid}-${m!.lastLogged}`);
   await mailDoc(uid).set({ comebackFor: m!.lastLogged, comebackAt: Timestamp.now(), lastEmailDay: today }, { merge: true });
   logger.info('comeback sent', { uid, away: daysAway(m!.lastLogged!, today) });
@@ -348,9 +350,9 @@ export const reminderSend = onTaskDispatched({
   if (kind === 'practice') {
     const data = await accountData(uid);
     const date = localParts(now, doc.tz).date;
-    const left = practicesLeft(data, date);
+    const c = calc(data, date), left = practicesLeft(data, date, c);
     const check = practiceCheck(data.categories, doc, now, new Set(left.map(c => c.id)));
-    const sent = check.send.length ? await pushToAccount(uid, practicePayload(check.send, left.length, badgeOn(data.settings)), practiceTag(check.send[0].remind)) : 0;
+    const sent = check.send.length ? await pushToAccount(uid, practicePayload(check.send, left.length, badgeOn(data.settings), tierAt(c.level)), practiceTag(check.send[0].remind)) : 0;
     const fix: Partial<ReminderDoc> = {};
     if (check.slots.join() !== (doc.practiceSlots ?? []).join()) fix.practiceSlots = check.slots; // daylight saving moved them
     if (check.handled.length) {
@@ -371,9 +373,9 @@ export const reminderSend = onTaskDispatched({
   if (check.act !== 'send') return;
 
   const data = await accountData(uid);
-  const left = practicesLeft(data, check.date);
+  const c = calc(data, check.date), left = practicesLeft(data, check.date, c);
   if (!left.length) return; // today is clear, or a rest day
-  const sent = await pushToAccount(uid, reminderPayload(left, badgeOn(data.settings)), 'daily-reminder');
+  const sent = await pushToAccount(uid, reminderPayload(left, badgeOn(data.settings), tierAt(c.level)), 'daily-reminder');
   if (sent) await reminderDoc(uid).update({ lastSent: check.date });
   logger.info('reminder sent', { uid, devices: sent, left: left.length });
 });

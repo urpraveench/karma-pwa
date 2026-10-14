@@ -17,6 +17,8 @@ export const MOVE_DAYS = 14, START_DAYS = 28, START_MIN_DAYS = 7;
 export const TIERS = ['Starting', 'Building', 'Steady', 'Strong', 'Relentless'] as const;
 export type Tier = typeof TIERS[number];
 export const tierOf = (level: number): Tier => TIERS[Math.ceil(level / 2) - 1];
+/** The tier whose voice to use: Steady before levels began (COACH-01). */
+export const tierAt = (lv: Pick<Levels, 'level'> | null | undefined): Tier => lv ? tierOf(lv.level) : 'Steady';
 
 /**
  * What a level asks of a day to count as clear (LVL-06): 'any5' 5+ minutes on any practice; 'minimum' one practice's small

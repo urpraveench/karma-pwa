@@ -3,6 +3,7 @@
 import { Buffer } from 'node:buffer';
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { suggestion, type Recap } from './recap.js';
+import type { Tier } from './shared/levels.js';
 
 export type EmailKind = 'tips' | 'recap' | 'news';
 export const EMAIL_KINDS: EmailKind[] = ['tips', 'recap', 'news'];
@@ -248,14 +249,25 @@ export function oneTapEmail(o: { name: string; unsubscribe: string }): Email {
 }
 
 /** The comeback, once per absence after 3 full days with nothing logged (NOTIF-07). */
-export function comebackEmail(o: { name: string; practice: Practice; days: number; unsubscribe: string }): Email {
+/** The comeback email's opening line in the coach's voice (COACH-08): Steady and Building as before levels. */
+export function comebackOpening(days: number, tier: Tier = 'Steady'): string {
+  const since = `It's been ${days} days since your last entry in TikTym.`;
+  switch (tier) {
+    case 'Starting': return `${since} That's fine: starting again is the whole skill, and you've done it before.`;
+    case 'Strong': return `${since} Not like you, which is exactly why it's easy to fix.`;
+    case 'Relentless': return `${since} Everyone has an off week. Nobody needs an off month.`;
+    default: return `${since} That happens to everyone: work, travel, a busy week.`;
+  }
+}
+
+export function comebackEmail(o: { name: string; practice: Practice; days: number; unsubscribe: string; tier?: Tier }): Email {
   const hi = o.name ? `Hi ${esc(o.name)},` : 'Hi,';
-  const what = esc(o.practice.name);
+  const what = esc(o.practice.name), opening = comebackOpening(o.days, o.tier);
   const html = frame({
     title: 'Pick up where you left off',
     body: [
       para(hi),
-      para(`It's been ${o.days} days since your last entry in TikTym. That happens to everyone: work, travel, a busy week.`),
+      para(esc(opening)),
       callout(`<strong>You don't need to make up for the missed days.</strong> Start with <strong>5 minutes of ${what} today</strong>, and you're back.`),
       practicesCard([{ ...o.practice, minutes: 5 }], 'today').replace(/<p style[^>]*>.*?<\/p>/s, ''),
       button(`Start 5 minutes of ${what}`, appLink('comeback')),
@@ -266,7 +278,7 @@ export function comebackEmail(o: { name: string; practice: Practice; days: numbe
   });
   const text = [
     hi.replace(/&amp;/g, '&'), '',
-    `It's been ${o.days} days since your last entry in TikTym. That happens to everyone: work, travel, a busy week.`, '',
+    opening, '',
     `You don't need to make up for the missed days. Start with 5 minutes of ${o.practice.name} today, and you're back.`, '',
     `Open TikTym: ${appLink('comeback')}`, HOME_HINT, '',
     'If something about TikTym got in the way, reply and tell me. I read every one.', '',

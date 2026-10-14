@@ -1,4 +1,6 @@
 import { activeCats, dayAll, dueOn, targetMinutesOn, usualHour, type Calc } from './backlog';
+import { CLEAR_SAYS, RULES, score, tierOf } from './levels';
+import { comebackText, rollText, voiceOf } from './voice';
 import { addDays, fmtShort, hourLabel, monthName, parse, ymd } from './date';
 import { firstName } from './user';
 import { sum } from './util';
@@ -6,7 +8,7 @@ import type { AppData, Category, DateStr, User } from './types';
 
 // One context-aware card per day on the Today screen. The highest-priority match wins.
 
-export type MomentKey = 'month' | 'comeback' | 'weekend' | 'minimum' | 'bestmonth' | 'monday' | 'habit' | 'roll' | 'start';
+export type MomentKey = 'level' | 'month' | 'comeback' | 'weekend' | 'minimum' | 'bestmonth' | 'monday' | 'habit' | 'roll' | 'start';
 
 export interface Moment {
   key: MomentKey;
@@ -62,6 +64,15 @@ export function moment(c: Calc, { data, user, hidden, now: clock = new Date() }:
   };
   const goalFor = (catId: string, min = 10) => Math.min(60, Math.max(min, c.per[catId].today.end));
 
+  // 0. level: each Monday's move, that day and the next (LVL-11); the levels introduction (LVL-13) covers where it started
+  const lv = c.level, last = lv?.moves[lv.moves.length - 1];
+  if (lv && last && lv.moves.length > 1 && T <= addDays(last.date, 1)) {
+    const says = CLEAR_SAYS[RULES[last.level].clear], up = last.level > lv.moves[lv.moves.length - 2].level;
+    const pct = score(c, data.categories, addDays(last.date, -14), addDays(last.date, -1));
+    add('level', 97, up
+      ? { tone: 'var(--gold)', title: `Up to Level ${last.level} · ${tierOf(last.level)}.`, body: `${pct}% of your practice days on target over two weeks earned it. ${says}` }
+      : { tone: '#0E7490', title: `Level ${last.level} for now.`, body: `Easier days and more shields while you get going again. ${says}` });
+  }
   // 1. month recap, first three days of a month
   if (now.getDate() <= 3) {
     const pmStart = ymd(new Date(now.getFullYear(), now.getMonth() - 1, 1)), pmEnd = addDays(ymd(new Date(now.getFullYear(), now.getMonth(), 1)), -1);
@@ -90,7 +101,7 @@ export function moment(c: Calc, { data, user, hidden, now: clock = new Date() }:
     let gap = 1; while (gap < 90 && !logged.has(addDays(T, -gap)) && addDays(T, -gap) >= earliest) gap++;
     add('comeback', 95, {
       tone: '#0E7490', minMode: true, minGoal, title: name ? `Welcome back, ${name}.` : 'Welcome back.',
-      body: `It's been ${gap - 1} days. No catching up today. ${minGoal} minutes of ${easiest.name} makes today count.`,
+      body: comebackText(voiceOf(c.level?.level), gap - 1, minGoal, easiest.name),
       cta: { label: `Start ${minGoal} min of ${easiest.name}`, cat: easiest.id, goal: minGoal },
     });
   }
@@ -159,9 +170,9 @@ export function moment(c: Calc, { data, user, hidden, now: clock = new Date() }:
     }
   }
   // 8. on a roll
-  if (c.streak >= 3 && t.end > 0) add('roll', 40, {
+  if (c.streak >= 3 && c.keepLeft > 0) add('roll', 40, {
     tone: 'var(--gold)', title: c.best - c.streak <= 1 && c.best > c.streak ? 'A new record is one day away.' : `Day ${c.streak + 1} is waiting.`,
-    body: `${c.streak} clear days in a row. ${t.end} points keeps it going.`,
+    body: rollText(voiceOf(c.level?.level), c.streak, c.keepLeft),
   });
   // 9. new user
   if (histDays < 3 && !logged.has(T) && easiest) add('start', 30, {

@@ -8,7 +8,7 @@ export const DEMO = { email: 'demo@tiktym.local', password: 'tiktym123' };
 const SESSION = { id: 'local-demo@tiktym.local', email: DEMO.email, name: 'Test user' };
 
 /** Every test-mode test fails if the app logs a console error or warning (APP-19). */
-export const test = base.extend<{ consoleErrors: string[]; installCard: boolean; hideInstallCard: void; reminderCard: boolean; hideReminderCard: void; ideaSplash: boolean; hideIdeaSplash: void }>({
+export const test = base.extend<{ consoleErrors: string[]; installCard: boolean; hideInstallCard: void; reminderCard: boolean; hideReminderCard: void; ideaSplash: boolean; hideIdeaSplash: void; levelsIntro: boolean; hideLevelsIntro: void }>({
   /** The install card on Today (APP-30) would appear in most tests (they run as an Android phone and log minutes); off unless a test opts in. */
   installCard: [false, { option: true }],
   hideInstallCard: [async ({ page, installCard }, use) => {
@@ -19,6 +19,12 @@ export const test = base.extend<{ consoleErrors: string[]; installCard: boolean;
   reminderCard: [false, { option: true }],
   hideReminderCard: [async ({ page, reminderCard }, use) => {
     if (!reminderCard) await page.addInitScript(() => { Notification.requestPermission = async () => 'default'; });
+    await use();
+  }, { auto: true }],
+  /** And the levels introduction (LVL-13), shown once when levels first apply. */
+  levelsIntro: [false, { option: true }],
+  hideLevelsIntro: [async ({ page, levelsIntro }, use) => {
+    if (!levelsIntro) await page.addInitScript(() => localStorage.setItem('tiktym:levels-intro', '9999-12-31'));
     await use();
   }, { auto: true }],
   /** And the once-a-day splash with today's idea (TODAY-21), which would cover Today on every test's first open. */

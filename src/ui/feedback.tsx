@@ -2,17 +2,19 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { haptic } from '../lib/feedback';
 import { Mark } from './icons';
 import type { Feel } from '../lib/types';
+import type { Tier } from '../lib/levels';
+import { celebrateText } from '../lib/voice';
 
 // One toast at a time (a new one replaces the old), plus the full-screen "All clear" celebration.
 
 interface ToastState { id: number; msg: string; ms: number; undo?: () => void; rate?: (feel: Feel) => void }
-interface CelebrateState { streak: number; undo: () => void; shield: boolean }
+interface CelebrateState { streak: number; undo: () => void; shield: boolean; tier: Tier }
 
 interface FeedbackApi {
   /** `rate` adds 😞 😐 🙂 buttons for how the session felt (LOG-31). */
   toast(msg: string, ms?: number, undo?: () => void, rate?: (feel: Feel) => void): void;
   /** `shield`: this clear day earned a streak shield (CALC-14). */
-  celebrate(streak: number, undo: () => void, shield?: boolean): void;
+  celebrate(streak: number, undo: () => void, shield?: boolean, tier?: Tier): void;
 }
 
 const Ctx = createContext<FeedbackApi | null>(null);
@@ -28,8 +30,8 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
   const seq = useRef(0);
 
   const toast = useCallback((msg: string, ms = 2600, undo?: () => void, rate?: (feel: Feel) => void) => setToast({ id: ++seq.current, msg, ms, undo, rate }), []);
-  const celebrate = useCallback((streak: number, undo: () => void, shield = false) => {
-    haptic([15, 60, 15, 60, 40]); setToast(null); setCel({ streak, undo, shield });
+  const celebrate = useCallback((streak: number, undo: () => void, shield = false, tier: Tier = 'Steady') => {
+    haptic([15, 60, 15, 60, 40]); setToast(null); setCel({ streak, undo, shield, tier });
   }, []);
 
   useEffect(() => {
@@ -63,7 +65,7 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
           <div>
             <Mark className="cel-mark" filled={27} color="var(--gold)" />
             <span className="clear-word">All clear</span>
-            <p>{cel.streak > 1 ? `${cel.streak}-day streak. ` : 'Nothing left today. '}{cel.shield ? 'You earned a shield: it keeps your streak if you miss a day.' : MILESTONES[cel.streak] || ''}</p>
+            <p>{celebrateText(cel.tier, cel.streak)}{cel.shield ? 'You earned a shield: it keeps your streak if you miss a day.' : MILESTONES[cel.streak] || ''}</p>
             <button className="btn btn-2" type="button">Undo last entry</button>
           </div>
         </div>

@@ -38,7 +38,7 @@ export type Feel = 1 | 2 | 3;
 export interface Settings {
   seeded?: boolean;
   schema?: number;
-  /** Days of target a practice may carry into a new day. 0 = no limit. Default 2. */
+  /** Days of target a practice may carry into a new day. 0 = no limit; -1 or missing = follow the level (2 before levels) (LVL-10). */
   backlogCap?: number;
   /** Email types this account has turned off; a missing or true value means on (NOTIF-01). */
   emails?: Partial<Record<'tips' | 'recap' | 'news', boolean>>;

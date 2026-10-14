@@ -1,5 +1,7 @@
 import { byOrder, targetMinutesOn, type Calc, type DayRow } from './backlog';
 import { addDays, parse } from './date';
+import { minimumOf, practiceStreak, score } from './levels';
+import { steadyLine, voiceOf } from './voice';
 import { DAY_NAMES, sum } from './util';
 import type { AppData, Category, DateStr } from './types';
 
@@ -53,8 +55,7 @@ export function buildInsights(data: AppData, c: Calc, T: DateStr, range: number)
   // --- practice health ---
   const health: PracticeHealth[] = act.map(cat => {
     const P = c.per[cat.id].byDate, rows = (n: number, e?: DateStr) => span(n, e).map(d => P.get(d)).filter((r): r is DayRow => !!r);
-    let st = 0, d = P.get(T) && isClear(P.get(T)!) ? T : addDays(T, -1);
-    while (P.get(d) && P.get(d)!.end === 0) { if (P.get(d)!.due > 0) st++; d = addDays(d, -1); }
+    const st = practiceStreak(P, c.level, T);
     const last7 = rows(7, addDays(T, -1)).filter(r => r.due > 0);
     const strip = span(14).map((d): StripCell => {
       const r = P.get(d); if (!r) return 'none'; if (!r.due) return r.done ? 'met' : 'rest';
@@ -98,6 +99,19 @@ export function buildInsights(data: AppData, c: Calc, T: DateStr, range: number)
     if (d >= 10) add(58, OK, `You're ${d}% ahead of last week`, ' at this point in the week.');
     if (d <= -15) add(66, DUE, `You're ${-d}% behind last week`, ` at this point. Today's ${c.totals.end} points would close most of the gap.`);
   }
+  // the practices lifting and dragging the level's score, from the last 14 days (LVL-12)
+  if (c.level) {
+    const days14 = span(14, addDays(T, -1));
+    const ps = act.map(cat => ({ cat, s: score(c, [cat], days14[0] ?? T, addDays(T, -1)), n: days14.filter(d => (c.per[cat.id].byDate.get(d)?.due ?? 0) > 0).length }))
+      .filter((p): p is { cat: Category; s: number; n: number } => p.s !== null && p.n >= 5).sort((a, b) => b.s - a.s);
+    if (ps.length >= 2) {
+      const best = ps[0], worst = ps[ps.length - 1], t = targetMinutesOn(worst.cat, T);
+      if (best.s >= 80 && best.s > worst.s) add(89, OK, `${best.cat.name} is your anchor.`, ` On target ${best.s}% of days in the last two weeks; it's lifting your level.`);
+      const slipping = health.some(h => h.cat.id === worst.cat.id && h.n7 >= 4 && h.misses >= 3); // already its own line
+      if (worst.s <= 50 && best.s > worst.s && !slipping) add(76, DUE, `${worst.cat.name} is holding your level back.`,
+        ` On target ${worst.s}% of days in the last two weeks.${minimumOf(t) < t ? ` Try ${minimumOf(t)} minutes a day for a week instead of ${t}.` : ''}`);
+    }
+  }
   // the practice that most often leaves you feeling good (LOG-31), from the last 60 days of rated entries
   const since60 = addDays(T, -60);
   const lift = data.categories.map(cat => {
@@ -110,7 +124,7 @@ export function buildInsights(data: AppData, c: Calc, T: DateStr, range: number)
   const win = tips.find(t => t.tone !== DUE), fixes = tips.filter(t => t.tone === DUE);
   const coach: CoachLine[] = win ? [win, ...fixes.slice(0, 2)] : fixes.slice(0, 3);
   if (coach.length < 3) coach.push(...tips.filter(t => !coach.includes(t)).slice(0, 3 - coach.length));
-  if (!coach.length) coach.push({ tone: OK, strong: 'Steady.', rest: ' Nothing is slipping. Keep showing up and the streak takes care of itself.' });
+  if (!coach.length) coach.push({ tone: OK, ...steadyLine(voiceOf(c.level?.level)) });
 
   // --- milestones + records ---
   const totalMin = sum(data.logs.map(l => l.minutes)), hours = totalMin / 60;

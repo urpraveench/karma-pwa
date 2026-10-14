@@ -1,4 +1,5 @@
 import { addDays, parse, today } from './date';
+import { dayState, keepLeft, LEVELS_FROM, levelOn, levels, RULES, type LevelRule, type Levels } from './levels';
 import { sum } from './util';
 import type { AppData, Category, DateStr, Log, Settings, Target } from './types';
 
@@ -36,15 +37,23 @@ export interface Totals {
 export interface Calc {
   per: Record<string, CategoryCalc>;
   totals: Totals;
-  /** Consecutive clear days (nothing pending at day end), counting today only if clear. */
+  /** Consecutive clear days by each day's level (LVL-06), counting today only once clear. */
   streak: number;
   best: number;
   /** Streak shields held now (CALC-14). */
   shields: number;
   /** Missed days a shield covered, oldest first. */
   shielded: DateStr[];
-  /** Clear days so far towards the next shield (0 to SHIELD_DAYS - 1). */
+  /** Clear days so far towards the next shield. */
   shieldDays: number;
+  /** The level now and how it got there, or null before levels began (LVL-01 to LVL-05). */
+  level: Levels | null;
+  /** The rules of today's level (LVL-06, LVL-07). */
+  rule: LevelRule;
+  /** What each day did for the streak by its level's rule, from the first practice's start (CALC-15). */
+  days: Map<DateStr, 'clear' | 'miss' | 'rest'>;
+  /** Minutes still needed today to count as clear (TODAY-13). */
+  keepLeft: number;
   /** Minutes logged, by category then date. */
   done: Record<string, Record<DateStr, number>>;
 }
@@ -70,13 +79,12 @@ export const dueLeft = (r: DayRow) => Math.max(0, r.due - r.done);
 /** Carried-over minutes still owed once the day's own target is counted (CALC-13). */
 export const carriedLeft = (r: DayRow) => r.end - dueLeft(r);
 
-export const capDays = (settings: Settings | undefined) => {
+/** The backlog limit the person picked, or null to follow the level (2 days before levels) (LVL-10). */
+export const capDays = (settings: Settings | undefined): number | null => {
   const v = settings?.backlogCap;
-  return v === undefined ? 2 : Number(v);
+  return v === undefined || v === null || Number(v) < 0 ? null : Number(v);
 };
 
-/** Clear days in a row that earn a streak shield, and the most shields held (CALC-14). */
-export const SHIELD_DAYS = 3, SHIELD_MAX = 3;
 
 export const byOrder = (a: Category, b: Category) => (a.order ?? 0) - (b.order ?? 0);
 
@@ -84,21 +92,28 @@ export function activeCats(categories: Category[], asOf: DateStr = today()): Cat
   return categories.filter(c => !c.archivedFrom || c.archivedFrom > asOf).sort(byOrder);
 }
 
-export function calc(data: AppData, asOf: DateStr = today()): Calc {
+export function calc(data: AppData, asOf: DateStr = today(), levelsFrom: DateStr = LEVELS_FROM): Calc {
   const done: Calc['done'] = {};
   for (const l of data.logs) { (done[l.catId] ||= {}); done[l.catId][l.date] = (done[l.catId][l.date] || 0) + l.minutes; }
-  const per: Calc['per'] = {}, cd = capDays(data.settings);
+  const per: Calc['per'] = {}, picked = capDays(data.settings);
   for (const c of data.categories) {
-    let carry = 0, last: DayRow | null = null;
     const byDate = new Map<DateStr, DayRow>();
-    for (let d = c.startDate; d <= asOf; d = addDays(d, 1)) {
-      const due = dueOn(c, d), dn = (done[c.id] || {})[d] || 0;
+    for (let d = c.startDate; d <= asOf; d = addDays(d, 1))
+      byDate.set(d, { date: d, due: dueOn(c, d), done: (done[c.id] || {})[d] || 0, opening: 0, owed: 0, end: 0 });
+    per[c.id] = { byDate, today: byDate.get(asOf) ?? { date: asOf, due: 0, done: (done[c.id] || {})[asOf] || 0, opening: 0, owed: 0, end: 0 } };
+  }
+  // The level only looks at what was due and done, never at the backlog or the streak, so it comes first (LVL-05) and
+  // the backlog limit can follow it (LVL-10).
+  const level = levels({ per }, data.categories, asOf, levelsFrom);
+  for (const c of data.categories) {
+    let carry = 0;
+    for (const row of per[c.id].byDate.values()) {
+      const d = row.date, cd = picked ?? RULES[levelOn(level, d)].cap;
       if (c.archivedFrom && d >= c.archivedFrom) carry = 0;
       if (cd > 0) carry = Math.min(carry, cd * targetMinutesOn(c, d)); // older misses beyond the cap are forgiven
-      const row: DayRow = { date: d, due, done: dn, opening: carry, owed: carry + due, end: Math.max(0, carry + due - dn) };
-      byDate.set(d, row); carry = row.end; last = row;
+      row.opening = carry; row.owed = carry + row.due; row.end = Math.max(0, row.owed - row.done);
+      carry = row.end;
     }
-    per[c.id] = { byDate, today: last && last.date === asOf ? last : { date: asOf, due: 0, done: (done[c.id] || {})[asOf] || 0, opening: 0, owed: 0, end: 0 } };
   }
   const act = activeCats(data.categories, asOf);
   const t = (k: keyof DayRow) => sum(act.map(c => per[c.id].today[k] as number));
@@ -108,22 +123,31 @@ export function calc(data: AppData, asOf: DateStr = today()): Calc {
     done: t('done'),
     carryLeft: sum(act.map(c => carriedLeft(per[c.id].today))),
   };
-  const dayEnd = (d: DateStr) => sum(data.categories.map(c => per[c.id].byDate.get(d)?.end || 0));
-  const dayDue = (d: DateStr) => sum(data.categories.map(c => per[c.id].byDate.get(d)?.owed || 0));
+  const rowsOn = (d: DateStr) => data.categories.flatMap(c => { const r = per[c.id].byDate.get(d); return r ? [r] : []; });
   const earliest = data.categories.reduce((m, c) => c.startDate < m ? c.startDate : m, asOf);
-  // One pass, oldest first. SHIELD_DAYS clear days in a row earn a shield (SHIELD_MAX at most); a missed day spends one instead
-  // of breaking the streak, and counts towards neither. Today counts only once clear, and never spends one: it isn't over.
-  let streak = 0, best = 0, shields = 0, week = 0;
-  const shielded: DateStr[] = [];
+  // One pass, oldest first, each day judged by its own level's rule. Enough clear days in a row earn a shield (up to the
+  // level's most); a missed day spends one instead of breaking the streak, and counts towards neither. Today counts only
+  // once clear, and never spends one: it isn't over. A level that holds fewer shields trims the extra (LVL-07).
+  let streak = 0, best = 0, shields = 0, week = 0, prev = 0;
+  const shielded: DateStr[] = [], days: Calc['days'] = new Map();
   for (let x = earliest; x <= asOf; x = addDays(x, 1)) {
-    if (dayEnd(x) === 0) {
-      if (dayDue(x) > 0) { streak++; if (++week === SHIELD_DAYS) { week = 0; shields = Math.min(SHIELD_MAX, shields + 1); } }
-    } else if (x === asOf) break;
+    const l = levelOn(level, x), R = RULES[l];
+    if (l !== prev) {
+      shields = Math.min(shields, R.shieldMax);
+      if (R.startShield && level && x === level.moves[0].date) shields = Math.max(shields, 1);
+      prev = l;
+    }
+    const st = dayState(R.clear, rowsOn(x));
+    days.set(x, st);
+    if (st === 'clear') { streak++; if (++week >= R.shieldDays) { week = 0; shields = Math.min(R.shieldMax, shields + 1); } }
+    else if (st === 'rest') { /* nothing due: neither extends nor breaks the streak */ }
+    else if (x === asOf) break;
     else if (shields > 0) { shields--; week = 0; shielded.push(x); }
     else { streak = 0; week = 0; }
     best = Math.max(best, streak);
   }
-  return { per, totals, streak, best, shields, shielded, shieldDays: week, done };
+  const rule = RULES[levelOn(level, asOf)];
+  return { per, totals, streak, best, shields, shielded, shieldDays: week, done, level, rule, days, keepLeft: keepLeft(rule.clear, rowsOn(asOf)) };
 }
 
 /**

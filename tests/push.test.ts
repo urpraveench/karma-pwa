@@ -268,3 +268,13 @@ describe('reminders reach the Android app through FCM (AND-08)', () => {
     expect(removed).toEqual(['old-app']);
   });
 });
+
+describe("reminders in the coach's voice (COACH-07)", () => {
+  it('the line under the title follows the tier; Steady says what it always said', () => {
+    expect(['Starting', 'Building', 'Steady', 'Strong', 'Relentless'].map(t => JSON.parse(reminderPayload([{ name: 'Reading' }], true, t as never)).body))
+      .toEqual(['5 minutes is a win today.', 'A few minutes keeps the chain growing.', 'Even 5 minutes counts.', 'You know the drill. Go get it.', "The streak won't feed itself."]);
+    expect(JSON.parse(reminderPayload([{ name: 'Reading' }, { name: 'Exercise' }], true, 'Strong')).body).toBe('Reading and Exercise. You know the drill. Go get it.');
+    expect(JSON.parse(practicePayload([{ name: 'Reading', remind: '10:00' }], 1, true, 'Starting')).body).toBe('5 minutes is a win today.');
+    expect(JSON.parse(reminderPayload([{ name: 'Reading' }], true)).body).toBe('Even 5 minutes counts.');
+  });
+});

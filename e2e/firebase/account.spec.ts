@@ -132,12 +132,12 @@ test.describe('Firebase sync', () => {
     await page.fill('#cn', 'Journaling');
     await page.click('.sheet button[type=submit]');
     await expect(toast(page)).toHaveText('Added Journaling');
-    await page.locator('.seg button', { hasText: '3 days' }).click();
+    await page.getByRole('button', { name: '3 days', exact: true }).click(); // its name either way; once levels began it reads "3" (LVL-10)
     await expect(toast(page)).toHaveText('Backlog capped at 3 days per practice');
     const phone2 = await onNewDevice(browser, email);
     await phone2.locator('.tab', { hasText: 'Setup' }).click();
     await expect(phone2.locator('.li', { hasText: 'Journaling' })).toBeVisible();
-    await expect(phone2.locator('.seg button', { hasText: '3 days' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(phone2.getByRole('button', { name: '3 days', exact: true })).toHaveAttribute('aria-pressed', 'true');
   });
 
   test('logging offline syncs once back online (SYNC-11)', async ({ page, context, browser }) => {

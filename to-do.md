@@ -16,6 +16,7 @@ Nothing right now.
 
 ## 2. Check by hand before release
 
+- [ ] After levels ship: the day they begin, an existing account sees the "Your level and your coach" screen once, with a sensible level, and no morning splash on top; on the first Monday after, a level card appears only if the level moved; a reminder push on the phone carries the tier's line (LVL-13, LVL-11, COACH-07)
 These can't be automated, or need the real project and a real phone. IDs refer to [FEATURES.md](FEATURES.md).
 
 - [ ] From 11 October: run `firebase firestore:backups:list --project tiktym` and check a daily backup appears each day (SYNC-17)
@@ -188,6 +189,21 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.16.0: levels (10, from how consistent you've been, moving each Monday) setting the streak, shield and backlog rules; the coach's voice by tier in the app, reminders and the comeback email; a one-screen welcome; the morning splash at 10 seconds. App, functions and website deployed, 14 October 2026
+- [x] **Claude:** `LEVELS_FROM` set to the release day, 14 October 2026; the Firebase-mode settings sync test finds the backlog buttons by name, since they read "1", "2", "3" once levels began (LVL-10). 14 October 2026
+- [x] **Claude:** the levels introduction no longer tells an account with under a week of history that its Level 1 came from its last 4 weeks; it says everyone starts at Level 1, as for a new account (LVL-13). On the `levels` branch, 14 October 2026
+- [x] **Claude:** the levels introduction cut to one screen, asked by Praveen: "Your level and your coach": TikTym helps you reach your goals, your level shows where you stand today, your coach guides you from here (LVL-13). On the `levels` branch, 14 October 2026
+- [x] **Claude:** the levels introduction: three screens the first time levels apply (once per device, in place of that morning's splash, never on the day an account starts), in the person's own level and rules; the "Meet your level" card on Today is gone, since the introduction covers it (LVL-13, LVL-11). On the `levels` branch, 14 October 2026
+- [x] **Claude:** the morning splash stays 10 seconds instead of 7, asked by Praveen (TODAY-21). On the `levels` branch, ships with it, 14 October 2026
+- [x] **Claude:** phase 5: the daily and practice reminders' line and the comeback email's opening in the coach's voice by tier; the server works out the level with the app's rules (COACH-07, COACH-08). On the `levels` branch, 14 October 2026
+- [x] **Claude:** phase 4: a card on Today when the level moves, and level progress in Insights; the coach names the practice lifting the score and the one dragging it; the level's text says what keeps the level when the score is under its threshold (LVL-11, LVL-12, TODAY-22). On the `levels` branch, 14 October 2026
+- [x] **Claude:** phase 3: the coach's voice by tier (Starting gentle to Relentless blunt; Steady as before levels) on the evening nudge, the "All clear" celebration, the on-a-roll and comeback cards, and Insights' quiet-week line (COACH-01 to COACH-06). On the `levels` branch, 14 October 2026
+- [x] **Claude:** phase 2c: the backlog limit follows the level when the person hasn't picked one (Levels 1–3: 1 day; 4–6: 2; 7–8: 3; 9–10: none), with Setup showing "Auto" (LVL-10). On the `levels` branch, 14 October 2026
+- [x] **Claude:** the level's score counts a practice-day as on target from 80% of its target, so someone doing 25 of 30 minutes a day doesn't score 0% (LVL-02). On the `levels` branch, 14 October 2026
+- [x] **Claude:** phase 2b: practice streaks by level: Levels 1–2 allow 2 missed days a week, 3–4 one, 5 one a fortnight, 6 up none; each practice-day judged like its level's clear day (LVL-09). On the `levels` branch, 14 October 2026
+- [x] **Claude:** phase 2a: the streak, shields and the evening nudge follow each day's level: what makes a clear day, shields earned and held (a shield to start at Levels 1–2), days before levels keep the old rules; the Streak sheet explains the current level's rules; shared with the functions (LVL-06 to LVL-08, CALC-10, CALC-14, CALC-15, TODAY-13, TODAY-20). On the `levels` branch, 14 October 2026
+- [x] **Claude:** phase 1: the level from history (score, starting level, weekly moves) in `src/lib/levels.ts`, shown on the Streak sheet with the score and what reaches the next level; streak rules unchanged (LVL-01 to LVL-05, TODAY-22). On the `levels` branch, 14 October 2026
+- [x] Released 1.15.0: the coloured button logs only today's minutes and a red "+N carried" button clears the backlog; "How did it feel?" only after a focus timer session; iPhone evening check and practice reminders. App and website deployed, 14 October 2026
 - [x] **Claude:** CLAUDE.md › Branches: `main` is production, live fixes branch off `main`, feature branches like `android` merge in only when they ship and take `main` after each release, deploy only from `main`. 14 October 2026
 - [x] **Claude:** "How did it feel?" only after a focus timer session, not after every quick tap or typed entry; the question made every toast twice as tall and covered the row just logged (LOG-31). 14 October 2026
 - [x] **Claude:** the coloured button logs only what's left of today's target; once that's done, a red "+N carried" button clears the backlog on purpose; the row reads "0 of 60, 120 carried" and "Today's 60 done, 120 carried"; the toast says what's still carried; the website's feature list says "One tap logs today's minutes" (LOG-01, LOG-32, TODAY-11). From a user who did 60 minutes of Exercise and got 180 logged. 14 October 2026

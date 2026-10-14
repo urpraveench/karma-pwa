@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { comebackDue, comebackRange, daysAway, indiaToday, latestLogDate } from '../functions/src/comeback';
-import { comebackEmail, unsubscribeLink } from '../functions/src/mail';
+import { comebackEmail, comebackOpening, unsubscribeLink } from '../functions/src/mail';
 
 const TODAY = '2026-10-14';
 
@@ -62,5 +62,24 @@ describe('the comeback email (NOTIF-07)', () => {
       expect(part).toContain('Helping busy people like you make time for what matters.');
       expect(part).not.toMatch(/Founder|Pramal/);
     }
+  });
+});
+
+describe("the comeback email in the coach's voice (COACH-08)", () => {
+  const unsubscribe = unsubscribeLink('uid123', 'tips', 'secret');
+  const practice = { name: 'Meditation', minutes: 10, color: '#8A4FA3' };
+
+  it('opens by tier; Steady and Building as before levels', () => {
+    expect(comebackOpening(4)).toBe("It's been 4 days since your last entry in TikTym. That happens to everyone: work, travel, a busy week.");
+    expect(comebackOpening(4, 'Building')).toBe(comebackOpening(4));
+    expect(comebackOpening(4, 'Starting')).toBe("It's been 4 days since your last entry in TikTym. That's fine: starting again is the whole skill, and you've done it before.");
+    expect(comebackOpening(4, 'Strong')).toBe("It's been 4 days since your last entry in TikTym. Not like you, which is exactly why it's easy to fix.");
+    expect(comebackOpening(4, 'Relentless')).toBe("It's been 4 days since your last entry in TikTym. Everyone has an off week. Nobody needs an off month.");
+  });
+
+  it('puts the opening in both the HTML and the text', () => {
+    const e = comebackEmail({ name: 'Ravi', practice, days: 4, unsubscribe, tier: 'Relentless' });
+    expect(e.html).toContain('Nobody needs an off month.');
+    expect(e.text).toContain("It's been 4 days since your last entry in TikTym. Everyone has an off week. Nobody needs an off month.");
   });
 });

@@ -180,6 +180,54 @@ test.describe('Today states', () => {
     await expect(sheet).toHaveCount(0);
   });
 
+  test('the Streak sheet shows the level: a new account at Level 1, with its rules (TODAY-22, TODAY-20, LVL-03, LVL-06, LVL-07)', async ({ page }) => {
+    // levels begin Monday 19 October; this account starts that day and meets its target on 19 and 20 October
+    await signInWith(page, seedData([reading('2026-10-19')], [['r', '2026-10-19', 30], ['r', '2026-10-20', 30]]), at(10, 0, 21));
+    await page.locator('button.streak').click();
+    const sheet = page.getByRole('dialog', { name: 'Streak' });
+    await expect(sheet.locator('.sk-lv')).toHaveText('Level 1 · Starting');
+    await expect(sheet.locator('.sk-lv-text')).toHaveText('100% of your practice days on target in the last 14 days. Reach 15% and on Monday 2 November you move up to Level 2.');
+    // Level 1's rules: a shield to start, one more every 2 clear days, up to 5 (LVL-06, LVL-07)
+    await expect(sheet.locator('.sk-shields')).toHaveAttribute('aria-label', '2 of 5 shields');
+    await expect(sheet.locator('.sk-next')).toHaveText('2 more clear days in a row earn a shield.');
+    await expect(sheet.locator('.sk-how')).toHaveText('At Level 1: A day is clear when you do 5 minutes or more on any practice. Every 2 clear days in a row earn a shield, and you can hold 5. Miss a day and a shield keeps your streak; the minutes still carry over.');
+  });
+
+  test('the Streak sheet shows the level: a consistent account starts at Level 10, with its rules (TODAY-22, TODAY-20, LVL-04, LVL-07)', async ({ page }) => {
+    await signInWith(page, seedData([reading('2026-09-14')], days('2026-09-14', '2026-10-20').map(d => ['r', d, 30])), at(10, 0, 21));
+    await page.locator('button.streak').click();
+    const sheet = page.getByRole('dialog', { name: 'Streak' });
+    await expect(sheet.locator('.sk-lv')).toHaveText('Level 10 · Relentless');
+    await expect(sheet.locator('.sk-lv-text')).toHaveText('100% of your practice days on target in the last 14 days. Stay at 83% or more to keep Level 10.');
+    // Level 10 holds one shield: the 3 held before levels began are trimmed (LVL-07)
+    await expect(sheet.locator('.sk-shields')).toHaveAttribute('aria-label', '1 of 1 shield');
+    await expect(sheet.locator('.sk-next')).toHaveText('You hold your shield, the most you can at this level.');
+    await expect(sheet.locator('.sk-how')).toHaveText('At Level 10: A day is clear when every practice is done, carried-over minutes included. Every 7 clear days in a row earn a shield, and you can hold 1. Miss a day and a shield keeps your streak; the minutes still carry over.');
+  });
+
+  test('the coach speaks to the level: the on-a-roll card at Level 1 (COACH-04, MOM-08)', async ({ page }) => {
+    // 6 clear days to 20 October; under a week of history when levels began, so Level 1, where 5 minutes keeps the streak
+    await signInWith(page, seedData([reading('2026-10-15')], days('2026-10-15', '2026-10-20').map(d => ['r', d, 30])), at(10, 0, 21));
+    await expect(page.locator('.moment .m-title')).toHaveText('Day 7 is waiting.');
+    await expect(page.locator('.moment .m-body')).toHaveText("6 days in a row. 5 minutes keeps it going. That's all it takes.");
+  });
+
+  test('the level in Insights (LVL-12)', async ({ page }) => {
+    await signInWith(page, seedData([reading('2026-09-14')], days('2026-09-14', '2026-10-18').map(d => ['r', d, 30])), at(10, 0, 19));
+    await tab(page, 'Insights').click();
+    const panel = page.getByRole('region', { name: 'Level' });
+    await expect(panel.locator('h3')).toHaveText('Level 10 · Relentless');
+    await expect(panel.locator('.lv-sub')).toHaveText('100% of your practice days on target in the last 14 days. Stay at 83% or more to keep Level 10.');
+    await panel.getByRole('button', { name: 'What it asks ›' }).click();
+    await expect(page.getByRole('dialog', { name: 'Streak' }).locator('.sk-lv')).toHaveText('Level 10 · Relentless');
+  });
+
+  test('no level before levels began (TODAY-22)', async ({ page }) => {
+    await signInWith(page, seedData([reading('2026-09-30')], days('2026-09-30', '2026-10-06').map(d => ['r', d, 30])));
+    await page.locator('button.streak').click();
+    await expect(page.getByRole('dialog', { name: 'Streak' }).locator('.sk-level')).toHaveCount(0);
+  });
+
   test('the Streak sheet marks the day a shield saved, and missed days (TODAY-20)', async ({ page }) => {
     // 1–3 Oct clear earns a shield; 4 Oct missed spends it; 5 Oct pays it back; 6 Oct missed with no shield left
     await signInWith(page, seedData([reading('2026-10-01')], [...days('2026-10-01', '2026-10-03').map(d => ['r', d, 30] as [string, string, number]), ['r', '2026-10-05', 60]]), at(10));
@@ -279,11 +327,13 @@ test.describe('the morning splash (TODAY-21)', () => {
     await expect(splash.locator('.splash-idea')).toHaveText(ideaFor('2026-10-08'));
   });
 
-  test('closes by itself after a few seconds, or with a tap anywhere', async ({ page }) => {
+  test('closes by itself after 10 seconds, or with a tap anywhere', async ({ page }) => {
     await signInWith(page, seedData([reading('2026-10-01')]));
     const splash = page.getByRole('dialog', { name: "Today's idea" });
     await expect(splash).toBeVisible();
-    await page.clock.fastForward(7500);
+    await page.clock.fastForward(9500);
+    await expect(splash).toBeVisible();
+    await page.clock.fastForward(1000);
     await expect(splash).toHaveCount(0);
     await page.evaluate(() => localStorage.removeItem('tiktym:idea-seen'));
     await page.reload();
@@ -295,5 +345,58 @@ test.describe('the morning splash (TODAY-21)', () => {
     await signIn(page);
     await page.waitForTimeout(300);
     await expect(page.getByRole('dialog', { name: "Today's idea" })).toHaveCount(0);
+  });
+});
+
+test.describe('the levels introduction (LVL-13)', () => {
+  test.use({ levelsIntro: true, ideaSplash: true });
+  const consistent = () => seedData([reading('2026-09-14')], days('2026-09-14', '2026-10-20').map(d => ['r', d, 30]));
+
+  test('one screen the first time levels apply, in place of that morning\'s splash; then never again', async ({ page }) => {
+    await signInWith(page, consistent(), at(10, 0, 21));
+    const intro = page.getByRole('dialog', { name: 'Your level and your coach' });
+    await expect(intro.locator('.intro-title')).toHaveText('Your level and your coach');
+    await expect(intro.locator('.intro-level')).toHaveText('Level 10 · Relentless');
+    await expect(intro.getByRole('img', { name: 'Level 10 of 10' })).toBeVisible();
+    await expect(intro.locator('.intro-body')).toHaveText([
+      'TikTym is here to help you reach your goals, and to keep you going with advice that fits you.',
+      "Your level shows where you stand today: Level 10, from how often you've hit your targets these last 4 weeks.",
+      'From here, your coach guides you, one step at a time, toward 100 minutes a day for your productive life.',
+    ]);
+    await intro.getByRole('button', { name: "Let's go" }).click();
+    await expect(intro).toHaveCount(0);
+    await expect(page.getByRole('dialog', { name: "Today's idea" })).toHaveCount(0); // not stacked after it
+    await page.reload();
+    await expect(page.locator('.cat')).toHaveCount(1);
+    await expect(intro).toHaveCount(0);
+    await expect(page.getByRole('dialog', { name: "Today's idea" })).toHaveCount(0); // already counted as this morning's
+  });
+
+  test('Escape closes it for good', async ({ page }) => {
+    await signInWith(page, consistent(), at(10, 0, 21));
+    const intro = page.getByRole('dialog', { name: 'Your level and your coach' });
+    await expect(intro).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(intro).toHaveCount(0);
+    await page.reload();
+    await expect(page.locator('.cat')).toHaveCount(1);
+    await expect(intro).toHaveCount(0);
+  });
+
+  test('a new account meets its level the day after it starts, not on the day it chooses practices', async ({ page }) => {
+    await signInWith(page, seedData([reading('2026-10-21')]), at(10, 0, 21));
+    await expect(page.locator('.cat')).toHaveCount(1);
+    await expect(page.getByRole('dialog', { name: 'Your level and your coach' })).toHaveCount(0);
+    await page.clock.setFixedTime(at(10, 0, 22));
+    await page.reload();
+    const intro = page.getByRole('dialog', { name: 'Your level and your coach' });
+    await expect(intro.locator('.intro-level')).toHaveText('Level 1 · Starting');
+    await expect(intro.locator('.intro-body').nth(1)).toHaveText('Your level shows where you stand today. Everyone starts at Level 1.');
+  });
+
+  test('not before levels begin: the morning splash as usual', async ({ page }) => {
+    await signInWith(page, seedData([reading('2026-10-01')]));
+    await expect(page.getByRole('dialog', { name: "Today's idea" })).toBeVisible();
+    await expect(page.getByRole('dialog', { name: 'Your level and your coach' })).toHaveCount(0);
   });
 });

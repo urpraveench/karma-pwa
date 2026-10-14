@@ -2,6 +2,7 @@
 // record reminders/{uid} keeps the account's reminder time, time zone and UTC slot, how many devices allowed
 // notifications, and the local date of the last reminder (lastSent). The 15-minute job queries it by slot.
 import { LOG_NUDGE_TEXT, LOG_NUDGE_TIME, localParts, logNudgeOn, practiceReminderText, practiceRemindTime, reminderOn, reminderText, reminderTime, utcSlot } from './shared/reminders.js';
+import type { Tier } from './shared/levels.js';
 import type { Category, Settings } from './shared/types.js';
 
 export interface ReminderDoc {
@@ -52,8 +53,8 @@ export function practiceCheck(categories: PracticeReminder[], doc: ReminderDoc, 
 }
 
 /** A practice reminder's notification; the tag is per time, so it doesn't replace the daily reminder. */
-export function practicePayload(due: Pick<Category, 'name' | 'remind'>[], left: number, badge: boolean): string {
-  return JSON.stringify({ ...practiceReminderText(due), badge: badge ? left : null, url: '/', tag: practiceTag(due[0]?.remind) });
+export function practicePayload(due: Pick<Category, 'name' | 'remind'>[], left: number, badge: boolean, tier: Tier = 'Steady'): string {
+  return JSON.stringify({ ...practiceReminderText(due, tier), badge: badge ? left : null, url: '/', tag: practiceTag(due[0]?.remind) });
 }
 
 /** The notification tag and web-push topic (letters, digits and '-' only) for a practice reminder time. */
@@ -106,8 +107,8 @@ export function reminderCheck(doc: ReminderDoc, now: Date): { act: 'send' | 'sen
 export const deviceGone = (statusCode: unknown) => statusCode === 404 || statusCode === 410;
 
 /** What the service worker receives: the notification, and the badge count unless the badge is switched off. */
-export function reminderPayload(left: Pick<Category, 'name'>[], badge: boolean): string {
-  return JSON.stringify({ ...reminderText(left), badge: badge ? left.length : null, url: '/', tag: 'daily-reminder' });
+export function reminderPayload(left: Pick<Category, 'name'>[], badge: boolean, tier: Tier = 'Steady'): string {
+  return JSON.stringify({ ...reminderText(left, tier), badge: badge ? left.length : null, url: '/', tag: 'daily-reminder' });
 }
 
 /**

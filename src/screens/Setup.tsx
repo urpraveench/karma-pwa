@@ -14,15 +14,16 @@ import { practiceRemindTime, timeLabel } from '../lib/reminders';
 const SHORT_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const dayTxt = (d: number[]) => d.length === 7 ? 'every day' : d.length === 0 ? 'no days' : [1, 2, 3, 4, 5, 6, 0].filter(x => d.includes(x)).map(x => SHORT_DAYS[x]).join(', ');
 const CAPS: [number, string][] = [[0, 'None'], [1, '1 day'], [2, '2 days'], [3, '3 days']];
+const capSays = (n: number) => n ? `${n} day${n === 1 ? '' : 's'}` : 'no limit';
 const THEMES: Theme[] = ['system', 'light', 'dark'];
 
 export function Setup() {
-  const { data, T, user, openSheet, reorderCategory, setBacklogCap, loadSample, exportBackup, importBackup, startOver, signOut, deleteAccount } = useApp();
+  const { data, c: cx, T, user, openSheet, reorderCategory, setBacklogCap, loadSample, exportBackup, importBackup, startOver, signOut, deleteAccount } = useApp();
   const [theme, setTheme] = useTheme();
   const { env: installEnv } = useInstall();
   const cats = [...data.categories].sort(byOrder);
   const total = sum(activeCats(data.categories, T).map(c => dueOn(c, T)));
-  const cap = capDays(data.settings);
+  const picked = capDays(data.settings), byLevel = cx.level ? cx.rule.cap : null, cap = picked ?? byLevel ?? 2;
 
   return (
     <>
@@ -49,9 +50,11 @@ export function Setup() {
 
       <div className="sect-h"><h2>Backlog limit</h2></div>
       <div className="seg seg-full" role="group" aria-label="Backlog limit">
-        {CAPS.map(([v, l]) => <button key={v} onClick={() => setBacklogCap(v)} aria-pressed={cap === v}>{l}</button>)}
+        {byLevel !== null && <button onClick={() => setBacklogCap(-1)} aria-pressed={picked === null} aria-label="By level">Auto</button>}
+        {CAPS.map(([v, l]) => <button key={v} onClick={() => setBacklogCap(v)} aria-pressed={(byLevel === null || picked !== null) && cap === v}
+          aria-label={byLevel !== null ? l : undefined}>{byLevel !== null && v ? v : l}</button>)}
       </div>
-      <p className="hint" style={{ textAlign: 'left', margin: '-6px 2px 22px' }}>The most each practice can carry into a new day, measured in days of its target. Misses beyond that are forgiven, so a bad week never becomes a hole you can't climb out of.</p>
+      <p className="hint" style={{ textAlign: 'left', margin: '-6px 2px 22px' }}>The most each practice can carry into a new day, measured in days of its target. Misses beyond that are forgiven, so a bad week never becomes a hole you can't climb out of.{byLevel !== null && ` Auto follows your level: ${capSays(byLevel)} at Level ${cx.level!.level}.`}</p>
 
       <div className="sect-h"><h2>Appearance</h2></div>
       <div className="seg" role="group" aria-label="Theme">

@@ -26,7 +26,7 @@ describe('levels', () => {
     expect([1, 2, 3, 6, 7, 10].map(tierOf)).toEqual(['Starting', 'Starting', 'Building', 'Steady', 'Strong', 'Relentless']);
   });
 
-  it("scores the share of practice-days whose own target was met, ignoring the backlog and days with nothing due (LVL-02)", () => {
+  it("scores the share of practice-days on target (80% of it or more), ignoring the backlog and days with nothing due (LVL-02)", () => {
     const weekdays = cat('w', '2026-09-28', { targets: [{ from: '2026-09-28', minutes: 10, days: [1, 2, 3, 4, 5] }] });
     // 28 Sep to 4 Oct: daily practice met on 4 of 7 days; weekday practice met on 3 of its 5 days (the weekend owes nothing)
     const d = data([cat('a', '2026-09-28'), weekdays], [...logs('a', '2026-09-28', '2026-10-01'), ...logs('w', '2026-09-30', '2026-10-02')]);
@@ -36,6 +36,9 @@ describe('levels', () => {
     const owed = data([cat('a', '2026-09-28')], logs('a', '2026-09-29', '2026-09-29'));
     expect(score(calc(owed, '2026-09-29'), owed.categories, '2026-09-29', '2026-09-29')).toBe(100);
     expect(score(c, d.categories, '2026-09-20', '2026-09-27')).toBeNull();
+    // 80% of a target counts; less doesn't
+    const near = data([cat('a', '2026-09-28')], [...logs('a', '2026-09-28', '2026-09-28', 8), ...logs('a', '2026-09-29', '2026-09-29', 7)]);
+    expect(score(calc(near, '2026-09-29'), near.categories, '2026-09-28', '2026-09-29')).toBe(50);
   });
 
   it('a new account starts at Level 1, and there are no levels before they began (LVL-03)', () => {

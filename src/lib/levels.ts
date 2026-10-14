@@ -111,13 +111,16 @@ export function practiceStreak(rows: Map<DateStr, DayRow>, lv: Levels | null, T:
   return st;
 }
 
-/** The share of scheduled practice-days from `from` to `to` where the day's own target was met, or null if nothing was due (LVL-02). */
+/** A practice-day counts as on target from this share of its own target, so 25 of 30 minutes isn't a zero (LVL-02). */
+export const ON_TARGET = .8;
+
+/** The share of scheduled practice-days from `from` to `to` that were on target, or null if nothing was due (LVL-02). */
 export function score(c: Pick<Calc, 'per'>, categories: Category[], from: DateStr, to: DateStr): number | null {
   let due = 0, met = 0;
   for (let d = from; d <= to; d = addDays(d, 1))
     for (const cat of categories) {
       const r = c.per[cat.id]?.byDate.get(d);
-      if (r && r.due > 0) { due++; if (r.done >= r.due) met++; }
+      if (r && r.due > 0) { due++; if (r.done >= r.due * ON_TARGET) met++; }
     }
   return due ? Math.round(met / due * 100) : null;
 }

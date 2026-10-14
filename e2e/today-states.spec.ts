@@ -352,18 +352,17 @@ test.describe('the levels introduction (LVL-13)', () => {
   test.use({ levelsIntro: true, ideaSplash: true });
   const consistent = () => seedData([reading('2026-09-14')], days('2026-09-14', '2026-10-20').map(d => ['r', d, 30]));
 
-  test('three screens the first time levels apply, in place of that morning\'s splash; then never again', async ({ page }) => {
+  test('one screen the first time levels apply, in place of that morning\'s splash; then never again', async ({ page }) => {
     await signInWith(page, consistent(), at(10, 0, 21));
-    const intro = page.getByRole('dialog', { name: 'How levels work' });
-    await expect(intro.locator('.intro-title')).toHaveText('Introducing levels');
+    const intro = page.getByRole('dialog', { name: 'Your level and your coach' });
+    await expect(intro.locator('.intro-title')).toHaveText('Your level and your coach');
     await expect(intro.locator('.intro-level')).toHaveText('Level 10 · Relentless');
     await expect(intro.getByRole('img', { name: 'Level 10 of 10' })).toBeVisible();
-    await intro.getByRole('button', { name: 'Next' }).click();
-    await expect(intro.locator('.intro-title')).toHaveText('Your level sets the rules');
-    await expect(intro.locator('.intro-body').first()).toHaveText('A day is clear when every practice is done, carried-over minutes included.');
-    await intro.getByRole('button', { name: 'Next' }).click();
-    await expect(intro.locator('.intro-title')).toHaveText('Climb every Monday');
-    await expect(intro.getByRole('button', { name: 'Skip' })).toHaveCount(0);
+    await expect(intro.locator('.intro-body')).toHaveText([
+      'TikTym is here to help you reach your goals, and to keep you going with advice that fits you.',
+      "Your level shows where you stand today: Level 10, from how often you've hit your targets these last 4 weeks.",
+      'From here, your coach guides you, one step at a time, toward 100 minutes a day for your productive life.',
+    ]);
     await intro.getByRole('button', { name: "Let's go" }).click();
     await expect(intro).toHaveCount(0);
     await expect(page.getByRole('dialog', { name: "Today's idea" })).toHaveCount(0); // not stacked after it
@@ -373,10 +372,11 @@ test.describe('the levels introduction (LVL-13)', () => {
     await expect(page.getByRole('dialog', { name: "Today's idea" })).toHaveCount(0); // already counted as this morning's
   });
 
-  test('Skip closes it for good', async ({ page }) => {
+  test('Escape closes it for good', async ({ page }) => {
     await signInWith(page, consistent(), at(10, 0, 21));
-    const intro = page.getByRole('dialog', { name: 'How levels work' });
-    await intro.getByRole('button', { name: 'Skip' }).click();
+    const intro = page.getByRole('dialog', { name: 'Your level and your coach' });
+    await expect(intro).toBeVisible();
+    await page.keyboard.press('Escape');
     await expect(intro).toHaveCount(0);
     await page.reload();
     await expect(page.locator('.cat')).toHaveCount(1);
@@ -386,17 +386,17 @@ test.describe('the levels introduction (LVL-13)', () => {
   test('a new account meets its level the day after it starts, not on the day it chooses practices', async ({ page }) => {
     await signInWith(page, seedData([reading('2026-10-21')]), at(10, 0, 21));
     await expect(page.locator('.cat')).toHaveCount(1);
-    await expect(page.getByRole('dialog', { name: 'How levels work' })).toHaveCount(0);
+    await expect(page.getByRole('dialog', { name: 'Your level and your coach' })).toHaveCount(0);
     await page.clock.setFixedTime(at(10, 0, 22));
     await page.reload();
-    const intro = page.getByRole('dialog', { name: 'How levels work' });
-    await expect(intro.locator('.intro-title')).toHaveText('Meet your level');
-    await expect(intro.locator('.intro-body')).toHaveText('TikTym has 10 levels. Everyone starts at Level 1, and you climb by showing up.');
+    const intro = page.getByRole('dialog', { name: 'Your level and your coach' });
+    await expect(intro.locator('.intro-level')).toHaveText('Level 1 · Starting');
+    await expect(intro.locator('.intro-body').nth(1)).toHaveText('Your level shows where you stand today. Everyone starts at Level 1.');
   });
 
   test('not before levels begin: the morning splash as usual', async ({ page }) => {
     await signInWith(page, seedData([reading('2026-10-01')]));
     await expect(page.getByRole('dialog', { name: "Today's idea" })).toBeVisible();
-    await expect(page.getByRole('dialog', { name: 'How levels work' })).toHaveCount(0);
+    await expect(page.getByRole('dialog', { name: 'Your level and your coach' })).toHaveCount(0);
   });
 });

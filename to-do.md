@@ -20,7 +20,7 @@ Ten levels that set how strict streaks and shields are, worked out from how cons
 
 ## 2. Check by hand before release
 
-- [ ] After levels ship: the day they begin, an existing account sees the three "Introducing levels" screens once, with a sensible level, and no morning splash on top; on the first Monday after, a level card appears only if the level moved; a reminder push on the phone carries the tier's line (LVL-13, LVL-11, COACH-07)
+- [ ] After levels ship: the day they begin, an existing account sees the "Your level and your coach" screen once, with a sensible level, and no morning splash on top; on the first Monday after, a level card appears only if the level moved; a reminder push on the phone carries the tier's line (LVL-13, LVL-11, COACH-07)
 These can't be automated, or need the real project and a real phone. IDs refer to [FEATURES.md](FEATURES.md).
 
 - [ ] From 11 October: run `firebase firestore:backups:list --project tiktym` and check a daily backup appears each day (SYNC-17)
@@ -187,6 +187,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** the levels introduction cut to one screen, asked by Praveen: "Your level and your coach": TikTym helps you reach your goals, your level shows where you stand today, your coach guides you from here (LVL-13). On the `levels` branch, 14 October 2026
 - [x] **Claude:** the levels introduction: three screens the first time levels apply (once per device, in place of that morning's splash, never on the day an account starts), in the person's own level and rules; the "Meet your level" card on Today is gone, since the introduction covers it (LVL-13, LVL-11). On the `levels` branch, 14 October 2026
 - [x] **Claude:** the morning splash stays 10 seconds instead of 7, asked by Praveen (TODAY-21). On the `levels` branch, ships with it, 14 October 2026
 - [x] **Claude:** phase 5: the daily and practice reminders' line and the comeback email's opening in the coach's voice by tier; the server works out the level with the app's rules (COACH-07, COACH-08). On the `levels` branch, 14 October 2026

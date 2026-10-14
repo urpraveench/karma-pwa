@@ -7,7 +7,7 @@ import type { Category, DateStr } from './types.js';
 // nothing is stored and the server gets the same answer: the score of past days decides each Monday's move.
 
 /** The day levels began. A day before it isn't judged by any level; set to the release date when levels ship. */
-export const LEVELS_FROM: DateStr = '2026-10-19';
+export const LEVELS_FROM: DateStr = '2026-10-14';
 export const LEVEL_MAX = 10;
 /** The score each level needs, as a whole percent (Level 1 needs nothing) (LVL-01). */
 export const THRESHOLD = [0, 0, 15, 25, 35, 45, 55, 65, 75, 85, 93];

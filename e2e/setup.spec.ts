@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { expect, test, loadSampleData, onDialog, seedData, signIn, signInWith, tab, toast } from './helpers';
+import { at, expect, test, loadSampleData, onDialog, seedData, signIn, signInWith, tab, toast } from './helpers';
 
 async function addJournaling(page: Page) {
   await page.locator('.chip', { hasText: 'Add practice' }).click();
@@ -298,4 +298,24 @@ test("Setup › About links to What's new on the website (GTM-13)", async ({ pag
   const link = page.locator('a.li', { hasText: "What's new" });
   await expect(link).toHaveAttribute('href', 'https://tiktym.com/updates/');
   await expect(link).toHaveAttribute('target', '_blank');
+});
+
+test('the backlog limit follows the level until one is picked (LVL-10)', async ({ page }) => {
+  // levels began on Monday 19 October; an account started that day is at Level 1, which carries 1 day
+  await signInWith(page, seedData([{ id: 'r', name: 'Reading', start: '2026-10-19' }]), at(10, 0, 21));
+  await expect(page.locator('.cat-meta')).toHaveText('0 of 30, 30 carried'); // 19 and 20 Oct missed: only a day's worth carries
+  await tab(page, 'Setup').click();
+  const byLevel = page.getByRole('button', { name: 'By level' });
+  await expect(byLevel).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('button', { name: '1 day' })).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('.hint', { hasText: 'Auto follows' })).toContainText('Auto follows your level: 1 day at Level 1.');
+  await page.getByRole('button', { name: 'None' }).click();
+  await expect(toast(page)).toHaveText('Backlog has no limit');
+  await expect(byLevel).toHaveAttribute('aria-pressed', 'false');
+  await tab(page, 'Today').click();
+  await expect(page.locator('.cat-meta')).toHaveText('0 of 30, 60 carried');
+  await tab(page, 'Setup').click();
+  await byLevel.click();
+  await expect(toast(page)).toHaveText('Backlog limit follows your level');
+  await expect(byLevel).toHaveAttribute('aria-pressed', 'true');
 });

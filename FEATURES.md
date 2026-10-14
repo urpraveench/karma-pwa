@@ -24,7 +24,7 @@ Summary of coverage at the time of writing:
 |---|---|---|---|---|
 | 1. Accounts and sign-in | 28 | 26 | 0 | 2 |
 | 2. First run | 13 | 13 | 0 | 0 |
-| 3. Backlog rules | 25 | 25 | 0 | 0 |
+| 3. Backlog rules | 26 | 26 | 0 | 0 |
 | 4. Today screen | 22 | 22 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
 | 6. Logging minutes | 28 | 28 | 0 | 0 |
@@ -39,7 +39,7 @@ Summary of coverage at the time of writing:
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| **Total** | **352** | **339** | **0** | **13** |
+| **Total** | **353** | **340** | **0** | **13** |
 
 ---
 
@@ -134,6 +134,7 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | LVL-07 | Shields by level | Clear days to earn one and the most held: Level 1 and 2: 2 days, 5 (and a shield to start with when levels begin at those levels); 3: 2, 4; 4: 3, 4; 5 and 6: 3, 3; 7: 4, 2; 8: 5, 2; 9: 6, 1; 10: 7, 1. Moving to a level that holds fewer trims the extra | Unit `levels.test.ts`, E2E `today-states.spec.ts` |
 | LVL-08 | Days before levels | Judged by the rules before levels (Level 6) whatever the level now, so no past streak is rewritten | Unit `levels.test.ts` |
 | LVL-09 | Practice streaks by level | Days in a row a practice was kept, each judged like its level's clear day on that practice alone (Level 1: 5+ minutes on it; from Level 6: nothing owed). Missed days that don't end it, and don't count: Levels 1–2: 2 in any 7 days; 3–4: 1 in 7; 5: 1 in 14; 6 up and before levels: none. Today counts once kept. Shown in Insights › Practice health and the "days straight" coach line | Unit `levels.test.ts` |
+| LVL-10 | Backlog limit by level | Unless the person picked a limit, each day's limit follows that day's level: Levels 1–3 carry 1 day of target, 4–6 two, 7–8 three, 9–10 no limit; before levels, 2 days as always. Setup › Backlog limit shows "Auto" (pressed when following the level) with "Auto follows your level: N days at Level L"; picking a number overrides it, and Auto (stored as -1, so it syncs) goes back | Unit `levels.test.ts`, E2E `setup.spec.ts` |
 
 ## 4. Today screen
 
@@ -345,7 +346,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 
 | ID | Scenario | Expected | Coverage |
 |---|---|---|---|
-| SET-01 | Backlog limit | None, 1, 2 or 3 days (default 2); toast confirms; totals recalculate immediately | E2E `setup.spec.ts` |
+| SET-01 | Backlog limit | None, 1, 2 or 3 days (default 2; once levels began, Auto, following the level: LVL-10); toast confirms; totals recalculate immediately | E2E `setup.spec.ts` |
 | SET-02 | Theme | System, Light or Dark; applies immediately and persists on this device | E2E `setup.spec.ts` |
 | SET-03 | System theme | Follows the phone's light or dark setting | E2E `app.spec.ts` |
 | SET-04 | Load sample data | Confirm, then replaces everything with 10 weeks of realistic history | E2E `setup.spec.ts`, `insights.spec.ts` |

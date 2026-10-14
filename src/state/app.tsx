@@ -351,7 +351,7 @@ function useAppState() {
     if (!store) return;
     const d0 = dataRef.current, settings = { ...d0.settings, backlogCap: v };
     setData({ ...d0, settings });
-    void persist(() => store.putSettings(settings), v ? `Backlog capped at ${v} day${v === 1 ? '' : 's'} per practice` : 'Backlog has no limit');
+    void persist(() => store.putSettings(settings), v < 0 ? 'Backlog limit follows your level' : v ? `Backlog capped at ${v} day${v === 1 ? '' : 's'} per practice` : 'Backlog has no limit');
   }, [store, setData, persist]);
 
   const replaceAll = useCallback((d: AppData, msg: string) => {

@@ -148,4 +148,16 @@ describe('levels', () => {
     // today not done yet doesn't end it
     expect(streak(i => i < 13, '2026-10-18')).toBe(13);
   });
+
+  it('the backlog limit follows the level unless one was picked (LVL-10)', () => {
+    const owed = (settings: AppData['settings'], asOf: string) => calc({ categories: [cat('a', '2026-08-01')], logs: logs('a', '2026-08-01', '2026-10-04'), settings }, asOf, FROM).per.a.today.opening;
+    // Level 10 from 5 Oct: no limit, so a week off carries every day of it
+    expect(owed({}, '2026-10-12')).toBe(70);
+    expect(owed({ backlogCap: -1 }, '2026-10-12')).toBe(70);
+    expect(owed({ backlogCap: 2 }, '2026-10-12')).toBe(20); // the picked limit wins
+    // before levels, 2 days as always
+    expect(owed({}, '2026-10-04')).toBe(0);
+    const before = calc({ categories: [cat('a', '2026-09-01')], logs: [], settings: {} }, '2026-09-10', FROM).per.a.today.opening;
+    expect(before).toBe(20);
+  });
 });

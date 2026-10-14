@@ -29,20 +29,22 @@ export interface LevelRule {
   clear: ClearRule; shieldDays: number; shieldMax: number; startShield?: boolean;
   /** Missed days a practice streak survives, and in how many days (LVL-09). */
   misses?: [number, number];
+  /** Days of target a practice carries into a new day unless the person picked a limit; 0 = no limit (LVL-10). */
+  cap: number;
 }
 /** By level, index 1 to 10 (LVL-06, LVL-07). Level 6 is the rule before levels. */
 export const RULES: LevelRule[] = [
-  { clear: 'all', shieldDays: 3, shieldMax: 3 },
-  { clear: 'any5', shieldDays: 2, shieldMax: 5, startShield: true, misses: [2, 7] },
-  { clear: 'minimum', shieldDays: 2, shieldMax: 5, startShield: true, misses: [2, 7] },
-  { clear: 'half', shieldDays: 2, shieldMax: 4, misses: [1, 7] },
-  { clear: 'most', shieldDays: 3, shieldMax: 4, misses: [1, 7] },
-  { clear: 'targets', shieldDays: 3, shieldMax: 3, misses: [1, 14] },
-  { clear: 'all', shieldDays: 3, shieldMax: 3 },
-  { clear: 'all', shieldDays: 4, shieldMax: 2 },
-  { clear: 'all', shieldDays: 5, shieldMax: 2 },
-  { clear: 'all', shieldDays: 6, shieldMax: 1 },
-  { clear: 'all', shieldDays: 7, shieldMax: 1 },
+  { clear: 'all', shieldDays: 3, shieldMax: 3, cap: 2 },
+  { clear: 'any5', shieldDays: 2, shieldMax: 5, startShield: true, misses: [2, 7], cap: 1 },
+  { clear: 'minimum', shieldDays: 2, shieldMax: 5, startShield: true, misses: [2, 7], cap: 1 },
+  { clear: 'half', shieldDays: 2, shieldMax: 4, misses: [1, 7], cap: 1 },
+  { clear: 'most', shieldDays: 3, shieldMax: 4, misses: [1, 7], cap: 2 },
+  { clear: 'targets', shieldDays: 3, shieldMax: 3, misses: [1, 14], cap: 2 },
+  { clear: 'all', shieldDays: 3, shieldMax: 3, cap: 2 },
+  { clear: 'all', shieldDays: 4, shieldMax: 2, cap: 3 },
+  { clear: 'all', shieldDays: 5, shieldMax: 2, cap: 3 },
+  { clear: 'all', shieldDays: 6, shieldMax: 1, cap: 0 },
+  { clear: 'all', shieldDays: 7, shieldMax: 1, cap: 0 },
 ];
 /** The level whose rules applied before levels began. */
 export const BEFORE_LEVELS = 6;

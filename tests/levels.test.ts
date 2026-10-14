@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { calc } from '../src/lib/backlog';
 import { addDays } from '../src/lib/date';
-import { dayState, keepLeft, levelFor, levelOn, levels, minimumOf, nextMonday, score, tierOf } from '../src/lib/levels';
+import { dayState, keepLeft, levelFor, levelOn, levels, minimumOf, nextMonday, practiceStreak, score, tierOf } from '../src/lib/levels';
 import type { DayRow } from '../src/lib/backlog';
 import type { AppData, Category, Log } from '../src/lib/types';
 
@@ -127,5 +127,22 @@ describe('levels', () => {
     const h = calc(half, '2026-10-06', FROM);
     expect(h.level!.level).toBe(1);
     expect([...h.days.entries()].filter(([d]) => d < FROM).map(([, v]) => v)).toEqual(['miss', 'miss', 'miss', 'miss']);
+  });
+
+  it('a practice streak survives the misses its level allows (LVL-09)', () => {
+    const streak = (keep: (i: number) => boolean, asOf: string, start = FROM) => {
+      const d = data([cat('a', start)], logs('a', start, asOf, 10, keep));
+      const c = calc(d, asOf, FROM);
+      return practiceStreak(c.per.a.byDate, c.level, asOf);
+    };
+    // Level 1 (5 Oct to 18 Oct): 2 misses in any 7 days are fine, a 3rd ends it
+    expect(streak(i => i !== 3 && i !== 5, '2026-10-18')).toBe(12);
+    expect(streak(i => i !== 3 && i !== 5 && i !== 7, '2026-10-18')).toBe(8); // misses on 12 and 10 Oct are allowed; 8 Oct is a 3rd in 7 days
+    // before levels (Level 6 rules), one miss ends it, even when paid back the next day
+    const old = data([cat('a', '2026-09-21')], [...logs('a', '2026-09-21', '2026-10-04', 10, i => i !== 3), ...logs('a', '2026-09-25', '2026-09-25')]);
+    const oc = calc(old, '2026-10-04', FROM);
+    expect(practiceStreak(oc.per.a.byDate, oc.level, '2026-10-04')).toBe(10); // 25 Sep to 4 Oct
+    // today not done yet doesn't end it
+    expect(streak(i => i < 13, '2026-10-18')).toBe(13);
   });
 });

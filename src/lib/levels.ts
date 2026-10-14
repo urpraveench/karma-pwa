@@ -24,15 +24,19 @@ export const tierOf = (level: number): Tier => TIERS[Math.ceil(level / 2) - 1];
  * not needed; 'all' every target and every carried-over minute (the rule before levels).
  */
 export type ClearRule = 'any5' | 'minimum' | 'half' | 'most' | 'targets' | 'all';
-export interface LevelRule { clear: ClearRule; shieldDays: number; shieldMax: number; startShield?: boolean }
+export interface LevelRule {
+  clear: ClearRule; shieldDays: number; shieldMax: number; startShield?: boolean;
+  /** Missed days a practice streak survives, and in how many days (LVL-09). */
+  misses?: [number, number];
+}
 /** By level, index 1 to 10 (LVL-06, LVL-07). Level 6 is the rule before levels. */
 export const RULES: LevelRule[] = [
   { clear: 'all', shieldDays: 3, shieldMax: 3 },
-  { clear: 'any5', shieldDays: 2, shieldMax: 5, startShield: true },
-  { clear: 'minimum', shieldDays: 2, shieldMax: 5, startShield: true },
-  { clear: 'half', shieldDays: 2, shieldMax: 4 },
-  { clear: 'most', shieldDays: 3, shieldMax: 4 },
-  { clear: 'targets', shieldDays: 3, shieldMax: 3 },
+  { clear: 'any5', shieldDays: 2, shieldMax: 5, startShield: true, misses: [2, 7] },
+  { clear: 'minimum', shieldDays: 2, shieldMax: 5, startShield: true, misses: [2, 7] },
+  { clear: 'half', shieldDays: 2, shieldMax: 4, misses: [1, 7] },
+  { clear: 'most', shieldDays: 3, shieldMax: 4, misses: [1, 7] },
+  { clear: 'targets', shieldDays: 3, shieldMax: 3, misses: [1, 14] },
   { clear: 'all', shieldDays: 3, shieldMax: 3 },
   { clear: 'all', shieldDays: 4, shieldMax: 2 },
   { clear: 'all', shieldDays: 5, shieldMax: 2 },
@@ -85,6 +89,26 @@ export function levelOn(lv: Levels | null, d: DateStr): number {
   let l = lv.moves[0].level;
   for (const m of lv.moves) if (m.date <= d) l = m.level;
   return l;
+}
+
+/**
+ * Days in a row a practice was kept, each day judged by its level's rule on that practice alone; today counts once kept.
+ * Below Level 6 a few missed days don't end it (they don't count either): as many as the level allows in any stretch of
+ * its days (LVL-09).
+ */
+export function practiceStreak(rows: Map<DateStr, DayRow>, lv: Levels | null, T: DateStr): number {
+  let st = 0;
+  const missed: DateStr[] = [];
+  for (let d = T, r = rows.get(d); r; d = addDays(d, -1), r = rows.get(d)) {
+    const rule = RULES[levelOn(lv, d)], s = dayState(rule.clear, [r]);
+    if (s === 'clear') st++;
+    else if (s === 'miss' && d !== T) {
+      const [n, days] = rule.misses ?? [0, 1], end = addDays(d, days);
+      if (missed.filter(m => m < end).length >= n) break;
+      missed.push(d);
+    }
+  }
+  return st;
 }
 
 /** The share of scheduled practice-days from `from` to `to` where the day's own target was met, or null if nothing was due (LVL-02). */

@@ -12,7 +12,6 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 Ten levels that set how strict streaks and shields are, worked out from how consistent someone has been, moving up or down by themselves each Monday. Level 6 is today's rules. Decided 14 October 2026: 10 levels in 5 coach voices (Starting, Building, Steady, Strong, Relentless); a clear day at Level 1 is 5 minutes on any practice; new accounts start at Level 1; existing accounts start from their last 28 days; moves are automatic, no manual setting.
 
-- [ ] **Claude:** phase 2b: practice streaks by level: Levels 1–2 allow 2 missed days a week, 3–4 one, 5 one a fortnight, 6 up none; each practice-day judged like its level's clear day
 - [ ] **Claude:** phase 2c: the backlog limit follows the level when the person hasn't picked one (Levels 1–3: 1 day; 4–6: 2; 7–8: 3; 9–10: none), with Setup showing "By level"
 - [ ] **Claude:** phase 3: the coach's voice by tier on Today's cards, the evening nudge, the celebration and Insights
 - [ ] **Claude:** phase 4: a card on Today when the level moves, and level progress in Insights; the coach names the practice lifting the score and the one dragging it
@@ -191,6 +190,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** phase 2b: practice streaks by level: Levels 1–2 allow 2 missed days a week, 3–4 one, 5 one a fortnight, 6 up none; each practice-day judged like its level's clear day (LVL-09). On the `levels` branch, 14 October 2026
 - [x] **Claude:** phase 2a: the streak, shields and the evening nudge follow each day's level: what makes a clear day, shields earned and held (a shield to start at Levels 1–2), days before levels keep the old rules; the Streak sheet explains the current level's rules; shared with the functions (LVL-06 to LVL-08, CALC-10, CALC-14, CALC-15, TODAY-13, TODAY-20). On the `levels` branch, 14 October 2026
 - [x] **Claude:** phase 1: the level from history (score, starting level, weekly moves) in `src/lib/levels.ts`, shown on the Streak sheet with the score and what reaches the next level; streak rules unchanged (LVL-01 to LVL-05, TODAY-22). On the `levels` branch, 14 October 2026
 - [x] Released 1.15.0: the coloured button logs only today's minutes and a red "+N carried" button clears the backlog; "How did it feel?" only after a focus timer session; iPhone evening check and practice reminders. App and website deployed, 14 October 2026

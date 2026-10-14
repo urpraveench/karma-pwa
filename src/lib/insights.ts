@@ -1,5 +1,6 @@
 import { byOrder, targetMinutesOn, type Calc, type DayRow } from './backlog';
 import { addDays, parse } from './date';
+import { practiceStreak } from './levels';
 import { DAY_NAMES, sum } from './util';
 import type { AppData, Category, DateStr } from './types';
 
@@ -53,8 +54,7 @@ export function buildInsights(data: AppData, c: Calc, T: DateStr, range: number)
   // --- practice health ---
   const health: PracticeHealth[] = act.map(cat => {
     const P = c.per[cat.id].byDate, rows = (n: number, e?: DateStr) => span(n, e).map(d => P.get(d)).filter((r): r is DayRow => !!r);
-    let st = 0, d = P.get(T) && isClear(P.get(T)!) ? T : addDays(T, -1);
-    while (P.get(d) && P.get(d)!.end === 0) { if (P.get(d)!.due > 0) st++; d = addDays(d, -1); }
+    const st = practiceStreak(P, c.level, T);
     const last7 = rows(7, addDays(T, -1)).filter(r => r.due > 0);
     const strip = span(14).map((d): StripCell => {
       const r = P.get(d); if (!r) return 'none'; if (!r.due) return r.done ? 'met' : 'rest';

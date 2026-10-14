@@ -24,7 +24,7 @@ Summary of coverage at the time of writing:
 |---|---|---|---|---|
 | 1. Accounts and sign-in | 28 | 26 | 0 | 2 |
 | 2. First run | 13 | 13 | 0 | 0 |
-| 3. Backlog rules | 24 | 24 | 0 | 0 |
+| 3. Backlog rules | 25 | 25 | 0 | 0 |
 | 4. Today screen | 22 | 22 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
 | 6. Logging minutes | 28 | 28 | 0 | 0 |
@@ -39,7 +39,7 @@ Summary of coverage at the time of writing:
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| **Total** | **351** | **338** | **0** | **13** |
+| **Total** | **352** | **339** | **0** | **13** |
 
 ---
 
@@ -133,6 +133,7 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | LVL-06 | A clear day by level | Level 1: 5+ minutes on any practice. 2: one practice's small minimum (half its target, rounded to 5, from 5 to 15 minutes). 3: half of the day's targets. 4: three quarters. 5: every target met, carried-over minutes not needed. 6 to 10: every target and every carried-over minute, as before levels. Below Level 6, a day with only carried-over minutes owed counts as nothing due | Unit `levels.test.ts` |
 | LVL-07 | Shields by level | Clear days to earn one and the most held: Level 1 and 2: 2 days, 5 (and a shield to start with when levels begin at those levels); 3: 2, 4; 4: 3, 4; 5 and 6: 3, 3; 7: 4, 2; 8: 5, 2; 9: 6, 1; 10: 7, 1. Moving to a level that holds fewer trims the extra | Unit `levels.test.ts`, E2E `today-states.spec.ts` |
 | LVL-08 | Days before levels | Judged by the rules before levels (Level 6) whatever the level now, so no past streak is rewritten | Unit `levels.test.ts` |
+| LVL-09 | Practice streaks by level | Days in a row a practice was kept, each judged like its level's clear day on that practice alone (Level 1: 5+ minutes on it; from Level 6: nothing owed). Missed days that don't end it, and don't count: Levels 1–2: 2 in any 7 days; 3–4: 1 in 7; 5: 1 in 14; 6 up and before levels: none. Today counts once kept. Shown in Insights › Practice health and the "days straight" coach line | Unit `levels.test.ts` |
 
 ## 4. Today screen
 
@@ -302,7 +303,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 |---|---|---|---|
 | INS-30 | This week | Points, % of target, clear days, each against the same point last week (↑ ↓ or "same as last week"; "no data last week") | Unit `insights.test.ts`, E2E `insights.spec.ts` |
 | INS-31 | Consistency | 16-week calendar, Monday rows on top: cleared, partial shades, missed, rest day outline, today outlined; tooltip per day | E2E `insights.spec.ts` (renders; colours are a Gap) |
-| INS-32 | Practice health | Per active practice: 14-day strip (met, partial, missed, rest, today), streak, % of target with trend, total hours | E2E `insights.spec.ts`, Unit `insights.test.ts` |
+| INS-32 | Practice health | Per active practice: 14-day strip (met, partial, missed, rest, today), streak (by level, LVL-09), % of target with trend, total hours | E2E `insights.spec.ts`, Unit `insights.test.ts` |
 | INS-33 | Next milestones | Next streak milestone (3, 7, 14, 21, 30, 50, 75, 100, 108, 150, 200, 365) and next hours milestone (5 to 1000), with progress bars | Unit `insights.test.ts` |
 | INS-34 | Records | Hours practised, longest streak, best day, days ended clear | Unit `insights.test.ts`, E2E `insights.spec.ts` |
 | INS-35 | Your rhythm | % of target by weekday over 8 weeks; strongest and weakest named once 4+ weekdays have data | E2E `insights.spec.ts`, Unit `insights.test.ts` |

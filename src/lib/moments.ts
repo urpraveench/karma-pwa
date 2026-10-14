@@ -64,20 +64,14 @@ export function moment(c: Calc, { data, user, hidden, now: clock = new Date() }:
   };
   const goalFor = (catId: string, min = 10) => Math.min(60, Math.max(min, c.per[catId].today.end));
 
-  // 0. level: an introduction for an existing account the day levels begin, and each Monday's move, that day and the next (LVL-11)
+  // 0. level: each Monday's move, that day and the next (LVL-11); the levels introduction (LVL-13) covers where it started
   const lv = c.level, last = lv?.moves[lv.moves.length - 1];
-  if (lv && last && T <= addDays(last.date, 1)) {
-    const says = CLEAR_SAYS[RULES[last.level].clear];
-    if (lv.moves.length > 1) {
-      const up = last.level > lv.moves[lv.moves.length - 2].level;
-      const pct = score(c, data.categories, addDays(last.date, -14), addDays(last.date, -1));
-      add('level', 97, up
-        ? { tone: 'var(--gold)', title: `Up to Level ${last.level} · ${tierOf(last.level)}.`, body: `${pct}% of your practice days on target over two weeks earned it. ${says}` }
-        : { tone: '#0E7490', title: `Level ${last.level} for now.`, body: `Easier days and more shields while you get going again. ${says}` });
-    } else if (earliest < last.date) add('level', 97, {
-      tone: 'var(--gold)', title: `Meet your level: ${last.level} · ${tierOf(last.level)}.`,
-      body: `Worked out from your last 4 weeks. It moves each Monday with how often you hit your targets. ${says}`,
-    });
+  if (lv && last && lv.moves.length > 1 && T <= addDays(last.date, 1)) {
+    const says = CLEAR_SAYS[RULES[last.level].clear], up = last.level > lv.moves[lv.moves.length - 2].level;
+    const pct = score(c, data.categories, addDays(last.date, -14), addDays(last.date, -1));
+    add('level', 97, up
+      ? { tone: 'var(--gold)', title: `Up to Level ${last.level} · ${tierOf(last.level)}.`, body: `${pct}% of your practice days on target over two weeks earned it. ${says}` }
+      : { tone: '#0E7490', title: `Level ${last.level} for now.`, body: `Easier days and more shields while you get going again. ${says}` });
   }
   // 1. month recap, first three days of a month
   if (now.getDate() <= 3) {

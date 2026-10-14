@@ -165,14 +165,9 @@ describe('levels', () => {
 
   const card = (d: AppData, asOf: string, hour = 10) => moment(calc(d, asOf, FROM), { data: d, user: null, hidden: null, now: new Date(`${asOf}T${String(hour).padStart(2, '0')}:00`) });
 
-  it('a card introduces the level to an existing account the day levels begin and the next (LVL-11)', () => {
+  it('no card for the starting level: the levels introduction covers it (LVL-11, LVL-13)', () => {
     const d = data([cat('a', '2026-08-01')], logs('a', '2026-08-01', '2026-10-06'));
-    expect(card(d, FROM)).toMatchObject({ key: 'level', title: 'Meet your level: 10 · Relentless.' });
-    expect(card(d, FROM)!.body).toMatch(/^Worked out from your last 4 weeks\. It moves each Monday with how often you hit your targets\. A day is clear when/);
-    expect(card(d, '2026-10-06')!.key).toBe('level');
-    expect(card(d, '2026-10-07')?.key).not.toBe('level');
-    // a new account isn't introduced: it starts at Level 1 with everything else
-    expect(card(data([cat('a', FROM)]), FROM)?.key).not.toBe('level');
+    expect(card(d, FROM)?.key).not.toBe('level');
   });
 
   it("a card on the day the level moves, and the next: up, with the score that earned it, or down, kindly (LVL-11)", () => {

@@ -24,7 +24,7 @@ Summary of coverage at the time of writing:
 |---|---|---|---|---|
 | 1. Accounts and sign-in | 28 | 26 | 0 | 2 |
 | 2. First run | 13 | 13 | 0 | 0 |
-| 3. Backlog rules | 28 | 28 | 0 | 0 |
+| 3. Backlog rules | 29 | 29 | 0 | 0 |
 | 4. Today screen | 22 | 22 | 0 | 0 |
 | 5. Moments | 22 | 22 | 0 | 0 |
 | 6. Logging minutes | 28 | 28 | 0 | 0 |
@@ -39,7 +39,7 @@ Summary of coverage at the time of writing:
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| **Total** | **363** | **350** | **0** | **13** |
+| **Total** | **364** | **351** | **0** | **13** |
 
 ---
 
@@ -135,8 +135,9 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | LVL-08 | Days before levels | Judged by the rules before levels (Level 6) whatever the level now, so no past streak is rewritten | Unit `levels.test.ts` |
 | LVL-09 | Practice streaks by level | Days in a row a practice was kept, each judged like its level's clear day on that practice alone (Level 1: 5+ minutes on it; from Level 6: nothing owed). Missed days that don't end it, and don't count: Levels 1–2: 2 in any 7 days; 3–4: 1 in 7; 5: 1 in 14; 6 up and before levels: none. Today counts once kept. Shown in Insights › Practice health and the "days straight" coach line | Unit `levels.test.ts` |
 | LVL-10 | Backlog limit by level | Unless the person picked a limit, each day's limit follows that day's level: Levels 1–3 carry 1 day of target, 4–6 two, 7–8 three, 9–10 no limit; before levels, 2 days as always. Setup › Backlog limit shows "Auto" (pressed when following the level) with "Auto follows your level: N days at Level L"; picking a number overrides it, and Auto (stored as -1, so it syncs) goes back | Unit `levels.test.ts`, E2E `setup.spec.ts` |
-| LVL-11 | Level cards on Today (priority 97) | The day levels begin and the next, an existing account sees "Meet your level: N · Tier." (worked out from the last 4 weeks, moves each Monday, and what a clear day asks); a new account doesn't. On a Monday the level moves, and the day after: up, "Up to Level N · Tier." with the two weeks' score that earned it; down, "Level N for now. Easier days and more shields while you get going again." Each with what a clear day now asks. Hidden for the day like any card (MOM-12) | Unit `levels.test.ts`, E2E `today-states.spec.ts` |
+| LVL-11 | Level cards on Today (priority 97) | On a Monday the level moves, and the day after: up, "Up to Level N · Tier." with the two weeks' score that earned it; down, "Level N for now. Easier days and more shields while you get going again." Each with what a clear day now asks. Hidden for the day like any card (MOM-12). The starting level has no card: the levels introduction covers it (LVL-13) | Unit `levels.test.ts` |
 | LVL-12 | Level in Insights | A "Level N · Tier" panel above Consistency with the bar and text of TODAY-22 ("Stay at X% or more to keep Level N; reach Y% to move up" when the score is under the level's threshold) and "What it asks ›" opening the Streak sheet. Coach lines from the last 14 days (practices with 5+ due days, at least two): "Name is your anchor" (80%+, the best) and "Name is holding your level back" (50% or less, the worst, unless it already has a "slipping" line), suggesting its small minimum for a week | Unit `levels.test.ts`, E2E `today-states.spec.ts` |
+| LVL-13 | Levels introduction | Three full-screen pages the first time levels apply, once per device, in place of that morning's splash (never stacked after it), and never on the day the account started: "Introducing levels" (existing accounts: the starting level, from the last 4 weeks) or "Meet your level" (new accounts: everyone starts at Level 1), with a 10-step ladder and "Level N · Tier"; "Your level sets the rules" (what a clear day asks, how shields are earned and held at this level); "Climb every Monday" (the score that reaches the next level, or keeps Level 10; 80% of a target counts; a bad fortnight eases off one step). Next, Skip (not on the last page), "Let's go", Escape | Unit `levelsIntro.test.ts`, E2E `today-states.spec.ts` |
 
 ## 4. Today screen
 

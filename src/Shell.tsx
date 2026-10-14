@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ComponentType } from 'react';
+import { useCallback, useEffect, useRef, useState, type ComponentType } from 'react';
 import { trackScreen } from './lib/analytics';
 import { activeCats } from './lib/backlog';
 import { Insights } from './screens/Insights';
@@ -15,6 +15,8 @@ import { useApp, type View } from './state/app';
 import { useTimer } from './state/timer';
 import { Focus } from './timer/Focus';
 import { IdeaSplash } from './components/IdeaSplash';
+import { introSeen, LevelsIntro } from './components/LevelsIntro';
+import { showLevelsIntro } from './lib/levelsIntro';
 import { MiniPlayer } from './timer/MiniPlayer';
 import { useFeedback } from './ui/feedback';
 import { Icon } from './ui/icons';
@@ -30,7 +32,9 @@ function Tab({ v, label }: { v: View; label: string }) {
 
 /** The signed-in app: current screen, tab bar, mini-player, sheets and the focus timer. */
 export function Shell() {
-  const { view, sheet, data, T, openSheet } = useApp();
+  const { view, sheet, data, c, T, openSheet } = useApp();
+  const [intro, setIntro] = useState(() => showLevelsIntro(introSeen(), c.level, T, data.categories));
+  const closeIntro = useCallback(() => setIntro(false), []);
   const { focusOpen, closeFocus } = useTimer();
   const { toast } = useFeedback();
   const Screen = SCREENS[view];
@@ -81,7 +85,7 @@ export function Shell() {
       {sheet?.kind === 'install' && <InstallSheet />}
       {sheet?.kind === 'editLog' && <EditLogSheet key={sheet.id} id={sheet.id} />}
       {focusOpen && <Focus />}
-      <IdeaSplash />
+      {intro ? <LevelsIntro onDone={closeIntro} /> : <IdeaSplash />}
     </>
   );
 }

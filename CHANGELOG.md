@@ -15,7 +15,7 @@ Format, newest first:
 
 ## Coming next
 
-- **Levels: streaks that fit you.** TikTym now has 10 levels, worked out from how often you hit your targets. At Level 1, 5 minutes on any practice keeps your streak and shields come easily; by Level 10, every minute counts and shields are rare. Your level moves up or down by itself each Monday, and the Streak sheet and Insights show what gets you to the next one. Days before levels keep the rules they had.
+- **Levels: streaks that fit you.** TikTym now has 10 levels, worked out from how often you hit your targets. At Level 1, 5 minutes on any practice keeps your streak and shields come easily; by Level 10, every minute counts and shields are rare. Your level moves up or down by itself each Monday, and the Streak sheet and Insights show what gets you to the next one. Days before levels keep the rules they had. The first time you open TikTym after the update, three short screens show how it works.
 - **A coach that speaks your level.** Reminders, the evening nudge, the "All clear" moment and the comeback email change their tone with your level: gentle when you're getting started, blunt when you're on a tear.
 - **More time with today's idea.** The morning card with the day's idea now stays for 10 seconds instead of 7, so there's time to read it. Tap anywhere to go straight in.
 

@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { calc } from '../src/lib/backlog';
 import { addDays } from '../src/lib/date';
-import { dayState, keepLeft, levelFor, levelOn, levels, minimumOf, nextMonday, practiceStreak, score, tierOf } from '../src/lib/levels';
+import { dayState, keepLeft, levelText, levelFor, levelOn, levels, minimumOf, nextMonday, practiceStreak, score, tierOf } from '../src/lib/levels';
 import type { DayRow } from '../src/lib/backlog';
+import { moment } from '../src/lib/moments';
+import { buildInsights } from '../src/lib/insights';
 import type { AppData, Category, Log } from '../src/lib/types';
 
 const EVERY_DAY = [0, 1, 2, 3, 4, 5, 6];
@@ -159,5 +161,52 @@ describe('levels', () => {
     expect(owed({}, '2026-10-04')).toBe(0);
     const before = calc({ categories: [cat('a', '2026-09-01')], logs: [], settings: {} }, '2026-09-10', FROM).per.a.today.opening;
     expect(before).toBe(20);
+  });
+
+  const card = (d: AppData, asOf: string, hour = 10) => moment(calc(d, asOf, FROM), { data: d, user: null, hidden: null, now: new Date(`${asOf}T${String(hour).padStart(2, '0')}:00`) });
+
+  it('a card introduces the level to an existing account the day levels begin and the next (LVL-11)', () => {
+    const d = data([cat('a', '2026-08-01')], logs('a', '2026-08-01', '2026-10-06'));
+    expect(card(d, FROM)).toMatchObject({ key: 'level', title: 'Meet your level: 10 · Relentless.' });
+    expect(card(d, FROM)!.body).toMatch(/^Worked out from your last 4 weeks\. It moves each Monday with how often you hit your targets\. A day is clear when/);
+    expect(card(d, '2026-10-06')!.key).toBe('level');
+    expect(card(d, '2026-10-07')?.key).not.toBe('level');
+    // a new account isn't introduced: it starts at Level 1 with everything else
+    expect(card(data([cat('a', FROM)]), FROM)?.key).not.toBe('level');
+  });
+
+  it("a card on the day the level moves, and the next: up, with the score that earned it, or down, kindly (LVL-11)", () => {
+    const up = data([cat('a', FROM)], logs('a', FROM, '2026-10-19'));
+    expect(card(up, '2026-10-19')).toMatchObject({ key: 'level', title: 'Up to Level 2 · Starting.' });
+    expect(card(up, '2026-10-19')!.body).toBe('100% of your practice days on target over two weeks earned it. A day is clear when one practice gets its small minimum: half its target, 5 to 15 minutes.');
+    expect(card(up, '2026-10-21')?.key).not.toBe('level');
+    const down = data([cat('a', '2026-08-01')], logs('a', '2026-08-01', '2026-10-04'));
+    expect(card(down, '2026-10-12')).toMatchObject({ key: 'level', title: 'Level 9 for now.' });
+    expect(card(down, '2026-10-12')!.body).toMatch(/^Easier days and more shields while you get going again\./);
+  });
+
+  it('Insights names the practice lifting the level and the one holding it back (LVL-12)', () => {
+    const two = (bKeep: (i: number) => boolean) => {
+      const d = data([cat('a', FROM), cat('b', FROM, { targets: [{ from: FROM, minutes: 30, days: EVERY_DAY }] })],
+        [...logs('a', FROM, '2026-10-18'), ...logs('b', FROM, '2026-10-18', 30, bKeep)]);
+      const T = '2026-10-19';
+      return buildInsights(d, calc(d, T, FROM), T, 7)!.coach.map(l => l.strong + l.rest);
+    };
+    // b on target only in the last week: 50% over two weeks, and not slipping
+    const lines = two(i => i >= 7);
+    expect(lines).toContain("a is your anchor. On target 100% of days in the last two weeks; it's lifting your level.");
+    expect(lines).toContain('b is holding your level back. On target 50% of days in the last two weeks. Try 15 minutes a day for a week instead of 30.');
+    // b missing most of the last week already has its "slipping" line; no second line about it
+    const slipping = two(i => i % 3 === 0);
+    expect(slipping.some(l => l.startsWith('b is slipping.'))).toBe(true);
+    expect(slipping.some(l => l.startsWith('b is holding'))).toBe(false);
+  });
+
+  it("the level's text: what moves it up, or what keeps it when the score is under its threshold (TODAY-22, LVL-12)", () => {
+    const base = { moves: [], nextCheck: '2026-11-02' };
+    expect(levelText({ ...base, level: 8, score: 80 }).text).toMatch(/^80% of your practice days on target in the last 14 days\. Reach 85% and on .+ you move up to Level 9\.$/);
+    expect(levelText({ ...base, level: 8, score: 71 }).text).toBe('71% of your practice days on target in the last 14 days. Stay at 65% or more to keep Level 8; reach 85% to move up.');
+    expect(levelText({ ...base, level: 1, score: 0 }).text).toMatch(/^0% of your practice days on target in the last 14 days\. Reach 15% and on .+ you move up to Level 2\.$/);
+    expect(levelText({ ...base, level: 10, score: 90 })).toEqual({ text: '90% of your practice days on target in the last 14 days. Stay at 83% or more to keep Level 10.', fill: 90 });
   });
 });

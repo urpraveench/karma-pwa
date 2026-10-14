@@ -212,6 +212,17 @@ test.describe('Today states', () => {
     await expect(page.locator('.moment .m-body')).toHaveText("6 days in a row. 5 minutes keeps it going. That's all it takes.");
   });
 
+  test('an existing account meets its level on Today the day levels begin, and sees it in Insights (LVL-11, LVL-12)', async ({ page }) => {
+    await signInWith(page, seedData([reading('2026-09-14')], days('2026-09-14', '2026-10-18').map(d => ['r', d, 30])), at(10, 0, 19));
+    await expect(page.locator('.moment .m-title')).toHaveText('Meet your level: 10 · Relentless.');
+    await tab(page, 'Insights').click();
+    const panel = page.getByRole('region', { name: 'Level' });
+    await expect(panel.locator('h3')).toHaveText('Level 10 · Relentless');
+    await expect(panel.locator('.lv-sub')).toHaveText('100% of your practice days on target in the last 14 days. Stay at 83% or more to keep Level 10.');
+    await panel.getByRole('button', { name: 'What it asks ›' }).click();
+    await expect(page.getByRole('dialog', { name: 'Streak' }).locator('.sk-lv')).toHaveText('Level 10 · Relentless');
+  });
+
   test('no level before levels began (TODAY-22)', async ({ page }) => {
     await signInWith(page, seedData([reading('2026-09-30')], days('2026-09-30', '2026-10-06').map(d => ['r', d, 30])));
     await page.locator('button.streak').click();

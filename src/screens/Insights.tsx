@@ -1,6 +1,7 @@
 import { useMemo, type CSSProperties, type ReactNode } from 'react';
 import { addDays, fmtShort, parse } from '../lib/date';
 import { buildInsights, isClear, TOD_BUCKETS, type Insights as Data, type WeekStat } from '../lib/insights';
+import { levelText, tierOf } from '../lib/levels';
 import { DAY_NAMES, sum, WD } from '../lib/util';
 import { useApp } from '../state/app';
 
@@ -20,6 +21,19 @@ function Delta({ s, unit = '' }: { s: WeekStat; unit?: string }) {
   return <span className={`delta ${d > 0 ? 'up' : 'down'}`}>{`${d > 0 ? '↑' : '↓'} ${Math.abs(d)}${unit} vs last week`}</span>;
 }
 
+/** The level and what reaches the next one (LVL-12). */
+function LevelPanel() {
+  const { c, openSheet } = useApp();
+  const lv = c.level!, lt = levelText(lv);
+  return (
+    <section className="panel" aria-label="Level">
+      <div className="panel-h"><h3>{`Level ${lv.level} · ${tierOf(lv.level)}`}</h3><button type="button" className="panel-link" onClick={() => openSheet({ kind: 'streak' })}>What it asks ›</button></div>
+      <span className="lv-bar" role="img" aria-label={`${Math.round(lt.fill)}% of the way`}><i style={{ width: `${lt.fill}%` }} /></span>
+      <p className="sub lv-sub">{lt.text}</p>
+    </section>
+  );
+}
+
 export function Insights() {
   const { data, c, T, range, setRange, openSheet } = useApp();
   const ins = useMemo(() => buildInsights(data, c, T, range), [data, c, T, range]);
@@ -37,6 +51,7 @@ export function Insights() {
         <div><b>{`${week.hit.value}%`}</b><span className="l">of target</span>{week.showDelta && <Delta s={week.hit} unit=" pts" />}</div>
         <div><b>{week.clear.value}</b><span className="l">{`clear day${week.clear.value === 1 ? '' : 's'}`}</span>{week.showDelta && <Delta s={week.clear} />}</div>
       </div>
+      {c.level && <LevelPanel />}
       <section className="panel">
         <div className="panel-h"><h3>Consistency</h3><button type="button" className="panel-link" onClick={() => openSheet({ kind: 'streak' })}>{c.streak ? `${c.streak}-day streak, best ${c.best}` : `best streak ${c.best}`} ›</button></div>
         <p className="sub">The last 16 weeks. Don't let the chain break.</p>

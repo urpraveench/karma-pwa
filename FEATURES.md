@@ -24,7 +24,7 @@ Summary of coverage at the time of writing:
 |---|---|---|---|---|
 | 1. Accounts and sign-in | 28 | 26 | 0 | 2 |
 | 2. First run | 13 | 13 | 0 | 0 |
-| 3. Backlog rules | 26 | 26 | 0 | 0 |
+| 3. Backlog rules | 28 | 28 | 0 | 0 |
 | 4. Today screen | 22 | 22 | 0 | 0 |
 | 5. Moments | 20 | 20 | 0 | 0 |
 | 6. Logging minutes | 28 | 28 | 0 | 0 |
@@ -39,7 +39,7 @@ Summary of coverage at the time of writing:
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| **Total** | **359** | **346** | **0** | **13** |
+| **Total** | **361** | **348** | **0** | **13** |
 
 ---
 
@@ -135,6 +135,8 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | LVL-08 | Days before levels | Judged by the rules before levels (Level 6) whatever the level now, so no past streak is rewritten | Unit `levels.test.ts` |
 | LVL-09 | Practice streaks by level | Days in a row a practice was kept, each judged like its level's clear day on that practice alone (Level 1: 5+ minutes on it; from Level 6: nothing owed). Missed days that don't end it, and don't count: Levels 1–2: 2 in any 7 days; 3–4: 1 in 7; 5: 1 in 14; 6 up and before levels: none. Today counts once kept. Shown in Insights › Practice health and the "days straight" coach line | Unit `levels.test.ts` |
 | LVL-10 | Backlog limit by level | Unless the person picked a limit, each day's limit follows that day's level: Levels 1–3 carry 1 day of target, 4–6 two, 7–8 three, 9–10 no limit; before levels, 2 days as always. Setup › Backlog limit shows "Auto" (pressed when following the level) with "Auto follows your level: N days at Level L"; picking a number overrides it, and Auto (stored as -1, so it syncs) goes back | Unit `levels.test.ts`, E2E `setup.spec.ts` |
+| LVL-11 | Level cards on Today (priority 97) | The day levels begin and the next, an existing account sees "Meet your level: N · Tier." (worked out from the last 4 weeks, moves each Monday, and what a clear day asks); a new account doesn't. On a Monday the level moves, and the day after: up, "Up to Level N · Tier." with the two weeks' score that earned it; down, "Level N for now. Easier days and more shields while you get going again." Each with what a clear day now asks. Hidden for the day like any card (MOM-12) | Unit `levels.test.ts`, E2E `today-states.spec.ts` |
+| LVL-12 | Level in Insights | A "Level N · Tier" panel above Consistency with the bar and text of TODAY-22 ("Stay at X% or more to keep Level N; reach Y% to move up" when the score is under the level's threshold) and "What it asks ›" opening the Streak sheet. Coach lines from the last 14 days (practices with 5+ due days, at least two): "Name is your anchor" (80%+, the best) and "Name is holding your level back" (50% or less, the worst, unless it already has a "slipping" line), suggesting its small minimum for a week | Unit `levels.test.ts`, E2E `today-states.spec.ts` |
 
 ## 4. Today screen
 
@@ -161,7 +163,7 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | TODAY-19 | Today's idea | A card at the foot of Today with one short line about practice and habits, written for TikTym: the same all day, the next in the list tomorrow, every line used in turn | Unit `ideas.test.ts`, E2E `today-states.spec.ts` |
 | TODAY-20 | Streak calendar | Under the streak badge, this week's days as dots (Monday to Sunday: clear, shield, missed, nothing due, today, to come). Tapping the badge, or Insights › Consistency's streak line (always there, even with no streak), opens the Streak sheet: the streak and best, 3 shield slots filled for those held, how far off the next shield is, a month calendar (Monday first) marking each day as in CALC-15, with a gold band joining clear days in a row and a shield on days a shield saved, back to the month of the first practice and no further than this month, a key, and how a clear day and shields work at the current level ("At Level N: …") | E2E `today-states.spec.ts` |
 | TODAY-21 | Morning splash | On the first open of each day on a device, a full-screen card before Today: the date, "Today's idea" and the day's line (TODAY-19), and "Start my day". It closes on that button, a tap anywhere, or by itself after 7 seconds (a gold bar shows the time), and isn't shown again that day on that device. Never on the day the account started, so choosing practices comes first. The idea card at the foot of Today stays | Unit `ideas.test.ts`, E2E `today-states.spec.ts`, `colours.spec.ts` |
-| TODAY-22 | Level on the Streak sheet | Under the shields: "Level N · Tier", the last 14 days' score, and what reaches the next level at Monday's check ("55% by Monday reaches Level 6") with a bar; at Level 10, the score that keeps it | Unit `levels.test.ts`, E2E `today-states.spec.ts` |
+| TODAY-22 | Level on the Streak sheet | Under the shields: "Level N · Tier", the last 14 days' score, and what reaches the next level at Monday's check ("55% by Monday reaches Level 6") with a bar; under the level's threshold, the score that keeps it; at Level 10, the score that keeps it | Unit `levels.test.ts`, E2E `today-states.spec.ts` |
 
 ## 5. Moments
 

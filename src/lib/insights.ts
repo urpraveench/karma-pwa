@@ -1,6 +1,6 @@
 import { byOrder, targetMinutesOn, type Calc, type DayRow } from './backlog';
 import { addDays, parse } from './date';
-import { practiceStreak } from './levels';
+import { minimumOf, practiceStreak, score } from './levels';
 import { steadyLine, voiceOf } from './voice';
 import { DAY_NAMES, sum } from './util';
 import type { AppData, Category, DateStr } from './types';
@@ -98,6 +98,19 @@ export function buildInsights(data: AppData, c: Calc, T: DateStr, range: number)
     const d = Math.round((pts(thisW) - pts(lastW)) / pts(lastW) * 100);
     if (d >= 10) add(58, OK, `You're ${d}% ahead of last week`, ' at this point in the week.');
     if (d <= -15) add(66, DUE, `You're ${-d}% behind last week`, ` at this point. Today's ${c.totals.end} points would close most of the gap.`);
+  }
+  // the practices lifting and dragging the level's score, from the last 14 days (LVL-12)
+  if (c.level) {
+    const days14 = span(14, addDays(T, -1));
+    const ps = act.map(cat => ({ cat, s: score(c, [cat], days14[0] ?? T, addDays(T, -1)), n: days14.filter(d => (c.per[cat.id].byDate.get(d)?.due ?? 0) > 0).length }))
+      .filter((p): p is { cat: Category; s: number; n: number } => p.s !== null && p.n >= 5).sort((a, b) => b.s - a.s);
+    if (ps.length >= 2) {
+      const best = ps[0], worst = ps[ps.length - 1], t = targetMinutesOn(worst.cat, T);
+      if (best.s >= 80 && best.s > worst.s) add(89, OK, `${best.cat.name} is your anchor.`, ` On target ${best.s}% of days in the last two weeks; it's lifting your level.`);
+      const slipping = health.some(h => h.cat.id === worst.cat.id && h.n7 >= 4 && h.misses >= 3); // already its own line
+      if (worst.s <= 50 && best.s > worst.s && !slipping) add(76, DUE, `${worst.cat.name} is holding your level back.`,
+        ` On target ${worst.s}% of days in the last two weeks.${minimumOf(t) < t ? ` Try ${minimumOf(t)} minutes a day for a week instead of ${t}.` : ''}`);
+    }
   }
   // the practice that most often leaves you feeling good (LOG-31), from the last 60 days of rated entries
   const since60 = addDays(T, -60);

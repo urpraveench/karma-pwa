@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Sheet } from '../components/Sheet';
-import { fmtLong, parse } from '../lib/date';
-import { CLEAR_SAYS, DROP_GAP, LEVEL_MAX, shieldSays, THRESHOLD, tierOf, type Levels } from '../lib/levels';
+import { parse } from '../lib/date';
+import { CLEAR_SAYS, levelText, shieldSays, tierOf } from '../lib/levels';
 import { dayMark, monthWeeks, nextShieldText, shiftMonth, type DayMark } from '../lib/streak';
 import { useApp } from '../state/app';
 import { Icon } from '../ui/icons';
@@ -11,14 +11,6 @@ const SAYS: Record<DayMark, string> = {
 };
 /** Days that keep a run going, so the band behind them joins up. */
 const RUN: DayMark[] = ['clear', 'shield', 'rest'];
-
-/** What the level's score is, and what reaches the next level or keeps the top one (TODAY-22). */
-function levelText(lv: Levels): { text: string; fill: number } {
-  const on = lv.score === null ? '' : `${lv.score}% of your practice days on target in the last 14 days. `;
-  if (lv.level === LEVEL_MAX) return { text: `${on}Stay at ${THRESHOLD[LEVEL_MAX] - DROP_GAP}% or more to keep Level ${LEVEL_MAX}.`, fill: lv.score ?? 0 };
-  const need = THRESHOLD[lv.level + 1];
-  return { text: `${on}Reach ${need}% and on ${fmtLong(lv.nextCheck)} you move up to Level ${lv.level + 1}.`, fill: Math.min(100, (lv.score ?? 0) / need * 100) };
-}
 
 /** Tap the streak on Today: the streak, the shields, and a month of days (TODAY-20). */
 export function StreakSheet() {

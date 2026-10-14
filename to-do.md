@@ -12,7 +12,6 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 Ten levels that set how strict streaks and shields are, worked out from how consistent someone has been, moving up or down by themselves each Monday. Level 6 is today's rules. Decided 14 October 2026: 10 levels in 5 coach voices (Starting, Building, Steady, Strong, Relentless); a clear day at Level 1 is 5 minutes on any practice; new accounts start at Level 1; existing accounts start from their last 28 days; moves are automatic, no manual setting.
 
-- [ ] **Claude:** phase 4: a card on Today when the level moves, and level progress in Insights; the coach names the practice lifting the score and the one dragging it
 - [ ] **Claude:** phase 5: emails and pushes in the tier's voice
 - [ ] **Claude (at release):** set `LEVELS_FROM` to the release date, so no day before it is judged by the new rules; merge `levels` into `main`, release 1.16.0
 
@@ -188,6 +187,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** phase 4: a card on Today when the level moves, and level progress in Insights; the coach names the practice lifting the score and the one dragging it; the level's text says what keeps the level when the score is under its threshold (LVL-11, LVL-12, TODAY-22). On the `levels` branch, 14 October 2026
 - [x] **Claude:** phase 3: the coach's voice by tier (Starting gentle to Relentless blunt; Steady as before levels) on the evening nudge, the "All clear" celebration, the on-a-roll and comeback cards, and Insights' quiet-week line (COACH-01 to COACH-06). On the `levels` branch, 14 October 2026
 - [x] **Claude:** phase 2c: the backlog limit follows the level when the person hasn't picked one (Levels 1–3: 1 day; 4–6: 2; 7–8: 3; 9–10: none), with Setup showing "Auto" (LVL-10). On the `levels` branch, 14 October 2026
 - [x] **Claude:** the level's score counts a practice-day as on target from 80% of its target, so someone doing 25 of 30 minutes a day doesn't score 0% (LVL-02). On the `levels` branch, 14 October 2026

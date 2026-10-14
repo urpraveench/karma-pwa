@@ -276,6 +276,7 @@ button.streak{text-align:right;cursor:pointer;border-radius:12px;padding:2px 0 2
 .sk-level{margin:-4px 0 18px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
 .sk-lv{margin:0 0 8px;font-size:15px;color:var(--ink-2)}.sk-lv b{color:var(--gold-text);font-family:var(--f-display);font-size:17px}
 .lv-bar{display:block;height:8px;border-radius:999px;background:var(--line);overflow:hidden}.lv-bar i{display:block;height:100%;background:var(--gold);border-radius:999px}
+.lv-sub{margin:8px 0 0}
 .sk-lv-text{margin:8px 0 0;font-size:13.5px;color:var(--ink-2);line-height:1.45}
 .sk-cal{background:var(--bg);border-radius:18px;padding:10px 8px 2px}
 .sk-month{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}

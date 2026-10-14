@@ -1,5 +1,5 @@
 // Generated from src/lib/levels.ts by `npm run functions:shared`. Don't edit: change src/lib/levels.ts and run it again.
-import { addDays, parse } from './date.js';
+import { addDays, fmtLong, parse } from './date.js';
 import type { Calc, DayRow } from './backlog.js';
 import type { Category, DateStr } from './types.js';
 
@@ -166,4 +166,14 @@ export function levels(c: Pick<Calc, 'per'>, categories: Category[], asOf: DateS
   let nextCheck = nextMonday(asOf);
   while (addDays(nextCheck, -MOVE_DAYS) < start) nextCheck = addDays(nextCheck, 7);
   return { level, moves, score: score(c, categories, later(start, addDays(asOf, -MOVE_DAYS)), addDays(asOf, -1)), nextCheck };
+}
+
+/** What the level's score is, and what reaches the next level or keeps the top one (TODAY-22, LVL-12). */
+export function levelText(lv: Levels): { text: string; fill: number } {
+  const on = lv.score === null ? '' : `${lv.score}% of your practice days on target in the last 14 days. `;
+  if (lv.level === LEVEL_MAX) return { text: `${on}Stay at ${THRESHOLD[LEVEL_MAX] - DROP_GAP}% or more to keep Level ${LEVEL_MAX}.`, fill: lv.score ?? 0 };
+  const need = THRESHOLD[lv.level + 1], fill = Math.min(100, (lv.score ?? 0) / need * 100);
+  if (lv.level > 1 && lv.score !== null && lv.score < THRESHOLD[lv.level])
+    return { text: `${on}Stay at ${THRESHOLD[lv.level] - DROP_GAP}% or more to keep Level ${lv.level}; reach ${need}% to move up.`, fill };
+  return { text: `${on}Reach ${need}% and on ${fmtLong(lv.nextCheck)} you move up to Level ${lv.level + 1}.`, fill };
 }

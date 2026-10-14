@@ -1,4 +1,5 @@
 import { activeCats, dayAll, dueOn, targetMinutesOn, usualHour, type Calc } from './backlog';
+import { CLEAR_SAYS, RULES, score, tierOf } from './levels';
 import { comebackText, rollText, voiceOf } from './voice';
 import { addDays, fmtShort, hourLabel, monthName, parse, ymd } from './date';
 import { firstName } from './user';
@@ -7,7 +8,7 @@ import type { AppData, Category, DateStr, User } from './types';
 
 // One context-aware card per day on the Today screen. The highest-priority match wins.
 
-export type MomentKey = 'month' | 'comeback' | 'weekend' | 'minimum' | 'bestmonth' | 'monday' | 'habit' | 'roll' | 'start';
+export type MomentKey = 'level' | 'month' | 'comeback' | 'weekend' | 'minimum' | 'bestmonth' | 'monday' | 'habit' | 'roll' | 'start';
 
 export interface Moment {
   key: MomentKey;
@@ -63,6 +64,21 @@ export function moment(c: Calc, { data, user, hidden, now: clock = new Date() }:
   };
   const goalFor = (catId: string, min = 10) => Math.min(60, Math.max(min, c.per[catId].today.end));
 
+  // 0. level: an introduction for an existing account the day levels begin, and each Monday's move, that day and the next (LVL-11)
+  const lv = c.level, last = lv?.moves[lv.moves.length - 1];
+  if (lv && last && T <= addDays(last.date, 1)) {
+    const says = CLEAR_SAYS[RULES[last.level].clear];
+    if (lv.moves.length > 1) {
+      const up = last.level > lv.moves[lv.moves.length - 2].level;
+      const pct = score(c, data.categories, addDays(last.date, -14), addDays(last.date, -1));
+      add('level', 97, up
+        ? { tone: 'var(--gold)', title: `Up to Level ${last.level} · ${tierOf(last.level)}.`, body: `${pct}% of your practice days on target over two weeks earned it. ${says}` }
+        : { tone: '#0E7490', title: `Level ${last.level} for now.`, body: `Easier days and more shields while you get going again. ${says}` });
+    } else if (earliest < last.date) add('level', 97, {
+      tone: 'var(--gold)', title: `Meet your level: ${last.level} · ${tierOf(last.level)}.`,
+      body: `Worked out from your last 4 weeks. It moves each Monday with how often you hit your targets. ${says}`,
+    });
+  }
   // 1. month recap, first three days of a month
   if (now.getDate() <= 3) {
     const pmStart = ymd(new Date(now.getFullYear(), now.getMonth() - 1, 1)), pmEnd = addDays(ymd(new Date(now.getFullYear(), now.getMonth(), 1)), -1);

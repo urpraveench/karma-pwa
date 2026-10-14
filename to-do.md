@@ -12,7 +12,7 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 Ten levels that set how strict streaks and shields are, worked out from how consistent someone has been, moving up or down by themselves each Monday. Level 6 is today's rules. Decided 14 October 2026: 10 levels in 5 coach voices (Starting, Building, Steady, Strong, Relentless); a clear day at Level 1 is 5 minutes on any practice; new accounts start at Level 1; existing accounts start from their last 28 days; moves are automatic, no manual setting.
 
-- [ ] **Claude (at release):** set `LEVELS_FROM` to the release date, so no day before it is judged by the new rules; merge `levels` into `main`, release 1.16.0
+- [ ] **Claude (at release):** set `LEVELS_FROM` to the release date, so no day before it is judged by the new rules; merge `levels` into `main`, release 1.16.0, and deploy the functions too (`firebase deploy --only functions`), since reminders and the comeback email now speak by tier
 
 ## Setup layout
 
@@ -20,6 +20,7 @@ Ten levels that set how strict streaks and shields are, worked out from how cons
 
 ## 2. Check by hand before release
 
+- [ ] After levels ship: the day they begin, an existing account sees "Meet your level" on Today with a sensible level; on the first Monday after, a level card appears only if the level moved; a reminder push on the phone carries the tier's line (LVL-11, COACH-07)
 These can't be automated, or need the real project and a real phone. IDs refer to [FEATURES.md](FEATURES.md).
 
 - [ ] From 11 October: run `firebase firestore:backups:list --project tiktym` and check a daily backup appears each day (SYNC-17)

@@ -26,7 +26,7 @@ Summary of coverage at the time of writing:
 | 2. First run | 13 | 13 | 0 | 0 |
 | 3. Backlog rules | 26 | 26 | 0 | 0 |
 | 4. Today screen | 22 | 22 | 0 | 0 |
-| 5. Moments | 14 | 14 | 0 | 0 |
+| 5. Moments | 20 | 20 | 0 | 0 |
 | 6. Logging minutes | 28 | 28 | 0 | 0 |
 | 7. Focus timer | 22 | 19 | 0 | 3 |
 | 8. History | 9 | 9 | 0 | 0 |
@@ -39,7 +39,7 @@ Summary of coverage at the time of writing:
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| **Total** | **353** | **340** | **0** | **13** |
+| **Total** | **359** | **346** | **0** | **13** |
 
 ---
 
@@ -176,13 +176,19 @@ One card on Today adapts to the situation. The highest-priority match wins. Any 
 | MOM-05 | Best month in reach (80) | Last 2 days of the month: points needed to beat the best month, or "already your best month" | Unit `moments-more.test.ts` |
 | MOM-06 | Fresh week (60) | Monday: last week's percentage and clear days | Unit `moments-more.test.ts` |
 | MOM-07 | Usual time (55) | Within an hour of the median time a pending practice is logged (last 30 days, 5+ entries): "You usually get Exercise done around 7 am. 45 left today." | Unit `moments.test.ts` |
-| MOM-08 | On a roll (40) | Streak of 3+ with points left; "A new record is one day away" when one more day beats the best | Unit `moments-more.test.ts` |
+| MOM-08 | On a roll (40) | Streak of 3+ with minutes still needed for today to count (LVL-06); "A new record is one day away" when one more day beats the best | Unit `moments-more.test.ts` |
 | MOM-09 | Start small (30) | New user (under 3 days of history) with nothing logged today | Unit `moments.test.ts`, E2E `today.spec.ts` |
 | MOM-10 | Minimum goal | 5 to 15 minutes, rounded to 5, from the easiest pending practice | Unit `moments.test.ts` |
 | MOM-11 | Card action button | Starts a focus timer on the suggested practice with the suggested goal; hidden while a timer runs | E2E `today-states.spec.ts` |
 | MOM-12 | Hide for today | ✕ hides that card until tomorrow, surviving reloads; a lower-priority card may take its place | E2E `today.spec.ts`, `today-states.spec.ts`, Unit `moments.test.ts` |
 | MOM-13 | Reaching the minimum | Logging past the minimum goal shows "Today counts. Anything more is a bonus." | E2E `today-states.spec.ts` |
 | MOM-14 | No active practices | No card | Unit `moments.test.ts` |
+| COACH-01 | The coach's voice by tier | Starting (Levels 1–2) gentle, Building (3–4) warm, Steady (5–6) as before levels, Strong (7–8) direct, Relentless (9–10) blunt and witty. Before levels: Steady | Unit `voice.test.ts` |
+| COACH-02 | Evening nudge by tier | Starting: "5 minutes keeps your 3-day streak. Smallest win of the day."; Building: "N more and your K-day streak lives. Your excuses are getting nervous."; Steady: as TODAY-13; Strong: "N left for day K+1. You've done harder before breakfast."; Relentless: "N minutes stand between you and day K+1. Records don't break themselves." | Unit `voice.test.ts` |
+| COACH-03 | "All clear" by tier | The first line of the celebration: Starting "Look at you, showing up."; Building "The habit is moving in."; Strong "Clean work."; Relentless "Of course."; Steady as before; milestone and shield lines follow as LOG-05 | Unit `voice.test.ts` |
+| COACH-04 | On a roll by tier | MOM-08's body: Starting "N days in a row. M minutes keeps it going. That's all it takes."; Building "…M more and the chain grows."; Strong "…M points left. Don't negotiate with yourself."; Relentless "…Finish what you started."; M is what the level still needs today | Unit `voice.test.ts`, E2E `today-states.spec.ts` |
+| COACH-05 | Comeback by tier | MOM-02's body: Starting "It's been N days, and that's fine. …and you're back."; Strong "N days off isn't like you. …restarts the engine."; Relentless "N days quiet. Everyone has an off week; nobody needs an off month. …, now."; Building and Steady as before | Unit `voice.test.ts` |
+| COACH-06 | Insights' quiet-week line by tier | When nothing else stands out (INS-20): "You showed up." / "Building." / "Steady." / "Strong." / "Relentless.", each with its own sentence | Unit `voice.test.ts` |
 
 ## 6. Logging minutes
 

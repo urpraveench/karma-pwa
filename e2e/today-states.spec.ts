@@ -205,6 +205,13 @@ test.describe('Today states', () => {
     await expect(sheet.locator('.sk-how')).toHaveText('At Level 10: A day is clear when every practice is done, carried-over minutes included. Every 7 clear days in a row earn a shield, and you can hold 1. Miss a day and a shield keeps your streak; the minutes still carry over.');
   });
 
+  test('the coach speaks to the level: the on-a-roll card at Level 1 (COACH-04, MOM-08)', async ({ page }) => {
+    // 6 clear days to 20 October; under a week of history when levels began, so Level 1, where 5 minutes keeps the streak
+    await signInWith(page, seedData([reading('2026-10-15')], days('2026-10-15', '2026-10-20').map(d => ['r', d, 30])), at(10, 0, 21));
+    await expect(page.locator('.moment .m-title')).toHaveText('Day 7 is waiting.');
+    await expect(page.locator('.moment .m-body')).toHaveText("6 days in a row. 5 minutes keeps it going. That's all it takes.");
+  });
+
   test('no level before levels began (TODAY-22)', async ({ page }) => {
     await signInWith(page, seedData([reading('2026-09-30')], days('2026-09-30', '2026-10-06').map(d => ['r', d, 30])));
     await page.locator('button.streak').click();

@@ -1,6 +1,7 @@
 import { byOrder, targetMinutesOn, type Calc, type DayRow } from './backlog';
 import { addDays, parse } from './date';
 import { practiceStreak } from './levels';
+import { steadyLine, voiceOf } from './voice';
 import { DAY_NAMES, sum } from './util';
 import type { AppData, Category, DateStr } from './types';
 
@@ -110,7 +111,7 @@ export function buildInsights(data: AppData, c: Calc, T: DateStr, range: number)
   const win = tips.find(t => t.tone !== DUE), fixes = tips.filter(t => t.tone === DUE);
   const coach: CoachLine[] = win ? [win, ...fixes.slice(0, 2)] : fixes.slice(0, 3);
   if (coach.length < 3) coach.push(...tips.filter(t => !coach.includes(t)).slice(0, 3 - coach.length));
-  if (!coach.length) coach.push({ tone: OK, strong: 'Steady.', rest: ' Nothing is slipping. Keep showing up and the streak takes care of itself.' });
+  if (!coach.length) coach.push({ tone: OK, ...steadyLine(voiceOf(c.level?.level)) });
 
   // --- milestones + records ---
   const totalMin = sum(data.logs.map(l => l.minutes)), hours = totalMin / 60;

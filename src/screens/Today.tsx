@@ -5,6 +5,7 @@ import { MomentCard } from '../components/MomentCard';
 import { ideaFor } from '../lib/ideas';
 import { easiestPending } from '../lib/moments';
 import { activeCats, carriedLeft, dueLeft, showUpStreak } from '../lib/backlog';
+import { nudgeText, voiceOf } from '../lib/voice';
 import { addDays, fmtLong } from '../lib/date';
 import { dayMark, weekStart } from '../lib/streak';
 import { greeting } from '../lib/user';
@@ -62,7 +63,7 @@ export function Today() {
       </p>
       {easy && <button className="just7" style={{ '--c': easy.color } as CSSProperties} onClick={() => start(easy.id, easyGoal)}><Icon.play />Just {easyGoal} minutes of {easy.name}</button>}
       {saved && <div className="nudge good"><Icon.shield />A shield kept your {c.streak}-day streak yesterday.</div>}
-      {showNudge && <div className="nudge">Clear {c.keepLeft} more to keep your {c.streak}-day streak{c.shields ? ' without using a shield' : ''}</div>}
+      {showNudge && <div className="nudge">{nudgeText(voiceOf(c.level?.level), c.keepLeft, c.streak, c.shields)}</div>}
       {!tm && !m && cats.length > 0 && !tipHidden && (
         <div className="tip">
           <span className="tip-play"><Icon.play /></span>

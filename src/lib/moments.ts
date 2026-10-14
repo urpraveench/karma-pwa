@@ -1,4 +1,5 @@
 import { activeCats, dayAll, dueOn, targetMinutesOn, usualHour, type Calc } from './backlog';
+import { comebackText, rollText, voiceOf } from './voice';
 import { addDays, fmtShort, hourLabel, monthName, parse, ymd } from './date';
 import { firstName } from './user';
 import { sum } from './util';
@@ -90,7 +91,7 @@ export function moment(c: Calc, { data, user, hidden, now: clock = new Date() }:
     let gap = 1; while (gap < 90 && !logged.has(addDays(T, -gap)) && addDays(T, -gap) >= earliest) gap++;
     add('comeback', 95, {
       tone: '#0E7490', minMode: true, minGoal, title: name ? `Welcome back, ${name}.` : 'Welcome back.',
-      body: `It's been ${gap - 1} days. No catching up today. ${minGoal} minutes of ${easiest.name} makes today count.`,
+      body: comebackText(voiceOf(c.level?.level), gap - 1, minGoal, easiest.name),
       cta: { label: `Start ${minGoal} min of ${easiest.name}`, cat: easiest.id, goal: minGoal },
     });
   }
@@ -159,9 +160,9 @@ export function moment(c: Calc, { data, user, hidden, now: clock = new Date() }:
     }
   }
   // 8. on a roll
-  if (c.streak >= 3 && t.end > 0) add('roll', 40, {
+  if (c.streak >= 3 && c.keepLeft > 0) add('roll', 40, {
     tone: 'var(--gold)', title: c.best - c.streak <= 1 && c.best > c.streak ? 'A new record is one day away.' : `Day ${c.streak + 1} is waiting.`,
-    body: `${c.streak} clear days in a row. ${t.end} points keeps it going.`,
+    body: rollText(voiceOf(c.level?.level), c.streak, c.keepLeft),
   });
   // 9. new user
   if (histDays < 3 && !logged.has(T) && easiest) add('start', 30, {

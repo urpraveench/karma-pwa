@@ -8,6 +8,7 @@ import type { EmailKind } from '../lib/notifications';
 import { count, countActiveDevice, flushStats, type Counter } from '../lib/stats';
 import { haptic } from '../lib/feedback';
 import { moment as findMoment, type Moment } from '../lib/moments';
+import { voiceOf } from '../lib/voice';
 import { startingCategories, type Choice } from '../lib/firstRun';
 import { defaultCategories, sampleData } from '../lib/sample';
 import { saveTimer } from '../lib/timer';
@@ -180,7 +181,7 @@ function useAppState() {
       setData({ ...cur, logs: cur.logs.filter(x => !ids.has(x.id)) });
       Promise.all(logs.map(l => store.deleteLog(l))).catch(() => toast(SAVE_FAILED)); toast('Undone');
     };
-    if (before.totals.end > 0 && after.totals.end === 0) { celebrate(after.streak, undo, after.shields > before.shields); return; }
+    if (before.totals.end > 0 && after.totals.end === 0) { celebrate(after.streak, undo, after.shields > before.shields, voiceOf(after.level?.level)); return; }
     if (logs.length > 1) {
       const minutes = logs.reduce((n, l) => n + l.minutes, 0);
       toast(`Logged ${logs.length} entries · ${minutes} minutes`, 4500, undo); return;

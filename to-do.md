@@ -8,12 +8,7 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 ## In progress
 
-### Levels (branch `levels`, ships as one release)
-
-Releasing 14 October 2026.
-
-Ten levels that set how strict streaks and shields are, worked out from how consistent someone has been, moving up or down by themselves each Monday. Level 6 is today's rules. Decided 14 October 2026: 10 levels in 5 coach voices (Starting, Building, Steady, Strong, Relentless); a clear day at Level 1 is 5 minutes on any practice; new accounts start at Level 1; existing accounts start from their last 28 days; moves are automatic, no manual setting.
-
+Nothing right now.
 
 ## Setup layout
 
@@ -188,6 +183,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] Released 1.16.0: levels (10, from how consistent you've been, moving each Monday) setting the streak, shield and backlog rules; the coach's voice by tier in the app, reminders and the comeback email; a one-screen welcome; the morning splash at 10 seconds. App, functions and website deployed, 14 October 2026
 - [x] **Claude:** `LEVELS_FROM` set to the release day, 14 October 2026; the Firebase-mode settings sync test finds the backlog buttons by name, since they read "1", "2", "3" once levels began (LVL-10). 14 October 2026
 - [x] **Claude:** the levels introduction no longer tells an account with under a week of history that its Level 1 came from its last 4 weeks; it says everyone starts at Level 1, as for a new account (LVL-13). On the `levels` branch, 14 October 2026
 - [x] **Claude:** the levels introduction cut to one screen, asked by Praveen: "Your level and your coach": TikTym helps you reach your goals, your level shows where you stand today, your coach guides you from here (LVL-13). On the `levels` branch, 14 October 2026

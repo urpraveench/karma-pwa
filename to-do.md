@@ -16,7 +16,8 @@ Nothing right now.
 
 ## 2. Check by hand before release
 
-- [ ] After levels ship: the day they begin, an existing account sees the "Your level and your coach" screen once, with a sensible level, and no morning splash on top; on the first Monday after, a level card appears only if the level moved; a reminder push on the phone carries the tier's line (LVL-13, LVL-11, COACH-07)
+- [ ] Tonight (14 Oct): the 7 pm reminder's second line reads in your tier's voice, not "Even 5 minutes counts." unless you're at Level 5 or 6 (COACH-07)
+- [ ] Mon 19 Oct: a level card appears on Today only if your level moved (LVL-11)
 These can't be automated, or need the real project and a real phone. IDs refer to [FEATURES.md](FEATURES.md).
 
 - [ ] From 11 October: run `firebase firestore:backups:list --project tiktym` and check a daily backup appears each day (SYNC-17)
@@ -183,6 +184,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **You:** checked 1.16.0 on your phone: the "Your level and your coach" screen showed once with a sensible level, no morning splash on top, and the Streak sheet shows the level (LVL-13, TODAY-22). 14 October 2026
 - [x] Released 1.16.0: levels (10, from how consistent you've been, moving each Monday) setting the streak, shield and backlog rules; the coach's voice by tier in the app, reminders and the comeback email; a one-screen welcome; the morning splash at 10 seconds. App, functions and website deployed, 14 October 2026
 - [x] **Claude:** `LEVELS_FROM` set to the release day, 14 October 2026; the Firebase-mode settings sync test finds the backlog buttons by name, since they read "1", "2", "3" once levels began (LVL-10). 14 October 2026
 - [x] **Claude:** the levels introduction no longer tells an account with under a week of history that its Level 1 came from its last 4 weeks; it says everyone starts at Level 1, as for a new account (LVL-13). On the `levels` branch, 14 October 2026

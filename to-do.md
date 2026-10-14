@@ -8,7 +8,15 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 ## In progress
 
-Nothing right now.
+### Levels (branch `levels`, ships as one release)
+
+Ten levels that set how strict streaks and shields are, worked out from how consistent someone has been, moving up or down by themselves each Monday. Level 6 is today's rules. Decided 14 October 2026: 10 levels in 5 coach voices (Starting, Building, Steady, Strong, Relentless); a clear day at Level 1 is 5 minutes on any practice; new accounts start at Level 1; existing accounts start from their last 28 days; moves are automatic, no manual setting.
+
+- [ ] **Claude:** phase 2: rules by level: what makes a clear day, shields earned and held, missed days a practice streak allows, the backlog limit's default; shared with the functions; the Streak sheet explains the level's rules (LVL-06 onward)
+- [ ] **Claude:** phase 3: the coach's voice by tier on Today's cards, the evening nudge, the celebration and Insights
+- [ ] **Claude:** phase 4: a card on Today when the level moves, and level progress in Insights; the coach names the practice lifting the score and the one dragging it
+- [ ] **Claude:** phase 5: emails and pushes in the tier's voice
+- [ ] **Claude (at release):** set `LEVELS_FROM` to the release date, so no day before it is judged by the new rules; merge `levels` into `main`, release 1.16.0
 
 ## Setup layout
 
@@ -182,6 +190,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** phase 1: the level from history (score, starting level, weekly moves) in `src/lib/levels.ts`, shown on the Streak sheet with the score and what reaches the next level; streak rules unchanged (LVL-01 to LVL-05, TODAY-22). On the `levels` branch, 14 October 2026
 - [x] Released 1.15.0: the coloured button logs only today's minutes and a red "+N carried" button clears the backlog; "How did it feel?" only after a focus timer session; iPhone evening check and practice reminders. App and website deployed, 14 October 2026
 - [x] **Claude:** CLAUDE.md › Branches: `main` is production, live fixes branch off `main`, feature branches like `android` merge in only when they ship and take `main` after each release, deploy only from `main`. 14 October 2026
 - [x] **Claude:** "How did it feel?" only after a focus timer session, not after every quick tap or typed entry; the question made every toast twice as tall and covered the row just logged (LOG-31). 14 October 2026

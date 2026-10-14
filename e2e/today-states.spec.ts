@@ -180,6 +180,29 @@ test.describe('Today states', () => {
     await expect(sheet).toHaveCount(0);
   });
 
+  test('the Streak sheet shows the level: a new account at Level 1 (TODAY-22, LVL-03)', async ({ page }) => {
+    // levels begin Monday 19 October; this account starts that day and meets its target on 19 and 20 October
+    await signInWith(page, seedData([reading('2026-10-19')], [['r', '2026-10-19', 30], ['r', '2026-10-20', 30]]), at(10, 0, 21));
+    await page.locator('button.streak').click();
+    const sheet = page.getByRole('dialog', { name: 'Streak' });
+    await expect(sheet.locator('.sk-lv')).toHaveText('Level 1 · Starting');
+    await expect(sheet.locator('.sk-lv-text')).toHaveText('100% of your practice days on target in the last 14 days. Reach 15% and on Monday 2 November you move up to Level 2.');
+  });
+
+  test('the Streak sheet shows the level: a consistent account starts at Level 10 (TODAY-22, LVL-04)', async ({ page }) => {
+    await signInWith(page, seedData([reading('2026-09-14')], days('2026-09-14', '2026-10-20').map(d => ['r', d, 30])), at(10, 0, 21));
+    await page.locator('button.streak').click();
+    const sheet = page.getByRole('dialog', { name: 'Streak' });
+    await expect(sheet.locator('.sk-lv')).toHaveText('Level 10 · Relentless');
+    await expect(sheet.locator('.sk-lv-text')).toHaveText('100% of your practice days on target in the last 14 days. Stay at 83% or more to keep Level 10.');
+  });
+
+  test('no level before levels began (TODAY-22)', async ({ page }) => {
+    await signInWith(page, seedData([reading('2026-09-30')], days('2026-09-30', '2026-10-06').map(d => ['r', d, 30])));
+    await page.locator('button.streak').click();
+    await expect(page.getByRole('dialog', { name: 'Streak' }).locator('.sk-level')).toHaveCount(0);
+  });
+
   test('the Streak sheet marks the day a shield saved, and missed days (TODAY-20)', async ({ page }) => {
     // 1–3 Oct clear earns a shield; 4 Oct missed spends it; 5 Oct pays it back; 6 Oct missed with no shield left
     await signInWith(page, seedData([reading('2026-10-01')], [...days('2026-10-01', '2026-10-03').map(d => ['r', d, 30] as [string, string, number]), ['r', '2026-10-05', 60]]), at(10));

@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { calc } from '../src/lib/backlog';
 import { addDays } from '../src/lib/date';
-import { levelFor, levels, nextMonday, score, tierOf } from '../src/lib/levels';
+import { dayState, keepLeft, levelFor, levelOn, levels, minimumOf, nextMonday, score, tierOf } from '../src/lib/levels';
+import type { DayRow } from '../src/lib/backlog';
 import type { AppData, Category, Log } from '../src/lib/types';
 
 const EVERY_DAY = [0, 1, 2, 3, 4, 5, 6];
@@ -79,5 +80,52 @@ describe('levels', () => {
     const d = data([cat('a', FROM)], logs('a', FROM, '2026-10-11', 10, i => i < 4)); // 4 of 7 days so far
     expect(lv(d, '2026-10-12')).toMatchObject({ score: 57, nextCheck: '2026-10-19' });
     expect(lv(d, FROM)!.nextCheck).toBe('2026-10-19'); // 12 October has only a week behind it
+  });
+
+  const row = (due: number, done: number, opening = 0): DayRow => ({ date: '2026-10-07', due, done, opening, owed: opening + due, end: Math.max(0, opening + due - done) });
+
+  it('what makes a clear day at each level (LVL-06)', () => {
+    expect([10, 20, 30, 60, 3].map(minimumOf)).toEqual([5, 10, 15, 15, 3]);
+    const day = [row(30, 4), row(10, 0, 20)]; // 4 of 30 on one practice, nothing on another that carries 20
+    expect(dayState('any5', day)).toBe('miss');
+    expect(dayState('any5', [row(30, 5), row(10, 0, 20)])).toBe('clear');
+    expect(dayState('minimum', [row(30, 14), row(10, 5, 20)])).toBe('clear'); // 5 is the 10-minute practice's minimum
+    expect(dayState('half', [row(30, 20), row(10, 0, 20)])).toBe('clear'); // 20 of 40
+    expect(dayState('most', [row(30, 20), row(10, 0, 20)])).toBe('miss'); // 30 needed
+    expect(dayState('targets', [row(30, 30), row(10, 10, 20)])).toBe('clear'); // the 20 carried can wait
+    expect(dayState('all', [row(30, 30), row(10, 10, 20)])).toBe('miss');
+    expect(dayState('half', [row(0, 0, 20)])).toBe('rest'); // only carried minutes: nothing due at a lower level
+    expect(dayState('all', [row(0, 0, 20)])).toBe('miss');
+  });
+
+  it('minutes still needed to keep the streak today, by level (TODAY-13)', () => {
+    const day = [row(30, 10), row(10, 0, 20)];
+    expect(['any5', 'minimum', 'half', 'most', 'targets', 'all'].map(r => keepLeft(r as never, day))).toEqual([0, 5, 10, 20, 30, 50]);
+  });
+
+  it('shields by level: a new account starts with one, earns one every 2 clear days at Level 1, and holds 5 (LVL-07)', () => {
+    const d = data([cat('a', FROM)], logs('a', FROM, '2026-10-16', 5)); // 5 of 10 minutes a day: clear at Level 1, never a full target
+    const c = calc(d, '2026-10-16', FROM);
+    expect(c.level!.level).toBe(1);
+    expect(c.streak).toBe(12);
+    expect(c.shields).toBe(5); // 1 to start + 1 every 2 days, capped at 5
+    expect(c.rule).toMatchObject({ clear: 'any5', shieldDays: 2, shieldMax: 5 });
+    const missed = calc(data([cat('a', FROM)], logs('a', FROM, '2026-10-16', 5, i => i !== 1)), '2026-10-16', FROM);
+    expect(missed.shielded).toEqual(['2026-10-06']); // the starting shield kept the streak on day two
+    expect(missed.streak).toBe(11);
+  });
+
+  it('a level that holds fewer shields trims the extra; days before levels keep the old rules (LVL-07, LVL-08)', () => {
+    const perfect = data([cat('a', '2026-08-01')], logs('a', '2026-08-01', '2026-10-06'));
+    expect(calc(perfect, '2026-10-04', FROM)).toMatchObject({ level: null, shields: 3, rule: { shieldMax: 3 } });
+    const c = calc(perfect, '2026-10-06', FROM);
+    expect(c.level!.level).toBe(10);
+    expect(c.shields).toBe(1);
+    expect(levelOn(c.level, '2026-10-04')).toBe(6);
+    // at Level 6 a day before levels with only half done was a miss; a Level 1 account can't rewrite it
+    const half = data([cat('a', '2026-10-01')], logs('a', '2026-10-01', '2026-10-06', 5));
+    const h = calc(half, '2026-10-06', FROM);
+    expect(h.level!.level).toBe(1);
+    expect([...h.days.entries()].filter(([d]) => d < FROM).map(([, v]) => v)).toEqual(['miss', 'miss', 'miss', 'miss']);
   });
 });

@@ -1,5 +1,5 @@
 import { addDays, parse } from './date';
-import type { Calc } from './backlog';
+import type { Calc, DayRow } from './backlog';
 import type { Category, DateStr } from './types';
 
 // Levels set how strict streaks and shields are (LVL-01). They're worked out from history every time, like shields, so
@@ -18,8 +18,77 @@ export const TIERS = ['Starting', 'Building', 'Steady', 'Strong', 'Relentless'] 
 export type Tier = typeof TIERS[number];
 export const tierOf = (level: number): Tier => TIERS[Math.ceil(level / 2) - 1];
 
+/**
+ * What a level asks of a day to count as clear (LVL-06): 'any5' 5+ minutes on any practice; 'minimum' one practice's small
+ * minimum; 'half' and 'most' half and three quarters of the day's targets; 'targets' every target met, carried-over minutes
+ * not needed; 'all' every target and every carried-over minute (the rule before levels).
+ */
+export type ClearRule = 'any5' | 'minimum' | 'half' | 'most' | 'targets' | 'all';
+export interface LevelRule { clear: ClearRule; shieldDays: number; shieldMax: number; startShield?: boolean }
+/** By level, index 1 to 10 (LVL-06, LVL-07). Level 6 is the rule before levels. */
+export const RULES: LevelRule[] = [
+  { clear: 'all', shieldDays: 3, shieldMax: 3 },
+  { clear: 'any5', shieldDays: 2, shieldMax: 5, startShield: true },
+  { clear: 'minimum', shieldDays: 2, shieldMax: 5, startShield: true },
+  { clear: 'half', shieldDays: 2, shieldMax: 4 },
+  { clear: 'most', shieldDays: 3, shieldMax: 4 },
+  { clear: 'targets', shieldDays: 3, shieldMax: 3 },
+  { clear: 'all', shieldDays: 3, shieldMax: 3 },
+  { clear: 'all', shieldDays: 4, shieldMax: 2 },
+  { clear: 'all', shieldDays: 5, shieldMax: 2 },
+  { clear: 'all', shieldDays: 6, shieldMax: 1 },
+  { clear: 'all', shieldDays: 7, shieldMax: 1 },
+];
+/** The level whose rules applied before levels began. */
+export const BEFORE_LEVELS = 6;
+
+/** A practice's small minimum for a day: half its target, rounded to 5, from 5 to 15 minutes, never more than the target. */
+export const minimumOf = (due: number) => Math.min(due, Math.max(5, Math.min(15, Math.round(due / 10) * 5)));
+
+/** Whether a day was clear, missed or had nothing due, by a level's rule; `rows` are that day's rows, one per practice (LVL-06). */
+export function dayState(rule: ClearRule, rows: DayRow[]): 'clear' | 'miss' | 'rest' {
+  const due = rows.reduce((n, r) => n + r.due, 0);
+  if (rule === 'all') return rows.every(r => r.owed === 0) ? 'rest' : rows.every(r => r.end === 0) ? 'clear' : 'miss';
+  if (due === 0) return 'rest';
+  return keepLeft(rule, rows) === 0 ? 'clear' : 'miss';
+}
+
+/** Minutes still needed for a day to count as clear by a level's rule (TODAY-13). */
+export function keepLeft(rule: ClearRule, rows: DayRow[]): number {
+  const due = rows.filter(r => r.due > 0), doneCap = due.reduce((n, r) => n + Math.min(r.done, r.due), 0), all = due.reduce((n, r) => n + r.due, 0);
+  switch (rule) {
+    case 'all': return rows.reduce((n, r) => n + r.end, 0);
+    case 'targets': return all - doneCap;
+    case 'half': case 'most': return Math.max(0, Math.ceil(all * (rule === 'half' ? .5 : .75)) - doneCap);
+    case 'minimum': return due.length ? Math.max(0, Math.min(...due.map(r => minimumOf(r.due) - r.done))) : 0;
+    case 'any5': return Math.max(0, 5 - Math.max(0, ...rows.map(r => r.done)));
+  }
+}
+
+/** What a level's clear day asks, in a sentence for the Streak sheet (TODAY-20). */
+export const CLEAR_SAYS: Record<ClearRule, string> = {
+  any5: 'A day is clear when you do 5 minutes or more on any practice.',
+  minimum: 'A day is clear when one practice gets its small minimum: half its target, 5 to 15 minutes.',
+  half: "A day is clear when you do half of the day's targets.",
+  most: "A day is clear when you do three quarters of the day's targets.",
+  targets: "A day is clear when every practice meets the day's target. Carried-over minutes can wait.",
+  all: 'A day is clear when every practice is done, carried-over minutes included.',
+};
+
+/** How a level's shields work, in a sentence for the Streak sheet (TODAY-20). */
+export const shieldSays = (r: LevelRule) =>
+  `Every ${r.shieldDays} clear days in a row earn a shield, and you can hold ${r.shieldMax}. Miss a day and a shield keeps your streak; the minutes still carry over.`;
+
+/** The level on day `d`: the one before levels for a day before they began (LVL-08). */
+export function levelOn(lv: Levels | null, d: DateStr): number {
+  if (!lv || d < lv.moves[0].date) return BEFORE_LEVELS;
+  let l = lv.moves[0].level;
+  for (const m of lv.moves) if (m.date <= d) l = m.level;
+  return l;
+}
+
 /** The share of scheduled practice-days from `from` to `to` where the day's own target was met, or null if nothing was due (LVL-02). */
-export function score(c: Calc, categories: Category[], from: DateStr, to: DateStr): number | null {
+export function score(c: Pick<Calc, 'per'>, categories: Category[], from: DateStr, to: DateStr): number | null {
   let due = 0, met = 0;
   for (let d = from; d <= to; d = addDays(d, 1))
     for (const cat of categories) {
@@ -47,7 +116,7 @@ export interface Levels {
 }
 
 /** The level on `asOf`, or null before levels began (LVL-03 to LVL-05). */
-export function levels(c: Calc, categories: Category[], asOf: DateStr, from: DateStr = LEVELS_FROM): Levels | null {
+export function levels(c: Pick<Calc, 'per'>, categories: Category[], asOf: DateStr, from: DateStr = LEVELS_FROM): Levels | null {
   if (asOf < from || !categories.length) return null;
   const start = categories.reduce((m, x) => x.startDate < m ? x.startDate : m, asOf);
   const later = (a: DateStr, b: DateStr) => a > b ? a : b;

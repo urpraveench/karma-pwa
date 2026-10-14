@@ -24,7 +24,7 @@ Summary of coverage at the time of writing:
 |---|---|---|---|---|
 | 1. Accounts and sign-in | 28 | 26 | 0 | 2 |
 | 2. First run | 13 | 13 | 0 | 0 |
-| 3. Backlog rules | 21 | 21 | 0 | 0 |
+| 3. Backlog rules | 24 | 24 | 0 | 0 |
 | 4. Today screen | 22 | 22 | 0 | 0 |
 | 5. Moments | 14 | 14 | 0 | 0 |
 | 6. Logging minutes | 28 | 28 | 0 | 0 |
@@ -39,7 +39,7 @@ Summary of coverage at the time of writing:
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| **Total** | **348** | **335** | **0** | **13** |
+| **Total** | **351** | **338** | **0** | **13** |
 
 ---
 
@@ -118,18 +118,21 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | CALC-07 | Days before a practice's start date | Never owed | Unit `backlog.test.ts` |
 | CALC-08 | Archived practice | Backlog clears from the archive date; nothing accrues; excluded from today's totals | Unit `backlog.test.ts` |
 | CALC-09 | Backfill a past day | Every later day is recalculated | Unit `backlog.test.ts` |
-| CALC-10 | Streak | Consecutive days ending with nothing owed; today counts only once it is clear; days with nothing due don't break or extend it; a shield can cover a missed day (CALC-14) | Unit `backlog.test.ts` |
+| CALC-10 | Streak | Consecutive clear days, each judged by its level's rule (LVL-06; before levels and from Level 6 up, ending with nothing owed); today counts only once it is clear; days with nothing due don't break or extend it; a shield can cover a missed day (CALC-14) | Unit `backlog.test.ts` |
 | CALC-11 | Best streak | Longest run on record, including the current one | Unit `backlog.test.ts` |
 | CALC-12 | "Days showing up" streak | Consecutive days with any entry; starts from yesterday if today has none yet | Unit `backlog.test.ts` |
 | CALC-13 | Carried over still to clear | Minutes logged today count toward today's target first, then the carried-in backlog: carried = what's still owed beyond today's target (60 due, 120 carried in, 60 logged: 120 still carried) | Unit `backlog.test.ts` |
-| CALC-14 | Streak shields | Three clear days in a row earn a shield (3 at most). A missed day spends a shield instead of breaking the streak; the missed minutes still carry over, and the shielded day doesn't count towards the streak or the next shield. Today never spends one. Worked out from history, so nothing extra is stored | Unit `backlog.test.ts`, E2E `today-states.spec.ts` |
-| CALC-15 | What each day did for the streak | From the same calc as the streak: clear (nothing left at day end), shield (missed, a shield kept the streak), missed, nothing due (no target and nothing carried), today (not clear yet), future, before the first practice. A day owing only carried-over minutes still has to be cleared. Next shield: "N more clear days in a row earn a shield", "Clear today/tomorrow to earn a shield", or "You hold 3 shields, the most you can" | Unit `streak.test.ts` |
+| CALC-14 | Streak shields | Clear days in a row earn a shield, as many as the level says, up to its most (LVL-07); before levels, three earn one and 3 at most. A missed day spends a shield instead of breaking the streak; the missed minutes still carry over, and the shielded day doesn't count towards the streak or the next shield. Today never spends one. Worked out from history, so nothing extra is stored | Unit `backlog.test.ts`, E2E `today-states.spec.ts` |
+| CALC-15 | What each day did for the streak | From the same calc as the streak: clear (met its level's rule), shield (missed, a shield kept the streak), missed, nothing due (no target and nothing carried), today (not clear yet), future, before the first practice. A day owing only carried-over minutes still has to be cleared. Next shield: "N more clear days in a row earn a shield", "Clear today/tomorrow to earn a shield", or "You hold 3 shields, the most you can" | Unit `streak.test.ts` |
 | CALC-16 | Today's own minutes left | Today's target minus what's logged today (never below 0); what the coloured button logs | Unit `backlog.test.ts` |
 | LVL-01 | Ten levels | Levels 1 to 10, in five tiers of two: Starting (1–2), Building (3–4), Steady (5–6), Strong (7–8), Relentless (9–10). Each level from 2 up has a score threshold: 15, 25, 35, 45, 55, 65, 75, 85, 93% | Unit `levels.test.ts` |
 | LVL-02 | Consistency score | The share of scheduled practice-days in a window where that day's own target was met (carried-over minutes don't count; a practice with nothing due that day is skipped), as a whole percent; no score when nothing was due | Unit `levels.test.ts` |
 | LVL-03 | New account's level | Level 1 from the first practice's start, when that is on or after the day levels began (`LEVELS_FROM`) | Unit `levels.test.ts`, E2E `today-states.spec.ts` |
 | LVL-04 | Existing account's starting level | On the day levels began: the highest level whose threshold the last 28 days' score reaches (Level 1 under 15%); Level 1 with under 7 days of history or no score | Unit `levels.test.ts`, E2E `today-states.spec.ts` |
 | LVL-05 | Weekly move | Each Monday once there are 14 days of history: the last 14 days' score moves the level up one if it reaches the next level's threshold, or down one if it is 10 or more points below the current level's; never more than one step a week; no move when nothing was due. Worked out from history, so nothing extra is stored | Unit `levels.test.ts` |
+| LVL-06 | A clear day by level | Level 1: 5+ minutes on any practice. 2: one practice's small minimum (half its target, rounded to 5, from 5 to 15 minutes). 3: half of the day's targets. 4: three quarters. 5: every target met, carried-over minutes not needed. 6 to 10: every target and every carried-over minute, as before levels. Below Level 6, a day with only carried-over minutes owed counts as nothing due | Unit `levels.test.ts` |
+| LVL-07 | Shields by level | Clear days to earn one and the most held: Level 1 and 2: 2 days, 5 (and a shield to start with when levels begin at those levels); 3: 2, 4; 4: 3, 4; 5 and 6: 3, 3; 7: 4, 2; 8: 5, 2; 9: 6, 1; 10: 7, 1. Moving to a level that holds fewer trims the extra | Unit `levels.test.ts`, E2E `today-states.spec.ts` |
+| LVL-08 | Days before levels | Judged by the rules before levels (Level 6) whatever the level now, so no past streak is rewritten | Unit `levels.test.ts` |
 
 ## 4. Today screen
 
@@ -147,14 +150,14 @@ The core engine: one minute logged is one point. Per practice, per day: `owed = 
 | TODAY-10 | Centre: minimum mode | In comeback and minimum-day moments: minutes still needed to make today count, with the full amount as a smaller "if you go all in" | E2E `today-states.spec.ts` |
 | TODAY-11 | Practice rows | Name, colour stripe, and "N of M" (M is today's target, the backlog not included) with ", K carried" when there is backlog, "Today's M done, K carried" once today's part is done, "K carried" on a day with no target, "Done, N logged" or "Rest day"; a progress bar showing done and carried. The hint under the rows: "The coloured button logs today's minutes" | E2E `today.spec.ts`, `today-states.spec.ts`, `setup.spec.ts` |
 | TODAY-12 | Archived practices | Not shown on Today | E2E `today-states.spec.ts` |
-| TODAY-13 | Streak nudge | After 6 pm with a streak and points left, and no moment card: "Clear N more to keep your K-day streak" | E2E `today-states.spec.ts` |
+| TODAY-13 | Streak nudge | After 6 pm with a streak and points left, and no moment card: "Clear N more to keep your K-day streak", N being what the level still needs today (LVL-06): 5 minutes at Level 1, every minute owed from Level 6 | E2E `today-states.spec.ts`, Unit `levels.test.ts` |
 | TODAY-14 | Focus timer tip | Shown until dismissed or a timer is first started; hidden when a moment card or timer is showing | E2E `today-states.spec.ts` |
 | TODAY-15 | No active practices | "No practices yet. Add one in Setup." | E2E `log-sheet.spec.ts` |
 | TODAY-16 | Practice order | Rows follow the practice order set in Setup | E2E `today.spec.ts` |
 | TODAY-17 | Streak shields on Today | The streak badge shows shields held ("1 shield"); the day after a shield is spent: "A shield kept your N-day streak yesterday." in gold with a shield icon (good news, not the red warning style), in place of the evening nudge; with a shield held, the evening nudge adds "without using a shield" | E2E `today-states.spec.ts` |
 | TODAY-18 | "Just 7 minutes" | With nothing logged today, no timer running and no moment card: a button "Just N minutes of Name" for the practice due today with the smallest target (N is 7, or less if less is left). It starts a focus timer with that goal, shown as the selected target | E2E `today-states.spec.ts` |
 | TODAY-19 | Today's idea | A card at the foot of Today with one short line about practice and habits, written for TikTym: the same all day, the next in the list tomorrow, every line used in turn | Unit `ideas.test.ts`, E2E `today-states.spec.ts` |
-| TODAY-20 | Streak calendar | Under the streak badge, this week's days as dots (Monday to Sunday: clear, shield, missed, nothing due, today, to come). Tapping the badge, or Insights › Consistency's streak line (always there, even with no streak), opens the Streak sheet: the streak and best, 3 shield slots filled for those held, how far off the next shield is, a month calendar (Monday first) marking each day as in CALC-15, with a gold band joining clear days in a row and a shield on days a shield saved, back to the month of the first practice and no further than this month, a key, and how shields work | E2E `today-states.spec.ts` |
+| TODAY-20 | Streak calendar | Under the streak badge, this week's days as dots (Monday to Sunday: clear, shield, missed, nothing due, today, to come). Tapping the badge, or Insights › Consistency's streak line (always there, even with no streak), opens the Streak sheet: the streak and best, 3 shield slots filled for those held, how far off the next shield is, a month calendar (Monday first) marking each day as in CALC-15, with a gold band joining clear days in a row and a shield on days a shield saved, back to the month of the first practice and no further than this month, a key, and how a clear day and shields work at the current level ("At Level N: …") | E2E `today-states.spec.ts` |
 | TODAY-21 | Morning splash | On the first open of each day on a device, a full-screen card before Today: the date, "Today's idea" and the day's line (TODAY-19), and "Start my day". It closes on that button, a tap anywhere, or by itself after 7 seconds (a gold bar shows the time), and isn't shown again that day on that device. Never on the day the account started, so choosing practices comes first. The idea card at the foot of Today stays | Unit `ideas.test.ts`, E2E `today-states.spec.ts`, `colours.spec.ts` |
 | TODAY-22 | Level on the Streak sheet | Under the shields: "Level N · Tier", the last 14 days' score, and what reaches the next level at Monday's check ("55% by Monday reaches Level 6") with a bar; at Level 10, the score that keeps it | Unit `levels.test.ts`, E2E `today-states.spec.ts` |
 

@@ -26,7 +26,7 @@ export function Today() {
   else center = <><span className="big">{t.end}</span><span className="lbl">points left today</span>{t.carryLeft > 0 && <span className="carry">{t.carryLeft} carried over</span>}</>;
 
   const saved = c.streak > 0 && c.shielded.at(-1) === addDays(T, -1);
-  const showNudge = !saved && !m && c.streak > 0 && t.end > 0 && now.getHours() >= 18;
+  const showNudge = !saved && !m && c.streak > 0 && c.keepLeft > 0 && now.getHours() >= 18;
   // a small way in on days nothing is logged yet (TODAY-18); a moment card offers its own start
   const easy = !tm && !m && t.done === 0 ? easiestPending(cats, c, T) : undefined;
   const easyGoal = easy ? Math.min(7, c.per[easy.id].today.end) : 0;
@@ -38,7 +38,7 @@ export function Today() {
         <div><p className="date">{fmtLong(T)}</p><h1 className="hello">{greeting(user, now.getHours())}</h1></div>
         {c.streak || su >= 2 ? (
           <button type="button" className="streak" onClick={() => openSheet({ kind: 'streak' })}
-            title={c.streak ? `Days in a row with nothing pending${c.shields ? '. A shield keeps the streak if you miss a day; three clear days in a row earn one' : ''}` : 'Days in a row with at least one entry'}>
+            title={c.streak ? `Clear days in a row${c.shields ? `. A shield keeps the streak if you miss a day; ${c.rule.shieldDays} clear days in a row earn one` : ''}` : 'Days in a row with at least one entry'}>
             {c.streak
               ? <><b>{c.streak}</b><span>day streak</span>{c.best > c.streak && <small>best {c.best}</small>}</>
               : <><b>{su}</b><span>days showing up</span></>}
@@ -62,7 +62,7 @@ export function Today() {
       </p>
       {easy && <button className="just7" style={{ '--c': easy.color } as CSSProperties} onClick={() => start(easy.id, easyGoal)}><Icon.play />Just {easyGoal} minutes of {easy.name}</button>}
       {saved && <div className="nudge good"><Icon.shield />A shield kept your {c.streak}-day streak yesterday.</div>}
-      {showNudge && <div className="nudge">Clear {t.end} more to keep your {c.streak}-day streak{c.shields ? ' without using a shield' : ''}</div>}
+      {showNudge && <div className="nudge">Clear {c.keepLeft} more to keep your {c.streak}-day streak{c.shields ? ' without using a shield' : ''}</div>}
       {!tm && !m && cats.length > 0 && !tipHidden && (
         <div className="tip">
           <span className="tip-play"><Icon.play /></span>

@@ -1,4 +1,4 @@
-import { dayAll, SHIELD_DAYS, SHIELD_MAX, type Calc } from './backlog';
+import type { Calc } from './backlog';
 import { addDays, parse } from './date';
 import type { Category, DateStr } from './types';
 
@@ -6,7 +6,7 @@ import type { Category, DateStr } from './types';
 // month in the Streak sheet. Worked out from the same calc as the streak itself, so the two always agree.
 
 /**
- * clear: nothing left at day end (extends the streak). shield: missed, but a shield kept the streak. miss: missed.
+ * clear: met its level's rule (extends the streak, LVL-06). shield: missed, but a shield kept the streak. miss: missed.
  * rest: nothing due (neither extends nor breaks it). today: today, not clear yet. future, before: outside the history.
  */
 export type DayMark = 'clear' | 'shield' | 'miss' | 'rest' | 'today' | 'future' | 'before';
@@ -14,9 +14,9 @@ export type DayMark = 'clear' | 'shield' | 'miss' | 'rest' | 'today' | 'future' 
 export function dayMark(c: Calc, categories: Category[], d: DateStr, T: DateStr): DayMark {
   if (d > T) return 'future';
   if (!categories.length || d < categories.reduce((m, x) => x.startDate < m ? x.startDate : m, T)) return 'before';
-  const all = dayAll(c, categories, d);
-  if (all.owed === 0) return 'rest';
-  if (all.end === 0) return 'clear';
+  const st = c.days.get(d);
+  if (!st || st === 'rest') return 'rest';
+  if (st === 'clear') return 'clear';
   if (d === T) return 'today';
   return c.shielded.includes(d) ? 'shield' : 'miss';
 }
@@ -40,8 +40,9 @@ export function shiftMonth(month: string, n: number): string {
 
 /** The line under the shields: how far off the next one is, or that all are held. */
 export function nextShieldText(c: Calc, todayClear: boolean): string {
-  if (c.shields >= SHIELD_MAX) return `You hold ${SHIELD_MAX} shields, the most you can.`;
-  const left = SHIELD_DAYS - c.shieldDays;
+  const max = c.rule.shieldMax;
+  if (c.shields >= max) return max === 1 ? 'You hold your shield, the most you can at this level.' : `You hold ${max} shields, the most you can${c.level ? ' at this level' : ''}.`;
+  const left = Math.max(1, c.rule.shieldDays - c.shieldDays);
   if (left === 1) return todayClear ? 'Clear tomorrow to earn a shield.' : 'Clear today to earn a shield.';
   return `${left} more clear days in a row earn a shield.`;
 }

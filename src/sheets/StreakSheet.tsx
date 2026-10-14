@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Sheet } from '../components/Sheet';
-import { SHIELD_MAX } from '../lib/backlog';
 import { fmtLong, parse } from '../lib/date';
-import { DROP_GAP, LEVEL_MAX, levels, THRESHOLD, tierOf, type Levels } from '../lib/levels';
+import { CLEAR_SAYS, DROP_GAP, LEVEL_MAX, shieldSays, THRESHOLD, tierOf, type Levels } from '../lib/levels';
 import { dayMark, monthWeeks, nextShieldText, shiftMonth, type DayMark } from '../lib/streak';
 import { useApp } from '../state/app';
 import { Icon } from '../ui/icons';
@@ -28,7 +27,7 @@ export function StreakSheet() {
   const [month, setMonth] = useState(T.slice(0, 7));
   const mark = (d: string) => dayMark(c, data.categories, d, T);
   const todayClear = mark(T) === 'clear';
-  const lv = levels(c, data.categories, T), lt = lv && levelText(lv);
+  const lv = c.level, lt = lv && levelText(lv), max = c.rule.shieldMax;
   const title = parse(`${month}-01`).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
 
   return (
@@ -37,8 +36,8 @@ export function StreakSheet() {
         <b>{c.streak}</b><span>day streak{c.best > c.streak ? ` · best ${c.best}` : ''}</span>
       </div>
 
-      <div className="sk-shields" role="img" aria-label={`${c.shields} of ${SHIELD_MAX} shields`}>
-        {Array.from({ length: SHIELD_MAX }, (_, i) => <span key={i} className={i < c.shields ? 'held' : ''}><Icon.shield /></span>)}
+      <div className="sk-shields" role="img" aria-label={`${c.shields} of ${max} shield${max > 1 ? 's' : ''}`}>
+        {Array.from({ length: max }, (_, i) => <span key={i} className={i < c.shields ? 'held' : ''}><Icon.shield /></span>)}
       </div>
       <p className="sk-next">{nextShieldText(c, todayClear)}</p>
 
@@ -81,7 +80,7 @@ export function StreakSheet() {
         </p>
       </div>
 
-      <p className="sk-how">A day is clear when every practice is done, carried-over minutes included. Every 3 clear days in a row earn a shield, and you can hold {SHIELD_MAX}. Miss a day and a shield keeps your streak; the minutes still carry over.</p>
+      <p className="sk-how">{lv ? `At Level ${lv.level}: ` : ''}{CLEAR_SAYS[c.rule.clear]} {shieldSays(c.rule)}</p>
     </Sheet>
   );
 }

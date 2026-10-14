@@ -180,21 +180,29 @@ test.describe('Today states', () => {
     await expect(sheet).toHaveCount(0);
   });
 
-  test('the Streak sheet shows the level: a new account at Level 1 (TODAY-22, LVL-03)', async ({ page }) => {
+  test('the Streak sheet shows the level: a new account at Level 1, with its rules (TODAY-22, TODAY-20, LVL-03, LVL-06, LVL-07)', async ({ page }) => {
     // levels begin Monday 19 October; this account starts that day and meets its target on 19 and 20 October
     await signInWith(page, seedData([reading('2026-10-19')], [['r', '2026-10-19', 30], ['r', '2026-10-20', 30]]), at(10, 0, 21));
     await page.locator('button.streak').click();
     const sheet = page.getByRole('dialog', { name: 'Streak' });
     await expect(sheet.locator('.sk-lv')).toHaveText('Level 1 · Starting');
     await expect(sheet.locator('.sk-lv-text')).toHaveText('100% of your practice days on target in the last 14 days. Reach 15% and on Monday 2 November you move up to Level 2.');
+    // Level 1's rules: a shield to start, one more every 2 clear days, up to 5 (LVL-06, LVL-07)
+    await expect(sheet.locator('.sk-shields')).toHaveAttribute('aria-label', '2 of 5 shields');
+    await expect(sheet.locator('.sk-next')).toHaveText('2 more clear days in a row earn a shield.');
+    await expect(sheet.locator('.sk-how')).toHaveText('At Level 1: A day is clear when you do 5 minutes or more on any practice. Every 2 clear days in a row earn a shield, and you can hold 5. Miss a day and a shield keeps your streak; the minutes still carry over.');
   });
 
-  test('the Streak sheet shows the level: a consistent account starts at Level 10 (TODAY-22, LVL-04)', async ({ page }) => {
+  test('the Streak sheet shows the level: a consistent account starts at Level 10, with its rules (TODAY-22, TODAY-20, LVL-04, LVL-07)', async ({ page }) => {
     await signInWith(page, seedData([reading('2026-09-14')], days('2026-09-14', '2026-10-20').map(d => ['r', d, 30])), at(10, 0, 21));
     await page.locator('button.streak').click();
     const sheet = page.getByRole('dialog', { name: 'Streak' });
     await expect(sheet.locator('.sk-lv')).toHaveText('Level 10 · Relentless');
     await expect(sheet.locator('.sk-lv-text')).toHaveText('100% of your practice days on target in the last 14 days. Stay at 83% or more to keep Level 10.');
+    // Level 10 holds one shield: the 3 held before levels began are trimmed (LVL-07)
+    await expect(sheet.locator('.sk-shields')).toHaveAttribute('aria-label', '1 of 1 shield');
+    await expect(sheet.locator('.sk-next')).toHaveText('You hold your shield, the most you can at this level.');
+    await expect(sheet.locator('.sk-how')).toHaveText('At Level 10: A day is clear when every practice is done, carried-over minutes included. Every 7 clear days in a row earn a shield, and you can hold 1. Miss a day and a shield keeps your streak; the minutes still carry over.');
   });
 
   test('no level before levels began (TODAY-22)', async ({ page }) => {

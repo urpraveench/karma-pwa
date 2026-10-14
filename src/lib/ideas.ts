@@ -73,7 +73,7 @@ export function ideaFor(d: DateStr): string {
 }
 
 /** How long the morning splash stays before it closes by itself (TODAY-21). */
-export const SPLASH_MS = 7000;
+export const SPLASH_MS = 10000;
 
 /**
  * The once-a-day splash with today's idea (TODAY-21): on the first open of the day on this device (`seen` is the last

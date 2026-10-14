@@ -328,11 +328,13 @@ test.describe('the morning splash (TODAY-21)', () => {
     await expect(splash.locator('.splash-idea')).toHaveText(ideaFor('2026-10-08'));
   });
 
-  test('closes by itself after a few seconds, or with a tap anywhere', async ({ page }) => {
+  test('closes by itself after 10 seconds, or with a tap anywhere', async ({ page }) => {
     await signInWith(page, seedData([reading('2026-10-01')]));
     const splash = page.getByRole('dialog', { name: "Today's idea" });
     await expect(splash).toBeVisible();
-    await page.clock.fastForward(7500);
+    await page.clock.fastForward(9500);
+    await expect(splash).toBeVisible();
+    await page.clock.fastForward(1000);
     await expect(splash).toHaveCount(0);
     await page.evaluate(() => localStorage.removeItem('tiktym:idea-seen'));
     await page.reload();

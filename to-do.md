@@ -187,6 +187,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** the morning splash stays 10 seconds instead of 7, asked by Praveen (TODAY-21). On the `levels` branch, ships with it, 14 October 2026
 - [x] **Claude:** phase 5: the daily and practice reminders' line and the comeback email's opening in the coach's voice by tier; the server works out the level with the app's rules (COACH-07, COACH-08). On the `levels` branch, 14 October 2026
 - [x] **Claude:** phase 4: a card on Today when the level moves, and level progress in Insights; the coach names the practice lifting the score and the one dragging it; the level's text says what keeps the level when the score is under its threshold (LVL-11, LVL-12, TODAY-22). On the `levels` branch, 14 October 2026
 - [x] **Claude:** phase 3: the coach's voice by tier (Starting gentle to Relentless blunt; Steady as before levels) on the evening nudge, the "All clear" celebration, the on-a-roll and comeback cards, and Insights' quiet-week line (COACH-01 to COACH-06). On the `levels` branch, 14 October 2026

@@ -1,4 +1,5 @@
-import type { Levels } from './levels';
+import { addDays } from './date';
+import { START_MIN_DAYS, type Levels } from './levels';
 import type { DateStr } from './types';
 
 // The levels introduction (LVL-13): one screen, once, the first time levels apply to an account.
@@ -13,8 +14,12 @@ export function showLevelsIntro(seen: boolean, lv: Levels | null, T: DateStr, ca
   return !seen && !!lv && categories.some(c => c.startDate < T);
 }
 
-/** The screen's words. `fresh` is an account that started on or after the day levels began. */
-export function introScreen(lv: Levels, fresh: boolean): IntroScreen {
+/**
+ * The screen's words. An account without the week of history a starting level needs began at Level 1 like a new one
+ * (LVL-04), so it's told so, not that the level came from its last 4 weeks.
+ */
+export function introScreen(lv: Levels, categories: { startDate: DateStr }[]): IntroScreen {
+  const fresh = !categories.some(c => c.startDate <= addDays(lv.moves[0].date, -START_MIN_DAYS));
   return {
     title: 'Your level and your coach',
     body: [

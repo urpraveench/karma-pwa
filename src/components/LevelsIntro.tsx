@@ -12,7 +12,7 @@ const write = (k: string, v: string) => { try { localStorage.setItem(k, v); } ca
 export function LevelsIntro({ onDone }: { onDone: () => void }) {
   const { c, data, T } = useApp();
   const lv = c.level!, n = lv.level;
-  const s = introScreen(lv, !data.categories.some(x => x.startDate < lv.moves[0].date));
+  const s = introScreen(lv, data.categories);
   const button = useRef<HTMLButtonElement>(null);
 
   useEffect(() => { write(INTRO_KEY, T); write(IDEA_KEY, T); }, [T]); // once, even if the app is closed before "Let's go"

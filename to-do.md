@@ -187,6 +187,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** the levels introduction no longer tells an account with under a week of history that its Level 1 came from its last 4 weeks; it says everyone starts at Level 1, as for a new account (LVL-13). On the `levels` branch, 14 October 2026
 - [x] **Claude:** the levels introduction cut to one screen, asked by Praveen: "Your level and your coach": TikTym helps you reach your goals, your level shows where you stand today, your coach guides you from here (LVL-13). On the `levels` branch, 14 October 2026
 - [x] **Claude:** the levels introduction: three screens the first time levels apply (once per device, in place of that morning's splash, never on the day an account starts), in the person's own level and rules; the "Meet your level" card on Today is gone, since the introduction covers it (LVL-13, LVL-11). On the `levels` branch, 14 October 2026
 - [x] **Claude:** the morning splash stays 10 seconds instead of 7, asked by Praveen (TODAY-21). On the `levels` branch, ships with it, 14 October 2026

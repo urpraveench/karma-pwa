@@ -99,8 +99,7 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 Google Play (started 12 October 2026; changed 13 October from a Trusted Web Activity to a Capacitor app with the ledger, see GTM.md › Strategy). Native changes need a Play release; the screens are the same React app as the website.
 
-- [ ] **You:** wait for Dun & Bradstreet India to issue the D-U-N-S number for Pramal IT Services Pvt Ltd (requested 13 October 2026, reference DR101320263470822114; queries to serviceindia@dnb.com). Answer any D&B verification call or email the same day. If it hasn't arrived by **Fri 23 Oct**, open a Personal account instead (PLAY-ACCOUNT.md › 1)
-- [ ] **You:** open a Google Play developer account (US$25) at play.google.com/console/signup (follow PLAY-ACCOUNT.md: personal or organisation), verify your identity and an Android phone, then create the app "TikTym" with Play App Signing on.
+- [ ] **You:** open a **Personal** Google Play developer account (US$25; decided 16 October 2026, so no D-U-N-S wait) at play.google.com/console/signup (follow PLAY-ACCOUNT.md), verify your identity and an Android phone, then create the app "TikTym" with Play App Signing on.
 - [ ] **You (this week):** recruit 15 Android testers for the closed test and the 100 Days challenge (your current users lean iPhone, so ask Android users directly); note them in OUTREACH.md
 - [ ] **Claude (by Fri 16 Oct):** Android shell: Capacitor around the existing app (`com.tiktym.app`), native Google sign-in passed to Firebase, push through FCM with a second sending path on the server, offline from the bundled files; upload key kept outside the repo
 - [ ] **Claude (Fri 16 Oct):** speed check on a low-end Android emulator: opens in about 2 seconds or less, scrolling smooth; if not, report before going further
@@ -110,7 +109,8 @@ Google Play (started 12 October 2026; changed 13 October from a Trusted Web Acti
 - [ ] **You:** send Claude the app signing key's SHA-256 fingerprint (Play Console › Test and release › App integrity › App signing).
 - [ ] **Claude:** store listing: short and full description, 512 px icon, 1024×500 feature graphic, phone screenshots from the real app, and draft answers for Data safety, Content rating and Target audience (18+).
 - [ ] **You:** fill in the Play Console forms (Claude's drafts), give reviewers a test login, upload the app, and start a closed test.
-- [ ] **You (personal account only):** 12 or more testers opted in to the closed test for 14 days in a row before Google allows production; the current users are the natural testers.
+- [ ] **You:** 12 or more testers opted in to the closed test for 14 days in a row before Google allows production (a personal account's rule); with the closed test starting 2 November, production is 16 November at the earliest. The current users are the natural testers.
+- [ ] **Claude (before submitting):** a personal account lists you, not the company named in the Terms, as the developer: check what the store listing shows and propose the matching wording for the Terms and Privacy Policy
 - [ ] **You:** apply for production, then publish.
 - [ ] **You and Claude (Mon 30 Nov):** the ledger test: at least half the Android testers scroll 15% or more less and invest more in week 4 than week 1. Pass: public release, then the iPhone app. Fail: interview testers, try the swap prompt (GTM.md › Strategy)
 - [ ] **You (early November, as a hedge):** enrol in the Apple Developer Program (US$99/year) and request the Family Controls entitlement, so approval isn't the bottleneck if the test passes
@@ -184,6 +184,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **You:** chose a **Personal** Google Play developer account instead of waiting for Dun & Bradstreet's D-U-N-S number for the company (requested 13 October). Personal accounts need 12 or more testers in a closed test for 14 days before production. 16 October 2026
 - [x] **You:** checked 1.16.0 on your phone: the "Your level and your coach" screen showed once with a sensible level, no morning splash on top, and the Streak sheet shows the level (LVL-13, TODAY-22). 14 October 2026
 - [x] Released 1.16.0: levels (10, from how consistent you've been, moving each Monday) setting the streak, shield and backlog rules; the coach's voice by tier in the app, reminders and the comeback email; a one-screen welcome; the morning splash at 10 seconds. App, functions and website deployed, 14 October 2026
 - [x] **Claude:** `LEVELS_FROM` set to the release day, 14 October 2026; the Firebase-mode settings sync test finds the backlog buttons by name, since they read "1", "2", "3" once levels began (LVL-10). 14 October 2026

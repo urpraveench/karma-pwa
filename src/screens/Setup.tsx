@@ -87,6 +87,7 @@ export function Setup() {
         <a className="li" href={config.whatsNew} target="_blank" rel="noopener"><span className="t">What's new<small>Every update, newest first</small></span><span className="chev">›</span></a>
         <a className="li" href={feedbackLink(BUILD)}><span className="t">Send feedback<small>Ideas, problems, anything. It goes straight to the people who build TikTym.</small></span><span className="chev">›</span></a>
         <a className="li" href={config.linkedin} target="_blank" rel="noopener"><span className="t">Follow TikTym on LinkedIn<small>Tips, updates and what's coming next</small></span><span className="chev">›</span></a>
+        <a className="li" href={config.instagram} target="_blank" rel="noopener"><span className="t">Follow TikTym on Instagram<small>Short videos and ideas for your 100 minutes</small></span><span className="chev">›</span></a>
         <a className="li" href={config.legal.terms}><span className="t">Terms of Service</span><span className="chev">›</span></a>
         <a className="li" href={config.legal.privacy}><span className="t">Privacy Policy</span><span className="chev">›</span></a>
       </div>

@@ -53,13 +53,14 @@ test.describe('website (GTM-04)', () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
   });
 
-  test('FAQ answers open, and legal links point at the app pages on app.tiktym.com (GTM-06), plus LinkedIn (GTM-10)', async ({ page }) => {
+  test('FAQ answers open, and legal links point at the app pages on app.tiktym.com (GTM-06), plus LinkedIn and Instagram (GTM-10)', async ({ page }) => {
     await page.goto('/');
     await page.locator('summary', { hasText: 'What happens if I miss a day?' }).click();
     await expect(page.locator('details[open] p')).toContainText('choose None for no limit');
     await expect(page.locator('footer a', { hasText: 'Terms' })).toHaveAttribute('href', `${APP}terms/`);
     await expect(page.locator('footer a', { hasText: 'Privacy' })).toHaveAttribute('href', `${APP}privacy/`);
     await expect(page.locator('footer a', { hasText: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/company/tiktym/');
+    await expect(page.locator('footer a', { hasText: 'Instagram' })).toHaveAttribute('href', 'https://www.instagram.com/tiktym.app/');
   });
 
   test('serves the header image the emails use (NOTIF-03)', async ({ request }) => {
@@ -155,6 +156,9 @@ test.describe("What's new (GTM-11, GTM-12)", () => {
     await page.goto('/');
     await page.locator('footer a', { hasText: "What's new" }).click();
     await expect(page.locator('h1')).toHaveText("What's new in TikTym");
+    // its own footer links to LinkedIn and Instagram too (GTM-10)
+    await expect(page.locator('footer a', { hasText: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/company/tiktym/');
+    await expect(page.locator('footer a', { hasText: 'Instagram' })).toHaveAttribute('href', 'https://www.instagram.com/tiktym.app/');
   });
 });
 
@@ -184,6 +188,7 @@ test('structured data describes TikTym, and its FAQ matches the page word for wo
   const byType = Object.fromEntries((data['@graph'] as { '@type': string }[]).map(g => [g['@type'], g as Record<string, any>]));
   expect(Object.keys(byType)).toEqual(['Organization', 'WebSite', 'WebApplication', 'FAQPage']);
   expect(byType.Organization.sameAs).toContain('https://www.linkedin.com/company/tiktym/');
+  expect(byType.Organization.sameAs).toContain('https://www.instagram.com/tiktym.app/');
   expect(byType.WebApplication).toMatchObject({ url: 'https://app.tiktym.com/', offers: { price: '0', priceCurrency: 'INR' } });
   const shown = await page.locator('#faq details').evaluateAll(ds => ds.map(d => ({
     q: d.querySelector('summary')!.textContent!.trim(),
@@ -198,7 +203,7 @@ test('an llms.txt summary for AI tools (GTM-17)', async ({ request }) => {
   expect(res.ok()).toBe(true);
   const text = await res.text();
   expect(text).toMatch(/^# TikTym/);
-  for (const link of ['https://tiktym.com/', 'https://app.tiktym.com/', 'https://tiktym.com/updates/']) expect(text).toContain(link);
+  for (const link of ['https://tiktym.com/', 'https://app.tiktym.com/', 'https://tiktym.com/updates/', 'https://www.linkedin.com/company/tiktym/', 'https://www.instagram.com/tiktym.app/']) expect(text).toContain(link);
   expect(text).toContain('Log by voice with AI'); // GTM-21
   expect(text).toContain('not AI'); // the coaching is rules, and says so
 });

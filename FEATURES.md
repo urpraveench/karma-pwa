@@ -40,8 +40,8 @@ Summary of coverage at the time of writing:
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| 18. Android app | 9 | 8 | 1 | 0 |
-| **Total** | **374** | **360** | **1** | **13** |
+| 18. Android app | 9 | 9 | 0 | 0 |
+| **Total** | **374** | **361** | **0** | **13** |
 
 ---
 
@@ -554,7 +554,7 @@ The same app inside a native Android shell (Capacitor), built from this codebase
 | AND-08 | Reminders reach the app | The daily reminder, the evening check, practice reminders and admin pushes go through FCM to the app's devices, alongside web push to the account's browsers, with the white TikTym ring in the status bar and a "Reminders" notification channel. A token FCM reports gone is removed and not tried again (as NOTIF-11); a refused send is logged and not retried, a busy or failing FCM is retried | Unit `push.test.ts` (a real phone getting them: Manual) |
 | AND-09 | Voice logging in the app | Tapping the microphone asks Android for the microphone once; allowed, recording starts as on the web (LOG-26). Refused for good: it says to turn the microphone on in Android's settings for TikTym, and keeps typing and manual entry (as LOG-29) | Android `e2e-android/voice.spec.ts` (emulator; a real phone: Manual) |
 | AND-06 | Updates and install prompts in the app | No "new version" bar inside the app, even when a newer build is live on the web (Play delivers updates); the app counts as installed, so there's no "Add TikTym to your home screen" row in Setup and no install card on Today; Setup › About shows the app's version, which is also the version Android and Play show (from package.json) | Android `e2e-android/updates.spec.ts` (emulator) |
-| AND-07 | Fast on a low-end phone | On a low-end Android phone (emulator profile), the first screen appears in about 2 seconds or less and scrolling is smooth | Gap |
+| AND-07 | Fast on a low-end phone | On a low-end Android phone (emulator profile: 2 cores, 2 GB, 720×1600), a cold start shows the sign-in screen in about 2 seconds or less and a signed-in Today with 10 weeks of data in about 2.5 seconds or less; scrolling Today stays smooth (95% of frames within about 30 frames a second, under 5% slower than 50 ms with the CPU slowed 4×) | Android `e2e-android/speed.spec.ts` (on `TikTym_LowEnd`) |
 
 ---
 
@@ -572,7 +572,7 @@ Planned or deliberately out of scope. Move a row into the tables above when it s
 
 ## What's left to test
 
-**Gaps** (testable, no test yet): AND-07, the Android app being built (to-do.md › Phase 2: App stores).
+**Gaps** (testable, no test yet): none.
 
 **Manual** (check by hand before a release, on a real phone and the real Firebase project):
 

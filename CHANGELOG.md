@@ -13,7 +13,7 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
-## Coming next
+## 1.16.2 · 16 October 2026 · TikTym on Instagram
 
 - **Follow TikTym on Instagram** from Setup › About, for short videos and ideas for your 100 minutes.
 

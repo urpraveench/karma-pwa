@@ -292,6 +292,14 @@ test('Setup › About links to the TikTym LinkedIn page (GTM-10)', async ({ page
   await expect(link).toHaveAttribute('target', '_blank');
 });
 
+test('Setup › About links to the TikTym Instagram page (GTM-10)', async ({ page }) => {
+  await signIn(page);
+  await tab(page, 'Setup').click();
+  const link = page.locator('a.li', { hasText: 'Follow TikTym on Instagram' });
+  await expect(link).toHaveAttribute('href', 'https://www.instagram.com/tiktym.app/');
+  await expect(link).toHaveAttribute('target', '_blank');
+});
+
 test("Setup › About links to What's new on the website (GTM-13)", async ({ page }) => {
   await signIn(page);
   await tab(page, 'Setup').click();

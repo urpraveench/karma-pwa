@@ -114,6 +114,7 @@ ${releases.map(releaseHtml).join('\n')}
       <a href="https://app.tiktym.com/privacy/">Privacy</a>
       <a href="mailto:praveen.cherukuru@gmail.com">Contact</a>
       <a href="https://www.linkedin.com/company/tiktym/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.instagram.com/tiktym.app/" target="_blank" rel="noopener">Instagram</a>
     </nav>
   </div>
 </footer>

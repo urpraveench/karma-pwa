@@ -93,7 +93,6 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 - [ ] **You:** finish the profile: Business account (category App page), bio, link and contact from OUTREACH.md › Profile text; profile picture and highlight covers from Downloads › TikTym Instagram › Profile
 - [ ] **You:** post the 9 in the order in Downloads › TikTym Instagram › CAPTIONS.txt (captions, covers, alt text included), pin 3, then announce from your personal Instagram and Invite friends
-- [ ] **Claude:** once the handle exists, link it from the website footer and the app's Setup › About
 
 **Phase 2: App stores**
 
@@ -184,6 +183,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** link Instagram (@tiktym.app) beside LinkedIn: Setup › About, the website footer (home and What's new), the structured data's sameAs, and llms.txt (GTM-10, GTM-16, GTM-17), 16 October 2026
 - [x] **Claude:** a second tab, or the Android app reopened within a few seconds of closing, kept running without Firestore's offline storage ("Falling back to memory cache": only one copy of the app could own it), so that session's changes weren't kept on the device; use Firestore's multi-tab storage so every copy shares it (SYNC-18). Found by the Android speed check. 16 October 2026
 - [x] **You:** chose a **Personal** Google Play developer account instead of waiting for Dun & Bradstreet's D-U-N-S number for the company (requested 13 October). Personal accounts need 12 or more testers in a closed test for 14 days before production. 16 October 2026
 - [x] **You:** checked 1.16.0 on your phone: the "Your level and your coach" screen showed once with a sensible level, no morning splash on top, and the Streak sheet shows the level (LVL-13, TODAY-22). 14 October 2026

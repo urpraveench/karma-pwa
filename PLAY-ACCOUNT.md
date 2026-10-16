@@ -6,6 +6,8 @@ Set aside about an hour for the steps you do, plus Google's own verification tim
 
 ## 1. Decide the account type (today, 5 minutes)
 
+**Decided 16 October 2026: Personal.** Skip to step 2.
+
 | | Personal | Organisation (Pramal IT Services Private Limited) |
 |---|---|---|
 | What Google checks | Your government photo ID | The company's **D-U-N-S number** (a free company ID from Dun & Bradstreet), plus the company's details |

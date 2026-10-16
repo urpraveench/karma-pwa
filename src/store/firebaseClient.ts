@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { Capacitor } from '@capacitor/core';
 import { CustomProvider, initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
-import { connectFirestoreEmulator, getFirestore, initializeFirestore, persistentLocalCache, type Firestore } from 'firebase/firestore';
+import { connectFirestoreEmulator, getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, type Firestore } from 'firebase/firestore';
 import { appCheckSiteKey, firebaseConfig } from '../config';
 import { nativeAppCheckMode, nativeAppCheckToken } from '../lib/nativeAppCheck';
 
@@ -20,9 +20,11 @@ if (nativeMode) {
 } else if (siteKey) initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(siteKey), isTokenAutoRefreshEnabled: true });
 export const auth = getAuth(app);
 
-// Offline persistence: logging works without signal and syncs later.
+// Offline persistence: logging works without signal and syncs later. Shared between copies of the app (SYNC-18): with
+// the default single-tab storage, a second tab, or the Android app reopened before the last copy's claim lapsed, ran
+// without it, so its changes weren't kept on the device.
 let firestore: Firestore;
-try { firestore = initializeFirestore(app, { localCache: persistentLocalCache() }); }
+try { firestore = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) }); }
 catch { firestore = getFirestore(app); }
 export const db = firestore;
 

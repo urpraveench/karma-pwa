@@ -34,14 +34,14 @@ Summary of coverage at the time of writing:
 | 9. Insights | 24 | 24 | 0 | 0 |
 | 10. Practices (Setup) | 24 | 24 | 0 | 0 |
 | 11. Settings and data (Setup) | 19 | 18 | 0 | 1 |
-| 12. Sync and storage | 17 | 15 | 0 | 2 |
+| 12. Sync and storage | 18 | 16 | 0 | 2 |
 | 13. App shell, PWA and platform | 37 | 32 | 0 | 5 |
 | 14. Marketing and sharing | 24 | 24 | 0 | 0 |
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
 | 18. Android app | 9 | 8 | 1 | 0 |
-| **Total** | **373** | **359** | **1** | **13** |
+| **Total** | **374** | **360** | **1** | **13** |
 
 ---
 
@@ -400,6 +400,7 @@ Up to 3 lines: one win first, then up to two fixes, filled with the next best li
 | SYNC-15 | Edit a log | Same month: only that entry changes. Another month: removed from the old month and added to the new one in one batch | Unit `firestore-store.test.ts`, Emulator `tests-emulator/store.test.ts` |
 | SYNC-16 | Closing right after a change | A log, edit, delete, practice change or settings change made just before the app closes or reloads is kept: it's shown when the app opens again and sent to Firebase then. Changes Firebase refuses aren't retried | Unit `outbox.test.ts`, E2E `firebase/quick-close.spec.ts` |
 | SYNC-17 | Backups | Firestore backs up the whole database every day (kept 7 days) and every Sunday (kept 8 weeks), so a bad bug or deletion can be undone by restoring into a new database | Manual (`firebase firestore:backups:schedules:list`; a restore drill) |
+| SYNC-18 | Two tabs, or a quick reopen | A second tab of the app, or the Android app opened again within seconds of closing, shares Firestore's offline storage with the copy before it instead of running without it, so changes made there are kept on the device too | E2E `firebase/two-tabs.spec.ts` |
 
 ## 13. App shell, PWA and platform
 

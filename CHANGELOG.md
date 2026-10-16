@@ -13,6 +13,10 @@ Format, newest first:
   Plain lines become paragraphs; **bold** and [links](https://…) work.
 -->
 
+## Coming next
+
+- **Follow TikTym on Instagram** from Setup › About, for short videos and ideas for your 100 minutes.
+
 ## 1.16.1 · 16 October 2026 · Two tabs, both offline
 
 - **TikTym open in two tabs.** A second tab now keeps your entries saved on the device too, so it works offline like the first one. Before, it quietly relied on the internet alone.

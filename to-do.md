@@ -184,6 +184,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** a second tab, or the Android app reopened within a few seconds of closing, kept running without Firestore's offline storage ("Falling back to memory cache": only one copy of the app could own it), so that session's changes weren't kept on the device; use Firestore's multi-tab storage so every copy shares it (SYNC-18). Found by the Android speed check. 16 October 2026
 - [x] **You:** chose a **Personal** Google Play developer account instead of waiting for Dun & Bradstreet's D-U-N-S number for the company (requested 13 October). Personal accounts need 12 or more testers in a closed test for 14 days before production. 16 October 2026
 - [x] **You:** checked 1.16.0 on your phone: the "Your level and your coach" screen showed once with a sensible level, no morning splash on top, and the Streak sheet shows the level (LVL-13, TODAY-22). 14 October 2026
 - [x] Released 1.16.0: levels (10, from how consistent you've been, moving each Monday) setting the streak, shield and backlog rules; the coach's voice by tier in the app, reminders and the comeback email; a one-screen welcome; the morning splash at 10 seconds. App, functions and website deployed, 14 October 2026

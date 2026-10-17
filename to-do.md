@@ -184,6 +184,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** the Android app's own icon and splash screen instead of Capacitor's placeholder X: the ring on the dark green tile as an adaptive icon (with a themed-icon version), and the ring on the app's background, light or dark, while it opens (AND-11). 17 October 2026
 - [x] **Claude:** a build number for test uploads, so a fix can go to Play testers without a release: the version code is the version × 100 plus `TIKTYM_ANDROID_BUILD` (AND-06, AND-10). 17 October 2026
 - [x] **Claude:** Google sign-in in the Play app said "this device doesn't support Credential Manager" on your iQOO Z6 Lite (Funtouch OS 14, Android 14): fall back to Google's older account picker there (AND-03). 17 October 2026
 - [x] **Claude:** added the Play app signing key's SHA-1 and SHA-256 to the Firebase Android app "TikTym Android" and downloaded `android/app/google-services.json` again, so Google sign-in works in Play installs (AND-03). 17 October 2026

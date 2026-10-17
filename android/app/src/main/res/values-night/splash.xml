@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The splash screen's colours: the app's background and the brand ring for it. Drawn by scripts/android-icons.mjs (AND-11). -->
+<resources>
+    <color name="splash_bg">#0F1B19</color>
+    <color name="splash_filled">#E4ECE7</color>
+    <color name="splash_empty">#3E5A55</color>
+    <color name="splash_gold">#E6B23C</color>
+</resources>

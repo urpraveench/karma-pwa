@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The splash screen's ring, in the colours for the app's background (values-night: dark). Drawn by scripts/android-icons.mjs (AND-11); don't edit by hand. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <path android:fillColor="@color/splash_filled" android:pathData="M57.01,31.03a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M61.99,32.77a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M66.46,35.58a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M70.19,39.31a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M73,43.78a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M74.74,48.75a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M75.33,54a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M74.74,59.25a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M73,64.22a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M70.19,68.69a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M66.46,72.42a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M61.99,75.23a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M57.01,76.97a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M51.77,77.56a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M46.52,76.97a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M41.54,75.23a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M37.08,72.42a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_filled" android:pathData="M33.35,68.69a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_empty" android:pathData="M30.54,64.22a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_empty" android:pathData="M28.8,59.25a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_empty" android:pathData="M28.21,54a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_empty" android:pathData="M28.8,48.75a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_empty" android:pathData="M30.54,43.78a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_empty" android:pathData="M33.35,39.31a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_empty" android:pathData="M37.08,35.58a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_empty" android:pathData="M41.54,32.77a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_empty" android:pathData="M46.52,31.03a2.23,2.23 0 1,0 4.46,0a2.23,2.23 0 1,0 -4.46,0"/>
+    <path android:fillColor="@color/splash_gold" android:pathData="M50.28,30.44a3.72,3.72 0 1,0 7.44,0a3.72,3.72 0 1,0 -7.44,0"/>
+</vector>

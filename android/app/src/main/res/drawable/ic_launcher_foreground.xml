@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The app icon's ring, as in public/icons/icon.svg, on the tile colour. Drawn by scripts/android-icons.mjs (AND-11); don't edit by hand. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <path android:fillColor="#EDF0EA" android:pathData="M56.95,30.82a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M61.99,32.62a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M66.53,35.42a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M70.27,39.17a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M73.08,43.7a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M74.88,48.74a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M75.46,54a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M74.88,59.26a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M73.08,64.3a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M70.27,68.83a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M66.53,72.58a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M61.99,75.38a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M56.95,77.18a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M51.7,77.76a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M46.44,77.18a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M41.4,75.38a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M36.86,72.58a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#EDF0EA" android:pathData="M33.12,68.83a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#3E5A55" android:pathData="M30.31,64.3a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#3E5A55" android:pathData="M28.51,59.26a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#3E5A55" android:pathData="M27.94,54a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#3E5A55" android:pathData="M28.51,48.74a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#3E5A55" android:pathData="M30.31,43.7a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#3E5A55" android:pathData="M33.12,39.17a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#3E5A55" android:pathData="M36.86,35.42a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#3E5A55" android:pathData="M41.4,32.62a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#3E5A55" android:pathData="M46.44,30.82a2.3,2.3 0 1,0 4.61,0a2.3,2.3 0 1,0 -4.61,0"/>
+    <path android:fillColor="#E6B23C" android:pathData="M50.04,30.24a3.96,3.96 0 1,0 7.92,0a3.96,3.96 0 1,0 -7.92,0"/>
+</vector>

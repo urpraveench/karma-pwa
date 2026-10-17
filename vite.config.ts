@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
+// @ts-expect-error: a plain .mjs script, without types
+import { dropWebOnly } from './scripts/native-web-only.mjs';
 
 // What this build is: the package.json version, the git commit (with -dirty if there were uncommitted
 // changes), and when it was built. Shown in the app and published as version.json so the app can tell
@@ -29,6 +31,7 @@ export default defineConfig({
   plugins: [
     react(),
     versionFile,
+    NATIVE && dropWebOnly(),
     !NATIVE && VitePWA({
       // A new deploy activates on the next load, without asking.
       registerType: 'autoUpdate',

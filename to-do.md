@@ -133,6 +133,8 @@ Day-to-day outreach (tasks by date, messages, tracking links, share and feedback
 
 From FEATURES.md › "What's left to test". None left: every scenario has a test, or is under "Check by hand before release".
 
+- [ ] **Claude:** `e2e/colours.spec.ts` (APP-14, APP-25) fails with console errors in a full browser run while the machine is busy and passes when rerun alone (twice on 17 October 2026): find the warning and fix the cause
+
 
 ## 6. Features not built yet
 
@@ -184,6 +186,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** leave the website-only files out of the Android app (the logo kit in `brand/`, the link-preview image, the web's notification worker and robots.txt), so the download is about 1.5 MB smaller now and 2.4 MB once the motion logos arrive (AND-12). 17 October 2026
 - [x] **Claude:** the Android app's own icon and splash screen instead of Capacitor's placeholder X: the ring on the dark green tile as an adaptive icon (with a themed-icon version), and the ring on the app's background, light or dark, while it opens (AND-11). 17 October 2026
 - [x] **Claude:** a build number for test uploads, so a fix can go to Play testers without a release: the version code is the version × 100 plus `TIKTYM_ANDROID_BUILD` (AND-06, AND-10). 17 October 2026
 - [x] **Claude:** Google sign-in in the Play app said "this device doesn't support Credential Manager" on your iQOO Z6 Lite (Funtouch OS 14, Android 14): fall back to Google's older account picker there (AND-03). 17 October 2026

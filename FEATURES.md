@@ -40,8 +40,8 @@ Summary of coverage at the time of writing:
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| 18. Android app | 11 | 11 | 0 | 0 |
-| **Total** | **376** | **363** | **0** | **13** |
+| 18. Android app | 12 | 12 | 0 | 0 |
+| **Total** | **377** | **364** | **0** | **13** |
 
 ---
 
@@ -556,6 +556,7 @@ The same app inside a native Android shell (Capacitor), built from this codebase
 | AND-06 | Updates and install prompts in the app | No "new version" bar inside the app, even when a newer build is live on the web (Play delivers updates); the app counts as installed, so there's no "Add TikTym to your home screen" row in Setup and no install card on Today; Setup › About shows the app's version, which is also the version Android and Play show (from package.json); the version code is the version times 100 plus a build number (`TIKTYM_ANDROID_BUILD`), so a test upload of the same version still rises | Android `e2e-android/updates.spec.ts` (emulator) |
 | AND-07 | Fast on a low-end phone | On a low-end Android phone (emulator profile: 2 cores, 2 GB, 720×1600), a cold start shows the sign-in screen in about 2 seconds or less and a signed-in Today with 10 weeks of data in about 2.5 seconds or less; scrolling Today stays smooth (95% of frames within about 30 frames a second, under 5% slower than 50 ms with the CPU slowed 4×) | Android `e2e-android/speed.spec.ts` (on `TikTym_LowEnd`) |
 | AND-11 | Icon and splash screen | The app's icon on the phone is TikTym's ring on its dark green tile, as on the web: an adaptive icon that fits whatever shape the phone uses (circle, squircle, square), a one-colour version for Android's themed icons, and the same tile on Android 7. While the app opens, the ring shows on the app's background, light or dark to match the phone. All drawn by `npm run android:icons` from `public/icons/icon.svg` and the brand ring, never Capacitor's placeholder | Unit `androidIcons.test.ts` (how it looks on a real phone's launcher: Manual) |
+| AND-12 | Small download | The app bundles only what it uses: the logo kit (`brand/`), the link-preview image (`og.png`), the web's notification worker (`push-sw.js`) and `robots.txt` stay on the website (app.tiktym.com) and out of the install | Unit `nativeWebOnly.test.ts` |
 | AND-10 | Play build | `npm run android:release` makes an app bundle for Play signed with the upload key from outside the repo, with Play Integrity App Check and the live Firebase project (never the emulators); without the key it stops and says where it goes; no key or password is in the repo | Unit `androidRelease.test.ts` (Play accepting the upload: Manual) |
 
 ---

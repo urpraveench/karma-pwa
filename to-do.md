@@ -98,7 +98,6 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 Google Play (started 12 October 2026; changed 13 October from a Trusted Web Activity to a Capacitor app with the ledger, see GTM.md › Strategy). Native changes need a Play release; the screens are the same React app as the website.
 
-- [ ] **You:** open a **Personal** Google Play developer account (US$25; decided 16 October 2026, so no D-U-N-S wait) at play.google.com/console/signup (follow PLAY-ACCOUNT.md), verify your identity and an Android phone, then create the app "TikTym" with Play App Signing on.
 - [ ] **You (this week):** recruit 15 Android testers for the closed test and the 100 Days challenge (your current users lean iPhone, so ask Android users directly); note them in OUTREACH.md
 - [ ] **Claude (by Fri 16 Oct):** Android shell: Capacitor around the existing app (`com.tiktym.app`), native Google sign-in passed to Firebase, push through FCM with a second sending path on the server, offline from the bundled files; upload key kept outside the repo
 - [ ] **Claude (Fri 16 Oct):** speed check on a low-end Android emulator: opens in about 2 seconds or less, scrolling smooth; if not, report before going further
@@ -183,6 +182,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **You:** opened a **Personal** Google Play developer account (identity verified) and created the app "TikTym": package `com.tiktym.app`, Free, English (India), Play App Signing on. 17 October 2026
 - [x] **Claude:** link Instagram (@tiktym.app) beside LinkedIn: Setup › About, the website footer (home and What's new), the structured data's sameAs, and llms.txt (GTM-10, GTM-16, GTM-17), 16 October 2026
 - [x] **Claude:** a second tab, or the Android app reopened within a few seconds of closing, kept running without Firestore's offline storage ("Falling back to memory cache": only one copy of the app could own it), so that session's changes weren't kept on the device; use Firestore's multi-tab storage so every copy shares it (SYNC-18). Found by the Android speed check. 16 October 2026
 - [x] **You:** chose a **Personal** Google Play developer account instead of waiting for Dun & Bradstreet's D-U-N-S number for the company (requested 13 October). Personal accounts need 12 or more testers in a closed test for 14 days before production. 16 October 2026

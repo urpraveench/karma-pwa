@@ -286,6 +286,7 @@ One row per share. "Replies" is anyone who answered; "Tried it" is anyone who sa
 | 10 Oct | WhatsApp Status | Image, then video | status | | | Image first for slow networks; full caption with the link on the image |
 | 11 Oct | WhatsApp one-to-one | The 7 who had signed up | direct | | | "Thanks for trying it, how's it going?" |
 | 12 Oct | WhatsApp Status, and one-to-one to those who asked about voice | Voice logging video (Downloads › TikTym voice post) | status, `utm_content=voice` | | | 16-second clip from the real app |
+| 17 Oct | Instagram Reel | "Things I know at 40 about finding time" (https://www.instagram.com/reel/Dek5kzHArLx/) | bio | | | 21 s, your own voice over Google Flow clips and app screens; tests the age-hook format against the skit and the levels ad. Hinglish skit dropped |
 
 ## Feedback log
 

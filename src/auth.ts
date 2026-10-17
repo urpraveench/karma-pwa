@@ -39,9 +39,21 @@ export const authMsg = (e: unknown) => AUTH_ERR[(e as { code?: string })?.code |
  */
 export function nativeGoogleMsg(e: unknown): string | null {
   const m = (e as Error)?.message || String(e);
-  if (/cancel/i.test(m)) return null;
+  if (/cancel|^12501\b/i.test(m)) return null;
   if (/no credential/i.test(m)) return 'Add a Google account to this phone (Settings › Passwords & accounts), or sign in with email.';
   return 'Google sign-in failed: ' + errCode(e);
+}
+
+/**
+ * Android's Google ID token for sign-in (AND-03). Credential Manager first; on a phone that doesn't have it (some makers
+ * leave it out, or no password service is chosen in Settings), Google's older account picker, which gives the same token.
+ */
+export async function nativeGoogleIdToken(signIn: (o: { skipNativeAuth: true; useCredentialManager?: boolean }) => Promise<{ credential?: { idToken?: string } | null }>) {
+  try { return (await signIn({ skipNativeAuth: true })).credential?.idToken; }
+  catch (e) {
+    if (!/support credential manager|no provider dependencies/i.test((e as Error)?.message || String(e))) throw e;
+    return (await signIn({ skipNativeAuth: true, useCredentialManager: false })).credential?.idToken;
+  }
 }
 
 /**
@@ -103,7 +115,7 @@ async function startFirebaseAuth(cb: AuthCallbacks): Promise<AuthApi> {
       if (Capacitor.isNativePlatform()) {
         const { FirebaseAuthentication } = await import('@capacitor-firebase/authentication');
         try {
-          const idToken = (await FirebaseAuthentication.signInWithGoogle({ skipNativeAuth: true })).credential?.idToken;
+          const idToken = await nativeGoogleIdToken(o => FirebaseAuthentication.signInWithGoogle(o));
           if (!idToken) return 'Google sign-in failed: no token from Google.';
           await A.signInWithCredential(auth, A.GoogleAuthProvider.credential(idToken));
           return null;

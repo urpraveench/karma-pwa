@@ -101,7 +101,6 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 
 Google Play (started 12 October 2026; changed 13 October from a Trusted Web Activity to a Capacitor app with the ledger, see GTM.md › Strategy). Native changes need a Play release; the screens are the same React app as the website.
 
-- [ ] **You:** open a **Personal** Google Play developer account (US$25; decided 16 October 2026, so no D-U-N-S wait) at play.google.com/console/signup (follow PLAY-ACCOUNT.md), verify your identity and an Android phone, then create the app "TikTym" with Play App Signing on.
 - [ ] **You (this week):** recruit 15 Android testers for the closed test and the 100 Days challenge (your current users lean iPhone, so ask Android users directly); note them in OUTREACH.md
 - [ ] **Claude (after the first Play upload):** add the Play app signing key's SHA-1 and SHA-256 (Play Console › App integrity) to the Firebase Android app "TikTym Android", then download `android/app/google-services.json` again; without it Google sign-in fails in the Play build (AND-03)
 - [ ] **Claude (first Play upload):** a release build script: an upload key kept outside the repo, `bundleRelease`, and `VITE_ANDROID_APPCHECK=play` (the debug APK scripts use the debug provider, which no Play user can pass) (AND-04)
@@ -188,6 +187,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **You:** opened a **Personal** Google Play developer account (identity verified) and created the app "TikTym": package `com.tiktym.app`, Free, English (India), Play App Signing on. 17 October 2026
 - [x] **Claude:** link Instagram (@tiktym.app) beside LinkedIn: Setup › About, the website footer (home and What's new), the structured data's sameAs, and llms.txt (GTM-10, GTM-16, GTM-17), 16 October 2026
 - [x] **Claude:** speed check on a low-end Android emulator profile (`TikTym_LowEnd`: 2 cores, 2 GB, 720×1600): cold start to the sign-in screen 1.3 s, to a signed-in Today with 10 weeks of data 2.4 s (with the test build's App Check failing on purpose, so the Play build is a little faster), scrolling at 60 frames a second with no frame slower than 50 ms even with the CPU slowed 4×; no changes needed (AND-07). It also found the shared offline storage bug fixed in 1.16.1 (SYNC-18). On the `android` branch, 16 October 2026
 - [x] **Claude:** a second tab, or the Android app reopened within a few seconds of closing, kept running without Firestore's offline storage ("Falling back to memory cache": only one copy of the app could own it), so that session's changes weren't kept on the device; use Firestore's multi-tab storage so every copy shares it (SYNC-18). Found by the Android speed check. 16 October 2026

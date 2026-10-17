@@ -185,7 +185,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 Move items here when they're finished, newest first, so there's a record.
 
 - [x] **Claude:** a build number for test uploads, so a fix can go to Play testers without a release: the version code is the version × 100 plus `TIKTYM_ANDROID_BUILD` (AND-06, AND-10). 17 October 2026
-- [x] **Claude:** Google sign-in in the Play app said "this device doesn't support Credential Manager" on your phone: fall back to Google's older account picker there (AND-03). 17 October 2026
+- [x] **Claude:** Google sign-in in the Play app said "this device doesn't support Credential Manager" on your iQOO Z6 Lite (Funtouch OS 14, Android 14): fall back to Google's older account picker there (AND-03). 17 October 2026
 - [x] **Claude:** added the Play app signing key's SHA-1 and SHA-256 to the Firebase Android app "TikTym Android" and downloaded `android/app/google-services.json` again, so Google sign-in works in Play installs (AND-03). 17 October 2026
 - [x] **You:** sent Claude the app signing key's fingerprints. 17 October 2026
 - [x] **Claude:** the Play build: `npm run android:release` makes an app bundle signed with an upload key kept in `~/.tiktym/` (outside the repo; README.md › Android app), with Play Integrity App Check; without the key it stops and says where it goes (AND-10). 17 October 2026

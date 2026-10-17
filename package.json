@@ -23,7 +23,8 @@
     "functions:shared": "node scripts/functions-shared.mjs",
     "admin:grant": "node scripts/admin-grant.mjs",
     "admin:dev": "vite --config vite.admin.config.ts",
-    "admin:build": "tsc --noEmit && vite build --config vite.admin.config.ts"
+    "admin:build": "tsc --noEmit && vite build --config vite.admin.config.ts",
+    "brand:motion": "node scripts/brand-motion.mjs"
   },
   "dependencies": {
     "firebase": "^12.19.0",

@@ -22,6 +22,12 @@ The ring fills bead by bead, the gold bead pulses, then the name and brand line 
 | File name | What it is | Use it for |
 |---|---|---|
 | `…-animated.svg` | The ring, ring + name, and both brand-line lockups, in `-color`, `-color-on-dark` and `-white`; plays once (2.4 s, the ring alone 1.9 s) and stays on the logo | Websites, the app, slides that play SVG. People with reduced motion turned on see the static logo |
+| `motion/tiktym-end-card-vertical-…mp4` | 1080×1920, `-dark` or `-light`, with sound: a tick per bead, a chime on the gold bead; 4 s | The end card of Reels, Shorts and Stories |
+| `motion/tiktym-end-card-wide-…mp4` | 1920×1080, `-dark` or `-light`, with sound; 4 s | The end card of YouTube and LinkedIn videos, slides |
+| `motion/tiktym-tagline-stacked-white.webm` | The brand-line lockup in white on a transparent background, with sound | Over footage in a video editor (CapCut, Premiere, DaVinci) |
+| `motion/tiktym-horizontal-color.gif` | Ring + name on white, 600 px wide; plays once and stays on the logo | Emails. Outlook on Windows shows only the first frame, the empty ring |
+
+Redraw the videos with `npm run brand:motion` after `npm run brand:kit`.
 
 ## Colours
 

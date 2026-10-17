@@ -56,3 +56,30 @@ export function motionStyle({ id, ink, rest, name }: { id: string; ink: string; 
 
 /** Each filled bead's inline delays: the empty ring's fade, then its own fill. */
 export const fillStyle = (k: number) => `animation-delay:${s(T.restIn)},${s(fillDelay(k))}`;
+
+/** The sound track as a 16-bit mono WAV: soft triangle ticks and a three-note chime, `seconds` long. */
+export function soundWav(seconds: number, rate = 44100): Uint8Array {
+  const n = Math.round(seconds * rate), mix = new Float32Array(n);
+  const tone = (at: number, freq: number, gain: number, len: number, wave: 'sine' | 'triangle') => {
+    const start = Math.round(at * rate);
+    for (let i = 0; i < Math.round(len * rate) && start + i < n; i++) {
+      const t = i / rate, ph = (t * freq) % 1;
+      const v = wave === 'sine' ? Math.sin(2 * Math.PI * ph) : 1 - 4 * Math.abs(ph - 0.5);
+      const attack = Math.min(1, t / 0.003); // no click at the start
+      mix[start + i] += v * gain * attack * Math.exp(-t * 5 / len);
+    }
+  };
+  for (const c of cues()) {
+    if (c.sound === 'tick') tone(c.at, 2100, 0.22, 0.05, 'triangle');
+    else { tone(c.at, 880, 0.3, 1.6, 'sine'); tone(c.at, 1320, 0.18, 1.8, 'sine'); tone(c.at, 1760, 0.08, 1.2, 'sine'); }
+  }
+  const peak = mix.reduce((m, v) => Math.max(m, Math.abs(v)), 0) || 1;
+  const out = new Uint8Array(44 + n * 2), view = new DataView(out.buffer);
+  const str = (o: number, x: string) => [...x].forEach((c, i) => view.setUint8(o + i, c.charCodeAt(0)));
+  str(0, 'RIFF'); view.setUint32(4, 36 + n * 2, true); str(8, 'WAVE'); str(12, 'fmt ');
+  view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+  view.setUint32(24, rate, true); view.setUint32(28, rate * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+  str(36, 'data'); view.setUint32(40, n * 2, true);
+  for (let i = 0; i < n; i++) view.setInt16(44 + i * 2, Math.round(mix[i] / peak * 0.7 * 32767), true);
+  return out;
+}

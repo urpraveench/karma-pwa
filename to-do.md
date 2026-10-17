@@ -8,9 +8,7 @@ Everything still pending, in the order it should happen. Tick items off as they'
 
 ## In progress
 
-Motion logo ("Bead fill", chosen 17 October 2026): the beads fill clockwise to where the logo stops, the gold bead pulses, then the name and brand line come in. It ends on the static logo.
-
-- [ ] **Claude:** motion logo videos in `public/brand/motion/` (`npm run brand:motion`), with a tick for each bead and a chime on the gold bead: end cards as MP4 (vertical 1080×1920 and wide 1920×1080, dark and light), a transparent WebM to go over footage, and a GIF for emails (GTM-24)
+Nothing right now.
 
 ## Setup layout
 
@@ -184,6 +182,7 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** motion logo videos in `public/brand/motion/` (`npm run brand:motion`), with a tick for each bead and a chime on the gold bead: end cards as MP4 (vertical 1080×1920 and wide 1920×1080, dark and light), a transparent WebM to go over footage, and a GIF for emails (GTM-24). Online at app.tiktym.com/brand/ from the next app deploy, 17 October 2026
 - [x] **Claude:** animated SVG logos in `public/brand/svg/` (`npm run brand:kit`): the ring, ring + name, and both lockups with the brand line, in colour, colour on dark and white; playing once, then holding the static logo, and showing the static logo straight away when the viewer has reduced motion turned on (GTM-23), 17 October 2026
 - [x] **You:** opened a **Personal** Google Play developer account (identity verified) and created the app "TikTym": package `com.tiktym.app`, Free, English (India), Play App Signing on. 17 October 2026
 - [x] **Claude:** link Instagram (@tiktym.app) beside LinkedIn: Setup › About, the website footer (home and What's new), the structured data's sameAs, and llms.txt (GTM-10, GTM-16, GTM-17), 16 October 2026

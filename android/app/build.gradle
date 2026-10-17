@@ -1,9 +1,12 @@
 apply plugin: 'com.android.application'
 
 // The app's version is package.json's, as on the web and in Setup › About (AND-06). Play needs a version code that rises
-// with every upload: 1.4.2 is 1004002, so each release (CLAUDE.md › Releasing bumps the version) gets a higher one.
+// with every upload: the version times 100 plus a build number (TIKTYM_ANDROID_BUILD, 0 to 99, default 0), so 1.4.2 is
+// 100400200 and a second test upload of it, build 1, is 100400201; each release (CLAUDE.md › Releasing) gets a higher one.
 def appVersion = new groovy.json.JsonSlurper().parse(file('../../package.json')).version
-def appVersionCode = appVersion.tokenize('.').collect { it.replaceAll(/\D.*/, '') as int }.with { it[0] * 1000000 + it[1] * 1000 + it[2] }
+def androidBuild = (System.getenv('TIKTYM_ANDROID_BUILD') ?: '0') as int
+if (androidBuild < 0 || androidBuild > 99) throw new GradleException("TIKTYM_ANDROID_BUILD must be 0 to 99")
+def appVersionCode = appVersion.tokenize('.').collect { it.replaceAll(/\D.*/, '') as int }.with { (it[0] * 1000000 + it[1] * 1000 + it[2]) * 100 + androidBuild }
 
 // The upload key that signs Play uploads lives outside the repo (AND-10): ~/.tiktym/upload-key.properties, or the file
 // TIKTYM_UPLOAD_KEY names, with storeFile, storePassword, keyAlias and keyPassword. Google re-signs for users (Play App Signing).

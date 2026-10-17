@@ -15,6 +15,12 @@ describe('Play build (AND-10)', () => {
     expect(release).toContain('./gradlew bundleRelease');
   });
 
+  it('gives each upload a higher version code: the version times 100 plus a build number (AND-06)', () => {
+    expect(gradle).toContain("System.getenv('TIKTYM_ANDROID_BUILD') ?: '0'");
+    expect(gradle).toContain('(it[0] * 1000000 + it[1] * 1000 + it[2]) * 100 + androidBuild');
+    expect(gradle).toContain('versionCode appVersionCode');
+  });
+
   it('keeps Play Integrity out of the debug builds', () => {
     for (const name of ['android:build', 'android:build:test']) expect(scripts[name]).toContain('VITE_ANDROID_APPCHECK=debug');
   });

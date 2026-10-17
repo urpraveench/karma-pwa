@@ -47,5 +47,5 @@ test('Setup › About shows the version Android shows, and nothing asks to add T
   const pkg = (await device.shell(`dumpsys package ${PKG}`)).toString();
   expect(pkg).toContain(`versionName=${VERSION}`);
   const [major, minor, patch] = VERSION.split('.').map(Number);
-  expect(pkg).toContain(`versionCode=${major * 1_000_000 + minor * 1000 + patch} `);
+  expect(pkg).toContain(`versionCode=${(major * 1_000_000 + minor * 1000 + patch) * 100} `);
 });

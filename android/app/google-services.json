@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "961077922651-b0t1tp7kl1t6vjp4bp1b54r8trtq7i4i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tiktym.app",
+            "certificate_hash": "a3a5c73712978a6d8bf34befe97f9a09c825eb28"
+          }
+        },
+        {
           "client_id": "961077922651-p0oetjsurbn3v8l2d6ud48mkicvpsj90.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

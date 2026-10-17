@@ -102,13 +102,11 @@ Move the app to `app.tiktym.com` (GTM-06, GTM-08, GTM-09). The same Hosting site
 Google Play (started 12 October 2026; changed 13 October from a Trusted Web Activity to a Capacitor app with the ledger, see GTM.md › Strategy). Native changes need a Play release; the screens are the same React app as the website.
 
 - [ ] **You (this week):** recruit 15 Android testers for the closed test and the 100 Days challenge (your current users lean iPhone, so ask Android users directly); note them in OUTREACH.md
-- [ ] **Claude (after the first Play upload):** add the Play app signing key's SHA-1 and SHA-256 (Play Console › Protected with Play › Play Store distribution › Go to Play app signing › App signing key) to the Firebase Android app "TikTym Android", then download `android/app/google-services.json` again; without it Google sign-in fails in the Play build (AND-03)
 - [ ] **You (once the Play account exists, before the closed test):** Play Console › Protected with Play › Play Integrity API › Get started › Link Cloud project › "tiktym" (you must be an Owner of the Firebase project yourself, not through a group); then Firebase console › App Check › Apps › TikTym Android › Play Integrity › Register (defaults). Without it voice logging fails in the Play build (AND-04)
 - [ ] **You (when Claude gives you a debug build for your phone):** Claude reads the build's debug secret from the phone over USB; you add it in Firebase console › App Check › Apps › TikTym Android › ⋮ › Manage debug tokens, so voice logging works in that build (AND-04)
 - [ ] **Claude (by Sun 1 Nov):** the ledger: Usage access reader (per-app minutes stay on the phone; only daily totals for social, video and games sync), app groups the person can change, "Invested · Scrolled" on Today and Insights against 100 a day, 700 a week and about 3,000 a month, a home-screen widget, and an optional ongoing notification
 - [ ] **Claude (before submitting):** check Play's current policy on Usage access and write the Data safety answers to match
 - [ ] **You (each build):** install it on your Android phone with Claude's checklist and report what you see
-- [ ] **You:** send Claude the app signing key's SHA-256 fingerprint and SHA-1 (Play Console › Protected with Play › Play Store distribution › Go to Play app signing › App signing key).
 - [ ] **Claude:** store listing: short and full description, 512 px icon, 1024×500 feature graphic, phone screenshots from the real app, and draft answers for Data safety, Content rating and Target audience (18+).
 - [ ] **You:** fill in the Play Console forms (Claude's drafts), give reviewers a test login, upload the app, and start a closed test.
 - [ ] **You:** 12 or more testers opted in to the closed test for 14 days in a row before Google allows production (a personal account's rule); with the closed test starting 2 November, production is 16 November at the earliest. The current users are the natural testers.
@@ -186,6 +184,8 @@ Decided 13 October 2026: a separate admin app in this repo and Firebase project,
 
 Move items here when they're finished, newest first, so there's a record.
 
+- [x] **Claude:** added the Play app signing key's SHA-1 and SHA-256 to the Firebase Android app "TikTym Android" and downloaded `android/app/google-services.json` again, so Google sign-in works in Play installs (AND-03). 17 October 2026
+- [x] **You:** sent Claude the app signing key's fingerprints. 17 October 2026
 - [x] **Claude:** the Play build: `npm run android:release` makes an app bundle signed with an upload key kept in `~/.tiktym/` (outside the repo; README.md › Android app), with Play Integrity App Check; without the key it stops and says where it goes (AND-10). 17 October 2026
 - [x] **You:** opened a **Personal** Google Play developer account (identity verified) and created the app "TikTym": package `com.tiktym.app`, Free, English (India), Play App Signing on. 17 October 2026
 - [x] **Claude:** link Instagram (@tiktym.app) beside LinkedIn: Setup › About, the website footer (home and What's new), the structured data's sameAs, and llms.txt (GTM-10, GTM-16, GTM-17), 16 October 2026

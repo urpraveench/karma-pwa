@@ -15,6 +15,14 @@ Also online at app.tiktym.com/brand/svg/… and app.tiktym.com/brand/png/… onc
 | `tiktym-tagline-stacked-…` | Ring, name and brand line, one under the other | Posters, flyers, the end card of a video |
 | `tiktym-app-icon` | The ring on its dark green tile | Profile pictures (LinkedIn, WhatsApp, YouTube), store listings |
 
+## Motion logo
+
+The ring fills bead by bead, the gold bead pulses, then the name and brand line come in, ending on the static logo.
+
+| File name | What it is | Use it for |
+|---|---|---|
+| `…-animated.svg` | The ring, ring + name, and both brand-line lockups, in `-color`, `-color-on-dark` and `-white`; plays once (2.4 s, the ring alone 1.9 s) and stays on the logo | Websites, the app, slides that play SVG. People with reduced motion turned on see the static logo |
+
 ## Colours
 
 | Ending | For |

@@ -5,6 +5,16 @@ apply plugin: 'com.android.application'
 def appVersion = new groovy.json.JsonSlurper().parse(file('../../package.json')).version
 def appVersionCode = appVersion.tokenize('.').collect { it.replaceAll(/\D.*/, '') as int }.with { it[0] * 1000000 + it[1] * 1000 + it[2] }
 
+// The upload key that signs Play uploads lives outside the repo (AND-10): ~/.tiktym/upload-key.properties, or the file
+// TIKTYM_UPLOAD_KEY names, with storeFile, storePassword, keyAlias and keyPassword. Google re-signs for users (Play App Signing).
+def uploadKeyFile = file(System.getenv('TIKTYM_UPLOAD_KEY') ?: "${System.getProperty('user.home')}/.tiktym/upload-key.properties")
+def uploadKey = new Properties()
+if (uploadKeyFile.exists()) uploadKeyFile.withInputStream { uploadKey.load(it) }
+gradle.taskGraph.whenReady { graph ->
+    if (!uploadKeyFile.exists() && graph.allTasks.any { it.name ==~ /(bundle|assemble)Release/ })
+        throw new GradleException("No upload key at ${uploadKeyFile}: a release build needs it (README.md › Android app)")
+}
+
 android {
     namespace = "com.tiktym.app"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -21,8 +31,19 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            if (uploadKeyFile.exists()) {
+                storeFile file(uploadKey.storeFile)
+                storePassword uploadKey.storePassword
+                keyAlias uploadKey.keyAlias
+                keyPassword uploadKey.keyPassword
+            }
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

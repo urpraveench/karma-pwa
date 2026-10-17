@@ -40,8 +40,8 @@ Summary of coverage at the time of writing:
 | 15. Analytics | 12 | 12 | 0 | 0 |
 | 16. Notifications | 20 | 20 | 0 | 0 |
 | 17. Admin console | 14 | 14 | 0 | 0 |
-| 18. Android app | 9 | 9 | 0 | 0 |
-| **Total** | **374** | **361** | **0** | **13** |
+| 18. Android app | 10 | 10 | 0 | 0 |
+| **Total** | **375** | **362** | **0** | **13** |
 
 ---
 
@@ -555,6 +555,7 @@ The same app inside a native Android shell (Capacitor), built from this codebase
 | AND-09 | Voice logging in the app | Tapping the microphone asks Android for the microphone once; allowed, recording starts as on the web (LOG-26). Refused for good: it says to turn the microphone on in Android's settings for TikTym, and keeps typing and manual entry (as LOG-29) | Android `e2e-android/voice.spec.ts` (emulator; a real phone: Manual) |
 | AND-06 | Updates and install prompts in the app | No "new version" bar inside the app, even when a newer build is live on the web (Play delivers updates); the app counts as installed, so there's no "Add TikTym to your home screen" row in Setup and no install card on Today; Setup › About shows the app's version, which is also the version Android and Play show (from package.json) | Android `e2e-android/updates.spec.ts` (emulator) |
 | AND-07 | Fast on a low-end phone | On a low-end Android phone (emulator profile: 2 cores, 2 GB, 720×1600), a cold start shows the sign-in screen in about 2 seconds or less and a signed-in Today with 10 weeks of data in about 2.5 seconds or less; scrolling Today stays smooth (95% of frames within about 30 frames a second, under 5% slower than 50 ms with the CPU slowed 4×) | Android `e2e-android/speed.spec.ts` (on `TikTym_LowEnd`) |
+| AND-10 | Play build | `npm run android:release` makes an app bundle for Play signed with the upload key from outside the repo, with Play Integrity App Check and the live Firebase project (never the emulators); without the key it stops and says where it goes; no key or password is in the repo | Unit `androidRelease.test.ts` (Play accepting the upload: Manual) |
 
 ---
 
